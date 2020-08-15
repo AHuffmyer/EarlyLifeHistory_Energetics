@@ -47,54 +47,54 @@ Date,Sample.ID,Chamber.ID,Lifestage,dpf,Type,Salinity,Run,Volume,Org.Number,Note
 20200723,12,B6,Larvae,3,Sample,34,2,0.00008,6,
 20200723,18,C6,Larvae,3,NA,34,2,0.00008,NA,
 20200723,24,D6,Larvae,3,Sample,34,2,0.00008,6,
-20200723,1,A1,Fused,30,Sample,34,3,0.00008,1,Fused individuals - for separate project
-20200723,7,B1,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,13,C1,Fused,30,Sample,34,3,0.00008,1,Fused individuals - for separate project
-20200723,19,D1,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,2,A2,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,8,B2,Fused,30,Blank,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,14,C2,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,20,D2,Fused,30,Sample,34,3,0.00008,2,Fused individuals - for separate project
-20200723,3,A3,Fused,30,Sample,34,3,0.00008,2,Fused individuals - for separate project
-20200723,9,B3,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,15,C3,Fused,30,Sample,34,3,0.00008,2,Fused individuals - for separate project
-20200723,21,D3,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,4,A4,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,10,B4,Fused,30,Sample,34,3,0.00008,1,Fused individuals - for separate project
-20200723,16,C4,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,22,D4,Fused,30,Blank,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,5,A5,Fused,30,Sample,34,3,0.00008,3,Fused individuals - for separate project
-20200723,11,B5,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,17,C5,Fused,30,Sample,34,3,0.00008,3,Fused individuals - for separate project
-20200723,23,D5,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,6,A6,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,12,B6,Fused,30,Sample,34,3,0.00008,3,Fused individuals - for separate project
-20200723,18,C6,Fused,30,NA,34,3,0.00008,NA,Fused individuals - for separate project
-20200723,24,D6,Fused,30,Sample,34,3,0.00008,4,Fused individuals - for separate project
-20200723,1,A1,Fused,30,Sample,34,4,0.00008,4,Fused individuals - for separate project
-20200723,7,B1,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,13,C1,Fused,30,Sample,34,4,0.00008,4,Fused individuals - for separate project
-20200723,19,D1,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,2,A2,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,8,B2,Fused,30,Blank,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,14,C2,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,20,D2,Fused,30,Sample,34,4,0.00008,6,Fused individuals - for separate project
-20200723,3,A3,Fused,30,Sample,34,4,0.00008,5,Fused individuals - for separate project
-20200723,9,B3,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,15,C3,Fused,30,Sample,34,4,0.00008,5,Fused individuals - for separate project
-20200723,21,D3,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,4,A4,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,10,B4,Fused,30,Sample,34,4,0.00008,8,Fused individuals - for separate project
-20200723,16,C4,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,22,D4,Fused,30,Sample,34,4,0.00008,7,Fused individuals - for separate project
-20200723,5,A5,Fused,30,Sample,34,4,0.00008,4,Fused individuals - for separate project
-20200723,11,B5,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,17,C5,Fused,30,Sample,34,4,0.00008,8,Fused individuals - for separate project
-20200723,23,D5,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,6,A6,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,12,B6,Fused,30,Sample,34,4,0.00008,6,Fused individuals - for separate project
-20200723,18,C6,Fused,30,NA,34,4,0.00008,NA,Fused individuals - for separate project
-20200723,24,D6,Fused,30,Blank,34,4,0.00008,NA,Fused individuals - for separate project
+20200723,1,A1,Juvenile,40,Sample,34,3,0.00008,1,Number of individuals indicates number polyps in fusion
+20200723,7,B1,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,13,C1,Juvenile,40,Sample,34,3,0.00008,1,Number of individuals indicates number polyps in fusion
+20200723,19,D1,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,2,A2,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,8,B2,Juvenile,40,Blank,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,14,C2,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,20,D2,Juvenile,40,Sample,34,3,0.00008,2,Number of individuals indicates number polyps in fusion
+20200723,3,A3,Juvenile,40,Sample,34,3,0.00008,2,Number of individuals indicates number polyps in fusion
+20200723,9,B3,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,15,C3,Juvenile,40,Sample,34,3,0.00008,2,Number of individuals indicates number polyps in fusion
+20200723,21,D3,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,4,A4,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,10,B4,Juvenile,40,Sample,34,3,0.00008,1,Number of individuals indicates number polyps in fusion
+20200723,16,C4,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,22,D4,Juvenile,40,Blank,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,5,A5,Juvenile,40,Sample,34,3,0.00008,3,Number of individuals indicates number polyps in fusion
+20200723,11,B5,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,17,C5,Juvenile,40,Sample,34,3,0.00008,3,Number of individuals indicates number polyps in fusion
+20200723,23,D5,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,6,A6,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,12,B6,Juvenile,40,Sample,34,3,0.00008,3,Number of individuals indicates number polyps in fusion
+20200723,18,C6,Juvenile,40,NA,34,3,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,24,D6,Juvenile,40,Sample,34,3,0.00008,4,Number of individuals indicates number polyps in fusion
+20200723,1,A1,Juvenile,40,Sample,34,4,0.00008,4,Number of individuals indicates number polyps in fusion
+20200723,7,B1,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,13,C1,Juvenile,40,Sample,34,4,0.00008,4,Number of individuals indicates number polyps in fusion
+20200723,19,D1,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,2,A2,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,8,B2,Juvenile,40,Blank,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,14,C2,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,20,D2,Juvenile,40,Sample,34,4,0.00008,6,Number of individuals indicates number polyps in fusion
+20200723,3,A3,Juvenile,40,Sample,34,4,0.00008,5,Number of individuals indicates number polyps in fusion
+20200723,9,B3,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,15,C3,Juvenile,40,Sample,34,4,0.00008,5,Number of individuals indicates number polyps in fusion
+20200723,21,D3,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,4,A4,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,10,B4,Juvenile,40,Sample,34,4,0.00008,8,Number of individuals indicates number polyps in fusion
+20200723,16,C4,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,22,D4,Juvenile,40,Sample,34,4,0.00008,7,Number of individuals indicates number polyps in fusion
+20200723,5,A5,Juvenile,40,Sample,34,4,0.00008,4,Number of individuals indicates number polyps in fusion
+20200723,11,B5,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,17,C5,Juvenile,40,Sample,34,4,0.00008,8,Number of individuals indicates number polyps in fusion
+20200723,23,D5,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,6,A6,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,12,B6,Juvenile,40,Sample,34,4,0.00008,6,Number of individuals indicates number polyps in fusion
+20200723,18,C6,Juvenile,40,NA,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
+20200723,24,D6,Juvenile,40,Blank,34,4,0.00008,NA,Number of individuals indicates number polyps in fusion
 20200724,1,A1,Larvae,4,Sample,34,1,0.00008,6,
 20200724,7,B1,Larvae,4,NA,34,1,0.00008,NA,
 20200724,13,C1,Larvae,4,Sample,34,1,0.00008,6,

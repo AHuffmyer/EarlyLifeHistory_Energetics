@@ -1,0 +1,978 @@
+---
+title: Early life history respirometry (photosynthesis & respiration) analysis and plotting
+author: "AS Huffmyer"
+date: '2020'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+---
+This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section along with summaries of potential implications. See Conclusions section for general overview of findings.    
+
+## **Setup**  
+
+Set up workspace, set options, and load required packages.    
+```{r, echo=TRUE, show=FALSE}
+rm(list=ls(all=TRUE)) 
+```
+
+```{r, warning=FALSE, message=FALSE}
+## install packages if you dont already have them in your library
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("car" %in% rownames(installed.packages()) == 'FALSE') install.packages('car') 
+if ("lme4" %in% rownames(installed.packages()) == 'FALSE') install.packages('lme4') 
+if ("lmerTest" %in% rownames(installed.packages()) == 'FALSE') install.packages('lmerTest') 
+if ("scales" %in% rownames(installed.packages()) == 'FALSE') install.packages('scales') 
+if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
+if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+
+#load packages
+library("ggplot2")
+library("tidyverse")
+library('car')
+library('lme4')
+library('lmerTest')
+library('scales')
+library('cowplot')
+```
+
+
+## **Data visualization and manipulation**  
+
+Load data from LoLinR.   
+```{r, warning=FALSE, message=FALSE}
+PRdata<-read.csv("../Output/Mcap2020/oxygen_P_R_calc.csv") #load data
+```
+
+Separate project specific data.  
+```{r, warning=FALSE, message=FALSE}
+#remove all rows of wells that did not have samples or blanks
+PRdata<-PRdata[!is.na(PRdata$Type),]
+
+#format columns
+PRdata$dpf<-as.factor(PRdata$dpf)
+
+#subset fused juvenile data frame for a different project, then save as separate file
+fused_oxygen <- PRdata[which(PRdata$Lifestage=='Juvenile'),]
+fused_oxygen <- droplevels(fused_oxygen)
+```
+
+Calculate a P:R ratio using gross photosynthesis.  
+```{r, warning=FALSE, message=FALSE}
+PRdata$ratio<-abs(PRdata$GP.nmol.org.min)/abs(PRdata$R.nmol.org.min) #calculate ratio with absolute values
+#remove outliers detected by values of P:R ratio data
+PRdata<-PRdata%>%filter(ratio < 15)
+
+fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min)
+```
+
+## **Plotting: Larvae, Recruits, Juveniles**    
+
+Generate plots by lifestage and days post fertilization.  
+
+### *Respiration*  
+
+Generate dot plot.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rplot1<-ggplot(data=PRdata, aes(x=dpf, y=R.nmol.org.min, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(aes(colour=Lifestage), binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Respiration: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Rplot1
+
+Rplot2<-Rplot1+theme(legend.position="none")
+
+ggsave("../Figures/Respiration/Lifestages/mcap_R.pdf", plot=Rplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+Generate mean plot.  
+
+```{r, results=TRUE}
+meanR <- plyr::ddply(PRdata, c("Lifestage", "dpf"), summarise,
+                   N    = length(R.nmol.org.min[!is.na(R.nmol.org.min)]),
+                   mean = mean(R.nmol.org.min, na.rm=TRUE),
+                   sd   = sd(R.nmol.org.min, na.rm=TRUE),
+                   se   = sd / sqrt(N)
+)
+```
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rplot3<-ggplot(data=meanR, aes(x=dpf, y=mean, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_point(aes(color=Lifestage), size=3, position=position_dodge(0.3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, linetype="solid", position=position_dodge(0.3), size=1) +
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.001, 0.0005), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Respiration: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Rplot3
+
+Rplot4<-Rplot3+theme(legend.position="none")
+
+ggsave("../Figures/Respiration/Lifestages/mcap_R_means.pdf", plot=Rplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+
+### *Net Photosynthesis*   
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(aes(colour=Lifestage), binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Net Photosynthesis: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0))); Pplot1
+
+Pplot2<-Pplot1+theme(legend.position="none")
+
+ggsave("../Figures/Respiration/Lifestages/mcap_P.pdf", plot=Pplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+Generate mean plot.  
+
+```{r, results=TRUE}
+meanP <- plyr::ddply(PRdata, c("Lifestage", "dpf"), summarise,
+                   N    = length(P.nmol.org.min[!is.na(P.nmol.org.min)]),
+                   mean = mean(P.nmol.org.min, na.rm=TRUE),
+                   sd   = sd(P.nmol.org.min, na.rm=TRUE),
+                   se   = sd / sqrt(N)
+)
+```
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pplot3<-ggplot(data=meanP, aes(x=dpf, y=mean, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_point(aes(color=Lifestage), size=3, position=position_dodge(0.3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, linetype="solid", position=position_dodge(0.3), size=1) +
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.0005, 0.0015), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Net Photosynthesis: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Pplot3
+
+Pplot4<-Pplot3+theme(legend.position="none")
+
+ggsave("../Figures/Respiration/Lifestages/mcap_P_means.pdf", plot=Pplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+### *Gross Photosynthesis*   
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(aes(colour=Lifestage), binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Gross Photosynthesis: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0))); GPplot1
+
+GPplot2<-GPplot1+theme(legend.position="none") 
+
+ggsave("../Figures/Respiration/Lifestages/mcap_GP.pdf", plot=GPplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+ 
+Generate mean plot.  
+
+```{r, results=TRUE}
+meanGP <- plyr::ddply(PRdata, c("Lifestage", "dpf"), summarise,
+                   N    = length(GP.nmol.org.min[!is.na(GP.nmol.org.min)]),
+                   mean = mean(GP.nmol.org.min, na.rm=TRUE),
+                   sd   = sd(GP.nmol.org.min, na.rm=TRUE),
+                   se   = sd / sqrt(N)
+)
+```
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPplot3<-ggplot(data=meanGP, aes(x=dpf, y=mean, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_point(aes(color=Lifestage), size=3, position=position_dodge(0.3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, linetype="solid", position=position_dodge(0.3), size=1) +
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.0005, 0.0025), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Gross Photosynthesis: nmol organism"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));GPplot3
+
+GPplot4<-GPplot3+theme(legend.position="none")
+
+ggsave("../Figures/Respiration/Lifestages/mcap_GP_means.pdf", plot=GPplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+### *Gross Photosynthesis:Respiration ratio *   
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRplot1<-ggplot(data=PRdata, aes(x=dpf, y=ratio, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+ geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(aes(colour=Lifestage), binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-1, 10), labels = scales::number_format(accuracy = 1, decimal.mark = '.'))+
+  ylab(expression(bold(paste("Gross Photosynthesis:Respiration ")))) +
+  xlab("Days post fertilization") +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0))); PRplot1
+
+ggsave("../Figures/Respiration/Lifestages/mcap_PR.pdf", plot=PRplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+``` 
+
+Generate mean plot.  
+
+```{r, results=TRUE}
+meanPR <- plyr::ddply(PRdata, c("Lifestage", "dpf"), summarise,
+                   N    = length(ratio[!is.na(ratio)]),
+                   mean = mean(ratio, na.rm=TRUE),
+                   sd   = sd(ratio, na.rm=TRUE),
+                   se   = sd / sqrt(N)
+)
+```
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRplot3<-ggplot(data=meanPR, aes(x=dpf, y=mean, colour=Lifestage, group=interaction(Lifestage, dpf))) +
+  geom_point(aes(color=Lifestage), size=3, position=position_dodge(0.3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, linetype="solid", position=position_dodge(0.3), size=1) +
+  scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
+  geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-1, 5), labels = scales::number_format(accuracy = 1, decimal.mark = '.'))+
+  xlab("Days post fertilization")+
+  ylab(expression(bold(paste("Gross Photosynthesis: Respiration")))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));PRplot3
+
+ggsave("../Figures/Respiration/Lifestages/mcap_PR_means.pdf", plot=PRplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+### *Plot Panels*  
+
+Combine plots above into a single panel.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+mcap_respiration<-plot_grid(Rplot2, Pplot2, GPplot2, PRplot1, Rplot4, Pplot4, GPplot4, PRplot3, labels = c("Respiration", "Net Photosynthesis", "Gross Photosynthesis", "P:R Ratio", "Respiration", "Net Photosynthesis", "Gross Photosynthesis", "P:R Ratio"), label_size=18, ncol=4, nrow=2, rel_heights= c(1,1,1,1), rel_widths = c(0.8,0.8,0.8,1), align="h")
+
+ggsave(filename="../Figures/Respiration/mcap_PR_panel.pdf", plot=mcap_respiration, dpi=300, width=28, height=16, units="in")
+```
+
+
+
+## **Plotting: Fused juveniles**
+
+### *Polyp Specific Rates*
+
+Generate a plot for fused corals separately to examine respirometry normalized to the number polyps fused together within a colony.  
+ 
+#### *Respiration*    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+FuseR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=R.nmol.org.min, group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Respiration: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseR1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_R.pdf", plot=FuseR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Net Photosynthesis*  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+FuseP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=P.nmol.org.min, group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Net Photosynthesis: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseP1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_P.pdf", plot=FuseP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Gross Photosynthesis*    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+FuseGP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=GP.nmol.org.min, group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.002, 0.002), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Gross Photosynthesis: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseGP1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_GP.pdf", plot=FuseGP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *P:R ratio*    
+
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+FusePR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=ratio, group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-1,10), labels = scales::number_format(accuracy = 1, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Gross Photosynthesis:Respiration")))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FusePR1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_PR.pdf", plot=FusePR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+### *Colony Total Rates*  
+
+#### *Respiration*  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Fuse_c_R1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(R.nmol.org.min*Org.Number), group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.005, 0.015), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Respiration: nmol colony"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_R1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_R.pdf", plot=Fuse_c_R1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Net Photosynthesis*  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Fuse_c_P1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(P.nmol.org.min*Org.Number), group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.005, 0.015), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Net Photosynthesis: nmol colony"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_P1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_P.pdf", plot=Fuse_c_P1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Gross Photosynthesis*  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Fuse_c_GP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(GP.nmol.org.min*Org.Number), group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-0.005, 0.015), labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Gross Photosynthesis: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_GP1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_GP.pdf", plot=Fuse_c_GP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *P:R Ratio * 
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Fuse_c_PR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(abs(fused_oxygen$GP.nmol.org.min*Org.Number)/abs(fused_oxygen$R.nmol.org.min*Org.Number)), group=interaction(Org.Number))) +
+  geom_boxplot(width=0.75, position=position_dodge(0.9))+
+  geom_dotplot(color="darkgray", binaxis='y', stackdir='center', 
+               position=position_dodge(0.9), dotsize=0.3)+
+  geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-1,10), labels = scales::number_format(accuracy = 1, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Gross Photosynthesis:Respiration")))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_PR1
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_PR.pdf", plot=Fuse_c_PR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+### *Plot Panel*  
+
+Combine plots above into a single panel.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+mcap_fused_respiration<-plot_grid(FuseR1, FuseP1, FuseGP1, FusePR1, Fuse_c_R1, Fuse_c_P1, Fuse_c_GP1, Fuse_c_PR1, labels = c("Polyp R", "Polyp P", "Polyp GP", "Polyp P:R", "Colony R", "Colony P", "Colony GP", "Colony P:R"), label_size = 18, ncol=4, nrow=2, rel_heights= c(1), rel_widths = c(1), align="h")
+
+ggsave(filename="../Figures/Respiration/mcap_fused_panel.pdf", plot=mcap_fused_respiration, dpi=300, width=24, height=12, units="in")
+```
+
+
+### *Comparing colony & polyp R and P rates * 
+#### *Respiration*  
+
+Make a summary table to displays means and standard errors for plotting.   
+
+```{r, results=FALSE}
+colony_v_polypsR <- plyr::ddply(fused_oxygen, c("Org.Number"), summarise,
+                   N_r_polyps    = length(R.nmol.org.min[!is.na(R.nmol.org.min)]),
+                   mean_r_polyps = mean(R.nmol.org.min, na.rm=TRUE),
+                   sd_r_polyps   = sd(R.nmol.org.min, na.rm=TRUE),
+                   se_r_polyps   = sd_r_polyps / sqrt(N_r_polyps), 
+                   N_r_colony    = length(R.nmol.org.min[!is.na(R.nmol.org.min)]),
+                   mean_r_colony = mean((Org.Number*R.nmol.org.min), na.rm=TRUE),
+                   sd_r_colony   = sd(Org.Number*R.nmol.org.min, na.rm=TRUE),
+                   se_r_colony   = sd_r_colony / sqrt(N_r_colony)
+)
+
+```
+
+Plot a line plot with two axis. Left axis: polyp specific respiration. Right axis: colony total respiration.  
+
+```{r, results=TRUE, message=FALSE, warning=FALSE}
+R_c_vs_p<-ggplot(data=colony_v_polypsR, aes(x=as.factor(Org.Number), group=interaction(Org.Number))) +
+  geom_point(aes(y=mean_r_polyps), size=3, position=position_dodge(0.01), color="orange") + #polyp
+  geom_errorbar(aes(ymin=mean_r_polyps-se_r_polyps, ymax=mean_r_polyps+se_r_polyps), width=0, linetype="solid", color="orange", position=position_dodge(0.01), size=0.5) + #polyp
+   geom_point(aes(y=mean_r_colony), size=3, position=position_dodge(0.06), color="purple") + #polyp
+  geom_errorbar(aes(ymin=mean_r_colony-se_r_colony, ymax=mean_r_colony+se_r_colony), width=0, linetype="solid", color="purple", position=position_dodge(0.06), size=0.5) + #polyp
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(
+     name = "Polyp Respiration", # Features of the first axis
+     sec.axis = sec_axis(~.*1, name="Colony Total Respiration"),  # Add a second axis and specify its features
+     limits=c(-0.006, 0.001),
+     labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.')
+     ) + 
+  xlab("Number of Fused Polyps")+
+  #ylab(expression(bold(paste("Respiration: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1), color="orange", face="bold"), 
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));R_c_vs_p
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_R.pdf", plot=R_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Net Photosynthesis*  
+
+Make a summary table to displays means and standard errors for plotting.  
+
+```{r, results=FALSE}
+colony_v_polypsP <- plyr::ddply(fused_oxygen, c("Org.Number"), summarise,
+                   N_p_polyps    = length(P.nmol.org.min[!is.na(P.nmol.org.min)]),
+                   mean_p_polyps = mean(P.nmol.org.min, na.rm=TRUE),
+                   sd_p_polyps   = sd(P.nmol.org.min, na.rm=TRUE),
+                   se_p_polyps   = sd_p_polyps / sqrt(N_p_polyps), 
+                   N_p_colony    = length(P.nmol.org.min[!is.na(P.nmol.org.min)]),
+                   mean_p_colony = mean((Org.Number*P.nmol.org.min), na.rm=TRUE),
+                   sd_p_colony   = sd(Org.Number*P.nmol.org.min, na.rm=TRUE),
+                   se_p_colony   = sd_p_colony / sqrt(N_p_colony)
+)
+
+```
+
+Plot a line plot with two axis. Left axis: polyp specific net photosynthesis Right axis: colony total net photosynthesis.    
+
+```{r, results=TRUE, message=FALSE, warning=FALSE}
+P_c_vs_p<-ggplot(data=colony_v_polypsP, aes(x=as.factor(Org.Number), group=interaction(Org.Number))) +
+  geom_point(aes(y=mean_p_polyps), size=3, position=position_dodge(0.01), color="orange") + #polyp
+  geom_errorbar(aes(ymin=mean_p_polyps-se_p_polyps, ymax=mean_p_polyps+se_p_polyps), width=0, linetype="solid", color="orange", position=position_dodge(0.01), size=0.5) + #polyp
+   geom_point(aes(y=mean_p_colony), size=3, position=position_dodge(0.06), color="purple") + #polyp
+  geom_errorbar(aes(ymin=mean_p_colony-se_p_colony, ymax=mean_p_colony+se_p_colony), width=0, linetype="solid", color="purple", position=position_dodge(0.06), size=0.5) + #polyp
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(
+     name = "Polyp Net Photosynthesis", # Features of the first axis
+     sec.axis = sec_axis(~.*1, name="Colony Total Net Photosynthesis"),  # Add a second axis and specify its features
+     limits=c(-0.001, 0.01),
+     labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.')
+     ) + 
+  xlab("Number of Fused Polyps")+
+  #ylab(expression(bold(paste("Respiration: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1), color="orange", face="bold"), 
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));P_c_vs_p
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_P.pdf", plot=P_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+
+
+
+
+#### *Gross Photosynthesis*  
+
+Make a summary table to displays means and standard errors for plotting.  
+
+```{r, results=FALSE}
+colony_v_polypsGP <- plyr::ddply(fused_oxygen, c("Org.Number"), summarise,
+                   N_gp_polyps    = length(GP.nmol.org.min[!is.na(GP.nmol.org.min)]),
+                   mean_gp_polyps = mean(GP.nmol.org.min, na.rm=TRUE),
+                   sd_gp_polyps   = sd(GP.nmol.org.min, na.rm=TRUE),
+                   se_gp_polyps   = sd_gp_polyps / sqrt(N_gp_polyps), 
+                   N_gp_colony    = length(GP.nmol.org.min[!is.na(GP.nmol.org.min)]),
+                   mean_gp_colony = mean((Org.Number*GP.nmol.org.min), na.rm=TRUE),
+                   sd_gp_colony   = sd(Org.Number*GP.nmol.org.min, na.rm=TRUE),
+                   se_gp_colony   = sd_gp_colony / sqrt(N_gp_colony)
+)
+
+```
+
+Plot a line plot with two axis. Left axis: polyp specific net photosynthesis Right axis: colony total net photosynthesis.    
+
+```{r, results=TRUE, message=FALSE, warning=FALSE}
+GP_c_vs_p<-ggplot(data=colony_v_polypsGP, aes(x=as.factor(Org.Number), group=interaction(Org.Number))) +
+  geom_point(aes(y=mean_gp_polyps), size=3, position=position_dodge(0.01), color="orange") + #polyp
+  geom_errorbar(aes(ymin=mean_gp_polyps-se_gp_polyps, ymax=mean_gp_polyps+se_gp_polyps), width=0, linetype="solid", color="orange", position=position_dodge(0.01), size=0.5) + #polyp
+   geom_point(aes(y=mean_gp_colony), size=3, position=position_dodge(0.06), color="purple") + #polyp
+  geom_errorbar(aes(ymin=mean_gp_colony-se_gp_colony, ymax=mean_gp_colony+se_gp_colony), width=0, linetype="solid", color="purple", position=position_dodge(0.06), size=0.5) + #polyp
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(
+     name = "Polyp Gross Photosynthesis", # Features of the first axis
+     sec.axis = sec_axis(~.*1, name="Colony Total Gross Photosynthesis"),  # Add a second axis and specify its features
+     limits=c(-0.001, 0.015),
+     labels = scales::number_format(accuracy = 0.0001, decimal.mark = '.')
+     ) + 
+  xlab("Number of Fused Polyps")+
+  #ylab(expression(bold(paste("Respiration: nmol polyp"^-1, "min"^-1)))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1), color="orange", face="bold"), 
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));GP_c_vs_p
+
+ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_GP.pdf", plot=GP_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+
+
+
+#### *P:R*  
+
+P:R is the same when calculated for polyp or colony rates. Display P:R means in plot.  
+
+Generate mean plot.  
+
+```{r, results=TRUE}
+meanPR_fuse <- plyr::ddply(fused_oxygen, c("Org.Number"), summarise,
+                   N    = length(ratio[!is.na(ratio)]),
+                   mean = mean(ratio, na.rm=TRUE),
+                   sd   = sd(ratio, na.rm=TRUE),
+                   se   = sd / sqrt(N)
+)
+```
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRplot_fuse<-ggplot(data=meanPR_fuse, aes(x=as.factor(Org.Number), y=mean, group=interaction(Org.Number))) +
+  geom_point(color="darkgray", size=3, position=position_dodge(0.3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, linetype="solid", position=position_dodge(0.3), size=1) +
+  geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+  scale_y_continuous(limits=c(-1, 8), labels = scales::number_format(accuracy = 1, decimal.mark = '.'))+
+  xlab("Number of Fused Polyps")+
+  ylab(expression(bold(paste("Gross Photosynthesis: Respiration")))) +
+  theme_classic() +
+  theme(text = element_text(size = 18, color="black"),
+        axis.text = element_text(size = 18, color="black"), 
+        legend.position = "right",
+        axis.title = element_text(size = 18, color="black", face="bold"), 
+        legend.title=element_blank(), 
+        legend.text = element_text(size=18), 
+        plot.margin=unit(c(1,1,1,1), "cm"), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
+        axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));PRplot_fuse
+
+ggsave("../Figures/Respiration/Fusion/mcap_PR_fuse_means.pdf", plot=PRplot_fuse, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+#### *Plot Panel*  
+
+Combine plots above into a single panel.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+mcap_fused_colony_vs_polyp<-plot_grid(R_c_vs_p, P_c_vs_p, GP_c_vs_p, PRplot_fuse, labels = c("Respiration", "Net Photosynthesis", "Gross Photosynthesis", "P:R"), label_size = 16, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,0.8), align="h")
+
+ggsave(filename="../Figures/Respiration/mcap_fused_colony_vs_polyp_panel.pdf", plot=mcap_fused_colony_vs_polyp, dpi=300, width=24, height=6, units="in")
+```
+
+
+## **Analysis: Larvae, Recruits, Juveniles**  
+
+### *Respiration*    
+
+Build linear mixed effect model and examine for Respiration.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rmodel1<-lmer(R.nmol.org.min~Lifestage*dpf + (1|Run/dpf), data=PRdata) #run nested within day
+anova(Rmodel1, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Variance is violated, revisit this assumption.   
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Rmodel1))
+hist(residuals(Rmodel1))
+leveneTest(residuals(Rmodel1)~Lifestage * dpf, data=PRdata)
+```
+
+For respiration, lifestage and lifestage:days post fertilization are significant. Respiration increased over larval development and was higher for recruits at day 8. This is the closest timepoint to metamorphosis, which may suggest that respiratory demand is high immediately after settlement and then reduces by day 10. Juveniles at 40 days post settlement had high respiration, indicating higher demand with larger size.  
+
+### *Net Photosynthesis*  
+
+Build linear mixed effect model and examine for Net Photosynthesis.  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pmodel1<-lmer(P.nmol.org.min~Lifestage*dpf + (1|Run/dpf), data=PRdata)
+anova(Pmodel1, type="II")
+```
+ 
+Check assumptions of model for residual normality and variance. Variance is just barely violated, revisit this assumption.   
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Pmodel1))
+hist(residuals(Pmodel1))
+leveneTest(residuals(Pmodel1)~Lifestage * dpf, data=PRdata)
+```
+
+For net photosynthesis, lifestage is significant. Photosynthesis appears to be higher in larvae (esp. at day 8), but reduces in early recruits (day 8 and day 10), which may suggest that symbiosis is "upset" or "reset" after metamorphosis and takes time to build to high levels seen in 40 day old juveniles. This supports our hypotheses that symbiosis integration occurs after settlement during early juvenile development.  
+
+### *Gross Photosynthesis*  
+
+Build linear mixed effect model and examine for Gross Photosynthesis.  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPmodel1<-lmer(GP.nmol.org.min~Lifestage*dpf + (1|Run/dpf), data=PRdata)
+anova(GPmodel1, type="II")
+```
+ 
+Check assumptions of model for residual normality and variance.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(GPmodel1))
+hist(residuals(GPmodel1))
+leveneTest(residuals(GPmodel1)~Lifestage * dpf, data=PRdata)
+```
+
+For gross photosynthesis, lifestage is significant. Gross photosynthesis does not appear to reduce as much as net photosynthesis after settlement, so this may indicate that the heavy respiratory demand is what is leading to decreased net photosynthetic output and therefore less available for growth/calcification at this life stage. Gross photosynthesis is still highest in juveniles, which supports that symbiosis is active and integrated in older juveniles.  
+
+
+### *P:R*  
+ 
+Build linear mixed effect model and examine for P:R ratio (gross photosynthesis : respiration)   
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRmodel1<-lmer(ratio~Lifestage*dpf + (1|Run/dpf), data=PRdata)
+anova(PRmodel1, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(PRmodel1))
+hist(residuals(PRmodel1))
+leveneTest(residuals(PRmodel1)~Lifestage * dpf, data=PRdata)
+```
+
+Lifestage is significant in analysis of P:R. P:R values are barely above 1 for larvae and are lowest for recruits, emphasizing the high respiratory demand not met by photosynthesis at this stage. Ratio is higher in juveniles, providing more energy for growth and calcification.  
+
+
+## **Analysis: Fused Juveniles**  
+
+
+### *Respiration*    
+
+Analyze respiration at the level of the whole colony, or normalized at polyp-specific rates within each colony. Analyze across total number of polyps fused together.  
+
+Build linear mixed effect model and examine for Respiration at the colony level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rmodel2<-lmer((R.nmol.org.min*Org.Number)~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(Rmodel2, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions are met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Rmodel2))
+hist(residuals(Rmodel2))
+leveneTest(residuals(Rmodel2)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+Build linear mixed effect model and examine for Respiration at the polyp level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rmodel3<-lmer(R.nmol.org.min~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(Rmodel3, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Rmodel3))
+hist(residuals(Rmodel3))
+leveneTest(residuals(Rmodel3)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+In fused colonies, polyp-specific respiration and total colony respiration are both significantly affected by the size of the colony (number of fused polyps). Polyp specific respiration seems to decrease in larger colonies while total colony respiration increases. This may suggest that each constituent polyp "saves" energy being part of a larger fused colony. This is very interesting to think about!  
+
+### *Net Photosynthesis*  
+
+Analyze net photosynthesis at the level of the whole colony, or normalized at polyp-specific rates within each colony. Analyze across total number of polyps fused together.  
+
+Build linear mixed effect model and examine for Net Photosynthesis at the colony level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pmodel2<-lmer((P.nmol.org.min*Org.Number)~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(Pmodel2, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions are met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Pmodel2))
+hist(residuals(Pmodel2))
+leveneTest(residuals(Pmodel2)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+Build linear mixed effect model and examine for Net Photosynthesis at the polyp level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pmodel3<-lmer(P.nmol.org.min~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(Pmodel3, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Pmodel3))
+hist(residuals(Pmodel3))
+leveneTest(residuals(Pmodel3)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+In fused colonies, net photosynthesis increases with larger fused colonies (significant), but polyp-specific net photosynthesis does not increase (not significant). This suggests that the capacity of each polyp to photosynthesize is not enhanced with fusion, but rather there is an additive effect of photosynthesis across the larger colony.  
+
+### *Gross Photosynthesis*  
+
+Analyze gross photosynthesis at the level of the whole colony, or normalized at polyp-specific rates within each colony. Analyze across total number of polyps fused together.  
+
+Build linear mixed effect model and examine for Gross Photosynthesis at the colony level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPmodel2<-lmer((GP.nmol.org.min*Org.Number)~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(GPmodel2, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions are met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(GPmodel2))
+hist(residuals(GPmodel2))
+leveneTest(residuals(GPmodel2)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+Build linear mixed effect model and examine for Gross Photosynthesis at the polyp level.     
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPmodel3<-lmer(GP.nmol.org.min~Org.Number + (1|Run/dpf), data=fused_oxygen) #run nested within day
+anova(GPmodel3, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Potential normality violation, revisit.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(GPmodel3))
+hist(residuals(GPmodel3))
+leveneTest(residuals(GPmodel3)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+In fused colonies, gross photosynthesis has similar results as net photosynthesis, which makes sense. Gross photosynthesis increases with larger fused colonies (significant), but polyp-specific net photosynthesis does not increase (not significant). This suggests that the capacity of each polyp to photosynthesize is not enhanced with fusion, but rather there is an additive effect of photosynthesis across the larger colony. 
+
+### *P:R * 
+ 
+Build linear mixed effect model and examine for P:R ratio (gross photosynthesis : respiration). Ratios are the same when calculated for colony or polyp level, so displaying and analyzing at the polyp level here.      
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRmodel2<-lmer(ratio~Org.Number + (1|Run/dpf), data=fused_oxygen)
+anova(PRmodel2, type="II")
+```
+
+Check assumptions of model for residual normality and variance. Assumptions met.  
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(PRmodel2))
+hist(residuals(PRmodel2))
+leveneTest(residuals(PRmodel2)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+P:R ratio does not significantly change over colony size. Juveniles at this age maintain positive P:R ratios (above 1) regardless of size.  This is likely achieved by reduced polyp-specific respiration balanced by increased colony total respiration, keeping respiratory demand consistent across colony sizes.    
+
+
+## **Conclusions**  
+
+In this data, we saw a few things that are particularly interesting to think about:   
+(1) Respiration and photosynthesis are different between lifestages. Larval respiration and photosynthesis are low in larvae, and just maintain energetic balance (P meeting R demands).   
+(2) Respiration increases at recruitment (2-4 days after recruitment, 8-10 days after fertilization) and is not met by photosynthesis, highlighting energetic vulnerabilities at this stage.   
+(3) For older juveniles (40 days post fertilization), there is excess in photosynthesis to meet respiratory demand that is available for growth and calcification.   
+(4) In juveniles, those that are fused have higher respiration and photosynthesis as the size of the colony (number of polyps fused together) is larger. Photosynthesis meets respiratory demand and is in excess, providing energy for growth and calcification at this stage.    
+(5) Interestingly, polyp-specific respiration decreases in larger fused colonies while total respiration increases. This suggests that by joining together in a larger colony, each constituent polyp may "save" energy.    
+

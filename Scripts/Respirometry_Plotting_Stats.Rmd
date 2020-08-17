@@ -29,6 +29,7 @@ if ("lmerTest" %in% rownames(installed.packages()) == 'FALSE') install.packages(
 if ("scales" %in% rownames(installed.packages()) == 'FALSE') install.packages('scales') 
 if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
 if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+if ("effects" %in% rownames(installed.packages()) == 'FALSE') install.packages('effects') 
 
 #load packages
 library("ggplot2")
@@ -38,6 +39,7 @@ library('lme4')
 library('lmerTest')
 library('scales')
 library('cowplot')
+library('effects')
 ```
 
 
@@ -101,7 +103,7 @@ Rplot1<-ggplot(data=PRdata, aes(x=dpf, y=R.nmol.org.min, colour=Lifestage, group
 
 Rplot2<-Rplot1+theme(legend.position="none")
 
-ggsave("../Figures/Respiration/Lifestages/mcap_R.pdf", plot=Rplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_R.pdf", plot=Rplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 Generate mean plot.  
@@ -113,7 +115,7 @@ meanR <- plyr::ddply(PRdata, c("Lifestage", "dpf"), summarise,
                    sd   = sd(R.nmol.org.min, na.rm=TRUE),
                    se   = sd / sqrt(N)
 )
-```
+``` 
 
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 Rplot3<-ggplot(data=meanR, aes(x=dpf, y=mean, colour=Lifestage, group=interaction(Lifestage, dpf))) +
@@ -137,7 +139,7 @@ Rplot3<-ggplot(data=meanR, aes(x=dpf, y=mean, colour=Lifestage, group=interactio
 
 Rplot4<-Rplot3+theme(legend.position="none")
 
-ggsave("../Figures/Respiration/Lifestages/mcap_R_means.pdf", plot=Rplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_R_means.pdf", plot=Rplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 
@@ -166,9 +168,9 @@ Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Lifestage, group
 
 Pplot2<-Pplot1+theme(legend.position="none")
 
-ggsave("../Figures/Respiration/Lifestages/mcap_P.pdf", plot=Pplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_P.pdf", plot=Pplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
-
+ 
 Generate mean plot.  
 
 ```{r, results=TRUE}
@@ -202,7 +204,7 @@ Pplot3<-ggplot(data=meanP, aes(x=dpf, y=mean, colour=Lifestage, group=interactio
 
 Pplot4<-Pplot3+theme(legend.position="none")
 
-ggsave("../Figures/Respiration/Lifestages/mcap_P_means.pdf", plot=Pplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_P_means.pdf", plot=Pplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ### *Gross Photosynthesis*   
@@ -230,7 +232,7 @@ GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Lifestage, gro
 
 GPplot2<-GPplot1+theme(legend.position="none") 
 
-ggsave("../Figures/Respiration/Lifestages/mcap_GP.pdf", plot=GPplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_GP.pdf", plot=GPplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
  
 Generate mean plot.  
@@ -266,7 +268,7 @@ GPplot3<-ggplot(data=meanGP, aes(x=dpf, y=mean, colour=Lifestage, group=interact
 
 GPplot4<-GPplot3+theme(legend.position="none")
 
-ggsave("../Figures/Respiration/Lifestages/mcap_GP_means.pdf", plot=GPplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_GP_means.pdf", plot=GPplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ### *Gross Photosynthesis:Respiration ratio *   
@@ -292,7 +294,7 @@ PRplot1<-ggplot(data=PRdata, aes(x=dpf, y=ratio, colour=Lifestage, group=interac
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0))); PRplot1
 
-ggsave("../Figures/Respiration/Lifestages/mcap_PR.pdf", plot=PRplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_PR.pdf", plot=PRplot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ``` 
 
 Generate mean plot.  
@@ -326,7 +328,7 @@ PRplot3<-ggplot(data=meanPR, aes(x=dpf, y=mean, colour=Lifestage, group=interact
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));PRplot3
 
-ggsave("../Figures/Respiration/Lifestages/mcap_PR_means.pdf", plot=PRplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Lifestages/mcap_PR_means.pdf", plot=PRplot3, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ### *Plot Panels*  
@@ -369,7 +371,7 @@ FuseR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=R.nmol.org.min,
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseR1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_R.pdf", plot=FuseR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_R.pdf", plot=FuseR1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Net Photosynthesis*  
@@ -394,7 +396,7 @@ FuseP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=P.nmol.org.min,
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseP1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_P.pdf", plot=FuseP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_P.pdf", plot=FuseP1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Gross Photosynthesis*    
@@ -419,7 +421,7 @@ FuseGP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=GP.nmol.org.mi
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FuseGP1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_GP.pdf", plot=FuseGP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_GP.pdf", plot=FuseGP1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *P:R ratio*    
@@ -445,7 +447,7 @@ FusePR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=ratio, group=i
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));FusePR1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_PR.pdf", plot=FusePR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_polyp_PR.pdf", plot=FusePR1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ### *Colony Total Rates*  
@@ -472,7 +474,7 @@ Fuse_c_R1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(R.nmol.org.
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_R1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_R.pdf", plot=Fuse_c_R1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_R.pdf", plot=Fuse_c_R1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Net Photosynthesis*  
@@ -497,7 +499,7 @@ Fuse_c_P1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(P.nmol.org.
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_P1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_P.pdf", plot=Fuse_c_P1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_P.pdf", plot=Fuse_c_P1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Gross Photosynthesis*  
@@ -522,7 +524,7 @@ Fuse_c_GP1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(GP.nmol.or
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_GP1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_GP.pdf", plot=Fuse_c_GP1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_GP.pdf", plot=Fuse_c_GP1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *P:R Ratio * 
@@ -547,7 +549,7 @@ Fuse_c_PR1<-ggplot(data=fused_oxygen, aes(x=as.factor(Org.Number), y=(abs(fused_
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));Fuse_c_PR1
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_PR.pdf", plot=Fuse_c_PR1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_PR.pdf", plot=Fuse_c_PR1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ### *Plot Panel*  
@@ -609,7 +611,7 @@ R_c_vs_p<-ggplot(data=colony_v_polypsR, aes(x=as.factor(Org.Number), group=inter
         axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));R_c_vs_p
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_R.pdf", plot=R_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_R.pdf", plot=R_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Net Photosynthesis*  
@@ -659,7 +661,7 @@ P_c_vs_p<-ggplot(data=colony_v_polypsP, aes(x=as.factor(Org.Number), group=inter
         axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));P_c_vs_p
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_P.pdf", plot=P_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_P.pdf", plot=P_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 
@@ -713,7 +715,7 @@ GP_c_vs_p<-ggplot(data=colony_v_polypsGP, aes(x=as.factor(Org.Number), group=int
         axis.title.y.right = element_text(margin = margin(t = 0, r = 1, b = 1, l = 2), color="purple", face="bold"),
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));GP_c_vs_p
 
-ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_GP.pdf", plot=GP_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_fused_colony_vs_polyp_GP.pdf", plot=GP_c_vs_p, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 
@@ -753,7 +755,7 @@ PRplot_fuse<-ggplot(data=meanPR_fuse, aes(x=as.factor(Org.Number), y=mean, group
         axis.title.y = element_text(margin = margin(t = 0, r = 1, b = 0, l = 1)), 
         axis.title.x = element_text(margin = margin(t = 3, r = 0, b = 0, l = 0)));PRplot_fuse
 
-ggsave("../Figures/Respiration/Fusion/mcap_PR_fuse_means.pdf", plot=PRplot_fuse, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("../Figures/Respiration/Fusion/mcap_PR_fuse_means.pdf", plot=PRplot_fuse, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 #### *Plot Panel*  
@@ -848,7 +850,7 @@ Lifestage is significant in analysis of P:R. P:R values are barely above 1 for l
 
 ### *Respiration*    
 
-Analyze respiration at the level of the whole colony, or normalized at polyp-specific rates within each colony. Analyze across total number of polyps fused together.  
+Analyze respiration at the level of the whole colony, or normalized at polyp-specific rates within each colony. Analyze across total number of polyps fused together.   
 
 Build linear mixed effect model and examine for Respiration at the colony level.     
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
@@ -876,6 +878,51 @@ Check assumptions of model for residual normality and variance. Assumptions met.
 qqPlot(residuals(Rmodel3))
 hist(residuals(Rmodel3))
 leveneTest(residuals(Rmodel3)~as.factor(Org.Number), data=fused_oxygen)
+```
+
+#### *Linear Regressions*  
+
+Display linear regression of 1) colony respiration and 2) polyp respiration.   
+
+Colony respiration:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+colony.R.effects <- predictorEffect(c("Org.Number"), Rmodel2) #set x axis
+
+colony.effR<-plot(colony.R.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("purple"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-.006, 0.0))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Colony Total Respiration")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");colony.effR
+```
+
+Polyp specific respiration:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+polyp.R.effects <- predictorEffect(c("Org.Number"), Rmodel3) #set x axis
+
+polyp.effR<-plot(polyp.R.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("orange"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-.006, 0.0))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Polyp Specific Respiration")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");polyp.effR
+                   #lattice=list(key.args=list(space="right",
+                                              #border=FALSE, 
+                                              #title=expression(bold("Temperature - Fusion")),
+                                              #cex=1, 
+                                              #cex.title=1)))
 ```
 
 In fused colonies, polyp-specific respiration and total colony respiration are both significantly affected by the size of the colony (number of fused polyps). Polyp specific respiration seems to decrease in larger colonies while total colony respiration increases. This may suggest that each constituent polyp "saves" energy being part of a larger fused colony. This is very interesting to think about!  
@@ -912,6 +959,46 @@ hist(residuals(Pmodel3))
 leveneTest(residuals(Pmodel3)~as.factor(Org.Number), data=fused_oxygen)
 ```
 
+#### *Linear Regressions*  
+
+Display linear regression of 1) colony net photosynthesis and 2) polyp net photosynthesis.     
+
+Colony net photosynthesis:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+colony.NP.effects <- predictorEffect(c("Org.Number"), Pmodel2) #set x axis
+
+colony.effNP<-plot(colony.NP.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("purple"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-0.005, 0.02))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Colony Total Net Photosynthesis")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");colony.effNP
+```
+
+Polyp net photosynthesis:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+polyp.NP.effects <- predictorEffect(c("Org.Number"), Pmodel3) #set x axis
+
+polyp.effNP<-plot(polyp.NP.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("orange"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-0.005, 0.02))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Polyp Specific Net Photosynthesis")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");polyp.effNP
+```
+
 In fused colonies, net photosynthesis increases with larger fused colonies (significant), but polyp-specific net photosynthesis does not increase (not significant). This suggests that the capacity of each polyp to photosynthesize is not enhanced with fusion, but rather there is an additive effect of photosynthesis across the larger colony.  
 
 ### *Gross Photosynthesis*  
@@ -945,6 +1032,45 @@ qqPlot(residuals(GPmodel3))
 hist(residuals(GPmodel3))
 leveneTest(residuals(GPmodel3)~as.factor(Org.Number), data=fused_oxygen)
 ```
+#### *Linear Regressions*  
+
+Display linear regression of 1) colony respiration and 2) polyp respiration.   
+
+Colony gross photosynthesis:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+colony.GP.effects <- predictorEffect(c("Org.Number"), GPmodel2) #set x axis
+
+colony.effGP<-plot(colony.GP.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("purple"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-0.005, 0.02))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Colony Total Gross Photosynthesis")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");colony.effGP
+```
+
+Polyp gross photosynthesis:  
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+polyp.GP.effects <- predictorEffect(c("Org.Number"), GPmodel3) #set x axis
+
+polyp.effGP<-plot(polyp.GP.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("orange"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(-0.005, 0.02))),
+                   type="response", #set response scale
+                   ylab=expression(bold("Polyp Specific Gross Photosynthesis")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");polyp.effGP
+```
 
 In fused colonies, gross photosynthesis has similar results as net photosynthesis, which makes sense. Gross photosynthesis increases with larger fused colonies (significant), but polyp-specific net photosynthesis does not increase (not significant). This suggests that the capacity of each polyp to photosynthesize is not enhanced with fusion, but rather there is an additive effect of photosynthesis across the larger colony. 
 
@@ -964,8 +1090,37 @@ hist(residuals(PRmodel2))
 leveneTest(residuals(PRmodel2)~as.factor(Org.Number), data=fused_oxygen)
 ```
 
+#### *Linear Regression*  
+
+P:R ratios:    
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+ratio.effects <- predictorEffect(c("Org.Number"), PRmodel2) #set x axis
+
+ratio.effGP<-plot(ratio.effects,
+                   lines=list(multiline=TRUE, #color lines
+                              col=c("black"), 
+                              lty=c(1)), 
+                   confint=list(style="bands", alpha=0.3), #set conf int
+                   lwd=4,
+                   axes=list(y=list(lim=c(0, 7))),
+                   type="response", #set response scale
+                   ylab=expression(bold("P:R Ratio")), 
+                   legend.position="top",
+                   xlab=expression(bold("Number of Fused Polyps")), 
+                   main="");ratio.effGP
+```
+
 P:R ratio does not significantly change over colony size. Juveniles at this age maintain positive P:R ratios (above 1) regardless of size.  This is likely achieved by reduced polyp-specific respiration balanced by increased colony total respiration, keeping respiratory demand consistent across colony sizes.    
 
+### *Linear Regression Plots*  
+
+Combine regression plts above into a single panel organized by metric.    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+fused_regressions<-plot_grid(polyp.effR, colony.effR, polyp.effNP, colony.effNP, polyp.effGP, colony.effGP, ratio.effGP, labels = c("p=0.01", "p<0.01", "p>0.05", "p=0.04", "p>0.05", "p=0.03", "p>0.05"), label_size = 16, ncol=2, nrow=4, rel_heights= c(1), rel_widths = c(1), align="h")
+
+ggsave(filename="../Figures/Respiration/fused_regressions.pdf", plot=fused_regressions, dpi=300, width=10, height=16, units="in")
+```
 
 ## **Conclusions**  
 
@@ -974,5 +1129,6 @@ In this data, we saw a few things that are particularly interesting to think abo
 (2) Respiration increases at recruitment (2-4 days after recruitment, 8-10 days after fertilization) and is not met by photosynthesis, highlighting energetic vulnerabilities at this stage.   
 (3) For older juveniles (40 days post fertilization), there is excess in photosynthesis to meet respiratory demand that is available for growth and calcification.   
 (4) In juveniles, those that are fused have higher respiration and photosynthesis as the size of the colony (number of polyps fused together) is larger. Photosynthesis meets respiratory demand and is in excess, providing energy for growth and calcification at this stage.    
-(5) Interestingly, polyp-specific respiration decreases in larger fused colonies while total respiration increases. This suggests that by joining together in a larger colony, each constituent polyp may "save" energy.    
+(5) Interestingly, polyp-specific respiration decreases in larger fused colonies while total respiration increases. This suggests that by joining together in a larger colony, each constituent polyp may "save" energy.  
+(6) Raises interesting questions for integration timing of symbiosis after settlement.  
 

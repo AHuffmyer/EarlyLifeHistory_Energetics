@@ -132,7 +132,7 @@ Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Stage, group=int
   geom_jitter(shape=16, position=position_dodge(0.9), size=3)+
   geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
   scale_color_brewer(palette = "Dark2", breaks=c("Gastrula", "Larvae"))+
-  scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+  scale_y_continuous(limits=c(-0.1, 0.3), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
   xlab("Days post fertilization")+
   ylab(expression(bold(paste("Net P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
   theme_classic() +
@@ -176,7 +176,7 @@ GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Stage, group=i
   geom_jitter(shape=16, position=position_dodge(0.9), size=3)+
   geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
   scale_color_brewer(palette = "Dark2", breaks=c("Gastrula", "Larvae"))+
-  scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+  scale_y_continuous(limits=c(-0.1, 0.3), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
   xlab("Days post fertilization")+
   ylab(expression(bold(paste("Gross P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
   theme_classic() +

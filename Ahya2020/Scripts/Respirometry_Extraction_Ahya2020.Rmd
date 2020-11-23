@@ -110,13 +110,14 @@ test$Time.Min
 
 Run loop to extract slopes from respiration data. Subset for respiration data by indicating "Rfiles" as grabbed above. 
 
+ADD FILTER FOR OXYGEN VALUES IN YALL? 
 ```{r, results=FALSE, warning=FALSE, message=FALSE}
 
 for(i in 1:length(Rfiles)) { # for every file in list start at the first and run this following function
   Resp.Data <-read.table(file.path(path.r,Rfiles[i]), skip = 46, header=T, sep=",", na.strings="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files, skip first 47 lines, has header, csv comma separated, assign NAs
   Resp.Data$Time.Min <- as.matrix(read.table(text = Resp.Data[,4], sep = ":")) %*% c(60, 1, 1/60) #set time as "relative time" column in data sheet and convert hh:mm:ss to decimal minutes
   Resp.Data <- Resp.Data %>% #filters data by removing first 10 min as temp/plate acclimates and removing last 5 min to prevent hypoxic effects
-     filter(Time.Min >= 10 & Time.Min <= 25) 
+     filter(Time.Min >= 10 & Time.Min <= 20) 
   Resp.Data.N <- Resp.Data[,53:76] #subset desired columns in datasheet
   #Resp.Data.N[is.na(Resp.Data.N)] <- 0.1 # turn na's into 0.1's as a dummy variable, make sure this is only populating the missing column, not other cells in datasheet, has to be a value <1
 
@@ -155,7 +156,7 @@ for(i in 1:length(Pfiles)) { # for every file in list start at the first and run
   Photo.Data <-read.table(file.path(path.p,Pfiles[i]), skip = 46, header=T, sep=",", na.strings="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files, skip first 47 lines, has header, csv comma separated, assign NAs
   Photo.Data$Time.Min <- as.matrix(read.table(text = Photo.Data[,4], sep = ":")) %*% c(60, 1, 1/60) #set time as "relative time" column in data sheet and convert hh:mm:ss to decimal minutes
   Photo.Data <- Photo.Data %>% #filters data by removing first 5 min as temp/plate acclimates
-     filter(Time.Min >= 5) 
+     filter(Time.Min >= 10 & Time.Min <= 20) 
   Photo.Data.N <- Photo.Data[,53:76] #subset desired columns in datasheet
   #Photo.Data.N[is.na(Photo.Data.N)] <- 0.01 # turn na's into 0.1's as a dummy variable, make sure this is only populating the missing column, not other cells in datasheet, has to be a value <1
 

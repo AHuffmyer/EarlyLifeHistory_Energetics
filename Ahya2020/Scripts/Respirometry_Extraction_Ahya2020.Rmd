@@ -108,9 +108,13 @@ test$Time.Min <- as.matrix(read.table(text = test[,4], sep = ":")) %*% c(60, 1, 
 test$Time.Min
 ```
 
+Set min and max allowed oxygen values for analysis.  
+```{r}
+oxy_max<-225
+oxy_min<-143
+```
 Run loop to extract slopes from respiration data. Subset for respiration data by indicating "Rfiles" as grabbed above. 
 
-ADD FILTER FOR OXYGEN VALUES IN YALL? 
 ```{r, results=FALSE, warning=FALSE, message=FALSE}
 
 for(i in 1:length(Rfiles)) { # for every file in list start at the first and run this following function
@@ -120,8 +124,9 @@ for(i in 1:length(Rfiles)) { # for every file in list start at the first and run
      filter(Time.Min >= 10 & Time.Min <= 20) 
   Resp.Data.N <- Resp.Data[,53:76] #subset desired columns in datasheet
   #Resp.Data.N[is.na(Resp.Data.N)] <- 0.1 # turn na's into 0.1's as a dummy variable, make sure this is only populating the missing column, not other cells in datasheet, has to be a value <1
-
+  
   for(j in 1:(ncol(Resp.Data.N))){
+    #Need to apply filter for values in j to <oxy_max and >oxy_min above - NEEDING SOLUTION HERE 
     model <- rankLocReg(
       xall=Resp.Data$Time.Min, yall=as.numeric(Resp.Data.N[, j]), 
       alpha=0.4, method="pc", verbose=TRUE) #extract slopes, percentile rank method with minimum window size of 0.4. This means that in order to fit a slope, it has to encompass at least 40% of available datapoints. 
@@ -159,7 +164,9 @@ for(i in 1:length(Pfiles)) { # for every file in list start at the first and run
      filter(Time.Min >= 10 & Time.Min <= 20) 
   Photo.Data.N <- Photo.Data[,53:76] #subset desired columns in datasheet
   #Photo.Data.N[is.na(Photo.Data.N)] <- 0.01 # turn na's into 0.1's as a dummy variable, make sure this is only populating the missing column, not other cells in datasheet, has to be a value <1
-
+  Photo.Data.N[Photo.Data.N < 0.225] <- NA
+  Photo.Data.N[Photo.Data.N > 0.143] <- NA
+  
   for(j in 1:(ncol(Photo.Data.N))){
     model <- rankLocReg(
       xall=Photo.Data$Time.Min, yall=as.numeric(Photo.Data.N[, j]), 

@@ -110,8 +110,8 @@ test$Time.Min
 
 Set min and max allowed oxygen values for analysis.  
 ```{r}
-oxy_max<-225
-oxy_min<-143
+oxy_max<-0.270
+oxy_min<-0.100
 ```
 Run loop to extract slopes from respiration data. Subset for respiration data by indicating "Rfiles" as grabbed above. 
 
@@ -123,8 +123,10 @@ for(i in 1:length(Rfiles)) { # for every file in list start at the first and run
   Resp.Data <- Resp.Data %>% #filters data by removing first 10 min as temp/plate acclimates and removing last 5 min to prevent hypoxic effects
      filter(Time.Min >= 10 & Time.Min <= 20) 
   Resp.Data.N <- Resp.Data[,53:76] #subset desired columns in datasheet
+  #Resp.Data.N[Resp.Data.N < oxy_min] <- NA 
+  #Resp.Data.N[Resp.Data.N > oxy_max] <- NA 
   #Resp.Data.N[is.na(Resp.Data.N)] <- 0.1 # turn na's into 0.1's as a dummy variable, make sure this is only populating the missing column, not other cells in datasheet, has to be a value <1
-  
+
   for(j in 1:(ncol(Resp.Data.N))){
     #Need to apply filter for values in j to <oxy_max and >oxy_min above - NEEDING SOLUTION HERE 
     model <- rankLocReg(

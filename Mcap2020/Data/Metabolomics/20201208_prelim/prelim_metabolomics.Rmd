@@ -1,0 +1,162 @@
+---
+title: M. capitata preliminary metabolomics exploration
+author: "AS Huffmyer"
+date: '2020'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+---
+Set up workspace, set options, and load required packages.    
+```{r, echo=TRUE, show=FALSE}
+rm(list=ls(all=TRUE)) 
+```
+
+```{r, warning=FALSE, message=FALSE}
+## install packages if you dont already have them in your library
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("vegan" %in% rownames(installed.packages()) == 'FALSE') install.packages('vegan') 
+if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+if ("factoextra" %in% rownames(installed.packages()) == 'FALSE') install.packages('factoextra') 
+if ("ggfortify" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggfortify') 
+
+#load packages
+library("ggplot2")
+library("tidyverse")
+library('vegan')
+library('factoextra')
+library('ggfortify')
+
+```
+
+Load data
+```{r}
+data<-read.csv("Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+#rename columns to be useful
+data<- data %>% 
+  rename(
+    Larvae1_rep1 = Larvae.1_50uL_1,
+    Larvae1_rep2 = Larvae.1_50uL_2,
+    Larvae2_rep1 = Larvae.2_50uL_1,
+    Larvae2_rep2 =  Larvae.2_50uL_2,
+    Recruit1_rep1 = Recruit.1_15.20.Individuals_1,
+    Recruit1_rep2 = Recruit.1_15.20.Individuals_2 
+    )
+
+```
+
+
+Conduct normalization of samples by normalizing each metabolite ion count to the median ion count across metabolites within that sample.  
+
+```{r}
+data<- data %>%
+  mutate(Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1), 
+         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2), 
+         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2),
+         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1),
+         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2))
+```
+
+
+Mutate the data to be in long rather than wide format.  
+
+```{r}
+data <- data %>% 
+  gather(Sample, IonCounts, 23:28)
+
+data <- data[c(9, 23, 24)]
+```
+
+Add lifestage column for categorizing  
+
+```{r}
+data<-data%>%
+  separate(Sample, sep="_", c("Lifestage", "Rep"), remove=FALSE)
+
+data$Lifestage<-as.factor(data$Lifestage)
+```
+
+Create plot showing normalized ion counts (count / sample median) for each lifestage.  
+
+```{r}
+#make summary table
+data_plotting<-plyr::ddply(data, c("Lifestage", "compound"), summarise,
+                N    = length(IonCounts[!is.na(IonCounts)]),
+                mean = mean(IonCounts, na.rm=TRUE),
+                sd   = sd(IonCounts, na.rm=TRUE),
+                se   = sd / sqrt(N)
+)
+#write summary file
+data_summary<-data_plotting[c(1,2,4)]
+
+data_summary%>%
+  spread(Lifestage, mean) %>%
+  write.csv("mean_norm_counts_lifestage.csv")
+
+
+metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
+  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  theme_classic()+
+  xlab("Metabolites")+
+  ylab("Normalized Ion Count")+
+ # ylim(-1,100)+
+  theme(
+    legend.position="right", 
+    panel.border=element_rect(colour="black", fill=NA, size=1),
+    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+    text = element_text(size = 16, color="black"), 
+    axis.text.y = element_text(size=14, color="black"), 
+    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+    axis.title = element_text(face="bold"));metab_compounds
+
+ggsave("compounds_fullscale.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
+
+metabl_short<-metab_compounds + ylim(0,100)
+
+ggsave("compounds_shortscale.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
+
+metabl_shortest<-metab_compounds + ylim(0,20)
+
+ggsave("compounds_shortestscale.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
+
+```
+
+
+Run PCA to view differences in life stages.  
+
+Convert data to wide format.
+
+```{r}
+data_pca<-data%>%
+  spread(compound, IonCounts)
+```
+
+Plot PCA with lifestage in colors.  
+
+```{r}
+scaled.pca<-prcomp(data_pca[c(4,81)],scale=TRUE, center=TRUE) 
+
+pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  theme_classic()+
+  xlim(-0.75,0.75)+
+  ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         legend.position="right",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot1
+
+pcaPlot1$layers[[2]]$aes_params$size <- 1
+
+ggsave("prelimPCA.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+

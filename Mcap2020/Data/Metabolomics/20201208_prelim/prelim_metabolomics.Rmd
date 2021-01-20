@@ -33,6 +33,8 @@ library('ggfortify')
 
 ```
 
+## Positive Polarity  
+
 Load data
 ```{r}
 data<-read.csv("Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
@@ -97,7 +99,7 @@ data_summary<-data_plotting[c(1,2,4)]
 
 data_summary%>%
   spread(Lifestage, mean) %>%
-  write.csv("mean_norm_counts_lifestage.csv")
+  write.csv("mean_norm_counts_lifestage_pos.csv")
 
 
 metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
@@ -115,15 +117,15 @@ metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, g
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
     axis.title = element_text(face="bold"));metab_compounds
 
-ggsave("compounds_fullscale.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
+ggsave("compounds_fullscale_pos.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
 
 metabl_short<-metab_compounds + ylim(0,100)
 
-ggsave("compounds_shortscale.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
+ggsave("compounds_shortscale_pos.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
 
 metabl_shortest<-metab_compounds + ylim(0,20)
 
-ggsave("compounds_shortestscale.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
+ggsave("compounds_shortestscale_pos.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
 
 ```
 
@@ -155,8 +157,237 @@ pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage",
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot1
 
-pcaPlot1$layers[[2]]$aes_params$size <- 1
+#pcaPlot1$layers[[2]]$aes_params$size <- 1
 
-ggsave("prelimPCA.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+ggsave("prelimPCA_pos.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
+Read in .csv of normalized counts with trend assigned.  
+
+Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
+
+```{r}
+trends<-read.csv("mean_norm_counts_lifestage_pos_trend.csv", sep=",", na.strings=NA)
+
+trends<-trends%>%
+  gather(Lifestage, IonCounts, 3:5)
+  
+metab_trends<-ggplot(trends, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
+  facet_wrap(~Trend, scales = "free")+
+  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  theme_classic()+
+  xlab("Metabolites")+
+  ylab("Normalized Ion Count")+
+  theme(
+    legend.position="right", 
+    panel.border=element_rect(colour="black", fill=NA, size=1),
+    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+    text = element_text(size = 16, color="black"), 
+    axis.text.y = element_text(size=14, color="black"), 
+    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+    axis.title = element_text(face="bold"));metab_trends
+
+ggsave("trends_fullscale.pdf", plot=metab_trends, dpi=300, width=35, height=8, units="in")
+
+trend_short<-metab_trends + ylim(0,100)
+
+ggsave("trends_shortscale.pdf", plot=trend_short, dpi=300, width=35, height=8, units="in")
+
+trend_shortest<-metab_trends + ylim(0,20)
+
+ggsave("trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, height=8, units="in")
+```
+
+
+
+## Negative Polarity  
+
+Load data
+```{r}
+data_neg<-read.csv("Peaks_Neg_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+#rename columns to be useful
+data_neg<- data_neg %>% 
+  rename(
+    Larvae1_rep1 = Larvae.1_50uL_1,
+    Larvae1_rep2 = Larvae.1_50uL_2,
+    Larvae2_rep1 = Larvae.2_50uL_1,
+    Larvae2_rep2 =  Larvae.2_50uL_2,
+    Recruit1_rep1 = Recruit.1_15.20.Individuals_1,
+    Recruit1_rep2 = Recruit.1_15.20.Individuals_2 
+    )
+
+```
+
+
+Conduct normalization of samples by normalizing each metabolite ion count to the median ion count across metabolites within that sample.  
+
+```{r}
+data_neg<- data_neg %>%
+  mutate(Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1), 
+         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2), 
+         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2),
+         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1),
+         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2))
+```
+
+
+Mutate the data to be in long rather than wide format.  
+
+```{r}
+data_neg <- data_neg %>% 
+  gather(Sample, IonCounts, 23:28)
+
+data_neg <- data_neg[c(9, 23, 24)]
+```
+
+Add lifestage column for categorizing  
+
+```{r}
+data_neg<-data_neg%>%
+  separate(Sample, sep="_", c("Lifestage", "Rep"), remove=FALSE)
+
+data_neg$Lifestage<-as.factor(data_neg$Lifestage)
+```
+
+Create plot showing normalized ion counts (count / sample median) for each lifestage.  
+
+```{r}
+#make summary table
+data_plotting_neg<-plyr::ddply(data_neg, c("Lifestage", "compound"), summarise,
+                N    = length(IonCounts[!is.na(IonCounts)]),
+                mean = mean(IonCounts, na.rm=TRUE),
+                sd   = sd(IonCounts, na.rm=TRUE),
+                se   = sd / sqrt(N)
+)
+#write summary file
+data_summary_neg<-data_plotting_neg[c(1,2,4)]
+
+data_summary_neg%>%
+  spread(Lifestage, mean) %>%
+  write.csv("mean_norm_counts_lifestage_neg.csv")
+
+metab_compounds_neg<-ggplot(data_plotting_neg, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
+  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  theme_classic()+
+  xlab("Metabolites")+
+  ylab("Normalized Ion Count")+
+ # ylim(-1,100)+
+  theme(
+    legend.position="right", 
+    panel.border=element_rect(colour="black", fill=NA, size=1),
+    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+    text = element_text(size = 16, color="black"), 
+    axis.text.y = element_text(size=14, color="black"), 
+    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+    axis.title = element_text(face="bold"));metab_compounds_neg
+
+ggsave("compounds_fullscale_neg.pdf", plot=metab_compounds_neg, dpi=300, width=25, height=8, units="in")
+
+metabl_short_neg<-metab_compounds_neg + ylim(0,100)
+
+ggsave("compounds_shortscale_neg.pdf", plot=metabl_short_neg, dpi=300, width=25, height=8, units="in")
+
+metabl_shortest_neg<-metab_compounds_neg + ylim(0,20)
+
+ggsave("compounds_shortestscale_neg.pdf", plot=metabl_shortest_neg, dpi=300, width=25, height=8, units="in")
+
+```
+
+
+Run PCA to view differences in life stages.  
+
+Convert data to wide format.
+
+```{r}
+data_pca_neg<-data_neg%>%
+  spread(compound, IonCounts)
+```
+
+Plot PCA with lifestage in colors.  
+
+```{r}
+scaled.pca.neg<-prcomp(data_pca_neg[c(4,76)],scale=TRUE, center=TRUE) 
+
+pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  theme_classic()+
+  xlim(-0.75,0.75)+
+  ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         legend.position="right",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot1_neg
+
+#pcaPlot1$layers[[2]]$aes_params$size <- 1
+
+ggsave("prelimPCA_neg.pdf", plot=pcaPlot1_neg, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+Read in .csv of normalized counts with trend assigned.  
+
+Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
+
+```{r}
+trends_neg<-read.csv("mean_norm_counts_lifestage_neg_trend.csv", sep=",", na.strings=NA)
+
+trends_neg<-trends_neg%>%
+  gather(Lifestage, IonCounts, 3:5)
+  
+metab_trends_neg<-ggplot(trends_neg, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
+  facet_wrap(~Trend, scales = "free")+
+  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  theme_classic()+
+  xlab("Metabolites")+
+  ylab("Normalized Ion Count")+
+  theme(
+    legend.position="right", 
+    panel.border=element_rect(colour="black", fill=NA, size=1),
+    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+    text = element_text(size = 16, color="black"), 
+    axis.text.y = element_text(size=14, color="black"), 
+    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+    axis.title = element_text(face="bold"));metab_trends_neg
+
+ggsave("trends_fullscale_neg.pdf", plot=metab_trends_neg, dpi=300, width=35, height=8, units="in")
+
+trend_short_neg<-metab_trends_neg + ylim(0,100)
+
+ggsave("trends_shortscale_neg.pdf", plot=trend_short_neg, dpi=300, width=35, height=8, units="in")
+
+trend_shortest_neg<-metab_trends_neg + ylim(0,20)
+
+ggsave("trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
+```
+
+
+Generate a dataframe with normalized counts for positive and negative polarity datasets.  
+
+```{r}
+#merge two datasets such that mean in negative = "negative", and mean from positive = "positive". If not present, NA. 
+data_summary_neg<-data_summary_neg%>%
+    rename(Negative = mean)
+
+data_summary<-data_summary%>%
+    rename(Positive = mean)
+
+#view normalized negative dataset
+head(data_summary_neg)
+
+head(data_summary)
+
+#join datasets together
+normalized_counts_pos_neg<-full_join(data_summary, data_summary_neg)
+
+write.csv(normalized_counts_pos_neg, file="normalized_counts_pos_neg.csv")
+
+```
+
+
+Use metabolite selection file to select polarity for each compound from the normalized counts data sheet.  
+
+Plot/explore this selected data.  

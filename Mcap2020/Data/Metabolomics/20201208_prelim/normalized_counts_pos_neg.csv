@@ -1,0 +1,364 @@
+,Lifestage,compound,Positive,Negative
+1,Larvae1,1 3-Dimethyluric acid,0.194376561,NA
+2,Larvae1,1-Methylhistidine,1.37707299,NA
+3,Larvae1,3-Methylindole,0.254487473,NA
+4,Larvae1,4-Hydroxy-L-phenylglycine,0.229001168,NA
+5,Larvae1,5-Hydroxylysine,0.35186596,0.257685978
+6,Larvae1,5-Methylcytosine,1.910648708,NA
+7,Larvae1,Acetyl glycine,0.537285143,0.914955048
+8,Larvae1,Adenine,1.850614175,NA
+9,Larvae1,Adenosine,0.233805039,NA
+10,Larvae1,ADP,0.193876406,NA
+11,Larvae1,AMP,0.547044806,0.639347837
+12,Larvae1,Arginine,11.69983654,0.210636159
+13,Larvae1,Arginine-Alanine,0.448316147,NA
+14,Larvae1,Arginine-Glutamine,1.931225423,NA
+15,Larvae1,Arginine-Valine,0.41627894,NA
+16,Larvae1,Asparagine,0.205986021,0.277856744
+17,Larvae1,Aspartate,0.211525323,0.508289734
+18,Larvae1,ATP,0.679029259,1.363837642
+19,Larvae1,Betaine,6277.915187,5.563087686
+20,Larvae1,Carnitine,75.91956961,NA
+21,Larvae1,CDP-Choline,0.103074501,NA
+22,Larvae1,Creatinine,0.803983244,NA
+23,Larvae1,Cytosine,1.139118732,NA
+24,Larvae1,Deoxycarnitine,18.64668298,NA
+25,Larvae1,Dimethylglycine,3.885904827,NA
+26,Larvae1,Fructose-6-phosphate,0.074847051,NA
+27,Larvae1,Glucose-6-phosphate,0.47570965,1.403706907
+28,Larvae1,Glutamate,7.560523319,9.204000529
+29,Larvae1,Glutamine,3.13914357,2.564417999
+30,Larvae1,Glutaryl-carnitine,0.124209882,NA
+31,Larvae1,Glutathione,0.4117464,0.592164641
+32,Larvae1,Glycerol-3-phosphate,0.030323994,NA
+33,Larvae1,Glycerophosphocholine,0.338016257,NA
+34,Larvae1,GMP,0.038606738,0.08550103
+35,Larvae1,GTP,0.069411425,NA
+36,Larvae1,Guanidinoacetate,0.530144939,NA
+37,Larvae1,Guanine,0.052567595,NA
+38,Larvae1,Guanosine,0.770400797,NA
+39,Larvae1,Histidine,5.761592514,0.345385261
+40,Larvae1,Homoarginine,5.339128955,NA
+41,Larvae1,Homocitrulline,0.132538682,NA
+42,Larvae1,Hypoxanthine,0.322751395,NA
+43,Larvae1,Indole,12.54967085,NA
+44,Larvae1,L-Octanoylcarnitine,4.009293994,NA
+45,Larvae1,L-Palmitoylcarnitine,14.62410727,NA
+46,Larvae1,Lysine,4.987216989,2.621751786
+47,Larvae1,Mannose-6-phosphate,0.139374028,1.056216477
+48,Larvae1,Methionine,0.92112718,0.768407398
+49,Larvae1,Montiporic Acid A,0,112.2145557
+50,Larvae1,Montiporic Acid B,0.039175771,15.40752535
+51,Larvae1,NAD+,0.480607223,0.555244699
+52,Larvae1,NG-dimethyl-L-arginine,4.800379876,NA
+53,Larvae1,Nicotinamide riboside,1.364152406,NA
+54,Larvae1,Nicotinamide ribotide,0.088282376,NA
+55,Larvae1,Nicotinate,3.266407839,NA
+56,Larvae1,O-Acetyl-L-carnitine,45.50680784,NA
+57,Larvae1,O-Butanoylcarnitine,7.474176169,NA
+58,Larvae1,O-Decanoyl-L-carnitine,2.144779042,NA
+59,Larvae1,O-Phosphorylethanolamine,0.699673688,NA
+60,Larvae1,O-Propanoylcarnitine,9.316313774,NA
+61,Larvae1,Ornithine,1.174104255,NA
+62,Larvae1,Pantothenate,2.029742535,4.595336401
+63,Larvae1,Phosphocholine,2.800726235,0.889396127
+64,Larvae1,Pipecolic acid,2.604382559,NA
+65,Larvae1,PosIS_Glutamine-2H5-15N2,156.2439907,NA
+66,Larvae1,PosIS_Inosine-15N4,5.644231386,NA
+67,Larvae1,PosIS_Lysine-2H8,5.245631308,NA
+68,Larvae1,PosIS_Serine-13C3-15N1,3.291546858,NA
+69,Larvae1,Proline,1.66092687,0.494637687
+70,Larvae1,S-adenosyl-L-methionine,1.317985096,0.07612077
+71,Larvae1,Serine,0.622449228,1.527340675
+72,Larvae1,Spermine,112.4092866,NA
+73,Larvae1,Taurine,2.744987625,0.06159502
+74,Larvae1,Threonine,0.380225405,0.923900923
+75,Larvae1,Trigonelline,227.413793,NA
+76,Larvae1,Tryptophan,0.202641179,0.241947022
+77,Larvae1,Tyrosine,0.080984472,0.451250249
+78,Larvae1,UDP-N-acetyl-glucosamine,0.367275448,1.036197702
+79,Larvae2,1 3-Dimethyluric acid,0.10784896,NA
+80,Larvae2,1-Methylhistidine,0.761966018,NA
+81,Larvae2,3-Methylindole,0.326088178,NA
+82,Larvae2,4-Hydroxy-L-phenylglycine,0.257621659,NA
+83,Larvae2,5-Hydroxylysine,0.038129059,0.042467356
+84,Larvae2,5-Methylcytosine,2.673268637,NA
+85,Larvae2,Acetyl glycine,0.974206341,0.920888352
+86,Larvae2,Adenine,4.061812351,NA
+87,Larvae2,Adenosine,1.282991398,NA
+88,Larvae2,ADP,0.370633611,NA
+89,Larvae2,AMP,7.777466946,3.794223629
+90,Larvae2,Arginine,13.50697214,0.098331611
+91,Larvae2,Arginine-Alanine,0.660609777,NA
+92,Larvae2,Arginine-Glutamine,7.487194414,NA
+93,Larvae2,Arginine-Valine,0.597603144,NA
+94,Larvae2,Asparagine,0.141239347,0.193087913
+95,Larvae2,Aspartate,0.196778039,0.308555022
+96,Larvae2,ATP,0.557982592,0.920941895
+97,Larvae2,Betaine,10492.80144,5.123897959
+98,Larvae2,Carnitine,139.6381057,NA
+99,Larvae2,CDP-Choline,0.071432678,NA
+100,Larvae2,Creatinine,0.340700536,NA
+101,Larvae2,Cytosine,0.159239683,NA
+102,Larvae2,Deoxycarnitine,13.50143346,NA
+103,Larvae2,Dimethylglycine,3.449518371,NA
+104,Larvae2,Fructose-6-phosphate,0.063401521,NA
+105,Larvae2,Glucose-6-phosphate,1.016395741,2.065522164
+106,Larvae2,Glutamate,8.909936941,9.008412058
+107,Larvae2,Glutamine,5.59722243,4.212745489
+108,Larvae2,Glutaryl-carnitine,0.184051421,NA
+109,Larvae2,Glutathione,0.612371419,0.816701956
+110,Larvae2,Glycerol-3-phosphate,0.022829716,NA
+111,Larvae2,Glycerophosphocholine,0.068781314,NA
+112,Larvae2,GMP,0.441974262,0.439283222
+113,Larvae2,GTP,0.037964484,NA
+114,Larvae2,Guanidinoacetate,1.3731325,NA
+115,Larvae2,Guanine,0.304926189,NA
+116,Larvae2,Guanosine,0.889693742,NA
+117,Larvae2,Histidine,6.669606313,0.104633157
+118,Larvae2,Homoarginine,4.580270544,NA
+119,Larvae2,Homocitrulline,0.075384043,NA
+120,Larvae2,Hypoxanthine,0.640010341,NA
+121,Larvae2,Indole,13.92747904,NA
+122,Larvae2,L-Octanoylcarnitine,2.206679643,NA
+123,Larvae2,L-Palmitoylcarnitine,15.33250598,NA
+124,Larvae2,Lysine,2.918494629,0.701035557
+125,Larvae2,Mannose-6-phosphate,0.084222924,1.069671929
+126,Larvae2,Methionine,1.438604101,0.870793013
+127,Larvae2,Montiporic Acid A,0.256417907,199.5623293
+128,Larvae2,Montiporic Acid B,0.323586974,29.58033648
+129,Larvae2,NAD+,0.581776456,0.451568048
+130,Larvae2,NG-dimethyl-L-arginine,6.765456864,NA
+131,Larvae2,Nicotinamide riboside,2.670185874,NA
+132,Larvae2,Nicotinamide ribotide,0.058015766,NA
+133,Larvae2,Nicotinate,1.586472971,NA
+134,Larvae2,O-Acetyl-L-carnitine,76.62049167,NA
+135,Larvae2,O-Butanoylcarnitine,3.069895601,NA
+136,Larvae2,O-Decanoyl-L-carnitine,2.151875525,NA
+137,Larvae2,O-Phosphorylethanolamine,0.469341932,NA
+138,Larvae2,O-Propanoylcarnitine,6.262193584,NA
+139,Larvae2,Ornithine,1.087825744,NA
+140,Larvae2,Pantothenate,1.062652511,1.737239904
+141,Larvae2,Phosphocholine,1.519956161,0.233266112
+142,Larvae2,Pipecolic acid,2.992556453,NA
+143,Larvae2,PosIS_Glutamine-2H5-15N2,276.8762897,NA
+144,Larvae2,PosIS_Inosine-15N4,9.717969184,NA
+145,Larvae2,PosIS_Lysine-2H8,10.95731799,NA
+146,Larvae2,PosIS_Serine-13C3-15N1,6.334476391,NA
+147,Larvae2,Proline,2.393147739,0.607891026
+148,Larvae2,S-adenosyl-L-methionine,0.929324484,0.022088241
+149,Larvae2,Serine,0.39528618,0.81517451
+150,Larvae2,Spermine,278.9141922,NA
+151,Larvae2,Taurine,1.048018469,0.063140391
+152,Larvae2,Threonine,0.406396954,0.21733235
+153,Larvae2,Trigonelline,364.6235679,NA
+154,Larvae2,Tryptophan,0.607628678,0.410852787
+155,Larvae2,Tyrosine,1.104152886,1.599389857
+156,Larvae2,UDP-N-acetyl-glucosamine,0.693015537,1.095183199
+157,Recruit1,1 3-Dimethyluric acid,0.044582251,NA
+158,Recruit1,1-Methylhistidine,0.205926551,NA
+159,Recruit1,3-Methylindole,0.381218076,NA
+160,Recruit1,4-Hydroxy-L-phenylglycine,0.237108766,NA
+161,Recruit1,5-Hydroxylysine,0.046828561,0
+162,Recruit1,5-Methylcytosine,5.041184496,NA
+163,Recruit1,Acetyl glycine,1.401625737,1.207542935
+164,Recruit1,Adenine,9.688870084,NA
+165,Recruit1,Adenosine,8.893725858,NA
+166,Recruit1,ADP,0,NA
+167,Recruit1,AMP,3.571480831,6.862677394
+168,Recruit1,Arginine,7.834713081,0.198262615
+169,Recruit1,Arginine-Alanine,0.176499957,NA
+170,Recruit1,Arginine-Glutamine,12.26440686,NA
+171,Recruit1,Arginine-Valine,0.159165218,NA
+172,Recruit1,Asparagine,0.032896132,0
+173,Recruit1,Aspartate,0.078749922,0.33816583
+174,Recruit1,ATP,0,0.088406654
+175,Recruit1,Betaine,13710.29814,4.107333166
+176,Recruit1,Carnitine,46.88269385,NA
+177,Recruit1,CDP-Choline,0,NA
+178,Recruit1,Creatinine,0.642696289,NA
+179,Recruit1,Cytosine,0.497878373,NA
+180,Recruit1,Deoxycarnitine,6.003775396,NA
+181,Recruit1,Dimethylglycine,3.617912182,NA
+182,Recruit1,Fructose-6-phosphate,0,NA
+183,Recruit1,Glucose-6-phosphate,0.140401207,1.268253901
+184,Recruit1,Glutamate,4.920157536,8.676070685
+185,Recruit1,Glutamine,9.138876841,12.58446831
+186,Recruit1,Glutaryl-carnitine,0.151487752,NA
+187,Recruit1,Glutathione,0.178113602,0.291664242
+188,Recruit1,Glycerol-3-phosphate,0.050663908,NA
+189,Recruit1,Glycerophosphocholine,0.716236477,NA
+190,Recruit1,GMP,0.24134055,0.455362664
+191,Recruit1,GTP,0,NA
+192,Recruit1,Guanidinoacetate,1.423286311,NA
+193,Recruit1,Guanine,0.342262018,NA
+194,Recruit1,Guanosine,0.224206922,NA
+195,Recruit1,Histidine,4.659011569,0
+196,Recruit1,Homoarginine,1.927872275,NA
+197,Recruit1,Homocitrulline,0,NA
+198,Recruit1,Hypoxanthine,0.698056146,NA
+199,Recruit1,Indole,12.79397226,NA
+200,Recruit1,L-Octanoylcarnitine,1.458019265,NA
+201,Recruit1,L-Palmitoylcarnitine,8.587835697,NA
+202,Recruit1,Lysine,1.486455722,0.478587764
+203,Recruit1,Mannose-6-phosphate,0,0.382373444
+204,Recruit1,Methionine,1.347927321,1.651371249
+205,Recruit1,Montiporic Acid A,0.166249251,303.5203923
+206,Recruit1,Montiporic Acid B,0,37.01473872
+207,Recruit1,NAD+,0.068842033,0.193407475
+208,Recruit1,NG-dimethyl-L-arginine,3.04213433,NA
+209,Recruit1,Nicotinamide riboside,1.208590342,NA
+210,Recruit1,Nicotinamide ribotide,0,NA
+211,Recruit1,Nicotinate,1.6110402,NA
+212,Recruit1,O-Acetyl-L-carnitine,91.65394144,NA
+213,Recruit1,O-Butanoylcarnitine,3.158954379,NA
+214,Recruit1,O-Decanoyl-L-carnitine,1.542911233,NA
+215,Recruit1,O-Phosphorylethanolamine,0.072411172,NA
+216,Recruit1,O-Propanoylcarnitine,4.166491863,NA
+217,Recruit1,Ornithine,1.296478353,NA
+218,Recruit1,Pantothenate,0.126662273,0.351739647
+219,Recruit1,Phosphocholine,0.77731117,0
+220,Recruit1,Pipecolic acid,1.641693,NA
+221,Recruit1,PosIS_Glutamine-2H5-15N2,454.7578806,NA
+222,Recruit1,PosIS_Inosine-15N4,17.70766471,NA
+223,Recruit1,PosIS_Lysine-2H8,18.25466459,NA
+224,Recruit1,PosIS_Serine-13C3-15N1,9.825002148,NA
+225,Recruit1,Proline,2.637315234,0.979629604
+226,Recruit1,S-adenosyl-L-methionine,0.429612434,0
+227,Recruit1,Serine,0.223169469,0.845847521
+228,Recruit1,Spermine,627.9309411,NA
+229,Recruit1,Taurine,10.9144411,1.978694711
+230,Recruit1,Threonine,0.112397413,0.092718459
+231,Recruit1,Trigonelline,344.3157886,NA
+232,Recruit1,Tryptophan,0.34737247,0.409417346
+233,Recruit1,Tyrosine,1.324105782,3.655237599
+234,Recruit1,UDP-N-acetyl-glucosamine,0.108365057,0.267349956
+235,Larvae1,3-Phenylbutyric acid,NA,2.47526831
+236,Larvae1,a-ketoglutarate,NA,0.597012019
+237,Larvae1,Alanine,NA,1.647676317
+238,Larvae1,Carbamoyl phosphate,NA,0.233404994
+239,Larvae1,Coenzyme A,NA,0.182825984
+240,Larvae1,Cresol,NA,0.319151993
+241,Larvae1,Glucose,NA,0.982561181
+242,Larvae1,Glycerate,NA,2.40606445
+243,Larvae1,Hydroxyoctanoic acid,NA,1.941935474
+244,Larvae1,Hydroxyphenyl pyruvate,NA,0.155269938
+245,Larvae1,Inositol,NA,4.462281101
+246,Larvae1,Malate,NA,2.008361867
+247,Larvae1,Methylphenyllactate,NA,3.191706122
+248,Larvae1,Montiporic Acid C,NA,218.1855663
+249,Larvae1,Montiporic Acid D,NA,50.62178148
+250,Larvae1,N-acetyl-glutamine,NA,0.094816309
+251,Larvae1,NAD+ (SIM),NA,1.286435137
+252,Larvae1,NADH (SIM),NA,0.015625042
+253,Larvae1,NADP+ (SIM),NA,0.079708148
+254,Larvae1,NADPH,NA,0.402653959
+255,Larvae1,NADPH (SIM),NA,0.031097251
+256,Larvae1,NegIS_Alanine-2H4-15N,NA,1144.173786
+257,Larvae1,NegIS_Glucose-2H7-13C6,NA,529.9158396
+258,Larvae1,NegIS_Glutamine-2H5-15N2,NA,135.1398517
+259,Larvae1,NegIS_Glycine-13C2_15N1,NA,22.44166429
+260,Larvae1,NegIS_Inosine-15N4,NA,10.45889019
+261,Larvae1,NegIS_Lysine-2H8,NA,2.349919626
+262,Larvae1,NegIS_Malate-2H3,NA,11.29906111
+263,Larvae1,NegIS_Serine-13C3-15N1,NA,7.271321423
+264,Larvae1,NegIS_Thymine-2H4,NA,35.67840643
+265,Larvae1,o-acetyl-L-serine,NA,1.017376392
+266,Larvae1,Phenyl-pyruvate,NA,0.108873735
+267,Larvae1,Phenylalanine,NA,0.674092956
+268,Larvae1,Pyroglutamate,NA,5.224698828
+269,Larvae1,Ribitol,NA,1.053526216
+270,Larvae1,Sorbitol,NA,11.50467566
+271,Larvae1,Succinate,NA,8.750235155
+272,Larvae1,Threonic acid,NA,1.255095358
+273,Larvae1,Thymidine,NA,0.477208146
+274,Larvae1,UDP-D-Glucose,NA,0.459172402
+275,Larvae1,UMP,NA,0.086434158
+276,Larvae1,Valine,NA,1.171148962
+277,Larvae1,Xanthine,NA,0.302704177
+278,Larvae2,3-Phenylbutyric acid,NA,2.477611414
+279,Larvae2,a-ketoglutarate,NA,0.553789403
+280,Larvae2,Alanine,NA,1.189640632
+281,Larvae2,Carbamoyl phosphate,NA,0.654277102
+282,Larvae2,Coenzyme A,NA,0.085062724
+283,Larvae2,Cresol,NA,0.394702344
+284,Larvae2,Glucose,NA,0.835733894
+285,Larvae2,Glycerate,NA,2.54224055
+286,Larvae2,Hydroxyoctanoic acid,NA,1.341509593
+287,Larvae2,Hydroxyphenyl pyruvate,NA,0.114501003
+288,Larvae2,Inositol,NA,4.502947458
+289,Larvae2,Malate,NA,19.8845608
+290,Larvae2,Methylphenyllactate,NA,2.933819642
+291,Larvae2,Montiporic Acid C,NA,346.5926562
+292,Larvae2,Montiporic Acid D,NA,114.7208573
+293,Larvae2,N-acetyl-glutamine,NA,0.131601268
+294,Larvae2,NAD+ (SIM),NA,1.190220549
+295,Larvae2,NADH (SIM),NA,0.009561921
+296,Larvae2,NADP+ (SIM),NA,0.104714783
+297,Larvae2,NADPH,NA,0.59310774
+298,Larvae2,NADPH (SIM),NA,0.108172537
+299,Larvae2,NegIS_Alanine-2H4-15N,NA,972.8295894
+300,Larvae2,NegIS_Glucose-2H7-13C6,NA,802.7753427
+301,Larvae2,NegIS_Glutamine-2H5-15N2,NA,183.9388585
+302,Larvae2,NegIS_Glycine-13C2_15N1,NA,29.55915737
+303,Larvae2,NegIS_Inosine-15N4,NA,12.60262949
+304,Larvae2,NegIS_Lysine-2H8,NA,2.590915724
+305,Larvae2,NegIS_Malate-2H3,NA,46.18575441
+306,Larvae2,NegIS_Serine-13C3-15N1,NA,10.68489132
+307,Larvae2,NegIS_Thymine-2H4,NA,29.12423438
+308,Larvae2,o-acetyl-L-serine,NA,1.375039413
+309,Larvae2,Phenyl-pyruvate,NA,0.06267647
+310,Larvae2,Phenylalanine,NA,0.937824424
+311,Larvae2,Pyroglutamate,NA,5.787121414
+312,Larvae2,Ribitol,NA,1.153376435
+313,Larvae2,Sorbitol,NA,18.04558186
+314,Larvae2,Succinate,NA,17.54583151
+315,Larvae2,Threonic acid,NA,0.407135378
+316,Larvae2,Thymidine,NA,0
+317,Larvae2,UDP-D-Glucose,NA,0.564632477
+318,Larvae2,UMP,NA,0.171248497
+319,Larvae2,Valine,NA,1.280243951
+320,Larvae2,Xanthine,NA,0.249881764
+321,Recruit1,3-Phenylbutyric acid,NA,4.822403351
+322,Recruit1,a-ketoglutarate,NA,0.281760611
+323,Recruit1,Alanine,NA,2.325292281
+324,Recruit1,Carbamoyl phosphate,NA,0.408308431
+325,Recruit1,Coenzyme A,NA,0.089178892
+326,Recruit1,Cresol,NA,0.939777125
+327,Recruit1,Glucose,NA,0.659329669
+328,Recruit1,Glycerate,NA,6.476020096
+329,Recruit1,Hydroxyoctanoic acid,NA,3.391975618
+330,Recruit1,Hydroxyphenyl pyruvate,NA,1.097375168
+331,Recruit1,Inositol,NA,4.671261337
+332,Recruit1,Malate,NA,58.64244935
+333,Recruit1,Methylphenyllactate,NA,11.21221958
+334,Recruit1,Montiporic Acid C,NA,575.0809524
+335,Recruit1,Montiporic Acid D,NA,150.8725038
+336,Recruit1,N-acetyl-glutamine,NA,0.160035445
+337,Recruit1,NAD+ (SIM),NA,0.738609372
+338,Recruit1,NADH (SIM),NA,0.005641781
+339,Recruit1,NADP+ (SIM),NA,0.114746339
+340,Recruit1,NADPH,NA,0.222639366
+341,Recruit1,NADPH (SIM),NA,0.107984849
+342,Recruit1,NegIS_Alanine-2H4-15N,NA,3774.777968
+343,Recruit1,NegIS_Glucose-2H7-13C6,NA,1017.394385
+344,Recruit1,NegIS_Glutamine-2H5-15N2,NA,627.0634055
+345,Recruit1,NegIS_Glycine-13C2_15N1,NA,107.9250747
+346,Recruit1,NegIS_Inosine-15N4,NA,53.99183543
+347,Recruit1,NegIS_Lysine-2H8,NA,10.75113168
+348,Recruit1,NegIS_Malate-2H3,NA,210.6716452
+349,Recruit1,NegIS_Serine-13C3-15N1,NA,31.33987691
+350,Recruit1,NegIS_Thymine-2H4,NA,99.24988006
+351,Recruit1,o-acetyl-L-serine,NA,3.136303171
+352,Recruit1,Phenyl-pyruvate,NA,0.208049014
+353,Recruit1,Phenylalanine,NA,1.895561949
+354,Recruit1,Pyroglutamate,NA,10.27037154
+355,Recruit1,Ribitol,NA,0.469245263
+356,Recruit1,Sorbitol,NA,3.400904566
+357,Recruit1,Succinate,NA,47.23381532
+358,Recruit1,Threonic acid,NA,0
+359,Recruit1,Thymidine,NA,0
+360,Recruit1,UDP-D-Glucose,NA,0.106303221
+361,Recruit1,UMP,NA,0.417473263
+362,Recruit1,Valine,NA,1.334988502
+363,Recruit1,Xanthine,NA,0.182281046

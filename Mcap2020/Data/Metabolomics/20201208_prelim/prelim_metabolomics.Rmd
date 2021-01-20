@@ -387,6 +387,7 @@ write.csv(normalized_counts_pos_neg, file="normalized_counts_pos_neg.csv")
 
 ```
 
+## Selecting polarity  
 
 Use metabolite selection file to select polarity for each compound from the normalized counts data sheet.  
 

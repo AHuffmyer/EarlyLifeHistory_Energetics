@@ -23,6 +23,8 @@ if ("vegan" %in% rownames(installed.packages()) == 'FALSE') install.packages('ve
 if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
 if ("factoextra" %in% rownames(installed.packages()) == 'FALSE') install.packages('factoextra') 
 if ("ggfortify" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggfortify') 
+if ("naniar" %in% rownames(installed.packages()) == 'FALSE') install.packages('naniar') 
+if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
 
 #load packages
 library("ggplot2")
@@ -30,6 +32,8 @@ library("tidyverse")
 library('vegan')
 library('factoextra')
 library('ggfortify')
+library('naniar')
+library('cowplot')
 
 ```
 
@@ -51,7 +55,6 @@ data<- data %>%
     )
 
 ```
-
 
 Conduct normalization of samples by normalizing each metabolite ion count to the median ion count across metabolites within that sample.  
 
@@ -100,7 +103,6 @@ data_summary<-data_plotting[c(1,2,4)]
 data_summary%>%
   spread(Lifestage, mean) %>%
   write.csv("mean_norm_counts_lifestage_pos.csv")
-
 
 metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
   geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
@@ -304,7 +306,7 @@ Convert data to wide format.
 data_pca_neg<-data_neg%>%
   spread(compound, IonCounts)
 ```
-
+ 
 Plot PCA with lifestage in colors.  
 
 ```{r}
@@ -364,7 +366,6 @@ trend_shortest_neg<-metab_trends_neg + ylim(0,20)
 ggsave("trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
 ```
 
-
 Generate a dataframe with normalized counts for positive and negative polarity datasets.  
 
 ```{r}
@@ -383,12 +384,109 @@ head(data_summary)
 #join datasets together
 normalized_counts_pos_neg<-full_join(data_summary, data_summary_neg)
 
-write.csv(normalized_counts_pos_neg, file="normalized_counts_pos_neg.csv")
+write_csv(normalized_counts_pos_neg, file="normalized_counts_pos_neg.csv")
 
 ```
 
 ## Selecting polarity  
 
-Use metabolite selection file to select polarity for each compound from the normalized counts data sheet.  
+Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.   
 
-Plot/explore this selected data.  
+```{r}
+#datan is positive and data_neg are negative dataframes 
+data<-data%>%
+  mutate(Polarity="Positive")
+
+data_neg<-data_neg%>%
+  mutate(Polarity="Negative")
+
+data_full<-full_join(data, data_neg) #combine full positive and negative datasets
+
+data_full<-data_full%>%
+  spread(Polarity, IonCounts)
+
+#summarize across life stages and reps
+polarity<-data_full%>%
+  gather("Polarity", "IonCounts", 5:6)%>%
+  group_by(Polarity, compound)%>%
+  summarise(mean=mean(IonCounts))%>% #summarize across samples (lifestages)
+  arrange(compound)%>% #list by compound
+  replace_na(list(mean=0)) #replace NA with 0 to allow us to calculate higher values between polarities 
+
+#add column of selected polarity based on stronger signal average
+polarity<-polarity%>%
+  spread(Polarity, mean)%>%
+  mutate(Selection = ifelse(Negative > Positive, "Negative",
+                     ifelse(Positive > Negative, "Positive", NA)))
+  
+```
+
+Use this selected polarity key to select data for analysis.    
+
+```{r}
+#match selection column back onto original dataframe 
+data_full$Selection<-polarity$Selection[match(data_full$compound, polarity$compound)] 
+
+#pull out pos data
+pos_peaks<-data_full%>%
+  filter(Selection=="Positive")%>%
+  select(Lifestage, Rep, compound, Positive, Selection)%>%
+  rename(value=Positive)
+  
+#pull out neg data
+neg_peaks<-data_full%>%
+  filter(Selection=="Negative")%>%
+  select(Lifestage, Rep, compound, Negative, Selection)%>%
+  rename(value=Negative)
+
+#rbind them together to generate a dataframe of positive and negative selected compounds
+peaks_selected<-rbind(pos_peaks, neg_peaks)
+
+peaks_selected<-peaks_selected %>%
+  select(Lifestage, Rep, compound, value) 
+```
+
+## Plotting full data with positive and negative polarities  
+
+### PCA  
+
+Run PCA to view differences in life stages.  
+
+Convert data to wide format.
+
+```{r}
+data_pca_full<-peaks_selected%>%
+  spread(compound, value)
+```
+
+Plot PCA with lifestage in colors.  
+
+```{r}
+scaled.pca<-prcomp(data_pca_full[c(3,123)],scale=TRUE, center=TRUE) 
+
+pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  theme_classic()+
+  xlim(-0.75,0.75)+
+  ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         legend.position="right",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot_full
+
+ggsave("prelimPCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
+```
+
+Show a panel of PCA by positive, negative, and combined datasets.  
+```{r}
+pca_pos<-pcaPlot1+theme(legend.position="none")
+pca_neg<-pcaPlot1_neg+theme(legend.position="none")
+
+pcaplots<-plot_grid(pca_pos, pca_neg, pcaPlot_full, labels = c("Positive", "Negative", "Combined"), ncol=3, nrow=1, rel_widths = c(0.8, 0.8, 1), label_size = 20, label_x = 0.1)
+
+ggsave(filename="All_PCAs.pdf", plot=pcaplots, dpi=300, width=20, height=5, units="in")
+```
+

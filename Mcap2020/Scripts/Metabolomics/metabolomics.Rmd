@@ -1,7 +1,7 @@
 ---
-title: M. capitata preliminary metabolomics exploration
+title: M. capitata metabolomics analysis
 author: "AS Huffmyer"
-date: '2020'
+date: '2021'
 output:
   html_document:
     code_folding: hide
@@ -12,8 +12,8 @@ output:
     keep_tex: yes
 ---
 Set up workspace, set options, and load required packages.    
-```{r, echo=TRUE, show=FALSE}
-rm(list=ls(all=TRUE)) 
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -41,7 +41,7 @@ library('cowplot')
 
 Load data
 ```{r}
-data<-read.csv("Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+data<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
 
 #rename columns to be useful
 data<- data %>% 
@@ -100,9 +100,9 @@ data_plotting<-plyr::ddply(data, c("Lifestage", "compound"), summarise,
 #write summary file
 data_summary<-data_plotting[c(1,2,4)]
 
-data_summary%>%
-  spread(Lifestage, mean) %>%
-  write.csv("mean_norm_counts_lifestage_pos.csv")
+#data_summary%>%
+  #spread(Lifestage, mean) %>%
+  #write_csv("Mcap2020/Output/Metabolomics/mean_norm_counts_lifestage_pos.csv")
 
 metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
   geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
@@ -119,15 +119,15 @@ metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, g
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
     axis.title = element_text(face="bold"));metab_compounds
 
-ggsave("compounds_fullscale_pos.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_pos.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
 
 metabl_short<-metab_compounds + ylim(0,100)
 
-ggsave("compounds_shortscale_pos.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_pos.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
 
 metabl_shortest<-metab_compounds + ylim(0,20)
 
-ggsave("compounds_shortestscale_pos.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_pos.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
 
 ```
 
@@ -161,16 +161,25 @@ pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage",
 
 #pcaPlot1$layers[[2]]$aes_params$size <- 1
 
-ggsave("prelimPCA_pos.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Metabolomics/PCA_pos.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 Read in .csv of normalized counts with trend assigned.  
 
 Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
 
-```{r}
-trends<-read.csv("mean_norm_counts_lifestage_pos_trend.csv", sep=",", na.strings=NA)
+ADD TREND DISTINCTION HERE  
 
+```{r}
+######
+
+trends<-read.csv("Mcap2020/Data/Metabolomics/mean_norm_counts_lifestage_pos_trend.csv", sep=",", na.strings=NA) ### Need to automate this step, set up function
+
+
+```
+
+
+```{r}
 trends<-trends%>%
   gather(Lifestage, IonCounts, 3:5)
   
@@ -189,15 +198,15 @@ metab_trends<-ggplot(trends, aes(y=IonCounts, x=compound, fill=Lifestage, group=
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
     axis.title = element_text(face="bold"));metab_trends
 
-ggsave("trends_fullscale.pdf", plot=metab_trends, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale.pdf", plot=metab_trends, dpi=300, width=35, height=8, units="in")
 
 trend_short<-metab_trends + ylim(0,100)
 
-ggsave("trends_shortscale.pdf", plot=trend_short, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale.pdf", plot=trend_short, dpi=300, width=35, height=8, units="in")
 
 trend_shortest<-metab_trends + ylim(0,20)
 
-ggsave("trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, height=8, units="in")
 ```
 
 
@@ -206,7 +215,7 @@ ggsave("trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, heigh
 
 Load data
 ```{r}
-data_neg<-read.csv("Peaks_Neg_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+data_neg<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Neg_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
 
 #rename columns to be useful
 data_neg<- data_neg %>% 
@@ -266,9 +275,9 @@ data_plotting_neg<-plyr::ddply(data_neg, c("Lifestage", "compound"), summarise,
 #write summary file
 data_summary_neg<-data_plotting_neg[c(1,2,4)]
 
-data_summary_neg%>%
-  spread(Lifestage, mean) %>%
-  write.csv("mean_norm_counts_lifestage_neg.csv")
+#data_summary_neg%>%
+  #spread(Lifestage, mean) %>%
+  #write_csv("Mcap2020/Output/Metabolomics/mean_norm_counts_lifestage_neg.csv")
 
 metab_compounds_neg<-ggplot(data_plotting_neg, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
   geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
@@ -285,15 +294,15 @@ metab_compounds_neg<-ggplot(data_plotting_neg, aes(y=mean, x=compound, fill=Life
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
     axis.title = element_text(face="bold"));metab_compounds_neg
 
-ggsave("compounds_fullscale_neg.pdf", plot=metab_compounds_neg, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_neg.pdf", plot=metab_compounds_neg, dpi=300, width=25, height=8, units="in")
 
 metabl_short_neg<-metab_compounds_neg + ylim(0,100)
 
-ggsave("compounds_shortscale_neg.pdf", plot=metabl_short_neg, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_neg.pdf", plot=metabl_short_neg, dpi=300, width=25, height=8, units="in")
 
 metabl_shortest_neg<-metab_compounds_neg + ylim(0,20)
 
-ggsave("compounds_shortestscale_neg.pdf", plot=metabl_shortest_neg, dpi=300, width=25, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_neg.pdf", plot=metabl_shortest_neg, dpi=300, width=25, height=8, units="in")
 
 ```
 
@@ -327,7 +336,7 @@ pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour=
 
 #pcaPlot1$layers[[2]]$aes_params$size <- 1
 
-ggsave("prelimPCA_neg.pdf", plot=pcaPlot1_neg, height=8, width=10, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Metabolomics/PCA_neg.pdf", plot=pcaPlot1_neg, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 Read in .csv of normalized counts with trend assigned.  
@@ -335,8 +344,12 @@ Read in .csv of normalized counts with trend assigned.
 Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
 
 ```{r}
-trends_neg<-read.csv("mean_norm_counts_lifestage_neg_trend.csv", sep=",", na.strings=NA)
+##redo to automate this part then delete this dataframe
+trends_neg<-read.csv("Mcap2020/Data/Metabolomics/mean_norm_counts_lifestage_neg_trend.csv", sep=",", na.strings=NA)
 
+```
+
+```{r}
 trends_neg<-trends_neg%>%
   gather(Lifestage, IonCounts, 3:5)
   
@@ -355,15 +368,15 @@ metab_trends_neg<-ggplot(trends_neg, aes(y=IonCounts, x=compound, fill=Lifestage
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
     axis.title = element_text(face="bold"));metab_trends_neg
 
-ggsave("trends_fullscale_neg.pdf", plot=metab_trends_neg, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale_neg.pdf", plot=metab_trends_neg, dpi=300, width=35, height=8, units="in")
 
 trend_short_neg<-metab_trends_neg + ylim(0,100)
 
-ggsave("trends_shortscale_neg.pdf", plot=trend_short_neg, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale_neg.pdf", plot=trend_short_neg, dpi=300, width=35, height=8, units="in")
 
 trend_shortest_neg<-metab_trends_neg + ylim(0,20)
 
-ggsave("trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
 ```
 
 Generate a dataframe with normalized counts for positive and negative polarity datasets.  
@@ -384,13 +397,13 @@ head(data_summary)
 #join datasets together
 normalized_counts_pos_neg<-full_join(data_summary, data_summary_neg)
 
-write_csv(normalized_counts_pos_neg, file="normalized_counts_pos_neg.csv")
+write_csv(normalized_counts_pos_neg, file="Mcap2020/Output/Metabolomics/normalized_counts_pos_neg.csv")
 
 ```
 
 ## Selecting polarity  
 
-Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.   
+Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.    
 
 ```{r}
 #datan is positive and data_neg are negative dataframes 
@@ -446,20 +459,28 @@ peaks_selected<-peaks_selected %>%
   select(Lifestage, Rep, compound, value) 
 ```
 
+Output file to .csv.   
+
+```{r}
+write_csv(peaks_selected, "Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+```
+
+
+
 ## Plotting full data with positive and negative polarities  
 
-### PCA  
+### PCA   
 
-Run PCA to view differences in life stages.  
+Run PCA to view differences in life stages.   
 
-Convert data to wide format.
+Convert data to wide format. 
 
 ```{r}
 data_pca_full<-peaks_selected%>%
   spread(compound, value)
 ```
 
-Plot PCA with lifestage in colors.  
+Plot PCA with lifestage in colors.   
 
 ```{r}
 scaled.pca<-prcomp(data_pca_full[c(3,123)],scale=TRUE, center=TRUE) 
@@ -477,16 +498,15 @@ pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Li
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot_full
 
-ggsave("prelimPCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
-
-Show a panel of PCA by positive, negative, and combined datasets.  
+ 
+Show a panel of PCA by positive, negative, and combined datasets.   
 ```{r}
 pca_pos<-pcaPlot1+theme(legend.position="none")
 pca_neg<-pcaPlot1_neg+theme(legend.position="none")
 
-pcaplots<-plot_grid(pca_pos, pca_neg, pcaPlot_full, labels = c("Positive", "Negative", "Combined"), ncol=3, nrow=1, rel_widths = c(0.8, 0.8, 1), label_size = 20, label_x = 0.1)
+pcaplots<-plot_grid(pca_pos, pca_neg, pcaPlot_full, labels = c("Positive", "Negative", "Combined"), ncol=3, nrow=1, rel_widths = c(0.8, 0.8, 1), label_size = 20, label_x = 0.1);pcaplots
 
-ggsave(filename="All_PCAs.pdf", plot=pcaplots, dpi=300, width=20, height=5, units="in")
-```
-
+ggsave(filename="Mcap2020/Figures/Metabolomics/All_PCAs.pdf", plot=pcaplots, dpi=300, width=20, height=5, units="in")
+```  

@@ -16,8 +16,8 @@ This script analyzes and plots data for Symbiont Integration 2020 respirometry d
 ## **Setup**  
 
 Set up workspace, set options, and load required packages.    
-```{r, echo=TRUE, show=FALSE}
-rm(list=ls(all=TRUE)) 
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -47,7 +47,7 @@ library('effects')
 
 Load data from LoLinR.   
 ```{r, warning=FALSE, message=FALSE}
-PRdata<-read.csv("../../Mcap2020/Output/Respiration/oxygen_P_R_calc.csv") #load data
+PRdata<-read.csv("Mcap2020/Output/Respiration/oxygen_P_R_calc.csv") #load data
 ```
 
 Separate project specific data.  
@@ -102,7 +102,7 @@ Rplot1<-ggplot(data=PRdata, aes(x=dpf, y=R.nmol.org.min, colour=Lifestage, group
 
 Rplot2<-Rplot1+theme(legend.position="none")
 
-ggsave("../../Mcap2020/Figures/Respiration/mcap_R.pdf", plot=Rplot1, height=8, width=7, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Respiration/mcap_R.pdf", plot=Rplot1, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
 
 Generate mean table  
@@ -140,7 +140,7 @@ Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Lifestage, group
 
 Pplot2<-Pplot1+theme(legend.position="none")
 
-ggsave("../../Mcap2020/Figures/Respiration/mcap_P.pdf", plot=Pplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Respiration/mcap_P.pdf", plot=Pplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
  
 Generate mean table.   
@@ -178,7 +178,7 @@ GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Lifestage, gro
 
 GPplot2<-GPplot1+theme(legend.position="none") 
 
-ggsave("../../Mcap2020/Figures/Respiration/mcap_GP.pdf", plot=GPplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Respiration/mcap_GP.pdf", plot=GPplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
  
 Generate mean table.  
@@ -217,7 +217,7 @@ PRplot1<-ggplot(data=PRdata, aes(x=dpf, y=ratio, colour=Lifestage, group=interac
 
 PRplot2<-PRplot1+theme(legend.position="right") 
 
-ggsave("../../Mcap2020/Figures/Respiration/mcap_PR.pdf", plot=PRplot1, height=8, width=8, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Respiration/mcap_PR.pdf", plot=PRplot1, height=8, width=8, units = c("in"), dpi=300) #output figure
 ``` 
 
 
@@ -239,7 +239,7 @@ Combine plots above into a single panel.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 mcap_respiration<-plot_grid(Rplot2, Pplot2, GPplot2, PRplot2, labels = c("A", "B", "C", "D"), label_size=18, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(0.75,0.75,0.75,1), align="h")
 
-ggsave(filename="../../Mcap2020/Figures/Respiration/mcap_PR_panel.pdf", plot=mcap_respiration, dpi=300, width=24, height=6, units="in")
+ggsave(filename="Mcap2020/Figures/Respiration/mcap_PR_panel.pdf", plot=mcap_respiration, dpi=300, width=24, height=6, units="in")
 ```
 
 
@@ -443,7 +443,7 @@ Combine plots above into a single panel.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 mcap_fused_respiration<-plot_grid(FuseR1, FuseP1, FuseGP1, FusePR1, Fuse_c_R1, Fuse_c_P1, Fuse_c_GP1, Fuse_c_PR1, labels = c("Polyp - Level Responses", "", "", "", "Colony - Level Responses", "", "", ""), label_size = 18, ncol=4, nrow=2, rel_heights= c(1), rel_widths = c(1), align="h")
 
-ggsave(filename="../../Mcap2020/Figures/Respiration/mcap_fused_panel.pdf", plot=mcap_fused_respiration, dpi=300, width=24, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/Respiration/mcap_fused_panel.pdf", plot=mcap_fused_respiration, dpi=300, width=24, height=12, units="in")
 ```
 
 
@@ -644,7 +644,7 @@ Combine plots above into a single panel.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 mcap_fused_colony_vs_polyp<-plot_grid(R_c_vs_p, P_c_vs_p, GP_c_vs_p, PRplot_fuse, labels = c("Respiration", "Net Photosynthesis", "Gross Photosynthesis", "P:R"), label_size = 16, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,0.8), align="h")
 
-ggsave(filename="../../Mcap2020/Figures/Respiration/mcap_fused_colony_vs_polyp_panel.pdf", plot=mcap_fused_colony_vs_polyp, dpi=300, width=24, height=6, units="in")
+ggsave(filename="Mcap2020/Figures/Respiration/mcap_fused_colony_vs_polyp_panel.pdf", plot=mcap_fused_colony_vs_polyp, dpi=300, width=24, height=6, units="in")
 ```
 
 
@@ -998,7 +998,7 @@ Combine regression plts above into a single panel organized by metric.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 fused_regressions<-plot_grid(polyp.effR, colony.effR, polyp.effNP, colony.effNP, polyp.effGP, colony.effGP, ratio.effGP, labels = c("p=0.01", "p<0.01", "p>0.05", "p=0.04", "p>0.05", "p=0.03", "p>0.05"), label_size = 16, ncol=2, nrow=4, rel_heights= c(1), rel_widths = c(1), align="h")
 
-ggsave(filename="../../Mcap2020/Figures/Respiration/fused_regressions.pdf", plot=fused_regressions, dpi=300, width=10, height=16, units="in")
+ggsave(filename="Mcap2020/Figures/Respiration/fused_regressions.pdf", plot=fused_regressions, dpi=300, width=10, height=16, units="in")
 ```
 
 ## **Conclusions**  

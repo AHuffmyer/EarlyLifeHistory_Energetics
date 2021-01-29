@@ -14,8 +14,8 @@ output:
 ## Setup  
 
 Set up workspace, set options, and load required packages.    
-```{r, echo=TRUE, show=FALSE}
-rm(list=ls(all=TRUE)) 
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -57,7 +57,7 @@ Modified from K. Wong, S. Gurr, H. Putnam scripts
 Set the path of all respirometry files within the R project.   
 
 ```{r, warning=FALSE, message=FALSE}
-path.p<-"../../Mcap2020/Data/Respiration/Runs" #location of files
+path.p<-"Mcap2020/Data/Respiration/Runs" #location of files
 ```
 
 Bring in the file names.
@@ -88,14 +88,14 @@ colnames(Photo.Rb) <- c("Date", "Run", "Sample.ID","Chamber.ID","Intercept", "um
 Load in the sample information file. It is important to have chambers in the order "A1, B1, C1, D1", rather than "A1, A2, A3, A4".  
 
 ```{r, warning=FALSE, message=FALSE}
-Sample.Info<-read.csv("../../Mcap2020/Data/Respiration/Resp_Sample_Info.csv") #information on life stage, number of individuals, runs, etc.
+Sample.Info<-read.csv("Mcap2020/Data/Respiration/Resp_Sample_Info.csv") #information on life stage, number of individuals, runs, etc.
 rename <- Sample.Info$Chamber.ID
 samp <- Sample.Info$Sample.ID
 run <- str_sub(file.names, 10, 13) #grab run from file name
 date <- str_sub(file.names, 1, str_length(file.names)-16) #grab date from file name
 
 #load in respiration start times as a list the same length as the number of files
-starttimes<-read.csv("../../Mcap2020/Data/Respiration/starttimes.csv") #read in file of starting R and P phase times
+starttimes<-read.csv("Mcap2020/Data/Respiration/starttimes.csv") #read in file of starting R and P phase times
 rtime<-starttimes$Rtime #list respiration start times. For respiration measurements, filter as > than this time
 ptime<-starttimes$Ptime #for photosynthesis, filter as < than this time
 ```
@@ -116,7 +116,7 @@ for(i in 1:length(file.names)) { # for every file in list start at the first and
       xall=Resp.Data$Time.Min, yall=as.numeric(Resp.Data.N[, j]), 
       alpha=0.4, method="pc", verbose=TRUE) #extract slopes, percentile rank method with minimum window size of 0.4. This means that in order to fit a slope, it has to encompass at least 40% of available datapoints. 
     
-    pdf(paste0("../../Mcap2020/Output/Respiration/RespirationPlots/",date[i], "_",run[i],"_",rename[j],"_regression_trunc.pdf")) #generate output file names
+    pdf(paste0("Mcap2020/Output/Respiration/RespirationPlots/",date[i], "_",run[i],"_",rename[j],"_regression_trunc.pdf")) #generate output file names
     plot(model)
     dev.off()
     
@@ -137,11 +137,11 @@ Save respiration data frames.
 ```{r, results=FALSE, warning=FALSE, message=FALSE}
 Resp.R <- Resp.R[-1,] #remove empty column
 
-write.csv(Resp.R, paste0("../../Mcap2020/Output/Respiration/Respiration_rates_Mcap2020.csv", sep="")) #save respiration rate data
+write.csv(Resp.R, paste0("Mcap2020/Output/Respiration/Respiration_rates_Mcap2020.csv", sep="")) #save respiration rate data
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-Resp.Rates <- read.csv(file = "../../Mcap2020/Output/Respiration/Respiration_rates_Mcap2020.csv") #read file back in so slopes don't have to be generated every time
+Resp.Rates <- read.csv(file = "Mcap2020/Output/Respiration/Respiration_rates_Mcap2020.csv") #read file back in so slopes don't have to be generated every time
 Resp.Rates = subset(Resp.Rates, select = -c(X) ) #remove empty column
 
 #format "run" column
@@ -166,7 +166,7 @@ for(i in 1:length(file.names)) { # for every file in list start at the first and
       xall=Photo.Data$Time.Min, yall=as.numeric(Photo.Data.N[, j]),
       alpha=0.4, method="pc", verbose=TRUE) #extract slopes with percentile method and required minimum window of 40% of data to extract slope
     
-    pdf(paste0("../../Mcap2020/Output/Respiration/PhotosynthesisPlots/",date[i], "_",run[i],"_",rename[j],"_regression_trunc.pdf")) #generate output files
+    pdf(paste0("Mcap2020/Output/Respiration/PhotosynthesisPlots/",date[i], "_",run[i],"_",rename[j],"_regression_trunc.pdf")) #generate output files
     plot(model)
     dev.off()
     
@@ -186,11 +186,11 @@ Save photosynthesis data frames.
 ```{r, warning=FALSE, message=FALSE}
 Photo.R <- Photo.R[-1,] #remove empty row
 
-write.csv(Photo.R, paste0("../../Mcap2020/Output/Respiration/Photosynthesis_rates_Mcap2020.csv", sep="")) #save P rates
+write.csv(Photo.R, paste0("Mcap2020/Output/Respiration/Photosynthesis_rates_Mcap2020.csv", sep="")) #save P rates
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-Photo.Rates <- read.csv(file = "../../Mcap2020/Output/Respiration/Photosynthesis_rates_Mcap2020.csv") #import P rates
+Photo.Rates <- read.csv(file = "Mcap2020/Output/Respiration/Photosynthesis_rates_Mcap2020.csv") #import P rates
 Photo.Rates = subset(Photo.Rates, select = -c(X) ) #remove empty column
 
 #format "run" column
@@ -271,7 +271,7 @@ oxygen.bio$GP.nmol.org.min <- oxygen.bio$GP.umol.org.min*1000 #calculate nanmole
 
 Save as .csv file.  
 ```{r, warning=FALSE, message=FALSE}
-write.csv(oxygen.bio, paste0("../../Mcap2020/Output/Respiration/oxygen_P_R_calc.csv", sep="")) #save final file
+write.csv(oxygen.bio, paste0("Mcap2020/Output/Respiration/oxygen_P_R_calc.csv", sep="")) #save final file
 ```
 
 This point ends the general use script for P and R rates. Below are project-specific scripts.  

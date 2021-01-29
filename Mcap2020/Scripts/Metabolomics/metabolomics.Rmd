@@ -131,7 +131,6 @@ ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_pos.pdf", plot=met
 
 ```
 
-
 Run PCA to view differences in life stages.  
 
 Convert data to wide format.
@@ -168,20 +167,20 @@ Read in .csv of normalized counts with trend assigned.
 
 Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
 
-ADD TREND DISTINCTION HERE  
+Add a column to distinguish increasing, decreasing, or variable trends.  
 
 ```{r}
-######
-
-trends<-read.csv("Mcap2020/Data/Metabolomics/mean_norm_counts_lifestage_pos_trend.csv", sep=",", na.strings=NA) ### Need to automate this step, set up function
-
-
+#assign trends 
+trends<-data_summary%>%
+  spread(Lifestage, mean)%>%
+  mutate(Trend=ifelse(Larvae1>Larvae2 & Larvae2>Recruit1, "Decreasing", 
+                      ifelse(Larvae1<Larvae2 & Larvae2<Recruit1, "Increasing", "Variable")))
 ```
 
 
 ```{r}
 trends<-trends%>%
-  gather(Lifestage, IonCounts, 3:5)
+  gather(Lifestage, IonCounts, 2:4)
   
 metab_trends<-ggplot(trends, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
   facet_wrap(~Trend, scales = "free")+
@@ -343,15 +342,18 @@ Read in .csv of normalized counts with trend assigned.
 
 Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
 
+Add a column to distinguish increasing, decreasing, or variable trends.  
 ```{r}
-##redo to automate this part then delete this dataframe
-trends_neg<-read.csv("Mcap2020/Data/Metabolomics/mean_norm_counts_lifestage_neg_trend.csv", sep=",", na.strings=NA)
-
+#assign trends to neg dataset
+trends_neg<-data_summary_neg%>%
+  spread(Lifestage, mean)%>%
+  mutate(Trend=ifelse(Larvae1>Larvae2 & Larvae2>Recruit1, "Decreasing", 
+                      ifelse(Larvae1<Larvae2 & Larvae2<Recruit1, "Increasing", "Variable")))
 ```
 
 ```{r}
 trends_neg<-trends_neg%>%
-  gather(Lifestage, IonCounts, 3:5)
+  gather(Lifestage, IonCounts, 2:4)
   
 metab_trends_neg<-ggplot(trends_neg, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
   facet_wrap(~Trend, scales = "free")+

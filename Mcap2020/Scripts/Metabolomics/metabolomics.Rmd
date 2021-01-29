@@ -400,7 +400,6 @@ head(data_summary)
 normalized_counts_pos_neg<-full_join(data_summary, data_summary_neg)
 
 write_csv(normalized_counts_pos_neg, file="Mcap2020/Output/Metabolomics/normalized_counts_pos_neg.csv")
-
 ```
 
 ## Selecting polarity  

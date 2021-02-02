@@ -143,7 +143,7 @@ data_pca<-data%>%
 Plot PCA with lifestage in colors.  
 
 ```{r}
-scaled.pca<-prcomp(data_pca[c(4,81)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca[c(4:81)],scale=TRUE, center=TRUE) 
 
 pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   scale_colour_manual(values=c("orange", "darkgray", "purple")) +
@@ -318,7 +318,7 @@ data_pca_neg<-data_neg%>%
 Plot PCA with lifestage in colors.  
 
 ```{r}
-scaled.pca.neg<-prcomp(data_pca_neg[c(4,76)],scale=TRUE, center=TRUE) 
+scaled.pca.neg<-prcomp(data_pca_neg[c(4:76)],scale=TRUE, center=TRUE) 
 
 pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   scale_colour_manual(values=c("orange", "darkgray", "purple")) +
@@ -484,7 +484,7 @@ data_pca_full<-peaks_selected%>%
 Plot PCA with lifestage in colors.   
 
 ```{r}
-scaled.pca<-prcomp(data_pca_full[c(3,123)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca_full[c(3:123)],scale=TRUE, center=TRUE) 
 
 pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   scale_colour_manual(values=c("orange", "darkgray", "purple")) +

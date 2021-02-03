@@ -25,18 +25,40 @@ if ("factoextra" %in% rownames(installed.packages()) == 'FALSE') install.package
 if ("ggfortify" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggfortify') 
 if ("naniar" %in% rownames(installed.packages()) == 'FALSE') install.packages('naniar') 
 if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+if ("mixOmics" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("mixOmics") 
 
 #load packages
 library("ggplot2")
-library("tidyverse")
 library('vegan')
 library('factoextra')
 library('ggfortify')
 library('naniar')
 library('cowplot')
+library("mixOmics")
+library("tidyverse")
 
 ```
 
+## Generalized Work Flow
+
+1. Data processing and exploration  
+ - Import Data (positive peaks, negative peaks)
+ - Normalize to sample median 
+ - Preliminary visualization of ion counts 
+ - Selection of polarity and generation of final data frame ("selected_metabolites.csv")
+ - Zero inflate values by 1000
+ - Log normalization of all ion counts of selected dataset  
+ 
+2. Preliminary PCA and PERMANOVA statistics
+3. Preliminary PLS-DA
+4. Validation of preliminary PLS-DA
+5. sPLS-DA from PLS-DA validation
+6. sPLS-DA model validation 
+7. Extraction of significant loadings
+
+# Data processing and exploration  
 ## Positive Polarity  
 
 Load data
@@ -402,7 +424,7 @@ normalized_counts_pos_neg<-full_join(data_summary, data_summary_neg)
 write_csv(normalized_counts_pos_neg, file="Mcap2020/Output/Metabolomics/normalized_counts_pos_neg.csv")
 ```
 
-## Selecting polarity  
+# Selecting metabolite polarity and generating final dataframe   
 
 Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.    
 
@@ -444,33 +466,39 @@ data_full$Selection<-polarity$Selection[match(data_full$compound, polarity$compo
 #pull out pos data
 pos_peaks<-data_full%>%
   filter(Selection=="Positive")%>%
-  select(Lifestage, Rep, compound, Positive, Selection)%>%
+  dplyr::select(Lifestage, Rep, compound, Positive, Selection)%>%
   rename(value=Positive)
   
 #pull out neg data
 neg_peaks<-data_full%>%
   filter(Selection=="Negative")%>%
-  select(Lifestage, Rep, compound, Negative, Selection)%>%
+  dplyr::select(Lifestage, Rep, compound, Negative, Selection)%>%
   rename(value=Negative)
 
 #rbind them together to generate a dataframe of positive and negative selected compounds
 peaks_selected<-rbind(pos_peaks, neg_peaks)
 
 peaks_selected<-peaks_selected %>%
-  select(Lifestage, Rep, compound, value) 
+  dplyr::select(Lifestage, Rep, compound, value) 
+```
+
+Add 1 to all values to account for 0 values and log transform.  
+```{r}
+hist(peaks_selected$value)
+
+peaks_selected$log_norm_counts<-log10(1+peaks_selected$value)
+hist(log(peaks_selected$log_norm_counts))
 ```
 
 Output file to .csv.   
 
 ```{r}
-write_csv(peaks_selected, "Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+peaks_selected%>%
+  rename(norm_counts=value)%>%
+  write_csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
 ```
 
-
-
-## Plotting full data with positive and negative polarities  
-
-### PCA   
+# Preliminary PCA of combined polarities  
 
 Run PCA to view differences in life stages.   
 
@@ -478,13 +506,16 @@ Convert data to wide format.
 
 ```{r}
 data_pca_full<-peaks_selected%>%
+  dplyr::select(Lifestage, Rep, compound, value)%>%
   spread(compound, value)
 ```
 
-Plot PCA with lifestage in colors.   
+Plot PCA and view scree plot with lifestage in colors.   
 
 ```{r}
 scaled.pca<-prcomp(data_pca_full[c(3:123)],scale=TRUE, center=TRUE) 
+
+fviz_eig(scaled.pca)
 
 pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   scale_colour_manual(values=c("orange", "darkgray", "purple")) +
@@ -499,7 +530,7 @@ pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Li
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot_full
 
-ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
  
 Show a panel of PCA by positive, negative, and combined datasets.   
@@ -511,3 +542,163 @@ pcaplots<-plot_grid(pca_pos, pca_neg, pcaPlot_full, labels = c("Positive", "Nega
 
 ggsave(filename="Mcap2020/Figures/Metabolomics/All_PCAs.pdf", plot=pcaplots, dpi=300, width=20, height=5, units="in")
 ```  
+
+
+# Preliminary PLS-DA 
+
+Load data if starting from this point.   
+
+```{r}
+metabolites <- read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+```
+
+log_norm_count indicates normalized ion counts that are log transformed for analysis.   
+
+Scripts from K Wong for preliminary PLS-DA.  
+
+Generate data frames for PLS-DA.  
+```{r, results=FALSE}
+#https://mixomicsteam.github.io/Bookdown/plsda.html
+
+#assigning datasets 
+X <- metabolites%>%
+  dplyr::select(Lifestage, Rep, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Lifestage[1:6]) #select treatment names
+
+X<-X[3:123] #pull only data columns
+
+dim(X) ## display number of samples and metabolite features
+```
+
+Generate PLSDA.   
+```{r}
+# PLSDA without variable selection
+MyResult.plsda <- plsda(X,Y) # 1 Run the method
+#plotIndiv(MyResult.plsda)    # 2 Plot the samples
+#plotVar(MyResult.plsda, cutoff = 0.7)    
+
+plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA")
+```
+
+Plot top 50 metabolite loadings contributing to 2 components. Here, comp1 separates larvae from recruit and comp2 separates larval 1 and larval 2.  
+```{r, message=FALSE}
+MyResult.plsda2 <- plsda(X,Y, ncomp=2) #number of components is classes-1 (3 classes of lifestages - 1 = 2)
+#selectVar(MyResult.plsda2, comp=1)$value
+
+plotLoadings(MyResult.plsda2, comp = 1, contrib = 'max', method = 'median', ndisplay = 50) #top 50 metabolites contributing to variation on component 1
+plotLoadings(MyResult.plsda2, comp = 2, contrib = 'max', method = 'median', ndisplay = 50) #top 50 metabolites contributing to variation on component 2
+```
+
+# Validation of preliminary PLS-DA 
+
+Validate PLS-DA.   
+```{r}
+#set.seed(30) 
+#MyPerf.plsda <- perf(MyResult.plsda2, validation = "Mfold", folds=2, #fold #? 
+                     #progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
+
+MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
+
+plot(MyPerf.plsda, col = color.mixo(5:7), sd = TRUE, legend.position = "horizontal")
+```
+
+NOT WORKING: 
+```{r}
+# Assessing optimal number of variables to keep 
+list.keepX <- c(5:10,  seq(20, 100, 10))
+list.keepX # to output the grid of values tested
+
+set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
+tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 4, # we suggest to push ncomp a bit more, e.g. 4
+                                 validation = 'loo',
+                                 measure = "BER", test.keepX = list.keepX)   # we suggest nrepeat = 50
+
+error <- tune.splsda.srbct$error.rate
+ncomp <- tune.splsda.srbct$choice.ncomp$ncomp # optimal number of components based on t-tests on the error rate
+ncomp
+
+###ncomp coming back as null for my data - too few groups? 
+
+select.keepX <- tune.splsda.srbct$choice.keepX[1:ncomp]  # optimal number of variables to select
+select.keepX
+
+plot(tune.splsda.srbct, col = color.jet(ncomp))
+
+```
+
+# sPLS-DA from PLS-DA validation 
+
+```{r}
+#MyResult.splsda.final <- splsda(X, Y, ncomp = ncomp, keepX =select.keepX) - original use this once validation works 
+
+MyResult.splsda.final <- splsda(X, Y, ncomp = 2, keepX = c(30,30)) #placeholder numbers for now until validation works
+
+plotIndiv(MyResult.splsda.final, ind.names = FALSE, legend=TRUE,
+          ellipse = TRUE, title="sPLS-DA - FINAL")
+
+#selectVar(MyResult.splsda.final, comp=1)$value
+#selectVar(MyResult.splsda.final, comp=2)$value
+
+plotLoadings(MyResult.splsda.final, comp = 1, contrib = 'max', method = 'median')
+plotLoadings(MyResult.splsda.final, comp = 2, contrib = 'max', method = 'median')
+
+```
+
+# sPLS-DA model validation  
+
+```{r}
+# Auroc plot of sPLS-DA
+auc.splsda = auroc(MyResult.splsda.final, roc.comp = ncomp)
+
+## Performance validation of final spls-da
+perf.splsda <- perf(MyResult.splsda.final, validation = "loo", auc = TRUE) 
+
+#Extracting Performance parameters
+perf.splsda$auc
+perf.splsda$error.rate
+plot(perf.splsda) #Plotting Error rates
+
+#Determining feature stability on each component 
+par(mfrow=c(1,2))
+plot(perf.splsda$features$stable[[1]], type = 'h', ylab = 'Stability', 
+     xlab = 'Features', main = 'Comp 1', las =2)
+plot(perf.splsda$features$stable[[2]], type = 'h', ylab = 'Stability', 
+     xlab = 'Features', main = 'Comp 2', las =2)
+#add more comps later on with more groups
+
+```
+
+# Extraction of significant loadings 
+
+Select the stable features in each component.  
+```{r}
+# here we match the selected variables to the stable features
+ind.match1 = match(selectVar(MyResult.splsda.final, comp = 1)$name, 
+                  names(perf.splsda$features$stable[[1]]))
+ind.match2 = match(selectVar(MyResult.splsda.final, comp = 2)$name, 
+                  names(perf.splsda$features$stable[[2]]))
+#ind.match3 = match(selectVar(MyResult.splsda.final, comp = 3)$name, 
+                  #names(perf.splsda$features$stable[[3]]))
+#ind.match4 = match(selectVar(MyResult.splsda.final, comp = 4)$name, 
+                  #names(perf.splsda$features$stable[[4]]))
+
+#extract the frequency of selection of those selected variables
+Freq1 = as.numeric(perf.splsda$features$stable[[1]][ind.match1])
+Freq2 = as.numeric(perf.splsda$features$stable[[2]][ind.match2])
+#Freq3 = as.numeric(perf.splsda$features$stable[[3]][ind.match3])
+#Freq4 = as.numeric(perf.splsda$features$stable[[4]][ind.match4])
+
+#Extracting the selected metabolites for each component 
+comp1.select.metabolites <- data.frame(selectVar(MyResult.splsda.final, comp = 1)$value, Freq1)
+comp2.select.metabolites <- data.frame(selectVar(MyResult.splsda.final, comp = 2)$value, Freq2)
+#comp3.select.metabolites <- data.frame(selectVar(MyResult.splsda.final, comp = 3)$value, Freq3)
+#comp4.select.metabolites <- data.frame(selectVar(MyResult.splsda.final, comp = 4)$value, Freq4)
+
+head(comp1.select.metabolites)
+head(comp2.select.metabolites)
+#head(comp3.select.metabolites)
+#head(comp4.select.metabolites)
+
+```

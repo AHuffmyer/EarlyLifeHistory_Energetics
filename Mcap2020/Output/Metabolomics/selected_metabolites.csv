@@ -1,727 +1,727 @@
-Lifestage,Rep,compound,value
-Larvae1,rep1,1 3-Dimethyluric acid,0.19646610159719774
-Larvae1,rep2,1 3-Dimethyluric acid,0.1922870210719756
-Larvae2,rep1,1 3-Dimethyluric acid,0.10511210019847106
-Larvae2,rep2,1 3-Dimethyluric acid,0.11058581915224963
-Recruit1,rep1,1 3-Dimethyluric acid,0.042620538712198765
-Recruit1,rep2,1 3-Dimethyluric acid,0.04654396341476768
-Larvae1,rep1,1-Methylhistidine,1.6219064602309843
-Larvae1,rep2,1-Methylhistidine,1.1322395201891944
-Larvae2,rep1,1-Methylhistidine,0.7587912219586108
-Larvae2,rep2,1-Methylhistidine,0.765140813913979
-Recruit1,rep1,1-Methylhistidine,0.3408067128482886
-Recruit1,rep2,1-Methylhistidine,0.07104638905974059
-Larvae1,rep1,3-Methylindole,0.28136181508054
-Larvae1,rep2,3-Methylindole,0.22761313121052498
-Larvae2,rep1,3-Methylindole,0.25629972397055395
-Larvae2,rep2,3-Methylindole,0.39587663165048
-Recruit1,rep1,3-Methylindole,0.2702472904763477
-Recruit1,rep2,3-Methylindole,0.49218886219839897
-Larvae1,rep1,4-Hydroxy-L-phenylglycine,0.23632540742103625
-Larvae1,rep2,4-Hydroxy-L-phenylglycine,0.2216769280358548
-Larvae2,rep1,4-Hydroxy-L-phenylglycine,0.23967286044500216
-Larvae2,rep2,4-Hydroxy-L-phenylglycine,0.2755704582778832
-Recruit1,rep1,4-Hydroxy-L-phenylglycine,0.10628567516540614
-Recruit1,rep2,4-Hydroxy-L-phenylglycine,0.3679318565344334
-Larvae1,rep1,5-Hydroxylysine,0.3559346080902159
-Larvae1,rep2,5-Hydroxylysine,0.34779731256346025
-Larvae2,rep1,5-Hydroxylysine,0.025364975414425426
-Larvae2,rep2,5-Hydroxylysine,0.0508931428207379
-Recruit1,rep1,5-Hydroxylysine,0.04695018618514482
-Recruit1,rep2,5-Hydroxylysine,0.046706936567998326
-Larvae1,rep1,5-Methylcytosine,2.4533687341484676
-Larvae1,rep2,5-Methylcytosine,1.3679286809556288
-Larvae2,rep1,5-Methylcytosine,3.5445509783032576
-Larvae2,rep2,5-Methylcytosine,1.8019862955517174
-Recruit1,rep1,5-Methylcytosine,5.183307394013451
-Recruit1,rep2,5-Methylcytosine,4.899061598764275
-Larvae1,rep1,Adenine,1.3377828334455484
-Larvae1,rep2,Adenine,2.3634455158014536
-Larvae2,rep1,Adenine,3.1509212237668542
-Larvae2,rep2,Adenine,4.972703478494776
-Recruit1,rep1,Adenine,9.001778253905346
-Recruit1,rep2,Adenine,10.375961914754292
-Larvae1,rep1,Adenosine,0.2753139975765548
-Larvae1,rep2,Adenosine,0.1922960797480105
-Larvae2,rep1,Adenosine,0.6990614127391838
-Larvae2,rep2,Adenosine,1.8669213834697171
-Recruit1,rep1,Adenosine,8.097473014850776
-Recruit1,rep2,Adenosine,9.689978700955383
-Larvae1,rep1,ADP,0.23170040723303623
-Larvae1,rep2,ADP,0.1560524048806036
-Larvae2,rep1,ADP,0.4645853131420081
-Larvae2,rep2,ADP,0.27668190956196737
-Recruit1,rep1,ADP,0
-Recruit1,rep2,ADP,0
-Larvae1,rep1,AMP,0.7816638349691003
-Larvae1,rep2,AMP,0.3124257771222697
-Larvae2,rep1,AMP,4.854607208137531
-Larvae2,rep2,AMP,10.700326684033186
-Recruit1,rep1,AMP,3.8407067742219576
-Recruit1,rep2,AMP,3.302254888731318
-Larvae1,rep1,Arginine,12.606577192042236
-Larvae1,rep2,Arginine,10.793095881688414
-Larvae2,rep1,Arginine,14.339152391347445
-Larvae2,rep2,Arginine,12.67479188492794
-Recruit1,rep1,Arginine,6.591189782247321
-Recruit1,rep2,Arginine,9.078236379132091
-Larvae1,rep1,Arginine-Alanine,0.5937363752232395
-Larvae1,rep2,Arginine-Alanine,0.3028959180110666
-Larvae2,rep1,Arginine-Alanine,0.4775641436224562
-Larvae2,rep2,Arginine-Alanine,0.8436554102839993
-Recruit1,rep1,Arginine-Alanine,0.3529999133062518
-Recruit1,rep2,Arginine-Alanine,0
-Larvae1,rep1,Arginine-Glutamine,2.070716403608731
-Larvae1,rep2,Arginine-Glutamine,1.7917344418338454
-Larvae2,rep1,Arginine-Glutamine,7.3007631658638505
-Larvae2,rep2,Arginine-Glutamine,7.673625661862559
-Recruit1,rep1,Arginine-Glutamine,13.968313435053997
-Recruit1,rep2,Arginine-Glutamine,10.56050028748572
-Larvae1,rep1,Arginine-Valine,0.4425275687357193
-Larvae1,rep2,Arginine-Valine,0.3900303113853926
-Larvae2,rep1,Arginine-Valine,0.694029093111464
-Larvae2,rep2,Arginine-Valine,0.5011771951184982
-Recruit1,rep1,Arginine-Valine,0.19638903337846908
-Recruit1,rep2,Arginine-Valine,0.12194140210483685
-Larvae1,rep1,Betaine,5915.732891625277
-Larvae1,rep2,Betaine,6640.097481907934
-Larvae2,rep1,Betaine,10544.455555337694
-Larvae2,rep2,Betaine,10441.147322819039
-Recruit1,rep1,Betaine,13623.303279500642
-Recruit1,rep2,Betaine,13797.29300143684
-Larvae1,rep1,Carnitine,92.91377084021622
-Larvae1,rep2,Carnitine,58.92536838249424
-Larvae2,rep1,Carnitine,136.8164894370263
-Larvae2,rep2,Carnitine,142.45972194693775
-Recruit1,rep1,Carnitine,66.6492763136167
-Recruit1,rep2,Carnitine,27.11611138037452
-Larvae1,rep1,CDP-Choline,0.13998856625863149
-Larvae1,rep2,CDP-Choline,0.06616043618844333
-Larvae2,rep1,CDP-Choline,0.10253620299384109
-Larvae2,rep2,CDP-Choline,0.040329152745136904
-Recruit1,rep1,CDP-Choline,0
-Recruit1,rep2,CDP-Choline,0
-Larvae1,rep1,Creatinine,0.2797926418643716
-Larvae1,rep2,Creatinine,1.3281738456674244
-Larvae2,rep1,Creatinine,0.2794411438555671
-Larvae2,rep2,Creatinine,0.40195992723051227
-Recruit1,rep1,Creatinine,0.5635461733654787
-Recruit1,rep2,Creatinine,0.7218464046259173
-Larvae1,rep1,Cytosine,1.0424968537157904
-Larvae1,rep2,Cytosine,1.2357406105283804
-Larvae2,rep1,Cytosine,0.16438440204876156
-Larvae2,rep2,Cytosine,0.15409496488943003
-Recruit1,rep1,Cytosine,0.2593686011757323
-Recruit1,rep2,Cytosine,0.736388144975014
-Larvae1,rep1,Deoxycarnitine,19.921661659182593
-Larvae1,rep2,Deoxycarnitine,17.37170430194766
-Larvae2,rep1,Deoxycarnitine,14.200993880294286
-Larvae2,rep2,Deoxycarnitine,12.801873035648555
-Recruit1,rep1,Deoxycarnitine,5.8134574154804755
-Recruit1,rep2,Deoxycarnitine,6.194093377181433
-Larvae1,rep1,Dimethylglycine,4.0895026990949095
-Larvae1,rep2,Dimethylglycine,3.6823069545566685
-Larvae2,rep1,Dimethylglycine,3.95506057615428
-Larvae2,rep2,Dimethylglycine,2.9439761658691284
-Recruit1,rep1,Dimethylglycine,3.153481648447218
-Recruit1,rep2,Dimethylglycine,4.0823427163349
-Larvae1,rep1,Fructose-6-phosphate,0.0881287450641648
-Larvae1,rep2,Fructose-6-phosphate,0.061565356808496514
-Larvae2,rep1,Fructose-6-phosphate,0.07237865924197565
-Larvae2,rep2,Fructose-6-phosphate,0.05442438308746496
-Recruit1,rep1,Fructose-6-phosphate,0
-Recruit1,rep2,Fructose-6-phosphate,0
-Larvae1,rep1,Glutaryl-carnitine,0.1869402007973539
-Larvae1,rep2,Glutaryl-carnitine,0.06147956323109782
-Larvae2,rep1,Glutaryl-carnitine,0.1065213971839332
-Larvae2,rep2,Glutaryl-carnitine,0.26158144448848997
-Recruit1,rep1,Glutaryl-carnitine,0.22574897205984343
-Recruit1,rep2,Glutaryl-carnitine,0.07722653184066502
-Larvae1,rep1,Glycerol-3-phosphate,0.02818283224234852
-Larvae1,rep2,Glycerol-3-phosphate,0.0324651559785283
-Larvae2,rep1,Glycerol-3-phosphate,0.021861889418290273
-Larvae2,rep2,Glycerol-3-phosphate,0.023797542614038568
-Recruit1,rep1,Glycerol-3-phosphate,0.05073457470524125
-Recruit1,rep2,Glycerol-3-phosphate,0.05059324148278278
-Larvae1,rep1,Glycerophosphocholine,0.3720695188854759
-Larvae1,rep2,Glycerophosphocholine,0.30396299486865586
-Larvae2,rep1,Glycerophosphocholine,0.10109971699901309
-Larvae2,rep2,Glycerophosphocholine,0.03646291092108616
-Recruit1,rep1,Glycerophosphocholine,0.3234340769730396
-Recruit1,rep2,Glycerophosphocholine,1.109038877874078
-Larvae1,rep1,GTP,0.08338238879633718
-Larvae1,rep2,GTP,0.055440460532535825
-Larvae2,rep1,GTP,0.059032254269524125
-Larvae2,rep2,GTP,0.01689671404705949
-Recruit1,rep1,GTP,0
-Recruit1,rep2,GTP,0
-Larvae1,rep1,Guanidinoacetate,0.47830204428678064
-Larvae1,rep2,Guanidinoacetate,0.5819878341101369
-Larvae2,rep1,Guanidinoacetate,1.169265962105318
-Larvae2,rep2,Guanidinoacetate,1.5769990372908234
-Recruit1,rep1,Guanidinoacetate,1.2594907292733137
-Recruit1,rep2,Guanidinoacetate,1.58708189274601
-Larvae1,rep1,Guanine,0.056616438083750394
-Larvae1,rep2,Guanine,0.04851875255874617
-Larvae2,rep1,Guanine,0.3151648878344433
-Larvae2,rep2,Guanine,0.29468749115157006
-Recruit1,rep1,Guanine,0.16044422289375473
-Recruit1,rep2,Guanine,0.5240798140549435
-Larvae1,rep1,Guanosine,1.1265911692145258
-Larvae1,rep2,Guanosine,0.41421042424946014
-Larvae2,rep1,Guanosine,0.8280467703247648
-Larvae2,rep2,Guanosine,0.9513407141036895
-Recruit1,rep1,Guanosine,0.2409630368131928
-Recruit1,rep2,Guanosine,0.2074508077649615
-Larvae1,rep1,Histidine,6.467019037129245
-Larvae1,rep2,Histidine,5.056165990124285
-Larvae2,rep1,Histidine,7.349016685947334
-Larvae2,rep2,Histidine,5.990195939632472
-Recruit1,rep1,Histidine,4.896603944427931
-Recruit1,rep2,Histidine,4.42141919393822
-Larvae1,rep1,Homoarginine,6.035193931594408
-Larvae1,rep2,Homoarginine,4.643063978438592
-Larvae2,rep1,Homoarginine,4.87927339115355
-Larvae2,rep2,Homoarginine,4.28126769685987
-Recruit1,rep1,Homoarginine,2.0667376729746687
-Recruit1,rep2,Homoarginine,1.7890068762406404
-Larvae1,rep1,Homocitrulline,0.14822009133289982
-Larvae1,rep2,Homocitrulline,0.11685727264372185
-Larvae2,rep1,Homocitrulline,0.052691114989030716
-Larvae2,rep2,Homocitrulline,0.09807697072231504
-Recruit1,rep1,Homocitrulline,0
-Recruit1,rep2,Homocitrulline,0
-Larvae1,rep1,Hypoxanthine,0.2581161599273267
-Larvae1,rep2,Hypoxanthine,0.38738662913032756
-Larvae2,rep1,Hypoxanthine,0.5401792993165712
-Larvae2,rep2,Hypoxanthine,0.7398413830449925
-Recruit1,rep1,Hypoxanthine,0.8370845580545372
-Recruit1,rep2,Hypoxanthine,0.5590277339066537
-Larvae1,rep1,Indole,9.779695767560494
-Larvae1,rep2,Indole,15.319645937689502
-Larvae2,rep1,Indole,12.369090802141134
-Larvae2,rep2,Indole,15.48586728770847
-Recruit1,rep1,Indole,11.999219756266719
-Recruit1,rep2,Indole,13.588724764557366
-Larvae1,rep1,L-Octanoylcarnitine,4.1643350490629825
-Larvae1,rep2,L-Octanoylcarnitine,3.8542529384630067
-Larvae2,rep1,L-Octanoylcarnitine,2.1903204512329824
-Larvae2,rep2,L-Octanoylcarnitine,2.223038833989297
-Recruit1,rep1,L-Octanoylcarnitine,1.4717897855499409
-Recruit1,rep2,L-Octanoylcarnitine,1.4442487441346763
-Larvae1,rep1,L-Palmitoylcarnitine,14.587789559667268
-Larvae1,rep2,L-Palmitoylcarnitine,14.660424975033674
-Larvae2,rep1,L-Palmitoylcarnitine,14.908117270031742
-Larvae2,rep2,L-Palmitoylcarnitine,15.756894696605036
-Recruit1,rep1,L-Palmitoylcarnitine,8.927717023349516
-Recruit1,rep2,L-Palmitoylcarnitine,8.247954370212538
-Larvae1,rep1,Lysine,5.369152594658828
-Larvae1,rep2,Lysine,4.605281384024981
-Larvae2,rep1,Lysine,2.994539976340333
-Larvae2,rep2,Lysine,2.8424492807996153
-Recruit1,rep1,Lysine,1.486936249821108
-Recruit1,rep2,Lysine,1.485975194859388
-Larvae1,rep1,Methionine,0.9575031462842094
-Larvae1,rep2,Methionine,0.8847512140164983
-Larvae2,rep1,Methionine,1.4529109451012943
-Larvae2,rep2,Methionine,1.4242972576945947
-Recruit1,rep1,Methionine,1.1711427474487266
-Recruit1,rep2,Methionine,1.524711895170223
-Larvae1,rep1,NG-dimethyl-L-arginine,5.289136458411144
-Larvae1,rep2,NG-dimethyl-L-arginine,4.31162329275838
-Larvae2,rep1,NG-dimethyl-L-arginine,6.679001936781196
-Larvae2,rep2,NG-dimethyl-L-arginine,6.851911791771668
-Recruit1,rep1,NG-dimethyl-L-arginine,3.192837857921331
-Recruit1,rep2,NG-dimethyl-L-arginine,2.891430802869365
-Larvae1,rep1,Nicotinamide riboside,1.2798510973266735
-Larvae1,rep2,Nicotinamide riboside,1.4484537147827479
-Larvae2,rep1,Nicotinamide riboside,2.572138672662192
-Larvae2,rep2,Nicotinamide riboside,2.7682330747232213
-Recruit1,rep1,Nicotinamide riboside,1.1629154419454626
-Recruit1,rep2,Nicotinamide riboside,1.2542652419234877
-Larvae1,rep1,Nicotinamide ribotide,0.09140783246377072
-Larvae1,rep2,Nicotinamide ribotide,0.08515691957522725
-Larvae2,rep1,Nicotinamide ribotide,0.059785947552226645
-Larvae2,rep2,Nicotinamide ribotide,0.05624558463346264
-Recruit1,rep1,Nicotinamide ribotide,0
-Recruit1,rep2,Nicotinamide ribotide,0
-Larvae1,rep1,Nicotinate,4.370917789193694
-Larvae1,rep2,Nicotinate,2.161897889372458
-Larvae2,rep1,Nicotinate,0.68806171556549
-Larvae2,rep2,Nicotinate,2.484884227142736
-Recruit1,rep1,Nicotinate,1.4947620807049988
-Recruit1,rep2,Nicotinate,1.7273183200591244
-Larvae1,rep1,O-Acetyl-L-carnitine,48.12799640644293
-Larvae1,rep2,O-Acetyl-L-carnitine,42.88561926384625
-Larvae2,rep1,O-Acetyl-L-carnitine,77.78359029997233
-Larvae2,rep2,O-Acetyl-L-carnitine,75.45739304017896
-Recruit1,rep1,O-Acetyl-L-carnitine,77.13641605292996
-Recruit1,rep2,O-Acetyl-L-carnitine,106.17146682744978
-Larvae1,rep1,O-Butanoylcarnitine,7.770107935387496
-Larvae1,rep2,O-Butanoylcarnitine,7.178244402199939
-Larvae2,rep1,O-Butanoylcarnitine,3.171551756065785
-Larvae2,rep2,O-Butanoylcarnitine,2.968239445592774
-Recruit1,rep1,O-Butanoylcarnitine,3.310466137146757
-Recruit1,rep2,O-Butanoylcarnitine,3.0074426203603233
-Larvae1,rep1,O-Decanoyl-L-carnitine,2.157631220230202
-Larvae1,rep2,O-Decanoyl-L-carnitine,2.131926863943523
-Larvae2,rep1,O-Decanoyl-L-carnitine,2.1110322455550983
-Larvae2,rep2,O-Decanoyl-L-carnitine,2.1927188039754224
-Recruit1,rep1,O-Decanoyl-L-carnitine,1.7046928839569775
-Recruit1,rep2,O-Decanoyl-L-carnitine,1.381129582187981
-Larvae1,rep1,O-Phosphorylethanolamine,0.7156930523393631
-Larvae1,rep2,O-Phosphorylethanolamine,0.6836543226814736
-Larvae2,rep1,O-Phosphorylethanolamine,0.4943155362966739
-Larvae2,rep2,O-Phosphorylethanolamine,0.44436832828382933
-Recruit1,rep1,O-Phosphorylethanolamine,0.09085671656373502
-Recruit1,rep2,O-Phosphorylethanolamine,0.05396562671465901
-Larvae1,rep1,O-Propanoylcarnitine,10.618205784951744
-Larvae1,rep2,O-Propanoylcarnitine,8.014421764040838
-Larvae2,rep1,O-Propanoylcarnitine,6.0458605386822475
-Larvae2,rep2,O-Propanoylcarnitine,6.4785266302347315
-Recruit1,rep1,O-Propanoylcarnitine,4.309642546539405
-Recruit1,rep2,O-Propanoylcarnitine,4.023341178753786
-Larvae1,rep1,Ornithine,1.2329597230501184
-Larvae1,rep2,Ornithine,1.1152487859835019
-Larvae2,rep1,Ornithine,1.1790156620022703
-Larvae2,rep2,Ornithine,0.996635826938868
-Recruit1,rep1,Ornithine,1.2601882355207676
-Recruit1,rep2,Ornithine,1.3327684697993427
-Larvae1,rep1,Phosphocholine,2.9139904241998256
-Larvae1,rep2,Phosphocholine,2.6874620448070266
-Larvae2,rep1,Phosphocholine,1.6183403811254247
-Larvae2,rep2,Phosphocholine,1.4215719412747403
-Recruit1,rep1,Phosphocholine,0.8358608689190526
-Recruit1,rep2,Phosphocholine,0.7187614714214935
-Larvae1,rep1,Pipecolic acid,2.4774217030191794
-Larvae1,rep2,Pipecolic acid,2.7313434148482254
-Larvae2,rep1,Pipecolic acid,3.340769353106366
-Larvae2,rep2,Pipecolic acid,2.644343552680013
-Recruit1,rep1,Pipecolic acid,1.3745599948258966
-Recruit1,rep2,Pipecolic acid,1.9088260053534842
-Larvae1,rep1,PosIS_Glutamine-2H5-15N2,137.03110087945558
-Larvae1,rep2,PosIS_Glutamine-2H5-15N2,175.45688048220302
-Larvae2,rep1,PosIS_Glutamine-2H5-15N2,240.51815977464494
-Larvae2,rep2,PosIS_Glutamine-2H5-15N2,313.2344196845712
-Recruit1,rep1,PosIS_Glutamine-2H5-15N2,399.0664597025441
-Recruit1,rep2,PosIS_Glutamine-2H5-15N2,510.4493015183592
-Larvae1,rep1,PosIS_Inosine-15N4,4.657489927796307
-Larvae1,rep2,PosIS_Inosine-15N4,6.630972844639748
-Larvae2,rep1,PosIS_Inosine-15N4,7.908787845118505
-Larvae2,rep2,PosIS_Inosine-15N4,11.527150522411304
-Recruit1,rep1,PosIS_Inosine-15N4,12.249556554597795
-Recruit1,rep2,PosIS_Inosine-15N4,23.16577287499366
-Larvae1,rep1,PosIS_Lysine-2H8,4.327642699091567
-Larvae1,rep2,PosIS_Lysine-2H8,6.163619917302204
-Larvae2,rep1,PosIS_Lysine-2H8,9.432093924084278
-Larvae2,rep2,PosIS_Lysine-2H8,12.48254204773905
-Recruit1,rep1,PosIS_Lysine-2H8,13.720598090535795
-Recruit1,rep2,PosIS_Lysine-2H8,22.788731098845727
-Larvae1,rep1,PosIS_Serine-13C3-15N1,2.848935076168403
-Larvae1,rep2,PosIS_Serine-13C3-15N1,3.7341586402839324
-Larvae2,rep1,PosIS_Serine-13C3-15N1,5.355757294519279
-Larvae2,rep2,PosIS_Serine-13C3-15N1,7.31319548659286
-Recruit1,rep1,PosIS_Serine-13C3-15N1,8.15625275218248
-Recruit1,rep2,PosIS_Serine-13C3-15N1,11.493751544614533
-Larvae1,rep1,Proline,1.5818676436649937
-Larvae1,rep2,Proline,1.739986095372028
-Larvae2,rep1,Proline,2.3836857229378943
-Larvae2,rep2,Proline,2.402609755924909
-Recruit1,rep1,Proline,2.5592372876691214
-Recruit1,rep2,Proline,2.715393179891936
-Larvae1,rep1,S-adenosyl-L-methionine,1.4037910489613794
-Larvae1,rep2,S-adenosyl-L-methionine,1.2321791436736802
-Larvae2,rep1,S-adenosyl-L-methionine,0.9374238849347181
-Larvae2,rep2,S-adenosyl-L-methionine,0.9212250828213042
-Recruit1,rep1,S-adenosyl-L-methionine,0.5698467791208428
-Recruit1,rep2,S-adenosyl-L-methionine,0.2893780891237742
-Larvae1,rep1,Spermine,91.57688205114836
-Larvae1,rep2,Spermine,133.2416911932519
-Larvae2,rep1,Spermine,263.1756675795028
-Larvae2,rep2,Spermine,294.65271682192713
-Recruit1,rep1,Spermine,610.6404879069102
-Recruit1,rep2,Spermine,645.2213943284871
-Larvae1,rep1,Taurine,1.3976691009740403
-Larvae1,rep2,Taurine,4.092306149829622
-Larvae2,rep1,Taurine,2.0345352705502506
-Larvae2,rep2,Taurine,0.061501667044199675
-Recruit1,rep1,Taurine,1.9731961507975824
-Recruit1,rep2,Taurine,19.855686043018913
-Larvae1,rep1,Trigonelline,209.8915398836539
-Larvae1,rep2,Trigonelline,244.93604618693502
-Larvae2,rep1,Trigonelline,336.3768466413513
-Larvae2,rep2,Trigonelline,392.8702890959028
-Recruit1,rep1,Trigonelline,307.90041502911805
-Recruit1,rep2,Trigonelline,380.73116218861117
-Larvae1,rep1,Tryptophan,0.21673604283926434
-Larvae1,rep2,Tryptophan,0.18854631555941945
-Larvae2,rep1,Tryptophan,0.6634572306861086
-Larvae2,rep2,Tryptophan,0.5518001245858936
-Recruit1,rep1,Tryptophan,0.3783831203144093
-Recruit1,rep2,Tryptophan,0.31636182061598594
-Larvae1,rep1,Acetyl glycine,0.9340597452691233
-Larvae1,rep2,Acetyl glycine,0.8958503513776593
-Larvae2,rep1,Acetyl glycine,0.643409289507293
-Larvae2,rep2,Acetyl glycine,1.1983674143876966
-Recruit1,rep1,Acetyl glycine,1
-Recruit1,rep2,Acetyl glycine,1.4150858701345765
-Larvae1,rep1,Asparagine,0.3149243637343842
-Larvae1,rep2,Asparagine,0.2407891244326604
-Larvae2,rep1,Asparagine,0.1670790611771894
-Larvae2,rep2,Asparagine,0.21909676433520897
-Recruit1,rep1,Asparagine,0
-Recruit1,rep2,Asparagine,0
-Larvae1,rep1,Aspartate,0.5451789502058577
-Larvae1,rep2,Aspartate,0.47140051731127824
-Larvae2,rep1,Aspartate,0.28666149695024234
-Larvae2,rep2,Aspartate,0.330448547918742
-Recruit1,rep1,Aspartate,0.328929492759745
-Recruit1,rep2,Aspartate,0.34740216703483234
-Larvae1,rep1,ATP,1.542447925859131
-Larvae1,rep2,ATP,1.1852273573452767
-Larvae2,rep1,ATP,1.1342842495876777
-Larvae2,rep2,ATP,0.7075995401352317
-Recruit1,rep1,ATP,0.1768133083074075
-Recruit1,rep2,ATP,0
-Larvae1,rep1,Glucose-6-phosphate,1.4804804202513937
-Larvae1,rep2,Glucose-6-phosphate,1.326933393321823
-Larvae2,rep1,Glucose-6-phosphate,1.6680384301486784
-Larvae2,rep2,Glucose-6-phosphate,2.4630058983481753
-Recruit1,rep1,Glucose-6-phosphate,1.457750996935426
-Recruit1,rep2,Glucose-6-phosphate,1.0787568056160084
-Larvae1,rep1,Glutamate,9.506623387875734
-Larvae1,rep2,Glutamate,8.90137767055183
-Larvae2,rep1,Glutamate,8.282878112684239
-Larvae2,rep2,Glutamate,9.7339460023622415
-Recruit1,rep1,Glutamate,8.68521450181389
-Recruit1,rep2,Glutamate,8.666926868875116
-Larvae1,rep1,Glutamine,2.4678168812956685
-Larvae1,rep2,Glutamine,2.6610191170824304
-Larvae2,rep1,Glutamine,3.750226824193003
-Larvae2,rep2,Glutamine,4.675264153451432
-Recruit1,rep1,Glutamine,14.29490923204445
-Recruit1,rep2,Glutamine,10.874027392072279
-Larvae1,rep1,Glutathione,0.6684218591053934
-Larvae1,rep2,Glutathione,0.5159074224351734
-Larvae2,rep1,Glutathione,0.6537237680885982
-Larvae2,rep2,Glutathione,0.9796801447284518
-Recruit1,rep1,Glutathione,0.26875695589731535
-Recruit1,rep2,Glutathione,0.31457152802044014
-Larvae1,rep1,GMP,0.17100206018169392
-Larvae1,rep2,GMP,0
-Larvae2,rep1,GMP,0.23801755222581966
-Larvae2,rep2,GMP,0.6405488922641807
-Recruit1,rep1,GMP,0.44811938248160704
-Recruit1,rep2,GMP,0.4626059455523473
-Larvae1,rep1,Mannose-6-phosphate,0.9792184787387325
-Larvae1,rep2,Mannose-6-phosphate,1.1332144744294963
-Larvae2,rep1,Mannose-6-phosphate,1.0059789270588209
-Larvae2,rep2,Mannose-6-phosphate,1.1333649313184606
-Recruit1,rep1,Mannose-6-phosphate,0.2900730086084777
-Recruit1,rep2,Mannose-6-phosphate,0.474673878763481
-Larvae1,rep1,Montiporic Acid A,146.0097617955029
-Larvae1,rep2,Montiporic Acid A,78.41934950801313
-Larvae2,rep1,Montiporic Acid A,129.47008098741583
-Larvae2,rep2,Montiporic Acid A,269.65457767166754
-Recruit1,rep1,Montiporic Acid A,315.8931770070021
-Recruit1,rep2,Montiporic Acid A,291.1476075360554
-Larvae1,rep1,Montiporic Acid B,19.97809051321629
-Larvae1,rep2,Montiporic Acid B,10.836960184652442
-Larvae2,rep1,Montiporic Acid B,19.480051154805597
-Larvae2,rep2,Montiporic Acid B,39.680621809627674
-Recruit1,rep1,Montiporic Acid B,39.80472676561947
-Recruit1,rep2,Montiporic Acid B,34.22475067928443
-Larvae1,rep1,NAD+,0.6154142986878375
-Larvae1,rep2,NAD+,0.4950751000286451
-Larvae2,rep1,NAD+,0.41666385390242905
-Larvae2,rep2,NAD+,0.48647224225905544
-Recruit1,rep1,NAD+,0.17083689928289214
-Recruit1,rep2,NAD+,0.2159780503770548
-Larvae1,rep1,Pantothenate,4.695454924700679
-Larvae1,rep2,Pantothenate,4.495217878299246
-Larvae2,rep1,Pantothenate,1.576782261179728
-Larvae2,rep2,Pantothenate,1.8976975474743305
-Recruit1,rep1,Pantothenate,0.21166135906449074
-Recruit1,rep2,Pantothenate,0.4918179347437383
-Larvae1,rep1,Serine,1.5375140795127447
-Larvae1,rep2,Serine,1.5171672701666759
-Larvae2,rep1,Serine,0.7785845362588388
-Larvae2,rep2,Serine,0.8517644830004395
-Recruit1,rep1,Serine,0.6916950412180917
-Recruit1,rep2,Serine,1
-Larvae1,rep1,Threonine,0.9449968391293326
-Larvae1,rep2,Threonine,0.9028050060275463
-Larvae2,rep1,Threonine,0.1817214463320256
-Larvae2,rep2,Threonine,0.2529432537869615
-Recruit1,rep1,Threonine,0
-Recruit1,rep2,Threonine,0.18543691833397022
-Larvae1,rep1,Tyrosine,0.40069290456737794
-Larvae1,rep2,Tyrosine,0.5018075930311682
-Larvae2,rep1,Tyrosine,1.4469912221561583
-Larvae2,rep2,Tyrosine,1.7517884926291822
-Recruit1,rep1,Tyrosine,4.004780515039431
-Recruit1,rep2,Tyrosine,3.3056946819981623
-Larvae1,rep1,UDP-N-acetyl-glucosamine,1
-Larvae1,rep2,UDP-N-acetyl-glucosamine,1.0723954034565089
-Larvae2,rep1,UDP-N-acetyl-glucosamine,1.1422900978293824
-Larvae2,rep2,UDP-N-acetyl-glucosamine,1.0480762997998851
-Recruit1,rep1,UDP-N-acetyl-glucosamine,0.2986461023100007
-Recruit1,rep2,UDP-N-acetyl-glucosamine,0.23605380872685514
-Larvae1,rep1,3-Phenylbutyric acid,1.461511987240993
-Larvae1,rep2,3-Phenylbutyric acid,3.4890246332208474
-Larvae2,rep1,3-Phenylbutyric acid,2.2565509279092852
-Larvae2,rep2,3-Phenylbutyric acid,2.6986718993483176
-Recruit1,rep1,3-Phenylbutyric acid,5.213740873923941
-Recruit1,rep2,3-Phenylbutyric acid,4.43106582775295
-Larvae1,rep1,a-ketoglutarate,0.750273086389644
-Larvae1,rep2,a-ketoglutarate,0.44375095176196433
-Larvae2,rep1,a-ketoglutarate,0.3297641518823451
-Larvae2,rep2,a-ketoglutarate,0.7778146536174594
-Recruit1,rep1,a-ketoglutarate,0.2732258100062075
-Recruit1,rep2,a-ketoglutarate,0.2902954112455035
-Larvae1,rep1,Alanine,1.625168873927791
-Larvae1,rep2,Alanine,1.6701837602183736
-Larvae2,rep1,Alanine,1
-Larvae2,rep2,Alanine,1.379281263380096
-Recruit1,rep1,Alanine,1.8381542522647607
-Recruit1,rep2,Alanine,2.8124303090616443
-Larvae1,rep1,Carbamoyl phosphate,0.2176200890178196
-Larvae1,rep2,Carbamoyl phosphate,0.24918989823051096
-Larvae2,rep1,Carbamoyl phosphate,0.6934968313850253
-Larvae2,rep2,Carbamoyl phosphate,0.6150573733327871
-Recruit1,rep1,Carbamoyl phosphate,0.3614052228764388
-Recruit1,rep2,Carbamoyl phosphate,0.45521163907637757
-Larvae1,rep1,Coenzyme A,0.2382538355641272
-Larvae1,rep2,Coenzyme A,0.12739813267936337
-Larvae2,rep1,Coenzyme A,0.09109155735110884
-Larvae2,rep2,Coenzyme A,0.07903388987618189
-Recruit1,rep1,Coenzyme A,0
-Recruit1,rep2,Coenzyme A,0.17835778348587858
-Larvae1,rep1,Cresol,0.37325999685517436
-Larvae1,rep2,Cresol,0.2650439884534083
-Larvae2,rep1,Cresol,0.26180286359593585
-Larvae2,rep2,Cresol,0.527601825284922
-Recruit1,rep1,Cresol,0.8165791861186921
-Recruit1,rep2,Cresol,1.062975064863234
-Larvae1,rep1,Glucose,1.0140442136812753
-Larvae1,rep2,Glucose,0.9510781492447733
-Larvae2,rep1,Glucose,1.5104125647188202
-Larvae2,rep2,Glucose,0.16105522404751868
-Recruit1,rep1,Glucose,0.32423529512594385
-Recruit1,rep2,Glucose,0.994424043773913
-Larvae1,rep1,Glycerate,2.316807488535827
-Larvae1,rep2,Glycerate,2.4953214121117564
-Larvae2,rep1,Glycerate,2.59713196133906
-Larvae2,rep2,Glycerate,2.4873491382029838
-Recruit1,rep1,Glycerate,6.9905467136331305
-Recruit1,rep2,Glycerate,5.961493478937585
-Larvae1,rep1,Hydroxyoctanoic acid,1.113796959787949
-Larvae1,rep2,Hydroxyoctanoic acid,2.7700739875432947
-Larvae2,rep1,Hydroxyoctanoic acid,0.7065600297258693
-Larvae2,rep2,Hydroxyoctanoic acid,1.9764591553692634
-Recruit1,rep1,Hydroxyoctanoic acid,3.9206902209113403
-Recruit1,rep2,Hydroxyoctanoic acid,2.8632610148294826
-Larvae1,rep1,Hydroxyphenyl pyruvate,0.19978628021680045
-Larvae1,rep2,Hydroxyphenyl pyruvate,0.11075359645829387
-Larvae2,rep1,Hydroxyphenyl pyruvate,0.08729555170711709
-Larvae2,rep2,Hydroxyphenyl pyruvate,0.14170645368103563
-Recruit1,rep1,Hydroxyphenyl pyruvate,1.5151349306338637
-Recruit1,rep2,Hydroxyphenyl pyruvate,0.6796154047881294
-Larvae1,rep1,Inositol,4.6342920772856955
-Larvae1,rep2,Inositol,4.290270124859989
-Larvae2,rep1,Inositol,4.134878824674202
-Larvae2,rep2,Inositol,4.871016091291211
-Recruit1,rep1,Inositol,4.969430170443206
-Recruit1,rep2,Inositol,4.3730925032474195
-Larvae1,rep1,Malate,4.016723733485654
-Larvae1,rep2,Malate,0
-Larvae2,rep1,Malate,14.457925518579966
-Larvae2,rep2,Malate,25.311196075350477
-Recruit1,rep1,Malate,61.929126675996294
-Recruit1,rep2,Malate,55.355772027445205
-Larvae1,rep1,Methylphenyllactate,2.409417790086098
-Larvae1,rep2,Methylphenyllactate,3.9739944530026925
-Larvae2,rep1,Methylphenyllactate,2.577027188034876
-Larvae2,rep2,Methylphenyllactate,3.2906120968772097
-Recruit1,rep1,Methylphenyllactate,11.95196099677626
-Recruit1,rep2,Methylphenyllactate,10.472478167195586
-Larvae1,rep1,Montiporic Acid C,283.1947577682007
-Larvae1,rep2,Montiporic Acid C,153.1763748809529
-Larvae2,rep1,Montiporic Acid C,235.11824139633114
-Larvae2,rep2,Montiporic Acid C,458.06707104481984
-Recruit1,rep1,Montiporic Acid C,630.5455872215957
-Recruit1,rep2,Montiporic Acid C,519.6163175393318
-Larvae1,rep1,Montiporic Acid D,65.76002092271752
-Larvae1,rep2,Montiporic Acid D,35.483542037075836
-Larvae2,rep1,Montiporic Acid D,75.90499607511205
-Larvae2,rep2,Montiporic Acid D,153.53671856998722
-Recruit1,rep1,Montiporic Acid D,151.4486019641189
-Recruit1,rep2,Montiporic Acid D,150.29640573561957
-Larvae1,rep1,N-acetyl-glutamine,0.12325454154539299
-Larvae1,rep2,N-acetyl-glutamine,0.0663780764133204
-Larvae2,rep1,N-acetyl-glutamine,0.08347430330714721
-Larvae2,rep2,N-acetyl-glutamine,0.17972823312813657
-Recruit1,rep1,N-acetyl-glutamine,0.11579914613108247
-Recruit1,rep2,N-acetyl-glutamine,0.20427174374305646
-Larvae1,rep1,NAD+ (SIM),1.305299993902889
-Larvae1,rep2,NAD+ (SIM),1.267570280563215
-Larvae2,rep1,NAD+ (SIM),1.1311492435395132
-Larvae2,rep2,NAD+ (SIM),1.2492918542364895
-Recruit1,rep1,NAD+ (SIM),0.8304836345872008
-Recruit1,rep2,NAD+ (SIM),0.6467351093836955
-Larvae1,rep1,NADH (SIM),0.004138961982908836
-Larvae1,rep2,NADH (SIM),0.027111122639714186
-Larvae2,rep1,NADH (SIM),0.008610751221533023
-Larvae2,rep2,NADH (SIM),0.01051309043332972
-Recruit1,rep1,NADH (SIM),0.00480127162067357
-Recruit1,rep2,NADH (SIM),0.006482290923779145
-Larvae1,rep1,NADP+ (SIM),0.09453610612823829
-Larvae1,rep2,NADP+ (SIM),0.06488019035910132
-Larvae2,rep1,NADP+ (SIM),0.08783538607424947
-Larvae2,rep2,NADP+ (SIM),0.12159418057764504
-Recruit1,rep1,NADP+ (SIM),0.12710678748654736
-Recruit1,rep2,NADP+ (SIM),0.10238589077365201
-Larvae1,rep1,NADPH,0.44033792435089836
-Larvae1,rep2,NADPH,0.3649699942016592
-Larvae2,rep1,NADPH,0.6944305248675765
-Larvae2,rep2,NADPH,0.4917849560056828
-Recruit1,rep1,NADPH,0.20368820194110093
-Recruit1,rep2,NADPH,0.24159053027439073
-Larvae1,rep1,NADPH (SIM),0.030984033591872233
-Larvae1,rep2,NADPH (SIM),0.03121046903500449
-Larvae2,rep1,NADPH (SIM),0.10366415191119395
-Larvae2,rep2,NADPH (SIM),0.11268092136820658
-Recruit1,rep1,NADPH (SIM),0.08147628475193848
-Recruit1,rep2,NADPH (SIM),0.1344934128652963
-Larvae1,rep1,NegIS_Alanine-2H4-15N,946.6566973554584
-Larvae1,rep2,NegIS_Alanine-2H4-15N,1341.6908748696603
-Larvae2,rep1,NegIS_Alanine-2H4-15N,543.8010859289377
-Larvae2,rep2,NegIS_Alanine-2H4-15N,1401.8580928956562
-Recruit1,rep1,NegIS_Alanine-2H4-15N,1732.469914404967
-Recruit1,rep2,NegIS_Alanine-2H4-15N,5817.086021351567
-Larvae1,rep1,NegIS_Glucose-2H7-13C6,471.72384580085554
-Larvae1,rep2,NegIS_Glucose-2H7-13C6,588.1078334845345
-Larvae2,rep1,NegIS_Glucose-2H7-13C6,637.5598938477201
-Larvae2,rep2,NegIS_Glucose-2H7-13C6,967.9907916418834
-Recruit1,rep1,NegIS_Glucose-2H7-13C6,420.44522640259663
-Recruit1,rep2,NegIS_Glucose-2H7-13C6,1614.343544567121
-Larvae1,rep1,NegIS_Glutamine-2H5-15N2,111.51294994271925
-Larvae1,rep2,NegIS_Glutamine-2H5-15N2,158.76675352624312
-Larvae2,rep1,NegIS_Glutamine-2H5-15N2,106.86591423059646
-Larvae2,rep2,NegIS_Glutamine-2H5-15N2,261.0118027462936
-Recruit1,rep1,NegIS_Glutamine-2H5-15N2,273.25984722431383
-Recruit1,rep2,NegIS_Glutamine-2H5-15N2,980.8669637876178
-Larvae1,rep1,NegIS_Glycine-13C2_15N1,18.856526957252836
-Larvae1,rep2,NegIS_Glycine-13C2_15N1,26.026801616916394
-Larvae2,rep1,NegIS_Glycine-13C2_15N1,18.705891890036206
-Larvae2,rep2,NegIS_Glycine-13C2_15N1,40.41242284810893
-Recruit1,rep1,NegIS_Glycine-13C2_15N1,49.916272116539524
-Recruit1,rep2,NegIS_Glycine-13C2_15N1,165.93387730580366
-Larvae1,rep1,NegIS_Inosine-15N4,7.958432946220273
-Larvae1,rep2,NegIS_Inosine-15N4,12.959347437336886
-Larvae2,rep1,NegIS_Inosine-15N4,8.00267630911096
-Larvae2,rep2,NegIS_Inosine-15N4,17.202582668574298
-Recruit1,rep1,NegIS_Inosine-15N4,21.3335426989555
-Recruit1,rep2,NegIS_Inosine-15N4,86.65012815980504
-Larvae1,rep1,NegIS_Lysine-2H8,1.7624597670903626
-Larvae1,rep2,NegIS_Lysine-2H8,2.9373794854123543
-Larvae2,rep1,NegIS_Lysine-2H8,1.6770479303680736
-Larvae2,rep2,NegIS_Lysine-2H8,3.504783516637947
-Recruit1,rep1,NegIS_Lysine-2H8,4.195165490668537
-Recruit1,rep2,NegIS_Lysine-2H8,17.307097866682472
-Larvae1,rep1,NegIS_Malate-2H3,14.28347715027453
-Larvae1,rep2,NegIS_Malate-2H3,8.314645070214036
-Larvae2,rep1,NegIS_Malate-2H3,35.579852068795304
-Larvae2,rep2,NegIS_Malate-2H3,56.79165674908244
-Recruit1,rep1,NegIS_Malate-2H3,105.05238425815394
-Recruit1,rep2,NegIS_Malate-2H3,316.29090606904623
-Larvae1,rep1,NegIS_Serine-13C3-15N1,6.238953799944163
-Larvae1,rep2,NegIS_Serine-13C3-15N1,8.303689046144997
-Larvae2,rep1,NegIS_Serine-13C3-15N1,6.200203615281936
-Larvae2,rep2,NegIS_Serine-13C3-15N1,15.16957902253327
-Recruit1,rep1,NegIS_Serine-13C3-15N1,14.684421116298317
-Recruit1,rep2,NegIS_Serine-13C3-15N1,47.995332708030645
-Larvae1,rep1,NegIS_Thymine-2H4,28.397302188862824
-Larvae1,rep2,NegIS_Thymine-2H4,42.95951067639333
-Larvae2,rep1,NegIS_Thymine-2H4,16.38573642927802
-Larvae2,rep2,NegIS_Thymine-2H4,41.86273233723624
-Recruit1,rep1,NegIS_Thymine-2H4,44.122947818985665
-Recruit1,rep2,NegIS_Thymine-2H4,154.37681230497606
-Larvae1,rep1,o-acetyl-L-serine,0.8583336274921941
-Larvae1,rep2,o-acetyl-L-serine,1.1764191567517575
-Larvae2,rep1,o-acetyl-L-serine,1.490340967608207
-Larvae2,rep2,o-acetyl-L-serine,1.2597378577222933
-Recruit1,rep1,o-acetyl-L-serine,3.2411096133102664
-Recruit1,rep2,o-acetyl-L-serine,3.0314967280594023
-Larvae1,rep1,Phenyl-pyruvate,0.08594367232200448
-Larvae1,rep2,Phenyl-pyruvate,0.13180379828214372
-Larvae2,rep1,Phenyl-pyruvate,0.04123396976812148
-Larvae2,rep2,Phenyl-pyruvate,0.08411897021682475
-Recruit1,rep1,Phenyl-pyruvate,0.1725860204982412
-Recruit1,rep2,Phenyl-pyruvate,0.24351200778699383
-Larvae1,rep1,Phenylalanine,0.6433897690478559
-Larvae1,rep2,Phenylalanine,0.7047961423703966
-Larvae2,rep1,Phenylalanine,0.8756488470118778
-Larvae2,rep2,Phenylalanine,1
-Recruit1,rep1,Phenylalanine,1.9257192811045691
-Recruit1,rep2,Phenylalanine,1.8654046178399266
-Larvae1,rep1,Pyroglutamate,3.792835413303896
-Larvae1,rep2,Pyroglutamate,6.656562243611259
-Larvae2,rep1,Pyroglutamate,6.204039071747412
-Larvae2,rep2,Pyroglutamate,5.370203756875976
-Recruit1,rep1,Pyroglutamate,11.792022802487411
-Recruit1,rep2,Pyroglutamate,8.748720275133184
-Larvae1,rep1,Ribitol,1.1070524319450106
-Larvae1,rep2,Ribitol,1
-Larvae2,rep1,Ribitol,1.3460380845392876
-Larvae2,rep2,Ribitol,0.9607147851432082
-Recruit1,rep1,Ribitol,0.34165763700898555
-Recruit1,rep2,Ribitol,0.596832889559148
-Larvae1,rep1,Sorbitol,13.781941641021362
-Larvae1,rep2,Sorbitol,9.227409671220887
-Larvae2,rep1,Sorbitol,21.275907361681956
-Larvae2,rep2,Sorbitol,14.815256364582668
-Recruit1,rep1,Sorbitol,3.0682991063393708
-Recruit1,rep2,Sorbitol,3.733510025618338
-Larvae1,rep1,Succinate,9.45912208020589
-Larvae1,rep2,Succinate,8.041348229381732
-Larvae2,rep1,Succinate,13.328965615327515
-Larvae2,rep2,Succinate,21.76269740313999
-Recruit1,rep1,Succinate,62.684189712189614
-Recruit1,rep2,Succinate,31.783440922178425
-Larvae1,rep1,Threonic acid,1.060519441761359
-Larvae1,rep2,Threonic acid,1.4496712745548996
-Larvae2,rep1,Threonic acid,0.248813229858228
-Larvae2,rep2,Threonic acid,0.565457525169057
-Recruit1,rep1,Threonic acid,0
-Recruit1,rep2,Threonic acid,0
-Larvae1,rep1,Thymidine,0.38654126941849604
-Larvae1,rep2,Thymidine,0.567875023283927
-Larvae2,rep1,Thymidine,0
-Larvae2,rep2,Thymidine,0
-Recruit1,rep1,Thymidine,0
-Recruit1,rep2,Thymidine,0
-Larvae1,rep1,UDP-D-Glucose,0.4651509195405988
-Larvae1,rep2,UDP-D-Glucose,0.4531938839468699
-Larvae2,rep1,UDP-D-Glucose,0.5853345069051198
-Larvae2,rep2,UDP-D-Glucose,0.5439304470959325
-Recruit1,rep1,UDP-D-Glucose,0.212606442829105
-Recruit1,rep2,UDP-D-Glucose,0
-Larvae1,rep1,UMP,0.1345240884016905
-Larvae1,rep2,UMP,0.03834422823592918
-Larvae2,rep1,UMP,0.0455583856291115
-Larvae2,rep2,UMP,0.2969386081225836
-Recruit1,rep1,UMP,0.5438394471768087
-Recruit1,rep2,UMP,0.2911070786580378
-Larvae1,rep1,Valine,1.1445961947609773
-Larvae1,rep2,Valine,1.1977017282543774
-Larvae2,rep1,Valine,1.1582968900059167
-Larvae2,rep2,Valine,1.4021910125857815
-Recruit1,rep1,Valine,1.2819548872180453
-Recruit1,rep2,Valine,1.3880221158254031
-Larvae1,rep1,Xanthine,0.18996439608116217
-Larvae1,rep2,Xanthine,0.4154439576839643
-Larvae2,rep1,Xanthine,0.30355870931336526
-Larvae2,rep2,Xanthine,0.19620481924586947
-Recruit1,rep1,Xanthine,0.10020495792485612
-Recruit1,rep2,Xanthine,0.2643571336615151
+Lifestage,Rep,compound,norm_counts,log_norm_counts
+Larvae1,rep1,1 3-Dimethyluric acid,0.19646610159719774,0.07790039864704795
+Larvae1,rep2,1 3-Dimethyluric acid,0.1922870210719756,0.07638081636290207
+Larvae2,rep1,1 3-Dimethyluric acid,0.10511210019847106,0.04340633415534421
+Larvae2,rep2,1 3-Dimethyluric acid,0.11058581915224963,0.04555212375274985
+Recruit1,rep1,1 3-Dimethyluric acid,0.042620538712198765,0.018126275896502012
+Recruit1,rep2,1 3-Dimethyluric acid,0.04654396341476768,0.019757476981825246
+Larvae1,rep1,1-Methylhistidine,1.6219064602309843,0.41861719363546673
+Larvae1,rep2,1-Methylhistidine,1.1322395201891944,0.3288359885598352
+Larvae2,rep1,1-Methylhistidine,0.7587912219586108,0.24521428941045542
+Larvae2,rep2,1-Methylhistidine,0.765140813913979,0.24677935690029829
+Recruit1,rep1,1-Methylhistidine,0.3408067128482886,0.12736617561919025
+Recruit1,rep2,1-Methylhistidine,0.07104638905974059,0.029808281360677105
+Larvae1,rep1,3-Methylindole,0.28136181508054,0.10767177775877035
+Larvae1,rep2,3-Methylindole,0.22761313121052498,0.08906152523206538
+Larvae2,rep1,3-Methylindole,0.25629972397055395,0.09909326435156149
+Larvae2,rep2,3-Methylindole,0.39587663165048,0.1448470367964521
+Recruit1,rep1,3-Methylindole,0.2702472904763477,0.10388827720372609
+Recruit1,rep2,3-Methylindole,0.49218886219839897,0.17382379406141504
+Larvae1,rep1,4-Hydroxy-L-phenylglycine,0.23632540742103625,0.09213279441562745
+Larvae1,rep2,4-Hydroxy-L-phenylglycine,0.2216769280358548,0.08695637209156289
+Larvae2,rep1,4-Hydroxy-L-phenylglycine,0.23967286044500216,0.09330709351053905
+Larvae2,rep2,4-Hydroxy-L-phenylglycine,0.2755704582778832,0.10570445259391723
+Recruit1,rep1,4-Hydroxy-L-phenylglycine,0.10628567516540614,0.04386728892862438
+Recruit1,rep2,4-Hydroxy-L-phenylglycine,0.3679318565344334,0.1360644635623275
+Larvae1,rep1,5-Hydroxylysine,0.3559346080902159,0.13223874555584608
+Larvae1,rep2,5-Hydroxylysine,0.34779731256346025,0.12962458607632515
+Larvae2,rep1,5-Hydroxylysine,0.025364975414425426,0.010878478655353071
+Larvae2,rep2,5-Hydroxylysine,0.0508931428207379,0.0215585582331576
+Recruit1,rep1,5-Hydroxylysine,0.04695018618514482,0.019926018470079365
+Recruit1,rep2,5-Hydroxylysine,0.046706936567998326,0.01982510226390686
+Larvae1,rep1,5-Methylcytosine,2.4533687341484676,0.5382429527068873
+Larvae1,rep2,5-Methylcytosine,1.3679286809556288,0.37436861784232583
+Larvae2,rep1,5-Methylcytosine,3.5445509783032576,0.6574909794658761
+Larvae2,rep2,5-Methylcytosine,1.8019862955517174,0.4474660068309758
+Recruit1,rep1,5-Methylcytosine,5.183307394013451,0.7912208373456149
+Recruit1,rep2,5-Methylcytosine,4.899061598764275,0.7707829311519824
+Larvae1,rep1,Adenine,1.3377828334455484,0.36880416524466597
+Larvae1,rep2,Adenine,2.3634455158014536,0.5267843969724617
+Larvae2,rep1,Adenine,3.1509212237668542,0.6181444914108015
+Larvae2,rep2,Adenine,4.972703478494776,0.77617095424982
+Recruit1,rep1,Adenine,9.001778253905346,1.0000772217200637
+Recruit1,rep2,Adenine,10.375961914754292,1.0559881294265014
+Larvae1,rep1,Adenosine,0.2753139975765548,0.10561712643727252
+Larvae1,rep2,Adenosine,0.1922960797480105,0.07638411600300599
+Larvae2,rep1,Adenosine,0.6990614127391838,0.23020907676882396
+Larvae2,rep2,Adenosine,1.8669213834697171,0.45741578391494847
+Recruit1,rep1,Adenosine,8.097473014850776,0.9589207760451615
+Recruit1,rep2,Adenosine,9.689978700955383,1.0289768399078647
+Larvae1,rep1,ADP,0.23170040723303623,0.09050508501341677
+Larvae1,rep2,ADP,0.1560524048806036,0.06297752148469787
+Larvae2,rep1,ADP,0.4645853131420081,0.1657146747186503
+Larvae2,rep2,ADP,0.27668190956196737,0.10608270452243145
+Recruit1,rep1,ADP,0,0
+Recruit1,rep2,ADP,0,0
+Larvae1,rep1,AMP,0.7816638349691003,0.2508257645772739
+Larvae1,rep2,AMP,0.3124257771222697,0.11807475169878778
+Larvae2,rep1,AMP,4.854607208137531,0.7674977631042449
+Larvae2,rep2,AMP,10.700326684033186,1.0681979878224224
+Recruit1,rep1,AMP,3.8407067742219576,0.6849087760525238
+Recruit1,rep2,AMP,3.302254888731318,0.6336961367558392
+Larvae1,rep1,Arginine,12.606577192042236,1.1337488898203532
+Larvae1,rep2,Arginine,10.793095881688414,1.0716278295088788
+Larvae2,rep1,Arginine,14.339152391347445,1.1858013620946464
+Larvae2,rep2,Arginine,12.67479188492794,1.1359207255784
+Recruit1,rep1,Arginine,6.591189782247321,0.8803098490667071
+Recruit1,rep2,Arginine,9.078236379132091,1.003384540261941
+Larvae1,rep1,Arginine-Alanine,0.5937363752232395,0.2024164850309515
+Larvae1,rep2,Arginine-Alanine,0.3028959180110666,0.11490972343407051
+Larvae2,rep1,Arginine-Alanine,0.4775641436224562,0.16954634343932218
+Larvae2,rep2,Arginine-Alanine,0.8436554102839993,0.26567975218569795
+Recruit1,rep1,Arginine-Alanine,0.3529999133062518,0.13129776877011545
+Recruit1,rep2,Arginine-Alanine,0,0
+Larvae1,rep1,Arginine-Glutamine,2.070716403608731,0.48723970897479474
+Larvae1,rep2,Arginine-Glutamine,1.7917344418338454,0.44587410452014187
+Larvae2,rep1,Arginine-Glutamine,7.3007631658638505,0.9191180229166604
+Larvae2,rep2,Arginine-Glutamine,7.673625661862559,0.938200674845763
+Recruit1,rep1,Arginine-Glutamine,13.968313435053997,1.1751728686721494
+Recruit1,rep2,Arginine-Glutamine,10.56050028748572,1.062976628841695
+Larvae1,rep1,Arginine-Valine,0.4425275687357193,0.15912412188696157
+Larvae1,rep2,Arginine-Valine,0.3900303113853926,0.14302427070293264
+Larvae2,rep1,Arginine-Valine,0.694029093111464,0.22892086459520378
+Larvae2,rep2,Arginine-Valine,0.5011771951184982,0.1764319582793981
+Recruit1,rep1,Arginine-Valine,0.19638903337846908,0.07787242344566918
+Recruit1,rep2,Arginine-Valine,0.12194140210483685,0.04997017473913518
+Larvae1,rep1,Betaine,5915.732891625277,3.7720819636809932
+Larvae1,rep2,Betaine,6640.097481907934,3.82223985511371
+Larvae2,rep1,Betaine,10544.455555337694,4.023065345658807
+Larvae2,rep2,Betaine,10441.147322819039,4.018789816152616
+Recruit1,rep1,Betaine,13623.303279500642,4.1343143025373115
+Recruit1,rep2,Betaine,13797.29300143684,4.139825362784525
+Larvae1,rep1,Carnitine,92.91377084021622,1.972729278756202
+Larvae1,rep2,Carnitine,58.92536838249424,1.7776107124761167
+Larvae2,rep1,Carnitine,136.8164894370263,2.139301183051128
+Larvae2,rep2,Carnitine,142.45972194693775,2.1567299847523973
+Recruit1,rep1,Carnitine,66.6492763136167,1.8302631550403086
+Recruit1,rep2,Carnitine,27.11611138037452,1.44895525508086
+Larvae1,rep1,CDP-Choline,0.13998856625863149,0.05690049551569581
+Larvae1,rep2,CDP-Choline,0.06616043618844333,0.027822562390928576
+Larvae2,rep1,CDP-Choline,0.10253620299384109,0.042392858912949714
+Larvae2,rep2,CDP-Choline,0.040329152745136904,0.017170768726157713
+Recruit1,rep1,CDP-Choline,0,0
+Recruit1,rep2,CDP-Choline,0,0
+Larvae1,rep1,Creatinine,0.2797926418643716,0.10713960887504217
+Larvae1,rep2,Creatinine,1.3281738456674244,0.36701540613041944
+Larvae2,rep1,Creatinine,0.2794411438555671,0.10702031250795341
+Larvae2,rep2,Creatinine,0.40195992723051227,0.14673560019883916
+Recruit1,rep1,Creatinine,0.5635461733654787,0.19411071099740002
+Recruit1,rep2,Creatinine,0.7218464046259173,0.23599440809410427
+Larvae1,rep1,Cytosine,1.0424968537157904,0.31016139621305866
+Larvae1,rep2,Cytosine,1.2357406105283804,0.3494214155154523
+Larvae2,rep1,Cytosine,0.16438440204876156,0.0660963790499025
+Larvae2,rep2,Cytosine,0.15409496488943003,0.06224154628121632
+Recruit1,rep1,Cytosine,0.2593686011757323,0.10015286118606298
+Recruit1,rep2,Cytosine,0.736388144975014,0.23964681207249627
+Larvae1,rep1,Deoxycarnitine,19.921661659182593,1.320596174495203
+Larvae1,rep2,Deoxycarnitine,17.37170430194766,1.264149446703108
+Larvae2,rep1,Deoxycarnitine,14.200993880294286,1.1818719841695364
+Larvae2,rep2,Deoxycarnitine,12.801873035648555,1.1399380279844236
+Recruit1,rep1,Deoxycarnitine,5.8134574154804755,0.8333675458967967
+Recruit1,rep2,Deoxycarnitine,6.194093377181433,0.8569760705316231
+Larvae1,rep1,Dimethylglycine,4.0895026990949095,0.7066753490184559
+Larvae1,rep2,Dimethylglycine,3.6823069545566685,0.6704598810181134
+Larvae2,rep1,Dimethylglycine,3.95506057615428,0.6950489681510075
+Larvae2,rep2,Dimethylglycine,2.9439761658691284,0.5959342817603513
+Recruit1,rep1,Dimethylglycine,3.153481648447218,0.6184122959386784
+Recruit1,rep2,Dimethylglycine,4.0823427163349,0.7060639473720943
+Larvae1,rep1,Fructose-6-phosphate,0.0881287450641648,0.03668028319583694
+Larvae1,rep2,Fructose-6-phosphate,0.061565356808496514,0.025946737293833722
+Larvae2,rep1,Fructose-6-phosphate,0.07237865924197565,0.030348162765458604
+Larvae2,rep2,Fructose-6-phosphate,0.05442438308746496,0.02301544022973245
+Recruit1,rep1,Fructose-6-phosphate,0,0
+Recruit1,rep2,Fructose-6-phosphate,0,0
+Larvae1,rep1,Glutaryl-carnitine,0.1869402007973539,0.07442883932701833
+Larvae1,rep2,Glutaryl-carnitine,0.06147956323109782,0.025911637068760176
+Larvae2,rep1,Glutaryl-carnitine,0.1065213971839332,0.0439598164458904
+Larvae2,rep2,Glutaryl-carnitine,0.26158144448848997,0.10091529270550044
+Recruit1,rep1,Glutaryl-carnitine,0.22574897205984343,0.08840153770942537
+Recruit1,rep2,Glutaryl-carnitine,0.07722653184066502,0.032307041443979445
+Larvae1,rep1,Glycerol-3-phosphate,0.02818283224234852,0.012070348096799672
+Larvae1,rep2,Glycerol-3-phosphate,0.0324651559785283,0.013875403842628097
+Larvae2,rep1,Glycerol-3-phosphate,0.021861889418290273,0.009392202338112445
+Larvae2,rep2,Glycerol-3-phosphate,0.023797542614038568,0.010214082793398594
+Recruit1,rep1,Glycerol-3-phosphate,0.05073457470524125,0.021493023069986284
+Recruit1,rep2,Glycerol-3-phosphate,0.05059324148278278,0.021434602638635197
+Larvae1,rep1,Glycerophosphocholine,0.3720695188854759,0.13737611640241953
+Larvae1,rep2,Glycerophosphocholine,0.30396299486865586,0.11526526673916537
+Larvae2,rep1,Glycerophosphocholine,0.10109971699901309,0.04182665101663479
+Larvae2,rep2,Glycerophosphocholine,0.03646291092108616,0.015553765792632322
+Recruit1,rep1,Glycerophosphocholine,0.3234340769730396,0.1217023130571723
+Recruit1,rep2,Glycerophosphocholine,1.109038877874078,0.3240845855671564
+Larvae1,rep1,GTP,0.08338238879633718,0.03478177152187269
+Larvae1,rep2,GTP,0.055440460532535825,0.02343373893074087
+Larvae2,rep1,GTP,0.059032254269524125,0.02490918733879366
+Larvae2,rep2,GTP,0.01689671404705949,0.007276843977438835
+Recruit1,rep1,GTP,0,0
+Recruit1,rep2,GTP,0,0
+Larvae1,rep1,Guanidinoacetate,0.47830204428678064,0.1697631774723896
+Larvae1,rep2,Guanidinoacetate,0.5819878341101369,0.19920313933918554
+Larvae2,rep1,Guanidinoacetate,1.169265962105318,0.33631280180380446
+Larvae2,rep2,Guanidinoacetate,1.5769990372908234,0.41111425630823456
+Recruit1,rep1,Guanidinoacetate,1.2594907292733137,0.35401056375365436
+Recruit1,rep2,Guanidinoacetate,1.58708189274601,0.4128101763024689
+Larvae1,rep1,Guanine,0.056616438083750394,0.023917362846788498
+Larvae1,rep2,Guanine,0.04851875255874617,0.02057620214514568
+Larvae2,rep1,Guanine,0.3151648878344433,0.11898020559188023
+Larvae2,rep2,Guanine,0.29468749115157006,0.11216495201023957
+Recruit1,rep1,Guanine,0.16044422289375473,0.06462427079658192
+Recruit1,rep2,Guanine,0.5240798140549435,0.18300771102982952
+Larvae1,rep1,Guanosine,1.1265911692145258,0.3276840061133158
+Larvae1,rep2,Guanosine,0.41421042424946014,0.1505140341364594
+Larvae2,rep1,Guanosine,0.8280467703247648,0.2619873029044422
+Larvae2,rep2,Guanosine,0.9513407141036895,0.29033310606094764
+Recruit1,rep1,Guanosine,0.2409630368131928,0.09375884584430869
+Recruit1,rep2,Guanosine,0.2074508077649615,0.08186944637890142
+Larvae1,rep1,Histidine,6.467019037129245,0.8731472585613671
+Larvae1,rep2,Histidine,5.056165990124285,0.7821977699938493
+Larvae2,rep1,Histidine,7.349016685947334,0.9216353290148518
+Larvae2,rep2,Histidine,5.990195939632472,0.8444893494664993
+Recruit1,rep1,Histidine,4.896603944427931,0.7706019586196168
+Recruit1,rep2,Histidine,4.42141919393822,0.7341129890137944
+Larvae1,rep1,Homoarginine,6.035193931594408,0.8472760736627986
+Larvae1,rep2,Homoarginine,4.643063978438592,0.751514974127091
+Larvae2,rep1,Homoarginine,4.87927339115355,0.7693236557170235
+Larvae2,rep2,Homoarginine,4.28126769685987,0.722738181562068
+Recruit1,rep1,Homoarginine,2.0667376729746687,0.4866766282641776
+Recruit1,rep2,Homoarginine,1.7890068762406404,0.445449585011724
+Larvae1,rep1,Homocitrulline,0.14822009133289982,0.060025141798864846
+Larvae1,rep2,Homocitrulline,0.11685727264372185,0.04799767655001223
+Larvae2,rep1,Homocitrulline,0.052691114989030716,0.022300957382185693
+Larvae2,rep2,Homocitrulline,0.09807697072231504,0.0406327834550205
+Recruit1,rep1,Homocitrulline,0,0
+Recruit1,rep2,Homocitrulline,0,0
+Larvae1,rep1,Hypoxanthine,0.2581161599273267,0.0997207407010699
+Larvae1,rep2,Hypoxanthine,0.38738662913032756,0.14219750469220105
+Larvae2,rep1,Hypoxanthine,0.5401792993165712,0.18757128198652415
+Larvae2,rep2,Hypoxanthine,0.7398413830449925,0.24050965655368964
+Recruit1,rep1,Hypoxanthine,0.8370845580545372,0.2641291466440339
+Recruit1,rep2,Hypoxanthine,0.5590277339066537,0.19285384102302244
+Larvae1,rep1,Indole,9.779695767560494,1.032606504047922
+Larvae1,rep2,Indole,15.319645937689502,1.2127107322992323
+Larvae2,rep1,Indole,12.369090802141134,1.1261018730032366
+Larvae2,rep2,Indole,15.48586728770847,1.2171117994232559
+Recruit1,rep1,Indole,11.999219756266719,1.1139172857132096
+Recruit1,rep2,Indole,13.588724764557366,1.1640173308296502
+Larvae1,rep1,L-Octanoylcarnitine,4.1643350490629825,0.7130144104415861
+Larvae1,rep2,L-Octanoylcarnitine,3.8542529384630067,0.68612240218066
+Larvae2,rep1,L-Octanoylcarnitine,2.1903204512329824,0.5038343078886873
+Larvae2,rep2,L-Octanoylcarnitine,2.223038833989297,0.5082655383034165
+Recruit1,rep1,L-Octanoylcarnitine,1.4717897855499409,0.39301153322192484
+Recruit1,rep2,L-Octanoylcarnitine,1.4442487441346763,0.3881454007145633
+Larvae1,rep1,L-Palmitoylcarnitine,14.587789559667268,1.192784534040579
+Larvae1,rep2,L-Palmitoylcarnitine,14.660424975033674,1.1948035432779782
+Larvae2,rep1,L-Palmitoylcarnitine,14.908117270031742,1.2016187838188432
+Larvae2,rep2,L-Palmitoylcarnitine,15.756894696605036,1.2241935404827584
+Recruit1,rep1,L-Palmitoylcarnitine,8.927717023349516,0.9968493896682238
+Recruit1,rep2,L-Palmitoylcarnitine,8.247954370212538,0.9660456782548931
+Larvae1,rep1,Lysine,5.369152594658828,0.8040816540080379
+Larvae1,rep2,Lysine,4.605281384024981,0.7485974189759513
+Larvae2,rep1,Lysine,2.994539976340333,0.6014667718251114
+Larvae2,rep2,Lysine,2.8424492807996153,0.5846081436501879
+Recruit1,rep1,Lysine,1.486936249821108,0.3956646526982567
+Recruit1,rep2,Lysine,1.485975194859388,0.3954967909229084
+Larvae1,rep1,Methionine,0.9575031462842094,0.29170246876971156
+Larvae1,rep2,Methionine,0.8847512140164983,0.275254031724558
+Larvae2,rep1,Methionine,1.4529109451012943,0.3896817810832025
+Larvae2,rep2,Methionine,1.4242972576945947,0.38458587022256485
+Recruit1,rep1,Methionine,1.1711427474487266,0.3366883782177781
+Recruit1,rep2,Methionine,1.524711895170223,0.40221182622631907
+Larvae1,rep1,NG-dimethyl-L-arginine,5.289136458411144,0.7985910179265178
+Larvae1,rep2,NG-dimethyl-L-arginine,4.31162329275838,0.7252272667218548
+Larvae2,rep1,NG-dimethyl-L-arginine,6.679001936781196,0.885304777125793
+Larvae2,rep2,NG-dimethyl-L-arginine,6.851911791771668,0.8949754120993899
+Recruit1,rep1,NG-dimethyl-L-arginine,3.192837857921331,0.6225080680387708
+Recruit1,rep2,NG-dimethyl-L-arginine,2.891430802869365,0.5901093122615502
+Larvae1,rep1,Nicotinamide riboside,1.2798510973266735,0.35790648308768164
+Larvae1,rep2,Nicotinamide riboside,1.4484537147827479,0.38889189859134443
+Larvae2,rep1,Nicotinamide riboside,2.572138672662192,0.5529283101277586
+Larvae2,rep2,Nicotinamide riboside,2.7682330747232213,0.5761377571610867
+Recruit1,rep1,Nicotinamide riboside,1.1629154419454626,0.3350395412540189
+Recruit1,rep2,Nicotinamide riboside,1.2542652419234877,0.3530050147830843
+Larvae1,rep1,Nicotinamide ribotide,0.09140783246377072,0.03798706616289558
+Larvae1,rep2,Nicotinamide ribotide,0.08515691957522725,0.03549254406289552
+Larvae2,rep1,Nicotinamide ribotide,0.059785947552226645,0.025218156600290077
+Larvae2,rep2,Nicotinamide ribotide,0.05624558463346264,0.02376490650370785
+Recruit1,rep1,Nicotinamide ribotide,0,0
+Recruit1,rep2,Nicotinamide ribotide,0,0
+Larvae1,rep1,Nicotinate,4.370917789193694,0.7300485048289009
+Larvae1,rep2,Nicotinate,2.161897889372458,0.49994784067584375
+Larvae2,rep1,Nicotinate,0.68806171556549,0.2273883203936527
+Larvae2,rep2,Nicotinate,2.484884227142736,0.5421883547874763
+Recruit1,rep1,Nicotinate,1.4947620807049988,0.3970291343426461
+Recruit1,rep2,Nicotinate,1.7273183200591244,0.4357358297557858
+Larvae1,rep1,O-Acetyl-L-carnitine,48.12799640644293,1.6913290526068494
+Larvae1,rep2,O-Acetyl-L-carnitine,42.88561926384625,1.6423222310046468
+Larvae2,rep1,O-Acetyl-L-carnitine,77.78359029997233,1.8964357684499833
+Larvae2,rep2,O-Acetyl-L-carnitine,75.45739304017896,1.8834194858414366
+Recruit1,rep1,O-Acetyl-L-carnitine,77.13641605292996,1.8928534872044585
+Recruit1,rep2,O-Acetyl-L-carnitine,106.17146682744978,2.0300791748266156
+Larvae1,rep1,O-Butanoylcarnitine,7.770107935387496,0.9430049383437755
+Larvae1,rep2,O-Butanoylcarnitine,7.178244402199939,0.9126600850567592
+Larvae2,rep1,O-Butanoylcarnitine,3.171551756065785,0.6202976362056702
+Larvae2,rep2,O-Butanoylcarnitine,2.968239445592774,0.5985978698234194
+Recruit1,rep1,O-Butanoylcarnitine,3.310466137146757,0.6345242376419845
+Recruit1,rep2,O-Butanoylcarnitine,3.0074426203603233,0.602867312725674
+Larvae1,rep1,O-Decanoyl-L-carnitine,2.157631220230202,0.4993614073786772
+Larvae1,rep2,O-Decanoyl-L-carnitine,2.131926863943523,0.49581161195659235
+Larvae2,rep1,O-Decanoyl-L-carnitine,2.1110322455550983,0.49290451255327733
+Larvae2,rep2,O-Decanoyl-L-carnitine,2.1927188039754224,0.5041606701023824
+Recruit1,rep1,O-Decanoyl-L-carnitine,1.7046928839569775,0.43211795839821177
+Recruit1,rep2,O-Decanoyl-L-carnitine,1.381129582187981,0.37678303055727785
+Larvae1,rep1,O-Phosphorylethanolamine,0.7156930523393631,0.23443959260410588
+Larvae1,rep2,O-Phosphorylethanolamine,0.6836543226814736,0.22625292970380995
+Larvae2,rep1,O-Phosphorylethanolamine,0.4943155362966739,0.17444231180561529
+Larvae2,rep2,O-Phosphorylethanolamine,0.44436832828382933,0.15967795676782517
+Recruit1,rep1,O-Phosphorylethanolamine,0.09085671656373502,0.03776770999045564
+Recruit1,rep2,O-Phosphorylethanolamine,0.05396562671465901,0.022826447336135515
+Larvae1,rep1,O-Propanoylcarnitine,10.618205784951744,1.0651390645552135
+Larvae1,rep2,O-Propanoylcarnitine,8.014421764040838,0.9549378738492795
+Larvae2,rep1,O-Propanoylcarnitine,6.0458605386822475,0.8479340427793494
+Larvae2,rep2,O-Propanoylcarnitine,6.4785266302347315,0.8738160444705014
+Recruit1,rep1,O-Propanoylcarnitine,4.309642546539405,0.7250652846801774
+Recruit1,rep2,O-Propanoylcarnitine,4.023341178753786,0.7009926758736987
+Larvae1,rep1,Ornithine,1.2329597230501184,0.3488808895672567
+Larvae1,rep2,Ornithine,1.1152487859835019,0.3253614544654808
+Larvae2,rep1,Ornithine,1.1790156620022703,0.3382603518142761
+Larvae2,rep2,Ornithine,0.996635826938868,0.3002988596761383
+Recruit1,rep1,Ornithine,1.2601882355207676,0.3541446100516887
+Recruit1,rep2,Ornithine,1.3327684697993427,0.36787163665987144
+Larvae1,rep1,Phosphocholine,2.9139904241998256,0.5926197587971324
+Larvae1,rep2,Phosphocholine,2.6874620448070266,0.5667275587989106
+Larvae2,rep1,Phosphocholine,1.6183403811254247,0.4180261036492369
+Larvae2,rep2,Phosphocholine,1.4215719412747403,0.38409737581267767
+Recruit1,rep1,Phosphocholine,0.8358608689190526,0.26383976501866807
+Recruit1,rep2,Phosphocholine,0.7187614714214935,0.2352156097683328
+Larvae1,rep1,Pipecolic acid,2.4774217030191794,0.5412573602803226
+Larvae1,rep2,Pipecolic acid,2.7313434148482254,0.5718652212493974
+Larvae2,rep1,Pipecolic acid,3.340769353106366,0.6375667102030493
+Larvae2,rep2,Pipecolic acid,2.644343552680013,0.5616193112208998
+Recruit1,rep1,Pipecolic acid,1.3745599948258966,0.3755831467934523
+Recruit1,rep2,Pipecolic acid,1.9088260053534842,0.46371774421893375
+Larvae1,rep1,PosIS_Glutamine-2H5-15N2,137.03110087945558,2.13997695175296
+Larvae1,rep2,PosIS_Glutamine-2H5-15N2,175.45688048220302,2.246638597222455
+Larvae2,rep1,PosIS_Glutamine-2H5-15N2,240.51815977464494,2.382949790960877
+Larvae2,rep2,PosIS_Glutamine-2H5-15N2,313.2344196845712,2.4972537537796002
+Recruit1,rep1,PosIS_Glutamine-2H5-15N2,399.0664597025441,2.6021321430393614
+Recruit1,rep2,PosIS_Glutamine-2H5-15N2,510.4493015183592,2.7088025898329784
+Larvae1,rep1,PosIS_Inosine-15N4,4.657489927796307,0.7526237894396026
+Larvae1,rep2,PosIS_Inosine-15N4,6.630972844639748,0.8825799080893622
+Larvae2,rep1,PosIS_Inosine-15N4,7.908787845118505,0.9498186167205396
+Larvae2,rep2,PosIS_Inosine-15N4,11.527150522411304,1.0978522958044248
+Recruit1,rep1,PosIS_Inosine-15N4,12.249556554597795,1.1222013432453575
+Recruit1,rep2,PosIS_Inosine-15N4,23.16577287499366,1.3832006893974067
+Larvae1,rep1,PosIS_Lysine-2H8,4.327642699091567,0.7265350909715168
+Larvae1,rep2,PosIS_Lysine-2H8,6.163619917302204,0.8551325352734103
+Larvae2,rep1,PosIS_Lysine-2H8,9.432093924084278,1.018371488522804
+Larvae2,rep2,PosIS_Lysine-2H8,12.48254204773905,1.1297717833879821
+Recruit1,rep1,PosIS_Lysine-2H8,13.720598090535795,1.1679254555274718
+Recruit1,rep2,PosIS_Lysine-2H8,22.788731098845727,1.376371277200509
+Larvae1,rep1,PosIS_Serine-13C3-15N1,2.848935076168403,0.5853405854776487
+Larvae1,rep2,PosIS_Serine-13C3-15N1,3.7341586402839324,0.675242806919121
+Larvae2,rep1,PosIS_Serine-13C3-15N1,5.355757294519279,0.803167304573176
+Larvae2,rep2,PosIS_Serine-13C3-15N1,7.31319548659286,0.9197679931507997
+Recruit1,rep1,PosIS_Serine-13C3-15N1,8.15625275218248,0.96171777257427
+Recruit1,rep2,PosIS_Serine-13C3-15N1,11.493751544614533,1.0966928651544403
+Larvae1,rep1,Proline,1.5818676436649937,0.41193397491751377
+Larvae1,rep2,Proline,1.739986095372028,0.4377483589085181
+Larvae2,rep1,Proline,2.3836857229378943,0.5293900189260251
+Larvae2,rep2,Proline,2.402609755924909,0.5318121428757434
+Recruit1,rep1,Proline,2.5592372876691214,0.5513569425669481
+Recruit1,rep2,Proline,2.715393179891936,0.5700047795560993
+Larvae1,rep1,S-adenosyl-L-methionine,1.4037910489613794,0.38089671365223465
+Larvae1,rep2,S-adenosyl-L-methionine,1.2321791436736802,0.3487290459944378
+Larvae2,rep1,S-adenosyl-L-methionine,0.9374238849347181,0.28722464949980786
+Larvae2,rep2,S-adenosyl-L-methionine,0.9212250828213042,0.2835782479959548
+Recruit1,rep1,S-adenosyl-L-methionine,0.5698467791208428,0.19585726627572833
+Recruit1,rep2,S-adenosyl-L-methionine,0.2893780891237742,0.11038028581188658
+Larvae1,rep1,Spermine,91.57688205114836,1.9665025498451096
+Larvae1,rep2,Spermine,133.2416911932519,2.127887414814114
+Larvae2,rep1,Spermine,263.1756675795028,2.4218928135714473
+Larvae2,rep2,Spermine,294.65271682192713,2.4707818741869767
+Recruit1,rep1,Spermine,610.6404879069102,2.7864962260740973
+Recruit1,rep2,Spermine,645.2213943284871,2.810381332024243
+Larvae1,rep1,Taurine,1.3976691009740403,0.3797892465121913
+Larvae1,rep2,Taurine,4.092306149829622,0.7069145055835035
+Larvae2,rep1,Taurine,2.0345352705502506,0.4820921896815946
+Larvae2,rep2,Taurine,0.061501667044199675,0.025920680543966276
+Recruit1,rep1,Taurine,1.9731961507975824,0.4732235618786409
+Recruit1,rep2,Taurine,19.855686043018913,1.3192244804344033
+Larvae1,rep1,Trigonelline,209.8915398836539,2.324059157949344
+Larvae1,rep2,Trigonelline,244.93604618693502,2.3908221867817945
+Larvae2,rep1,Trigonelline,336.3768466413513,2.528115274693744
+Larvae2,rep2,Trigonelline,392.8702890959028,2.5953532218135655
+Recruit1,rep1,Trigonelline,307.90041502911805,2.489818491806581
+Recruit1,rep2,Trigonelline,380.73116218861117,2.5817576145316092
+Larvae1,rep1,Tryptophan,0.21673604283926434,0.0851963731586867
+Larvae1,rep2,Tryptophan,0.18854631555941945,0.07501611008604331
+Larvae2,rep1,Tryptophan,0.6634572306861086,0.22101163915987534
+Larvae2,rep2,Tryptophan,0.5518001245858936,0.19083578239929433
+Recruit1,rep1,Tryptophan,0.3783831203144093,0.13936994610045209
+Recruit1,rep2,Tryptophan,0.31636182061598594,0.11937527765131337
+Larvae1,rep1,Acetyl glycine,0.9340597452691233,0.2864698857965844
+Larvae1,rep2,Acetyl glycine,0.8958503513776593,0.2778040533945112
+Larvae2,rep1,Acetyl glycine,0.643409289507293,0.21574573753011722
+Larvae2,rep2,Acetyl glycine,1.1983674143876966,0.3421002780357085
+Recruit1,rep1,Acetyl glycine,1,0.3010299956639812
+Recruit1,rep2,Acetyl glycine,1.4150858701345765,0.3829325770182185
+Larvae1,rep1,Asparagine,0.3149243637343842,0.11890077232576629
+Larvae1,rep2,Asparagine,0.2407891244326604,0.09369797821336394
+Larvae2,rep1,Asparagine,0.1670790611771894,0.06710027735638772
+Larvae2,rep2,Asparagine,0.21909676433520897,0.08603817858718533
+Recruit1,rep1,Asparagine,0,0
+Recruit1,rep2,Asparagine,0,0
+Larvae1,rep1,Aspartate,0.5451789502058577,0.18897878316957936
+Larvae1,rep2,Aspartate,0.47140051731127824,0.16773090439466434
+Larvae2,rep1,Aspartate,0.28666149695024234,0.10946430499056928
+Larvae2,rep2,Aspartate,0.330448547918742,0.12399808385768558
+Recruit1,rep1,Aspartate,0.328929492759745,0.12350193977067114
+Recruit1,rep2,Aspartate,0.34740216703483234,0.12949724149559153
+Larvae1,rep1,ATP,1.542447925859131,0.4052520665137077
+Larvae1,rep2,ATP,1.1852273573452767,0.3394966289053865
+Larvae2,rep1,ATP,1.1342842495876777,0.3292522594213847
+Larvae2,rep2,ATP,0.7075995401352317,0.23238602917433235
+Recruit1,rep1,ATP,0.1768133083074075,0.0707075710823133
+Recruit1,rep2,ATP,0,0
+Larvae1,rep1,Glucose-6-phosphate,1.4804804202513937,0.39453580326886334
+Larvae1,rep2,Glucose-6-phosphate,1.326933393321823,0.36678395211922177
+Larvae2,rep1,Glucose-6-phosphate,1.6680384301486784,0.42619208082221327
+Larvae2,rep2,Glucose-6-phosphate,2.4630058983481753,0.5394532312600826
+Recruit1,rep1,Glucose-6-phosphate,1.457750996935426,0.3905378809366093
+Recruit1,rep2,Glucose-6-phosphate,1.0787568056160084,0.3178036840611969
+Larvae1,rep1,Glutamate,9.506623387875734,1.021463165159518
+Larvae1,rep2,Glutamate,8.90137767055183,0.9956956262230116
+Larvae2,rep1,Glutamate,8.282878112684239,0.9676826480579475
+Larvae2,rep2,Glutamate,9.7339460023622415,1.0307594062169847
+Recruit1,rep1,Glutamate,8.68521450181389,0.9861092436325724
+Recruit1,rep2,Glutamate,8.666926868875116,0.9852884331305806
+Larvae1,rep1,Glutamine,2.4678168812956685,0.5400561564101364
+Larvae1,rep2,Glutamine,2.6610191170824304,0.5636019966831516
+Larvae2,rep1,Glutamine,3.750226824193003,0.676714347760329
+Larvae2,rep2,Glutamine,4.675264153451432,0.7539860804407512
+Recruit1,rep1,Glutamine,14.29490923204445,1.1845469039987493
+Recruit1,rep2,Glutamine,10.874027392072279,1.0745980464606915
+Larvae1,rep1,Glutathione,0.6684218591053934,0.22230587119217216
+Larvae1,rep2,Glutathione,0.5159074224351734,0.18067267942714968
+Larvae2,rep1,Glutathione,0.6537237680885982,0.2184629683279983
+Larvae2,rep2,Glutathione,0.9796801447284518,0.29659502733186716
+Recruit1,rep1,Glutathione,0.26875695589731535,0.10337843626185146
+Recruit1,rep2,Glutathione,0.31457152802044014,0.11878422176945287
+Larvae1,rep1,GMP,0.17100206018169392,0.06855765914132499
+Larvae1,rep2,GMP,0,0
+Larvae2,rep1,GMP,0.23801755222581966,0.09272680201914058
+Larvae2,rep2,GMP,0.6405488922641807,0.2149891779248289
+Recruit1,rep1,GMP,0.44811938248160704,0.1608043664300563
+Recruit1,rep2,GMP,0.4626059455523473,0.1651273345164579
+Larvae1,rep1,Mannose-6-phosphate,0.9792184787387325,0.2964937370429278
+Larvae1,rep2,Mannose-6-phosphate,1.1332144744294963,0.32903452182479564
+Larvae2,rep1,Mannose-6-phosphate,1.0059789270588209,0.30232636641613314
+Larvae2,rep2,Mannose-6-phosphate,1.1333649313184606,0.3290651517934214
+Recruit1,rep1,Mannose-6-phosphate,0.2900730086084777,0.11061428885628669
+Recruit1,rep2,Mannose-6-phosphate,0.474673878763481,0.16869598755947732
+Larvae1,rep1,Montiporic Acid A,146.0097617955029,2.167346173885326
+Larvae1,rep2,Montiporic Acid A,78.41934950801313,1.8999263256107983
+Larvae2,rep1,Montiporic Acid A,129.47008098741583,2.115510931967101
+Larvae2,rep2,Montiporic Acid A,269.65457767166754,2.4324153768574615
+Recruit1,rep1,Montiporic Acid A,315.8931770070021,2.5009128885430654
+Recruit1,rep2,Montiporic Acid A,291.1476075360554,2.46560233412346
+Larvae1,rep1,Montiporic Acid B,19.97809051321629,1.3217659549102556
+Larvae1,rep2,Montiporic Acid B,10.836960184652442,1.0732401868014199
+Larvae2,rep1,Montiporic Acid B,19.480051154805597,1.3113310370802604
+Larvae2,rep2,Montiporic Acid B,39.680621809627674,1.6093875825601027
+Recruit1,rep1,Montiporic Acid B,39.80472676561947,1.6107104741027205
+Recruit1,rep2,Montiporic Acid B,34.22475067928443,1.5468479278567895
+Larvae1,rep1,NAD+,0.6154142986878375,0.20828392267911133
+Larvae1,rep2,NAD+,0.4950751000286451,0.1746630085192126
+Larvae2,rep1,NAD+,0.41666385390242905,0.1512668130465079
+Larvae2,rep2,NAD+,0.48647224225905544,0.17215680378900444
+Recruit1,rep1,NAD+,0.17083689928289214,0.06849640090082572
+Recruit1,rep2,NAD+,0.2159780503770548,0.08492573555664956
+Larvae1,rep1,Pantothenate,4.695454924700679,0.7555284190905308
+Larvae1,rep2,Pantothenate,4.495217878299246,0.7399849163167828
+Larvae2,rep1,Pantothenate,1.576782261179728,0.41107772209637705
+Larvae2,rep2,Pantothenate,1.8976975474743305,0.46205305321320017
+Recruit1,rep1,Pantothenate,0.21166135906449074,0.08338125808140322
+Recruit1,rep2,Pantothenate,0.4918179347437383,0.17371582396715096
+Larvae1,rep1,Serine,1.5375140795127447,0.4044084606307192
+Larvae1,rep2,Serine,1.5171672701666759,0.40091207613503077
+Larvae2,rep1,Serine,0.7785845362588388,0.2500745120622657
+Larvae2,rep2,Serine,0.8517644830004395,0.267585750036242
+Recruit1,rep1,Serine,0.6916950412180917,0.22832207628397114
+Recruit1,rep2,Serine,1,0.3010299956639812
+Larvae1,rep1,Threonine,0.9449968391293326,0.2889188998777655
+Larvae1,rep2,Threonine,0.9028050060275463,0.27939428532053584
+Larvae2,rep1,Threonine,0.1817214463320256,0.07251511734241008
+Larvae2,rep2,Threonine,0.2529432537869615,0.09793140209928691
+Recruit1,rep1,Threonine,0,0
+Recruit1,rep2,Threonine,0.18543691833397022,0.07387844844632253
+Larvae1,rep1,Tyrosine,0.40069290456737794,0.14634292866828832
+Larvae1,rep2,Tyrosine,0.5018075930311682,0.1766142957590802
+Larvae2,rep1,Tyrosine,1.4469912221561583,0.3886324114539628
+Larvae2,rep2,Tyrosine,1.7517884926291822,0.43961505019789804
+Recruit1,rep1,Tyrosine,4.004780515039431,0.699385036221459
+Recruit1,rep2,Tyrosine,3.3056946819981623,0.6340432306373545
+Larvae1,rep1,UDP-N-acetyl-glucosamine,1,0.3010299956639812
+Larvae1,rep2,UDP-N-acetyl-glucosamine,1.0723954034565089,0.31647262035717594
+Larvae2,rep1,UDP-N-acetyl-glucosamine,1.1422900978293824,0.33087828038744016
+Larvae2,rep2,UDP-N-acetyl-glucosamine,1.0480762997998851,0.3113461319741113
+Recruit1,rep1,UDP-N-acetyl-glucosamine,0.2986461023100007,0.11349081638937775
+Recruit1,rep2,UDP-N-acetyl-glucosamine,0.23605380872685514,0.09203737716419683
+Larvae1,rep1,3-Phenylbutyric acid,1.461511987240993,0.3912019550711714
+Larvae1,rep2,3-Phenylbutyric acid,3.4890246332208474,0.6521519885699605
+Larvae2,rep1,3-Phenylbutyric acid,2.2565509279092852,0.5127578743224862
+Larvae2,rep2,3-Phenylbutyric acid,2.6986718993483176,0.5680458077624259
+Recruit1,rep1,3-Phenylbutyric acid,5.213740873923941,0.793353138302375
+Recruit1,rep2,3-Phenylbutyric acid,4.43106582775295,0.7348850667323451
+Larvae1,rep1,a-ketoglutarate,0.750273086389644,0.24310581477735002
+Larvae1,rep2,a-ketoglutarate,0.44375095176196433,0.15949228353567096
+Larvae2,rep1,a-ketoglutarate,0.3297641518823451,0.12377462095291591
+Larvae2,rep2,a-ketoglutarate,0.7778146536174594,0.24988648154587212
+Recruit1,rep1,a-ketoglutarate,0.2732258100062075,0.10490543377370694
+Recruit1,rep2,a-ketoglutarate,0.2902954112455035,0.11068915276914268
+Larvae1,rep1,Alanine,1.625168873927791,0.4191572462775784
+Larvae1,rep2,Alanine,1.6701837602183736,0.42654115024198014
+Larvae2,rep1,Alanine,1,0.3010299956639812
+Larvae2,rep2,Alanine,1.379281263380096,0.3764457845819029
+Recruit1,rep1,Alanine,1.8381542522647607,0.4530359954508817
+Recruit1,rep2,Alanine,2.8124303090616443,0.5812019135570459
+Larvae1,rep1,Carbamoyl phosphate,0.2176200890178196,0.08551180473334227
+Larvae1,rep2,Carbamoyl phosphate,0.24918989823051096,0.09662846358210818
+Larvae2,rep1,Carbamoyl phosphate,0.6934968313850253,0.22878438839530152
+Larvae2,rep2,Carbamoyl phosphate,0.6150573733327871,0.20818795482765293
+Recruit1,rep1,Carbamoyl phosphate,0.3614052228764388,0.13398741239320577
+Recruit1,rep2,Carbamoyl phosphate,0.45521163907637757,0.16292615964423324
+Larvae1,rep1,Coenzyme A,0.2382538355641272,0.09280968190929324
+Larvae1,rep2,Coenzyme A,0.12739813267936337,0.05207731115853501
+Larvae2,rep1,Coenzyme A,0.09109155735110884,0.037861195303279374
+Larvae2,rep2,Coenzyme A,0.07903388987618189,0.03303508504906848
+Recruit1,rep1,Coenzyme A,0,0
+Recruit1,rep2,Coenzyme A,0.17835778348587858,0.07127717483291672
+Larvae1,rep1,Cresol,0.37325999685517436,0.13775276921768997
+Larvae1,rep2,Cresol,0.2650439884534083,0.10210562718016489
+Larvae2,rep1,Cresol,0.26180286359593585,0.10099150867980955
+Larvae2,rep2,Cresol,0.527601825284922,0.18401016862684708
+Recruit1,rep1,Cresol,0.8165791861186921,0.25925433385017016
+Recruit1,rep2,Cresol,1.062975064863234,0.31449397869649187
+Larvae1,rep1,Glucose,1.0140442136812753,0.30406900025287026
+Larvae1,rep2,Glucose,0.9510781492447733,0.2902746651433864
+Larvae2,rep1,Glucose,1.5104125647188202,0.3997450999101633
+Larvae2,rep2,Glucose,0.16105522404751868,0.06485287686925865
+Recruit1,rep1,Glucose,0.32423529512594385,0.1219651590430763
+Recruit1,rep2,Glucose,0.994424043773913,0.2998175011632822
+Larvae1,rep1,Glycerate,2.316807488535827,0.5207202652810555
+Larvae1,rep2,Glycerate,2.4953214121117564,0.5434871174460707
+Larvae2,rep1,Glycerate,2.59713196133906,0.5559563702705964
+Larvae2,rep2,Glycerate,2.4873491382029838,0.5424954292241316
+Recruit1,rep1,Glycerate,6.9905467136331305,0.9025764947822288
+Recruit1,rep2,Glycerate,5.961493478937585,0.84270242065682
+Larvae1,rep1,Hydroxyoctanoic acid,1.113796959787949,0.3250632689323442
+Larvae1,rep2,Hydroxyoctanoic acid,2.7700739875432947,0.5763498733003505
+Larvae2,rep1,Hydroxyoctanoic acid,0.7065600297258693,0.23212156956758018
+Larvae2,rep2,Hydroxyoctanoic acid,1.9764591553692634,0.4736999272978332
+Recruit1,rep1,Hydroxyoctanoic acid,3.9206902209113403,0.6920260251471633
+Recruit1,rep2,Hydroxyoctanoic acid,2.8632610148294826,0.586954051523193
+Larvae1,rep1,Hydroxyphenyl pyruvate,0.19978628021680045,0.07910389139023082
+Larvae1,rep2,Hydroxyphenyl pyruvate,0.11075359645829387,0.04561772809743504
+Larvae2,rep1,Hydroxyphenyl pyruvate,0.08729555170711709,0.03634761127013049
+Larvae2,rep2,Hydroxyphenyl pyruvate,0.14170645368103563,0.05755445598151874
+Recruit1,rep1,Hydroxyphenyl pyruvate,1.5151349306338637,0.4005612888185218
+Recruit1,rep2,Hydroxyphenyl pyruvate,0.6796154047881294,0.22520984916654466
+Larvae1,rep1,Inositol,4.6342920772856955,0.750839356718901
+Larvae1,rep2,Inositol,4.290270124859989,0.7234778479786653
+Larvae2,rep1,Inositol,4.134878824674202,0.7105301993653756
+Larvae2,rep2,Inositol,4.871016091291211,0.7687132706943733
+Recruit1,rep1,Inositol,4.969430170443206,0.7759328762477213
+Recruit1,rep2,Inositol,4.3730925032474195,0.7302243174538783
+Larvae1,rep1,Malate,4.016723733485654,0.7004201854753739
+Larvae1,rep2,Malate,0,0
+Larvae2,rep1,Malate,14.457925518579966,1.1891512103918511
+Larvae2,rep2,Malate,25.311196075350477,1.4201405910396259
+Recruit1,rep1,Malate,61.929126675996294,1.798851704694768
+Recruit1,rep2,Malate,55.355772027445205,1.750938403634863
+Larvae1,rep1,Methylphenyllactate,2.409417790086098,0.5326802229394989
+Larvae1,rep2,Methylphenyllactate,3.9739944530026925,0.6967052966090951
+Larvae2,rep1,Methylphenyllactate,2.577027188034876,0.553522241118678
+Larvae2,rep2,Methylphenyllactate,3.2906120968772097,0.632519252868557
+Recruit1,rep1,Methylphenyllactate,11.95196099677626,1.1123355279233322
+Recruit1,rep2,Methylphenyllactate,10.472478167195586,1.0596572398794009
+Larvae1,rep1,Montiporic Acid C,283.1947577682007,2.453616062707071
+Larvae1,rep2,Montiporic Acid C,153.1763748809529,2.188017829973638
+Larvae2,rep1,Montiporic Acid C,235.11824139633114,2.373129539945085
+Larvae2,rep2,Montiporic Acid C,458.06707104481984,2.6618761418698784
+Recruit1,rep1,Montiporic Acid C,630.5455872215957,2.8004047049534426
+Recruit1,rep2,Montiporic Acid C,519.6163175393318,2.7165177759634433
+Larvae1,rep1,Montiporic Acid D,65.76002092271752,1.824516464115947
+Larvae1,rep2,Montiporic Acid D,35.483542037075836,1.5620969955686956
+Larvae2,rep1,Montiporic Acid D,75.90499607511205,1.885954554331628
+Larvae2,rep2,Montiporic Acid D,153.53671856998722,2.1890316862053893
+Recruit1,rep1,Montiporic Acid D,151.4486019641189,2.183123446005088
+Recruit1,rep2,Montiporic Acid D,150.29640573561957,2.179828610853799
+Larvae1,rep1,N-acetyl-glutamine,0.12325454154539299,0.05047818320907914
+Larvae1,rep2,N-acetyl-glutamine,0.0663780764133204,0.027911207869989227
+Larvae2,rep1,N-acetyl-glutamine,0.08347430330714721,0.034818615642687
+Larvae2,rep2,N-acetyl-glutamine,0.17972823312813657,0.07178197302956828
+Recruit1,rep1,N-acetyl-glutamine,0.11579914613108247,0.047586024729215935
+Recruit1,rep2,N-acetyl-glutamine,0.20427174374305646,0.08072449646654138
+Larvae1,rep1,NAD+ (SIM),1.305299993902889,0.36272744912656735
+Larvae1,rep2,NAD+ (SIM),1.267570280563215,0.35556075636621504
+Larvae2,rep1,NAD+ (SIM),1.1311492435395132,0.3286138642501524
+Larvae2,rep2,NAD+ (SIM),1.2492918542364895,0.35204581046492445
+Recruit1,rep1,NAD+ (SIM),0.8304836345872008,0.26256585043129227
+Recruit1,rep2,NAD+ (SIM),0.6467351093836955,0.21662374501974133
+Larvae1,rep1,NADH (SIM),0.004138961982908836,0.0017938186319644855
+Larvae1,rep2,NADH (SIM),0.027111122639714186,0.01161743224239832
+Larvae2,rep1,NADH (SIM),0.008610751221533023,0.003723593181928729
+Larvae2,rep2,NADH (SIM),0.01051309043332972,0.004541943844531653
+Recruit1,rep1,NADH (SIM),0.00480127162067357,0.0020801760124403244
+Recruit1,rep2,NADH (SIM),0.006482290923779145,0.0028061378717243236
+Larvae1,rep1,NADP+ (SIM),0.09453610612823829,0.03923009247646736
+Larvae1,rep2,NADP+ (SIM),0.06488019035910132,0.02730074806310564
+Larvae2,rep1,NADP+ (SIM),0.08783538607424947,0.03656318182501413
+Larvae2,rep2,NADP+ (SIM),0.12159418057764504,0.04983574727952601
+Recruit1,rep1,NADP+ (SIM),0.12710678748654736,0.05196506513135488
+Recruit1,rep2,NADP+ (SIM),0.10238589077365201,0.042333646147041736
+Larvae1,rep1,NADPH,0.44033792435089836,0.15846439588947364
+Larvae1,rep2,NADPH,0.3649699942016592,0.1351231044933492
+Larvae2,rep1,NADPH,0.6944305248675765,0.22902376657250997
+Larvae2,rep2,NADPH,0.4917849560056828,0.1737062231694023
+Recruit1,rep1,NADPH,0.20368820194110093,0.0805140037712916
+Recruit1,rep2,NADPH,0.24159053027439073,0.09397839152263372
+Larvae1,rep1,NADPH (SIM),0.030984033591872233,0.013251939602975037
+Larvae1,rep2,NADPH (SIM),0.03121046903500449,0.013347313403777645
+Larvae2,rep1,NADPH (SIM),0.10366415191119395,0.04283693647124376
+Larvae2,rep2,NADPH (SIM),0.11268092136820658,0.04637064146289853
+Recruit1,rep1,NADPH (SIM),0.08147628475193848,0.03401700041468968
+Recruit1,rep2,NADPH (SIM),0.1344934128652963,0.05480197861270583
+Larvae1,rep1,NegIS_Alanine-2H4-15N,946.6566973554584,2.9766510362339313
+Larvae1,rep2,NegIS_Alanine-2H4-15N,1341.6908748696603,3.1279760373959293
+Larvae2,rep1,NegIS_Alanine-2H4-15N,543.8010859289377,2.7362379645663943
+Larvae2,rep2,NegIS_Alanine-2H4-15N,1401.8580928956562,3.1470137418841397
+Recruit1,rep1,NegIS_Alanine-2H4-15N,1732.469914404967,3.2389163085702686
+Recruit1,rep2,NegIS_Alanine-2H4-15N,5817.086021351567,3.7647801380733186
+Larvae1,rep1,NegIS_Glucose-2H7-13C6,471.72384580085554,2.674607510148324
+Larvae1,rep2,NegIS_Glucose-2H7-13C6,588.1078334845345,2.7701947976748635
+Larvae2,rep1,NegIS_Glucose-2H7-13C6,637.5598938477201,2.805201638244143
+Larvae2,rep2,NegIS_Glucose-2H7-13C6,967.9907916418834,2.986319649952603
+Recruit1,rep1,NegIS_Glucose-2H7-13C6,420.44522640259663,2.6247411390631386
+Recruit1,rep2,NegIS_Glucose-2H7-13C6,1614.343544567121,3.208264900439937
+Larvae1,rep1,NegIS_Glutamine-2H5-15N2,111.51294994271925,2.0512025114695382
+Larvae1,rep2,NegIS_Glutamine-2H5-15N2,158.76675352624312,2.203486410382857
+Larvae2,rep1,NegIS_Glutamine-2H5-15N2,106.86591423059646,2.0328842287399818
+Larvae2,rep2,NegIS_Glutamine-2H5-15N2,261.0118027462936,2.4183208552591857
+Recruit1,rep1,NegIS_Glutamine-2H5-15N2,273.25984722431383,2.438162229750507
+Recruit1,rep2,NegIS_Glutamine-2H5-15N2,980.8669637876178,2.992052647861349
+Larvae1,rep1,NegIS_Glycine-13C2_15N1,18.856526957252836,1.2979032897182314
+Larvae1,rep2,NegIS_Glycine-13C2_15N1,26.026801616916394,1.4317946538263135
+Larvae2,rep1,NegIS_Glycine-13C2_15N1,18.705891890036206,1.2945960958448837
+Larvae2,rep2,NegIS_Glycine-13C2_15N1,40.41242284810893,1.6171306397944107
+Recruit1,rep1,NegIS_Glycine-13C2_15N1,49.916272116539524,1.7068565988605866
+Recruit1,rep2,NegIS_Glycine-13C2_15N1,165.93387730580366,2.2225444806815364
+Larvae1,rep1,NegIS_Inosine-15N4,7.958432946220273,0.9522320473485503
+Larvae1,rep2,NegIS_Inosine-15N4,12.959347437336886,1.1448651166404527
+Larvae2,rep1,NegIS_Inosine-15N4,8.00267630911096,0.9543716353834193
+Larvae2,rep2,NegIS_Inosine-15N4,17.202582668574298,1.2601330121133678
+Recruit1,rep1,NegIS_Inosine-15N4,21.3335426989555,1.3489576192904869
+Recruit1,rep2,NegIS_Inosine-15N4,86.65012815980504,1.9427525554447076
+Larvae1,rep1,NegIS_Lysine-2H8,1.7624597670903626,0.4412959616043399
+Larvae1,rep2,NegIS_Lysine-2H8,2.9373794854123543,0.5952072741954008
+Larvae2,rep1,NegIS_Lysine-2H8,1.6770479303680736,0.42765614694637344
+Larvae2,rep2,NegIS_Lysine-2H8,3.504783516637947,0.6536739252177242
+Recruit1,rep1,NegIS_Lysine-2H8,4.195165490668537,0.7155993864532372
+Recruit1,rep2,NegIS_Lysine-2H8,17.307097866682472,1.262619503210424
+Larvae1,rep1,NegIS_Malate-2H3,14.28347715027453,1.1842221720002333
+Larvae1,rep2,NegIS_Malate-2H3,8.314645070214036,0.9691663109784493
+Larvae2,rep1,NegIS_Malate-2H3,35.579852068795304,1.5632419448299604
+Larvae2,rep2,NegIS_Malate-2H3,56.79165674908244,1.7618651448327247
+Recruit1,rep1,NegIS_Malate-2H3,105.05238425815394,2.025520436723584
+Recruit1,rep2,NegIS_Malate-2H3,316.29090606904623,2.5014576248875873
+Larvae1,rep1,NegIS_Serine-13C3-15N1,6.238953799944163,0.8596758049067545
+Larvae1,rep2,NegIS_Serine-13C3-15N1,8.303689046144997,0.968655186694584
+Larvae2,rep1,NegIS_Serine-13C3-15N1,6.200203615281936,0.8573447780622432
+Larvae2,rep2,NegIS_Serine-13C3-15N1,15.16957902253327,1.2086987131302251
+Recruit1,rep1,NegIS_Serine-13C3-15N1,14.684421116298317,1.1954684943033387
+Recruit1,rep2,NegIS_Serine-13C3-15N1,47.995332708030645,1.690154711136889
+Larvae1,rep1,NegIS_Thymine-2H4,28.397302188862824,1.4683074767301925
+Larvae1,rep2,NegIS_Thymine-2H4,42.95951067639333,1.643052849544788
+Larvae2,rep1,NegIS_Thymine-2H4,16.38573642927802,1.240193091360836
+Larvae2,rep2,NegIS_Thymine-2H4,41.86273233723624,1.6320798522205489
+Recruit1,rep1,NegIS_Thymine-2H4,44.122947818985665,1.6543974637523398
+Recruit1,rep2,NegIS_Thymine-2H4,154.37681230497606,2.191386207261675
+Larvae1,rep1,o-acetyl-L-serine,0.8583336274921941,0.2691236857457699
+Larvae1,rep2,o-acetyl-L-serine,1.1764191567517575,0.3377425398928288
+Larvae2,rep1,o-acetyl-L-serine,1.490340967608207,0.39625881304473315
+Larvae2,rep2,o-acetyl-L-serine,1.2597378577222933,0.3540580614713529
+Recruit1,rep1,o-acetyl-L-serine,3.2411096133102664,0.627479497133279
+Recruit1,rep2,o-acetyl-L-serine,3.0314967280594023,0.605466311664499
+Larvae1,rep1,Phenyl-pyruvate,0.08594367232200448,0.03580729907035929
+Larvae1,rep2,Phenyl-pyruvate,0.13180379828214372,0.053771147074311645
+Larvae2,rep1,Phenyl-pyruvate,0.04123396976812148,0.017548328321361707
+Larvae2,rep2,Phenyl-pyruvate,0.08411897021682475,0.03507694389385227
+Recruit1,rep1,Phenyl-pyruvate,0.1725860204982412,0.06914471224630211
+Recruit1,rep2,Phenyl-pyruvate,0.24351200778699383,0.09464998332565942
+Larvae1,rep1,Phenylalanine,0.6433897690478559,0.21574057893802398
+Larvae1,rep2,Phenylalanine,0.7047961423703966,0.23167245398140043
+Larvae2,rep1,Phenylalanine,0.8756488470118778,0.2731515344269517
+Larvae2,rep2,Phenylalanine,1,0.3010299956639812
+Recruit1,rep1,Phenylalanine,1.9257192811045691,0.46623265380711837
+Recruit1,rep2,Phenylalanine,1.8654046178399266,0.45718595645622373
+Larvae1,rep1,Pyroglutamate,3.792835413303896,0.680592515509376
+Larvae1,rep2,Pyroglutamate,6.656562243611259,0.8840338174454118
+Larvae2,rep1,Pyroglutamate,6.204039071747412,0.8575760595886789
+Larvae2,rep2,Pyroglutamate,5.370203756875976,0.8041533238693608
+Recruit1,rep1,Pyroglutamate,11.792022802487411,1.1069392248927772
+Recruit1,rep2,Pyroglutamate,8.748720275133184,0.9889476091421097
+Larvae1,rep1,Ribitol,1.1070524319450106,0.3236753427372295
+Larvae1,rep2,Ribitol,1,0.3010299956639812
+Larvae2,rep1,Ribitol,1.3460380845392876,0.37033505798028066
+Larvae2,rep2,Ribitol,0.9607147851432082,0.2924144237304142
+Recruit1,rep1,Ribitol,0.34165763700898555,0.1276417070945101
+Recruit1,rep2,Ribitol,0.596832889559148,0.2032594690879288
+Larvae1,rep1,Sorbitol,13.781941641021362,1.169731483355018
+Larvae1,rep2,Sorbitol,9.227409671220887,1.0097656524858782
+Larvae2,rep1,Sorbitol,21.275907361681956,1.3478354031307223
+Larvae2,rep2,Sorbitol,14.815256364582668,1.199076236202498
+Recruit1,rep1,Sorbitol,3.0682991063393708,0.6094128752874233
+Recruit1,rep2,Sorbitol,3.733510025618338,0.6751833012941292
+Larvae1,rep1,Succinate,9.45912208020589,1.0194952321676336
+Larvae1,rep2,Succinate,8.041348229381732,0.9562331965065777
+Larvae2,rep1,Succinate,13.328965615327515,1.1562148405181025
+Larvae2,rep2,Succinate,21.76269740313999,1.357223725116987
+Recruit1,rep1,Succinate,62.684189712189614,1.8040316274216617
+Recruit1,rep2,Succinate,31.783440922178425,1.515654534807632
+Larvae1,rep1,Threonic acid,1.060519441761359,0.31397671660865034
+Larvae1,rep2,Threonic acid,1.4496712745548996,0.3891078095787019
+Larvae2,rep1,Threonic acid,0.248813229858228,0.09649749097043259
+Larvae2,rep2,Threonic acid,0.565457525169057,0.19464128860260038
+Recruit1,rep1,Threonic acid,0,0
+Recruit1,rep2,Threonic acid,0,0
+Larvae1,rep1,Thymidine,0.38654126941849604,0.1419328005738066
+Larvae1,rep2,Thymidine,0.567875023283927,0.19531144172767897
+Larvae2,rep1,Thymidine,0,0
+Larvae2,rep2,Thymidine,0,0
+Recruit1,rep1,Thymidine,0,0
+Recruit1,rep2,Thymidine,0,0
+Larvae1,rep1,UDP-D-Glucose,0.4651509195405988,0.16588236199243872
+Larvae1,rep2,UDP-D-Glucose,0.4531938839468699,0.16232356138052367
+Larvae2,rep1,UDP-D-Glucose,0.5853345069051198,0.20012091272124866
+Larvae2,rep2,UDP-D-Glucose,0.5439304470959325,0.18862773180100273
+Recruit1,rep1,UDP-D-Glucose,0.212606442829105,0.08371987140158224
+Recruit1,rep2,UDP-D-Glucose,0,0
+Larvae1,rep1,UMP,0.1345240884016905,0.05481372133058154
+Larvae1,rep2,UMP,0.03834422823592918,0.016341353165980104
+Larvae2,rep1,UMP,0.0455583856291115,0.01934828951959918
+Larvae2,rep2,UMP,0.2969386081225836,0.11291941880988929
+Recruit1,rep1,UMP,0.5438394471768087,0.18860213354459515
+Recruit1,rep2,UMP,0.2911070786580378,0.11096226220589259
+Larvae1,rep1,Valine,1.1445961947609773,0.3313455310679466
+Larvae1,rep2,Valine,1.1977017282543774,0.34196874970564395
+Larvae2,rep1,Valine,1.1582968900059167,0.3341111849357332
+Larvae2,rep2,Valine,1.4021910125857815,0.38060753779367285
+Recruit1,rep1,Valine,1.2819548872180453,0.35830705444419064
+Recruit1,rep2,Valine,1.3880221158254031,0.37803834454127594
+Larvae1,rep1,Xanthine,0.18996439608116217,0.07553396742882942
+Larvae1,rep2,Xanthine,0.4154439576839643,0.15089267882268242
+Larvae2,rep1,Xanthine,0.30355870931336526,0.11513059557849874
+Larvae2,rep2,Xanthine,0.19620481924586947,0.0778055477564694
+Recruit1,rep1,Xanthine,0.10020495792485612,0.0414735977075075
+Recruit1,rep2,Xanthine,0.2643571336615151,0.10186976324327328

@@ -1,5 +1,5 @@
 ---
-title: M. capitata metabolomics analysis
+title: M. capitata 2020 metabolomics analysis
 author: "AS Huffmyer"
 date: '2021'
 output:
@@ -10,6 +10,8 @@ output:
     toc_float: yes
   pdf_document:
     keep_tex: yes
+editor_options: 
+  chunk_output_type: console
 ---
 Set up workspace, set options, and load required packages.    
 ```{r}
@@ -43,20 +45,21 @@ library("tidyverse")
 
 ## Generalized Work Flow
 
-1. Data processing and exploration  
- - Import Data (positive peaks, negative peaks)
- - Normalize to sample median 
- - Preliminary visualization of ion counts 
- - Selection of polarity and generation of final data frame ("selected_metabolites.csv")
- - Zero inflate values by 1000
+1. Data processing and exploration    
+ - Import Data (positive peaks, negative peaks)  
+ - Normalize to sample median   
+ - Preliminary visualization of ion counts   
+ - Selection of polarity and generation of final data frame ("selected_metabolites.csv")  
+ - Check for polarity correlations  
+ - Zero inflate values by 1000  
  - Log normalization of all ion counts of selected dataset  
  
-2. Preliminary PCA and PERMANOVA statistics
-3. Preliminary PLS-DA
-4. Validation of preliminary PLS-DA
-5. sPLS-DA from PLS-DA validation
-6. sPLS-DA model validation 
-7. Extraction of significant loadings
+2. Preliminary PCA and PERMANOVA statistics  
+3. Preliminary PLS-DA  
+4. Validation of preliminary PLS-DA  
+5. sPLS-DA from PLS-DA validation  
+6. sPLS-DA model validation   
+7. Extraction of significant loadings  
 
 # Data processing and exploration  
 ## Positive Polarity  
@@ -440,7 +443,34 @@ data_full<-full_join(data, data_neg) #combine full positive and negative dataset
 
 data_full<-data_full%>%
   spread(Polarity, IonCounts)
+```
 
+Check for correlations between metabolites that have both positive and negative representation. We would expect that metabolites with higher ion counts will show higher counts across polarities.  
+
+```{r}
+correlation<-data_full
+
+#only use complete observations
+correlation<-correlation[complete.cases(correlation), ]
+```
+
+Display correlations for the metabolites with shared representation.  
+
+```{r}
+corrplots<-ggplot(data=correlation, aes(x=log(1+Positive), y=log(1+Negative)))+
+  geom_point()+
+  facet_wrap(~compound, scales="free")+
+  geom_smooth(method='lm', color='red')+
+  theme_classic()+
+  theme(text=element_text(size=14, face="bold"))
+corrplots
+
+ggsave("Mcap2020/Figures/Metabolomics/Correlation_plot.pdf", corrplots, width=20, height=16)
+```
+
+Relationship between positive and negative polarities are generally positive. Some of the relationships are more strong for certain metabolites and more variable for others.  
+
+```{r}
 #summarize across life stages and reps
 polarity<-data_full%>%
   gather("Polarity", "IonCounts", 5:6)%>%
@@ -457,7 +487,7 @@ polarity<-polarity%>%
   
 ```
 
-Use this selected polarity key to select data for analysis.    
+Use the selected polarity key to select data for analysis.    
 
 ```{r}
 #match selection column back onto original dataframe 
@@ -633,7 +663,7 @@ plot(tune.splsda.srbct, col = color.jet(ncomp))
 ```{r}
 #MyResult.splsda.final <- splsda(X, Y, ncomp = ncomp, keepX =select.keepX) - original use this once validation works 
 
-MyResult.splsda.final <- splsda(X, Y, ncomp = 2, keepX = c(30,30)) #placeholder numbers for now until validation works
+MyResult.splsda.final <- splsda(X, Y, ncomp = 2, keepX = c(40,40)) #placeholder numbers for now until validation works
 
 plotIndiv(MyResult.splsda.final, ind.names = FALSE, legend=TRUE,
           ellipse = TRUE, title="sPLS-DA - FINAL")
@@ -672,7 +702,7 @@ plot(perf.splsda$features$stable[[2]], type = 'h', ylab = 'Stability',
 
 # Extraction of significant loadings 
 
-Select the stable features in each component.  
+Select the stable features in each component. These are the values with the highest value from the comp plots above.    
 ```{r}
 # here we match the selected variables to the stable features
 ind.match1 = match(selectVar(MyResult.splsda.final, comp = 1)$name, 

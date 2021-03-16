@@ -1,4 +1,4 @@
-label,metaGroupId,groupId,goodPeakCount,medMz,medRt,maxQuality,note,compound,compoundId,expectedRtDiff,ppmDiff,parent,Blank1,Blank2,Blank3,Larvae-1_50uL_1,Larvae-1_50uL_2,Larvae-2_50uL_1,Larvae-2_50uL_2,Recruit-1_15-20-Individuals_1,Recruit-1_15-20-Individuals_2
+label,metaGroupId,groupId,goodPeakCount,medMz,medRt,maxQuality,note,compound,compoundId,expectedRtDiff,ppmDiff,parent,Blank1,Blank2,Blank3,Larvae-2_50uL_1,Larvae-2_50uL_2,Larvae-4_50uL_1,Larvae-4_50uL_2,Larvae-6_15-20-Individuals_1,Larvae-6_15-20-Individuals_2
 g,0,1,2,523.9974,13.30544,0.8445906,,GTP,GTP,-1,1924.917,523.9974,0,0,0,24948.19,12607.51,6774.084,1909.572,0,0
 g,0,2,4,508.0025,12.72088,0.8525322,,ATP,ATP,-1,1985.766,508.0025,4106.355,2419.627,1848.731,241964.5,124927.8,101258.4,26395.23,0,0
 g,0,3,8,147.1126,12.49828,0.8523812,,Lysine,Lysine,-1,6892.722,147.1126,38660.35,0,19735.85,1606462,1047270,343630.2,321237.7,86444.05,88206.7

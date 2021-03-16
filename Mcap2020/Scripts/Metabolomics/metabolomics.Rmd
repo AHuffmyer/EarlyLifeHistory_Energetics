@@ -71,12 +71,12 @@ data<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_11292020_Rutgers.csv", sep=
 #rename columns to be useful
 data<- data %>% 
   rename(
-    Larvae1_rep1 = Larvae.1_50uL_1,
-    Larvae1_rep2 = Larvae.1_50uL_2,
     Larvae2_rep1 = Larvae.2_50uL_1,
-    Larvae2_rep2 =  Larvae.2_50uL_2,
-    Recruit1_rep1 = Recruit.1_15.20.Individuals_1,
-    Recruit1_rep2 = Recruit.1_15.20.Individuals_2 
+    Larvae2_rep2 = Larvae.2_50uL_2,
+    Larvae4_rep1 = Larvae.4_50uL_1,
+    Larvae4_rep2 =  Larvae.4_50uL_2,
+    Larvae6_rep1 = Larvae.6_15.20.Individuals_1,
+    Larvae6_rep2 = Larvae.6_15.20.Individuals_2 
     )
 
 ```
@@ -85,12 +85,12 @@ Conduct normalization of samples by normalizing each metabolite ion count to the
 
 ```{r}
 data<- data %>%
-  mutate(Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1), 
-         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2), 
-         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
-         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2),
-         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1),
-         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2))
+  mutate(Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2), 
+         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1), 
+         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2),
+         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1),
+         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2))
 ```
 
 
@@ -198,8 +198,8 @@ Add a column to distinguish increasing, decreasing, or variable trends.
 #assign trends 
 trends<-data_summary%>%
   spread(Lifestage, mean)%>%
-  mutate(Trend=ifelse(Larvae1>Larvae2 & Larvae2>Recruit1, "Decreasing", 
-                      ifelse(Larvae1<Larvae2 & Larvae2<Recruit1, "Increasing", "Variable")))
+  mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
+                      ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
 ```
 
 
@@ -244,12 +244,12 @@ data_neg<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Neg_11292020_Rutgers.csv", 
 #rename columns to be useful
 data_neg<- data_neg %>% 
   rename(
-    Larvae1_rep1 = Larvae.1_50uL_1,
-    Larvae1_rep2 = Larvae.1_50uL_2,
     Larvae2_rep1 = Larvae.2_50uL_1,
-    Larvae2_rep2 =  Larvae.2_50uL_2,
-    Recruit1_rep1 = Recruit.1_15.20.Individuals_1,
-    Recruit1_rep2 = Recruit.1_15.20.Individuals_2 
+    Larvae2_rep2 = Larvae.2_50uL_2,
+    Larvae4_rep1 = Larvae.4_50uL_1,
+    Larvae4_rep2 = Larvae.4_50uL_2,
+    Larvae6_rep1 = Larvae.6_15.20.Individuals_1,
+    Larvae6_rep2 = Larvae.6_15.20.Individuals_2 
     )
 
 ```
@@ -259,12 +259,12 @@ Conduct normalization of samples by normalizing each metabolite ion count to the
 
 ```{r}
 data_neg<- data_neg %>%
-  mutate(Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1), 
-         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2), 
-         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
-         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2),
-         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1),
-         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2))
+  mutate(Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2), 
+         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1), 
+         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2),
+         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1),
+         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2))
 ```
 
 
@@ -372,8 +372,8 @@ Add a column to distinguish increasing, decreasing, or variable trends.
 #assign trends to neg dataset
 trends_neg<-data_summary_neg%>%
   spread(Lifestage, mean)%>%
-  mutate(Trend=ifelse(Larvae1>Larvae2 & Larvae2>Recruit1, "Decreasing", 
-                      ifelse(Larvae1<Larvae2 & Larvae2<Recruit1, "Increasing", "Variable")))
+  mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
+                      ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
 ```
 
 ```{r}

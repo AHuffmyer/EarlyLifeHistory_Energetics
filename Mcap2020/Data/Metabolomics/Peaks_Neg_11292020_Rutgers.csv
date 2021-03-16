@@ -1,4 +1,4 @@
-label,metaGroupId,groupId,goodPeakCount,medMz,medRt,maxQuality,note,compound,compoundId,expectedRtDiff,ppmDiff,parent,Blank1,Blank2,Blank3,Larvae-1_50uL_1,Larvae-1_50uL_2,Larvae-2_50uL_1,Larvae-2_50uL_2,Recruit-1_15-20-Individuals_1,Recruit-1_15-20-Individuals_2
+label,metaGroupId,groupId,goodPeakCount,medMz,medRt,maxQuality,note,compound,compoundId,expectedRtDiff,ppmDiff,parent,Blank1,Blank2,Blank3,Larvae-2_50uL_1,Larvae-2_50uL_2,Larvae-4_50uL_1,Larvae-4_50uL_2,Larvae-6_15-20-Individuals_1,Larvae-6_15-20-Individuals_2
 g,0,1,4,505.9887,12.25347,0.849201,,ATP,ATP,-1,1986.308,505.9887,37088.3,4248.629,0,192264.9,106006,78636.32,40935.9,2888.256,0
 g,0,2,4,145.0981,12.40988,0.8533157,,Lysine,Lysine,-1,6895.02,145.0981,0,0,0,342203.6,223434.8,48545.36,40602.23,5880.09,8767.546
 g,0,3,2,161.093,12.26183,0.8476515,,5-Hydroxylysine,5-Hydroxylysine,-1,6215.139,161.093,0,0,0,36433.55,19952.43,2704.717,2656.595,0,0

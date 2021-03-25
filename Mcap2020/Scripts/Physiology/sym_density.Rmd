@@ -1,0 +1,61 @@
+---
+title: "Symbiont density analysis - Mcap 2020"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+## install packages if you dont already have them
+if (!require("tidyverse")) install.packages("tidyverse")
+
+# load packages
+library(tidyverse)
+```
+
+
+# Import data
+```{r}
+# Cell count data
+sym_counts <- read_csv("Mcap2020/Data/Physiology/CellDensity/symbiont.counts.csv")
+
+```
+
+# Calculate cells per square centimeter
+```{r}
+# Calculate mean counts for each sample
+df <- sym_counts %>%
+  select(tube.ID, num.squares, matches("Count[1-6]")) %>%
+  gather("rep", "count", -tube.ID, -num.squares) %>%
+  group_by(tube.ID, num.squares) %>%
+  summarise(mean_count = mean(count, na.rm = TRUE))
+
+#match in identifying information
+df$lifestage<-sym_counts$lifestage[match(df$tube.ID, sym_counts$tube.ID)]
+df$total.volume.ul<-sym_counts$total.volume.ul[match(df$tube.ID, sym_counts$tube.ID)]
+df$num.individuals<-sym_counts$num.individuals[match(df$tube.ID, sym_counts$tube.ID)]
+
+# Normalize counts by homogenat volume and surface area
+df <- df %>%
+  mutate(cells.mL = mean_count * 10000 / num.squares,
+         cells = cells.mL * (total.volume.ul/1000),
+         cells.ind = cells / num.individuals)
+```
+
+# Plot data
+```{r}
+df %>%
+  #filter(!is.na(site)) %>%
+  ggplot(aes(x = lifestage, y = cells.ind / 10^6, color = lifestage)) +
+  labs(x = "",y = "Cell Density (Cells/cm2 * 10^6)") +
+geom_jitter(width = 0.1) +                                            # Plot all points
+  stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
+               geom = "errorbar", color = "black", width = 0.5) +
+  stat_summary(fun.y = mean, geom = "point", color = "black")           # Plot mean
+```
+
+Output data to file.  
+
+```{r}
+df %>%
+  write_csv(., file = "Mcap2020/Data/Physiology/CellDensity/calculated_densities.csv")
+```
+

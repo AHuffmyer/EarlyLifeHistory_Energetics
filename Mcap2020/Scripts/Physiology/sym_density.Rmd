@@ -7,10 +7,18 @@ output: html_document
 ## install packages if you dont already have them
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("RColorBrewer")) install.packages("RColorBrewer")
+if (!require("car")) install.packages("car")
+if (!require("emmeans")) install.packages("emmeans")
+if (!require("multcomp")) install.packages("multcomp")
 
 # load packages
 library(tidyverse)
 library(ggplot2)
+library(RColorBrewer)
+library(car)
+library(emmeans)
+library(multcomp)
 ```
 
 
@@ -42,7 +50,7 @@ df <- df %>%
          cells.ind = cells / num.individuals)
 ```
 
-# Plot data
+# Plot data with mean and standard error
 ```{r}
 df %>%
   #filter(!is.na(site)) %>%
@@ -51,7 +59,61 @@ df %>%
 geom_jitter(width = 0.1) +                                            # Plot all points
   stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
                geom = "errorbar", color = "black", width = 0.5) +
-  stat_summary(fun.y = mean, geom = "point", color = "black")           # Plot mean
+  stat_summary(fun.y = mean, geom = "point", color = "black") + # Plot mean
+  theme_classic()
+```
+
+# Plot data as box plot  
+```{r}
+symb_plot<-df %>%
+    ggplot(., aes(x = lifestage, y = cells.ind, fill = lifestage)) +
+    geom_boxplot(outlier.size = 0) +
+    geom_point(pch = 21, size=2, position = position_jitterdodge(0.2)) + 
+    xlab("Lifestage") + 
+    scale_fill_brewer()+
+    ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
+    ylim(0,9000)+
+    theme_classic() + 
+    geom_text(label="A", x=1, y=2500, size=5, color="black")+ #egg
+    geom_text(label="A", x=2, y=2500, size=5, color="black")+ #embryo 1
+    geom_text(label="A", x=3, y=2500, size=5, color="black")+ #larvae 1
+    geom_text(label="AB", x=4, y=4000, size=5, color="black")+ #larvae 2
+    geom_text(label="AB", x=5, y=4000, size=5, color="black")+ #larvae 3
+    geom_text(label="AB", x=6, y=4000, size=5, color="black")+ #larvae 4
+    geom_text(label="BC", x=7, y=4500, size=5, color="black")+ #larvae 4
+    geom_text(label="D", x=8, y=6500, size=5, color="black")+ #larvae 6
+    geom_text(label="CD", x=9, y=6500, size=5, color="black")+ #recruit1
+    geom_text(label="D", x=10, y=8700, size=5, color="black")+ #recruit2
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=10, color="black")
+      ); symb_plot
+
+ggsave("Mcap2020/Figures/Physiology/SymbiontCounts.pdf", symb_plot, dpi=300, w=8.5, h=5, units="in")
+```
+
+# Statistical analysis  
+
+Run ANOVA on cells per larvae by timestage.  
+
+```{r}
+model<-aov(cells.ind~lifestage, data=df)
+qqPlot(residuals(model))
+leveneTest(residuals(model)~lifestage, data=df)
+```
+
+Both normality and homogeneity of variance pass. View summary and p-values.  
+
+```{r}
+summary(model)
+```
+
+There is a significant effect of lifestage on cell densities. View posthoc comparisons for differences between lifestages.  
+
+```{r}
+emm = emmeans(model, ~ lifestage) 
+cld(emm, Letters=c(LETTERS)) #letter display
 ```
 
 Output data to file.  

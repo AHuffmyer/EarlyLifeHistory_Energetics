@@ -560,7 +560,7 @@ pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Li
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot_full
 
-#ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
+ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
  
 Show a panel of PCA by positive, negative, and combined datasets.   

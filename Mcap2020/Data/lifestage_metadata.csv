@@ -1,11 +1,11 @@
-lifestage,hpf
-Egg Fertilized,1
-Embryo 1,5
-Larvae 1,38
-Larvae 2,65
-Larvae 3,93
-Larvae 4,163
-Larvae 5,183
-Larvae 6,231
-Recruit 1,183
-Recruit 2,231
+lifestage,hpf,group
+Egg Fertilized,1,Egg
+Embryo 1,5,Embryo
+Larvae 1,38,Larvae
+Larvae 2,65,Larvae
+Larvae 3,93,Larvae
+Larvae 4,163,Larvae
+Larvae 5,183,Larvae
+Larvae 6,231,Larvae
+Recruit 1,183,Recruit
+Recruit 2,231,Recruit

@@ -13,7 +13,7 @@ output:
 ---
 This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section along with summaries of potential implications. See Conclusions section for general overview of findings.    
 
-## **Setup**  
+# **Setup**  
 
 Set up workspace, set options, and load required packages.    
 ```{r}
@@ -43,7 +43,7 @@ library('effects')
 ```
 
 
-## **Data visualization and manipulation**  
+# **Data visualization and manipulation**  
 
 Load data from LoLinR.   
 ```{r, warning=FALSE, message=FALSE}
@@ -72,6 +72,7 @@ PRdata<-PRdata%>%filter(ratio < 15)
 fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min)
 ```
 
+# **Exploring core and additional datasets**    
 ## **Plotting: Larvae, Recruits, Juveniles**    
 
 Generate plots by lifestage and days post fertilization.  
@@ -1011,3 +1012,5 @@ In this data, we saw a few things that are particularly interesting to think abo
 (5) Interestingly, polyp-specific respiration decreases in larger fused colonies while total respiration increases. This suggests that by joining together in a larger colony, each constituent polyp may "save" energy.  
 (6) Raises interesting questions for integration timing of symbiosis after settlement.  
 
+
+# **Analysis and plotting of core dataset**  

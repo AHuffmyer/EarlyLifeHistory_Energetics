@@ -173,10 +173,23 @@ qqPlot(residuals(model))
 leveneTest(residuals(model)~lifestage, data=df)
 ```
 
-Both normality and homogeneity of variance pass. View summary and p-values.  
+Both normality and homogeneity of variance pass. View summary and p-values and save model output table.  
 
 ```{r}
-summary(model)
+output<-anova(model)
+output
+
+output.new <- output[,c("Sum Sq", "Df", "Mean Sq", "F value", "Pr(>F)")]
+names(output.new) <- c("SS", "df", "MS", "F", "P")
+totals <- colSums(output.new)
+output.anova.table <- as.data.frame(rbind(output.new, totals), 
+                      row.names = c("Treatment", "Error", "Total"))
+
+
+output.anova.table%>%
+  kbl(caption="Table X. Linear mixed effect model analysis of Symbiodiniaceae cell densities across ontogeny", format="html", digits = c(3, 0, 0, 2, 11))%>%
+  kable_classic(full_width=FALSE, html_font="Arial")%>%
+  save_kable(.,"Mcap2020/Figures/Physiology/cell_density_model.png", zoom=3)
 ```
 
 There is a significant effect of lifestage on cell densities. View posthoc comparisons for differences between lifestages.  

@@ -10,6 +10,8 @@ output:
     toc_float: yes
   pdf_document:
     keep_tex: yes
+editor_options: 
+  chunk_output_type: console
 ---
 This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section along with summaries of potential implications. See Conclusions section for general overview of findings.    
 
@@ -72,7 +74,280 @@ PRdata<-PRdata%>%filter(ratio < 15)
 fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min)
 ```
 
-# **Exploring core and additional datasets**    
+# **Analysis and plotting of core dataset**  
+
+Load sample metadata to identify stage and hpf.  
+
+```{r}
+metadata<-read.csv("Mcap2020/Data/Respiration/PR_metadata.csv")
+
+PRdf<-PRdata%>%
+  filter(!Lifestage=="Juvenile")
+
+#load in sample information
+PRdf$code<-paste(PRdf$Date, PRdf$Lifestage)
+metadata$code<-paste(metadata$Date, metadata$Lifestage)
+
+PRdf$hpf<-metadata$hpf[match(PRdf$code, metadata$code)]
+PRdf$group<-metadata$group[match(PRdf$code, metadata$code)]
+PRdf$hpf<-as.factor(PRdf$hpf)
+```
+
+## Respiration  
+
+Plot data as a scatterplot   
+```{r}
+r_plot<-PRdf %>%
+    ggplot(., aes(x = hpf, y = R.nmol.org.min)) +
+    geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+    geom_boxplot(aes(color=Lifestage, group=group), outlier.size = 0, position = position_dodge(1), lwd=1) +
+    #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_dodge(1)) + 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    ylab(expression(bold(paste("R (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); r_plot
+
+#EGG: #8C510A
+#EMBRYO: #DFC27D
+#LARVAE: #80CDC1
+#RECRUIT: #003C30
+
+#ggsave("Mcap2020/Figures/Respiration/Respiration.png", r_plot, dpi=300, w=8.5, h=5, units="in")
+```
+
+## Photosynthesis (Net)  
+
+Plot data as a scatterplot   
+```{r}
+p_plot<-PRdf %>%
+    ggplot(., aes(x = hpf, y = P.nmol.org.min)) +
+    geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+    geom_boxplot(aes(color=Lifestage, group=group), outlier.size = 0, position = position_dodge(1), lwd=1) +
+    #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_dodge(1)) + 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    ylab(expression(bold(paste("P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); p_plot
+
+#EGG: #8C510A
+#EMBRYO: #DFC27D
+#LARVAE: #80CDC1
+#RECRUIT: #003C30
+
+#ggsave("Mcap2020/Figures/Respiration/NetPhotosynthesis.png", rp_plot, dpi=300, w=8.5, h=5, units="in")
+```
+
+## Photosynthesis (Gross)  
+
+Plot data as a scatterplot   
+```{r}
+gp_plot<-PRdf %>%
+    ggplot(., aes(x = hpf, y = GP.nmol.org.min)) +
+    geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+    geom_boxplot(aes(color=Lifestage, group=group), outlier.size = 0, position = position_dodge(1), lwd=1) +
+    #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_dodge(1)) + 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    ylab(expression(bold(paste("GP (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); gp_plot
+
+#EGG: #8C510A
+#EMBRYO: #DFC27D
+#LARVAE: #80CDC1
+#RECRUIT: #003C30
+
+#ggsave("Mcap2020/Figures/Respiration/NetPhotosynthesis.png", gp_plot, dpi=300, w=8.5, h=5, units="in")
+```
+
+## P:R Ratio  
+
+Plot data as a scatterplot   
+```{r}
+pr_plot<-PRdf %>%
+    ggplot(., aes(x = hpf, y = ratio)) +
+    geom_hline(yintercept=1, linetype="dashed", color="black", size=0.75)+
+    geom_boxplot(aes(color=Lifestage, group=group), outlier.size = 0, position = position_dodge(1), lwd=1) +
+    #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_dodge(1)) + 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    ylab(expression(bold(paste("P:R")))) +
+    scale_y_continuous(limits=c(-0.5, 10), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=16),
+      legend.text=element_text(size=14)
+      ); pr_plot
+
+#EGG: #8C510A
+#EMBRYO: #DFC27D
+#LARVAE: #80CDC1
+#RECRUIT: #003C30
+
+#ggsave("Mcap2020/Figures/Respiration/NetPhotosynthesis.png", gp_plot, dpi=300, w=8.5, h=5, units="in")
+```
+
+## Generate final figure  
+
+```{r}
+full_fig<-plot_grid(r_plot, p_plot, gp_plot, pr_plot, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,1.2), label_y=1, align="h")
+
+ggsave(filename="Mcap2020/Figures/Respiration/respirometry_fig.png", plot=full_fig, dpi=500, width=26, height=6, units="in")
+```
+
+## Analyze data  
+
+### *Respiration*     
+
+Build linear mixed effect model and examine for Respiration.      
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Rmodel1<-lmer(R.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
+anova(Rmodel1, type="II")
+summary(Rmodel1)
+```
+
+Check assumptions of model for residual normality and variance. Passes assumptions.    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Rmodel1))
+leveneTest(residuals(Rmodel1)~group, data=PRdf)
+```
+
+Conduct post hoc test.  
+
+```{r}
+emm<-emmeans(Rmodel1, ~group)
+cld(emm)
+```
+
+
+### *Net Photosynthesis*  
+
+Build linear mixed effect model and examine for Photosynthesis      
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+Pmodel1<-lmer(P.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
+anova(Pmodel1, type="II")
+summary(Pmodel1)
+```
+
+Check assumptions of model for residual normality and variance. Violates variance assumption, return to this.    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(Pmodel1))
+leveneTest(residuals(Pmodel1)~group, data=PRdf)
+```
+
+Conduct post hoc test.  
+
+```{r}
+emm<-emmeans(Pmodel1, ~group)
+cld(emm)
+```
+ 
+
+### *Gross Photosynthesis*  
+
+Build linear mixed effect model and examine for GP      
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+GPmodel1<-lmer(GP.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
+anova(GPmodel1, type="II")
+summary(GPmodel1)
+```
+
+Check assumptions of model for residual normality and variance. Violates variance assumption, return to this.    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(GPmodel1))
+leveneTest(residuals(GPmodel1)~group, data=PRdf)
+```
+
+Conduct post hoc test.  
+
+```{r}
+emm<-emmeans(GPmodel1, ~group)
+cld(emm)
+```
+
+### *P:R*  
+ 
+Build linear mixed effect model and examine for GP      
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+PRmodel1<-lmer(ratio~group + (1|Run), data=PRdf) #run nested within day
+anova(PRmodel1, type="II")
+summary(PRmodel1)
+```
+
+Check assumptions of model for residual normality and variance. Violates variance assumption, return to this.    
+
+```{r, results=TRUE, warning=FALSE, message=FALSE}
+qqPlot(residuals(PRmodel1))
+leveneTest(residuals(PRmodel1)~group, data=PRdf)
+```
+
+Conduct post hoc test.  
+
+```{r}
+emm<-emmeans(PRmodel1, ~group)
+cld(emm)
+```
+
+### Generate summary tables of mean and SE for all variables  
+
+Generate summary of all respiration data.  
+
+```{r}
+summary<-PRdf%>%
+  group_by(group)%>%
+  summarise(N=length(R.nmol.org.min),
+            Mean_R=mean(R.nmol.org.min), 
+            SE_R=sd(R.nmol.org.min)/sqrt(length(R.nmol.org.min)),
+            Mean_P=mean(P.nmol.org.min), 
+            SE_P=sd(P.nmol.org.min)/sqrt(length(P.nmol.org.min)),
+            Mean_GP=mean(GP.nmol.org.min), 
+            SE_GP=sd(GP.nmol.org.min)/sqrt(length(GP.nmol.org.min)),
+            Mean_PR=mean(ratio), 
+            SE_PR=sd(ratio)/sqrt(length(ratio)))
+
+summary%>%
+  write_csv(., "Mcap2020/Output/Respiration/mean_respiration.csv")
+```
+
+
+# **Exploring additional datasets**    
 ## **Plotting: Larvae, Recruits, Juveniles**    
 
 Generate plots by lifestage and days post fertilization.  
@@ -651,7 +926,7 @@ ggsave(filename="Mcap2020/Figures/Respiration/mcap_fused_colony_vs_polyp_panel.p
 
 ## **Analysis: Larvae, Recruits, Juveniles**  
 
-### *Respiration*    
+### *Respiration*     
 
 Build linear mixed effect model and examine for Respiration.     
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
@@ -1013,4 +1288,4 @@ In this data, we saw a few things that are particularly interesting to think abo
 (6) Raises interesting questions for integration timing of symbiosis after settlement.  
 
 
-# **Analysis and plotting of core dataset**  
+

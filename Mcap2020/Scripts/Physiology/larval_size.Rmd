@@ -261,3 +261,26 @@ corr<-corr%>%
   mutate(counts_area=cells.ind/mean_area)
 ```
 
+Plot cells per mm^2 as a boxplot.  
+
+```{r}
+cells_size_plot<-corr %>%
+    ggplot(., aes(x = hpf, y = counts_area)) +
+    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
+    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
+    ylim(2000, 35000)+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14)
+      ); cells_size_plot
+
+ggsave("Mcap2020/Figures/Physiology/Normalized_counts_size.png", cells_size_plot, dpi=300, w=8.5, h=5, units="in")
+```
+

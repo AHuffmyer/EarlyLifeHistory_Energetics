@@ -284,3 +284,31 @@ cells_size_plot<-corr %>%
 ggsave("Mcap2020/Figures/Physiology/Normalized_counts_size.png", cells_size_plot, dpi=300, w=8.5, h=5, units="in")
 ```
 
+Analyze differences in normalized cell counts by timepoint. Normality and variance assumtions pass. There is a significant effect of timepoint on cell counts normalized to average size.  
+
+```{r}
+model<-aov(counts_area~lifestage, data=corr)
+qqPlot(residuals(model))
+leveneTest(residuals(model)~lifestage, data=corr)
+summary(model)
+```
+
+View posthoc differences.  
+```{r}
+emm = emmeans(model, ~ lifestage)
+cld(emm, Letters=c(LETTERS)) #letter display
+```
+
+Generate summary table of descriptive statistics.  
+
+```{r}
+#need to output to csv 
+corr%>%
+  group_by(group, hpf)%>%
+  summarize(n=length(counts_area),
+            Mean=format(round(mean(counts_area), 0), 0), 
+            SE=format(round(sd(counts_area)/sqrt(length(counts_area)),0),0))%>%
+  rename(Lifestage=group, HPF=hpf)%>%
+  write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary.csv")
+```
+

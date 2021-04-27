@@ -252,3 +252,12 @@ test
 ```
 
 Significant correlation between size and cell counts.  r=0.37  
+
+# Visualize normalized symbiont cell counts using summarized data at the level of the tube.   
+
+Generate number of symbiont cells per mm^2 area.  
+```{r}
+corr<-corr%>%
+  mutate(counts_area=cells.ind/mean_area)
+```
+

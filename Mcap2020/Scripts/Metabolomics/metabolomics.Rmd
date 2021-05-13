@@ -548,13 +548,13 @@ scaled.pca<-prcomp(data_pca_full[c(3:123)],scale=TRUE, center=TRUE)
 fviz_eig(scaled.pca)
 
 pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
-  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
-  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
+  scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
   theme_classic()+
   xlim(-0.75,0.75)+
   ylim(-0.75, 0.75)+
    theme(legend.text = element_text(size=18), 
-         legend.position="right",
+         legend.position="none",
         plot.background = element_blank(),
         legend.title = element_text(size=18, face="bold"), 
         axis.text = element_text(size=18), 

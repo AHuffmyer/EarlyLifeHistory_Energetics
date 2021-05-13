@@ -32,6 +32,8 @@ if ("scales" %in% rownames(installed.packages()) == 'FALSE') install.packages('s
 if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
 if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
 if ("effects" %in% rownames(installed.packages()) == 'FALSE') install.packages('effects') 
+if ("emmeans" %in% rownames(installed.packages()) == 'FALSE') install.packages('emmeans') 
+if ("multcomp" %in% rownames(installed.packages()) == 'FALSE') install.packages('multcomp') 
 
 #load packages
 library("ggplot2")
@@ -42,12 +44,14 @@ library('lmerTest')
 library('scales')
 library('cowplot')
 library('effects')
+library('emmeans')
+library('multcomp')
 ```
 
 
 # **Data visualization and manipulation**  
 
-Load data from LoLinR.   
+Load data from LoLinR.    
 ```{r, warning=FALSE, message=FALSE}
 PRdata<-read.csv("Mcap2020/Output/Respiration/oxygen_P_R_calc.csv") #load data
 ```
@@ -235,7 +239,7 @@ ggsave(filename="Mcap2020/Figures/Respiration/respirometry_fig.png", plot=full_f
 
 Build linear mixed effect model and examine for Respiration.      
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
-Rmodel1<-lmer(R.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
+Rmodel1<-lmer(R.nmol.org.min~group + (1|Run), data=PRdf) #run as random
 anova(Rmodel1, type="II")
 summary(Rmodel1)
 ```
@@ -257,7 +261,7 @@ cld(emm)
 
 ### *Net Photosynthesis*  
 
-Build linear mixed effect model and examine for Photosynthesis      
+Build linear mixed effect model and examine for Photosynthesis       
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 Pmodel1<-lmer(P.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
 anova(Pmodel1, type="II")
@@ -281,7 +285,7 @@ cld(emm)
 
 ### *Gross Photosynthesis*  
 
-Build linear mixed effect model and examine for GP      
+Build linear mixed effect model and examine for GP       
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 GPmodel1<-lmer(GP.nmol.org.min~group + (1|Run), data=PRdf) #run nested within day
 anova(GPmodel1, type="II")
@@ -304,14 +308,14 @@ cld(emm)
 
 ### *P:R*  
  
-Build linear mixed effect model and examine for GP      
+Build linear mixed effect model and examine for GP       
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 PRmodel1<-lmer(ratio~group + (1|Run), data=PRdf) #run nested within day
 anova(PRmodel1, type="II")
 summary(PRmodel1)
 ```
 
-Check assumptions of model for residual normality and variance. Violates variance assumption, return to this.    
+Check assumptions of model for residual normality and variance. Meets assumptions.  
 
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 qqPlot(residuals(PRmodel1))

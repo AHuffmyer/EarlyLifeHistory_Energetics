@@ -176,12 +176,15 @@ ggsave("Mcap2020/Figures/Physiology/LarvalSize_Box.png", size_plot2, dpi=300, w=
 
 # Statistical analysis  
 
-Run ANOVA on cells per larvae by sampling point, specified by sequence of samples taken (life stage, hpf).    
+Run lmer on cells per larvae by sampling point, specified by sequence of samples taken (life stage, hpf). Use tube ID as random effect.       
 
 ```{r}
-model<-aov(area~lifestage, data=df)
+#model<-aov(area~lifestage, data=df)
+model<-lmer(area~lifestage + (1|tube.ID), data=df)
+summary(model)
 qqPlot(residuals(model))
 leveneTest(residuals(model)~lifestage, data=df)
+anova(model, type=2)
 ```
 
 Violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  

@@ -1,5 +1,5 @@
 ---
-title: M. capitata 2020 metabolomics analysis
+title: Montipora capitata 2020 metabolomics analysis
 author: "AS Huffmyer"
 date: '2021'
 output:
@@ -64,9 +64,14 @@ library("tidyverse")
 # Data processing and exploration  
 ## Positive Polarity  
 
-Load data
+Load data  
 ```{r}
-data<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+dataset1<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+dataset2<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_Normalized_20210524_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+#join together by compound
+data<-full_join(dataset1, dataset2)
 
 #rename columns to be useful
 data<- data %>% 
@@ -76,7 +81,47 @@ data<- data %>%
     Larvae4_rep1 = Larvae.4_50uL_1,
     Larvae4_rep2 =  Larvae.4_50uL_2,
     Larvae6_rep1 = Larvae.6_15.20.Individuals_1,
-    Larvae6_rep2 = Larvae.6_15.20.Individuals_2 
+    Larvae6_rep2 = Larvae.6_15.20.Individuals_2, 
+    Egg_rep1 = Egg.Fertilized_F1_8, 
+    Egg_rep2 = Egg.Fertilized_F2_4, 
+    Egg_rep3 = Egg.Fertilized_F3_18, 
+    Egg_rep4 = Egg.Fertilized_F4_12, 
+    Embryo_rep1 = Embryo.1_F5_39, 
+    Embryo_rep2 = Embryo.1_F6_7, 
+    Embryo_rep3 = Embryo.1_F7_23, 
+    Embryo_rep4 = Embryo.1_F8_29, 
+    Larvae1_rep1 = Larvae.1_F9_6, 
+    Larvae1_rep2 = Larvae.1_F10_19, 
+    Larvae1_rep3 = Larvae.1_F11_44, 
+    Larvae1_rep4 = Larvae.1_F12_5, 
+    Larvae2_rep3 = Larvae.2_F15_46, 
+    Larvae2_rep4 = Larvae.2_F16_11, 
+    Larvae3_rep1 = Larvae.3_F17_43, 
+    Larvae3_rep2 = Larvae.3_F18_26, 
+    Larvae3_rep3 = Larvae.3_F19_17, 
+    Larvae3_rep4 = Larvae.3_F20_9, 
+    Larvae4_rep3 = Larvae.4_F23_1, 
+    Larvae4_rep4 = Larvae.4_F24_24, 
+    Larvae5_rep1 = Larvae.5_F25_2, 
+    Larvae5_rep2 = Larvae.5_F26_22, 
+    Larvae5_rep3 = Larvae.5_F27_15, 
+    Larvae5_rep4 = Larvae.5_F28_13, 
+    Larvae6_rep3 = Larvae.6_F31_16, 
+    Larvae6_rep4 = Larvae.6_F32_14, 
+    Recruit1_rep1 = Recruit.1_F33_3, 
+    Recruit1_rep2 = Recruit.1_F34_47, 
+    Recruit1_rep3 = Recruit.1_F35_10, 
+    Recruit1_rep4 = Recruit.1_F36_28, 
+    Recruit1plug_rep1 = Recruit.1_Plug_20, 
+    Recruit1plug_rep2 = Recruit.1_Plug_32,
+    Recruit1plug_rep3 = Recruit.1_Plug_35,
+    Recruit1plug_rep4 = Recruit.1_Plug_37,
+    Recruit2_rep1 = Recruit.2_F37_45, 
+    Recruit2_rep2 = Recruit.2_F38_27, 
+    Recruit2_rep3 = Recruit.2_F39_21, 
+    Recruit2_rep4 = Recruit.2_F40_25, 
+    Recruit2plug_rep1 = Recruit.2_Plug_31, 
+    Recruit2plug_rep2 = Recruit.2_Plug_34
     )
 
 ```
@@ -85,22 +130,61 @@ Conduct normalization of samples by normalizing each metabolite ion count to the
 
 ```{r}
 data<- data %>%
-  mutate(Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
-         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2), 
-         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1), 
-         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2),
-         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1),
-         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2))
+  mutate(Egg_rep1_norm = Egg_rep1 / median(Egg_rep1, na.rm=TRUE), 
+         Egg_rep2_norm = Egg_rep2 / median(Egg_rep2, na.rm=TRUE), 
+         Egg_rep3_norm = Egg_rep3 / median(Egg_rep3, na.rm=TRUE),
+         Egg_rep4_norm = Egg_rep4 / median(Egg_rep4, na.rm=TRUE),
+         Embryo_rep1_norm = Embryo_rep1 / median(Embryo_rep1, na.rm=TRUE), 
+         Embryo_rep2_norm = Embryo_rep2 / median(Embryo_rep2, na.rm=TRUE), 
+         Embryo_rep3_norm = Embryo_rep3 / median(Embryo_rep3, na.rm=TRUE),
+         Embryo_rep4_norm = Embryo_rep4 / median(Embryo_rep4, na.rm=TRUE),
+         Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1, na.rm=TRUE), 
+         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2, na.rm=TRUE), 
+         Larvae1_rep3_norm = Larvae1_rep3 / median(Larvae1_rep3, na.rm=TRUE),
+         Larvae1_rep4_norm = Larvae1_rep4 / median(Larvae1_rep4, na.rm=TRUE),
+         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1, na.rm=TRUE), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2, na.rm=TRUE), 
+         Larvae2_rep3_norm = Larvae2_rep3 / median(Larvae2_rep3, na.rm=TRUE),
+         Larvae2_rep4_norm = Larvae2_rep4 / median(Larvae2_rep4, na.rm=TRUE),
+         Larvae3_rep1_norm = Larvae3_rep1 / median(Larvae3_rep1, na.rm=TRUE), 
+         Larvae3_rep2_norm = Larvae3_rep2 / median(Larvae3_rep2, na.rm=TRUE), 
+         Larvae3_rep3_norm = Larvae3_rep3 / median(Larvae3_rep3, na.rm=TRUE),
+         Larvae3_rep4_norm = Larvae3_rep4 / median(Larvae3_rep4, na.rm=TRUE),
+         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1, na.rm=TRUE), 
+         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2, na.rm=TRUE),
+         Larvae4_rep3_norm = Larvae4_rep3 / median(Larvae4_rep3, na.rm=TRUE), 
+         Larvae4_rep4_norm = Larvae4_rep4 / median(Larvae4_rep4, na.rm=TRUE),
+         Larvae5_rep1_norm = Larvae5_rep1 / median(Larvae5_rep1, na.rm=TRUE), 
+         Larvae5_rep2_norm = Larvae5_rep2 / median(Larvae5_rep2, na.rm=TRUE),
+         Larvae5_rep3_norm = Larvae5_rep3 / median(Larvae5_rep3, na.rm=TRUE), 
+         Larvae5_rep4_norm = Larvae5_rep4 / median(Larvae5_rep4, na.rm=TRUE),
+         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1, na.rm=TRUE),
+         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2, na.rm=TRUE),
+         Larvae6_rep3_norm = Larvae6_rep3 / median(Larvae6_rep3, na.rm=TRUE),
+         Larvae6_rep4_norm = Larvae6_rep4 / median(Larvae6_rep4, na.rm=TRUE), 
+         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1, na.rm=TRUE),
+         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2, na.rm=TRUE),
+         Recruit1_rep3_norm = Recruit1_rep3 / median(Recruit1_rep3, na.rm=TRUE),
+         Recruit1_rep4_norm = Recruit1_rep4 / median(Recruit1_rep4, na.rm=TRUE), 
+         Recruit2_rep1_norm = Recruit2_rep1 / median(Recruit2_rep1, na.rm=TRUE),
+         Recruit2_rep2_norm = Recruit2_rep2 / median(Recruit2_rep2, na.rm=TRUE),
+         Recruit2_rep3_norm = Recruit2_rep3 / median(Recruit2_rep3, na.rm=TRUE),
+         Recruit2_rep4_norm = Recruit2_rep4 / median(Recruit2_rep4, na.rm=TRUE),
+         Recruit1plug_rep1_norm = Recruit1plug_rep1 / median(Recruit1plug_rep1, na.rm=TRUE),
+         Recruit1plug_rep2_norm = Recruit1plug_rep2 / median(Recruit1plug_rep2, na.rm=TRUE),
+         Recruit1plug_rep3_norm = Recruit1plug_rep3 / median(Recruit1plug_rep3, na.rm=TRUE),
+         Recruit1plug_rep4_norm = Recruit1plug_rep4 / median(Recruit1plug_rep4, na.rm=TRUE),
+         Recruit2plug_rep1_norm = Recruit2plug_rep1 / median(Recruit2plug_rep1, na.rm=TRUE),
+         Recruit2plug_rep2_norm = Recruit2plug_rep2 / median(Recruit2plug_rep2, na.rm=TRUE))
 ```
-
 
 Mutate the data to be in long rather than wide format.  
 
 ```{r}
 data <- data %>% 
-  gather(Sample, IonCounts, 23:28)
+  gather(Sample, IonCounts, 64:109)
 
-data <- data[c(9, 23, 24)]
+data <- data[c(9, 64, 65)]
 ```
 
 Add lifestage column for categorizing  
@@ -129,7 +213,7 @@ data_summary<-data_plotting[c(1,2,4)]
   #spread(Lifestage, mean) %>%
   #write_csv("Mcap2020/Output/Metabolomics/mean_norm_counts_lifestage_pos.csv")
 
-metab_compounds<-ggplot(data_plotting, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
+metab_compounds<-ggplot(data_summary, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
   geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
   theme_classic()+
   xlab("Metabolites")+
@@ -163,19 +247,33 @@ Convert data to wide format.
 ```{r}
 data_pca<-data%>%
   spread(compound, IonCounts)
+
+data_pca<-data_pca%>%
+  filter(!(Sample=="Larvae2_rep1_norm"))%>%
+  filter(!(Sample=="Larvae2_rep2_norm"))%>%
+  filter(!(Sample=="Larvae4_rep1_norm"))%>%
+  filter(!(Sample=="Larvae4_rep2_norm"))%>%
+  filter(!(Sample=="Larvae6_rep1_norm"))%>%
+  filter(!(Sample=="Larvae6_rep2_norm"))
+#manualluy remove samples that were run in different runs as the metabolite profiles are different and result in a large number of NA's
+
+#remove columns with na's 
+data_pca<-data_pca%>%
+    select_if(~ !any(is.na(.)))
+
 ```
 
 Plot PCA with lifestage in colors.  
 
 ```{r}
-scaled.pca<-prcomp(data_pca[c(4:81)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca[c(4:131)],scale=TRUE, center=TRUE) 
 
 pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
-  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
-  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
-  xlim(-0.75,0.75)+
-  ylim(-0.75, 0.75)+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
    theme(legend.text = element_text(size=18), 
          legend.position="right",
         plot.background = element_blank(),
@@ -190,47 +288,47 @@ ggsave("Mcap2020/Figures/Metabolomics/PCA_pos.pdf", plot=pcaPlot1, height=8, wid
 
 Read in .csv of normalized counts with trend assigned.  
 
-Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend.  
+Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent trend. - No longer using this approach with high number of samples, but leaving in script for reference.  
 
 Add a column to distinguish increasing, decreasing, or variable trends.  
 
 ```{r}
 #assign trends 
-trends<-data_summary%>%
-  spread(Lifestage, mean)%>%
-  mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
-                      ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
+#trends<-data_summary%>%
+  #spread(Lifestage, mean)%>%
+  #mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
+                      #ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
 ```
 
 
 ```{r}
-trends<-trends%>%
-  gather(Lifestage, IonCounts, 2:4)
+#trends<-trends%>%
+  #gather(Lifestage, IonCounts, 2:4)
   
-metab_trends<-ggplot(trends, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
-  facet_wrap(~Trend, scales = "free")+
-  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
-  theme_classic()+
-  xlab("Metabolites")+
-  ylab("Normalized Ion Count")+
-  theme(
-    legend.position="right", 
-    panel.border=element_rect(colour="black", fill=NA, size=1),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-    text = element_text(size = 16, color="black"), 
-    axis.text.y = element_text(size=14, color="black"), 
-    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
-    axis.title = element_text(face="bold"));metab_trends
+#metab_trends<-ggplot(trends, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
+  #facet_wrap(~Trend, scales = "free")+
+  #geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  #theme_classic()+
+  #xlab("Metabolites")+
+  #ylab("Normalized Ion Count")+
+  #theme(
+   # legend.position="right", 
+    #panel.border=element_rect(colour="black", fill=NA, size=1),
+    #strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+    #text = element_text(size = 16, color="black"), 
+    #axis.text.y = element_text(size=14, color="black"), 
+    #axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+    #axis.title = element_text(face="bold"));metab_trends
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale.pdf", plot=metab_trends, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale.pdf", plot=metab_trends, dpi=300, width=35, height=8, units="in")
 
-trend_short<-metab_trends + ylim(0,100)
+#trend_short<-metab_trends + ylim(0,100)
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale.pdf", plot=trend_short, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale.pdf", plot=trend_short, dpi=300, width=35, height=8, units="in")
 
-trend_shortest<-metab_trends + ylim(0,20)
+#trend_shortest<-metab_trends + ylim(0,20)
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale.pdf", plot=trend_shortest, dpi=300, width=35, height=8, units="in")
 ```
 
 
@@ -239,7 +337,12 @@ ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale.pdf", plot=trend_shor
 
 Load data
 ```{r}
-data_neg<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Neg_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+data_neg1<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Neg_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+data_neg2<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Neg_Normalized_20210524_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
+
+#join together by compound
+data_neg<-full_join(data_neg1, data_neg2)
 
 #rename columns to be useful
 data_neg<- data_neg %>% 
@@ -247,10 +350,56 @@ data_neg<- data_neg %>%
     Larvae2_rep1 = Larvae.2_50uL_1,
     Larvae2_rep2 = Larvae.2_50uL_2,
     Larvae4_rep1 = Larvae.4_50uL_1,
-    Larvae4_rep2 = Larvae.4_50uL_2,
+    Larvae4_rep2 =  Larvae.4_50uL_2,
     Larvae6_rep1 = Larvae.6_15.20.Individuals_1,
-    Larvae6_rep2 = Larvae.6_15.20.Individuals_2 
-    )
+    Larvae6_rep2 = Larvae.6_15.20.Individuals_2, 
+    Egg_rep1 = Egg.Fertilized_F1_8, 
+    Egg_rep2 = Egg.Fertilized_F2_4, 
+    Egg_rep3 = Egg.Fertilized_F3_18, 
+    Egg_rep4 = Egg.Fertilized_F4_12, 
+    Embryo_rep1 = Embryo.1_F5_39, 
+    Embryo_rep2 = Embryo.1_F6_7, 
+    Embryo_rep3 = Embryo.1_F7_23, 
+    Embryo_rep4 = Embryo.1_F8_29, 
+    Larvae1_rep1 = Larvae.1_F9_6, 
+    Larvae1_rep2 = Larvae.1_F10_19, 
+    Larvae1_rep3 = Larvae.1_F11_44, 
+    Larvae1_rep4 = Larvae.1_F12_5, 
+    Larvae2_rep3 = Larvae.2_F15_46, 
+    Larvae2_rep4 = Larvae.2_F16_11, 
+    Larvae3_rep1 = Larvae.3_F17_43, 
+    Larvae3_rep2 = Larvae.3_F18_26, 
+    Larvae3_rep3 = Larvae.3_F19_17, 
+    Larvae3_rep4 = Larvae.3_F20_9, 
+    Larvae4_rep3 = Larvae.4_F23_1, 
+    Larvae4_rep4 = Larvae.4_F24_24, 
+    Larvae5_rep1 = Larvae.5_F25_2, 
+    Larvae5_rep2 = Larvae.5_F26_22, 
+    Larvae5_rep3 = Larvae.5_F27_15, 
+    Larvae5_rep4 = Larvae.5_F28_13, 
+    Larvae6_rep3 = Larvae.6_F31_16, 
+    Larvae6_rep4 = Larvae.6_F32_14, 
+    Recruit1_rep1 = Recruit.1_F33_3, 
+    Recruit1_rep2 = Recruit.1_F34_47, 
+    Recruit1_rep3 = Recruit.1_F35_10, 
+    Recruit1_rep4 = Recruit.1_F36_28, 
+    Recruit1plug_rep1 = Recruit.1_Plug_20, 
+    Recruit1plug_rep2 = Recruit.1_Plug_32,
+    Recruit1plug_rep3 = Recruit.1_Plug_35,
+    Recruit1plug_rep4 = Recruit.1_Plug_37,
+    Recruit2_rep1 = Recruit.2_F37_45, 
+    Recruit2_rep2 = Recruit.2_F38_27, 
+    Recruit2_rep3 = Recruit.2_F39_21, 
+    Recruit2_rep4 = Recruit.2_F40_25, 
+    Recruit2plug_rep1 = Recruit.2_Plug_31, 
+    Recruit2plug_rep2 = Recruit.2_Plug_34, 
+    Recruit2plug_rep3 = Recruit.2_Plug_40,
+    Recruit2plug_rep4 = Recruit.2_Plug_41,
+    Recruit2plug_rep5 = Recruit.2_Plug_42,
+    Recruit3plug_rep1 = Recruit.3_Plug_30,
+    Recruit3plug_rep2 = Recruit.3_Plug_33,
+    Recruit3plug_rep3 = Recruit.3_Plug_36,
+    Recruit3plug_rep4 = Recruit.3_Plug_38)
 
 ```
 
@@ -259,12 +408,59 @@ Conduct normalization of samples by normalizing each metabolite ion count to the
 
 ```{r}
 data_neg<- data_neg %>%
-  mutate(Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1), 
-         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2), 
-         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1), 
-         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2),
-         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1),
-         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2))
+  mutate(Egg_rep1_norm = Egg_rep1 / median(Egg_rep1, na.rm=TRUE), 
+         Egg_rep2_norm = Egg_rep2 / median(Egg_rep2, na.rm=TRUE), 
+         Egg_rep3_norm = Egg_rep3 / median(Egg_rep3, na.rm=TRUE),
+         Egg_rep4_norm = Egg_rep4 / median(Egg_rep4, na.rm=TRUE),
+         Embryo_rep1_norm = Embryo_rep1 / median(Embryo_rep1, na.rm=TRUE), 
+         Embryo_rep2_norm = Embryo_rep2 / median(Embryo_rep2, na.rm=TRUE), 
+         Embryo_rep3_norm = Embryo_rep3 / median(Embryo_rep3, na.rm=TRUE),
+         Embryo_rep4_norm = Embryo_rep4 / median(Embryo_rep4, na.rm=TRUE),
+         Larvae1_rep1_norm = Larvae1_rep1 / median(Larvae1_rep1, na.rm=TRUE), 
+         Larvae1_rep2_norm = Larvae1_rep2 / median(Larvae1_rep2, na.rm=TRUE), 
+         Larvae1_rep3_norm = Larvae1_rep3 / median(Larvae1_rep3, na.rm=TRUE),
+         Larvae1_rep4_norm = Larvae1_rep4 / median(Larvae1_rep4, na.rm=TRUE),
+         Larvae2_rep1_norm = Larvae2_rep1 / median(Larvae2_rep1, na.rm=TRUE), 
+         Larvae2_rep2_norm = Larvae2_rep2 / median(Larvae2_rep2, na.rm=TRUE), 
+         Larvae2_rep3_norm = Larvae2_rep3 / median(Larvae2_rep3, na.rm=TRUE),
+         Larvae2_rep4_norm = Larvae2_rep4 / median(Larvae2_rep4, na.rm=TRUE),
+         Larvae3_rep1_norm = Larvae3_rep1 / median(Larvae3_rep1, na.rm=TRUE), 
+         Larvae3_rep2_norm = Larvae3_rep2 / median(Larvae3_rep2, na.rm=TRUE), 
+         Larvae3_rep3_norm = Larvae3_rep3 / median(Larvae3_rep3, na.rm=TRUE),
+         Larvae3_rep4_norm = Larvae3_rep4 / median(Larvae3_rep4, na.rm=TRUE),
+         Larvae4_rep1_norm = Larvae4_rep1 / median(Larvae4_rep1, na.rm=TRUE), 
+         Larvae4_rep2_norm = Larvae4_rep2 / median(Larvae4_rep2, na.rm=TRUE),
+         Larvae4_rep3_norm = Larvae4_rep3 / median(Larvae4_rep3, na.rm=TRUE), 
+         Larvae4_rep4_norm = Larvae4_rep4 / median(Larvae4_rep4, na.rm=TRUE),
+         Larvae5_rep1_norm = Larvae5_rep1 / median(Larvae5_rep1, na.rm=TRUE), 
+         Larvae5_rep2_norm = Larvae5_rep2 / median(Larvae5_rep2, na.rm=TRUE),
+         Larvae5_rep3_norm = Larvae5_rep3 / median(Larvae5_rep3, na.rm=TRUE), 
+         Larvae5_rep4_norm = Larvae5_rep4 / median(Larvae5_rep4, na.rm=TRUE),
+         Larvae6_rep1_norm = Larvae6_rep1 / median(Larvae6_rep1, na.rm=TRUE),
+         Larvae6_rep2_norm = Larvae6_rep2 / median(Larvae6_rep2, na.rm=TRUE),
+         Larvae6_rep3_norm = Larvae6_rep3 / median(Larvae6_rep3, na.rm=TRUE),
+         Larvae6_rep4_norm = Larvae6_rep4 / median(Larvae6_rep4, na.rm=TRUE), 
+         Recruit1_rep1_norm = Recruit1_rep1 / median(Recruit1_rep1, na.rm=TRUE),
+         Recruit1_rep2_norm = Recruit1_rep2 / median(Recruit1_rep2, na.rm=TRUE),
+         Recruit1_rep3_norm = Recruit1_rep3 / median(Recruit1_rep3, na.rm=TRUE),
+         Recruit1_rep4_norm = Recruit1_rep4 / median(Recruit1_rep4, na.rm=TRUE), 
+         Recruit2_rep1_norm = Recruit2_rep1 / median(Recruit2_rep1, na.rm=TRUE),
+         Recruit2_rep2_norm = Recruit2_rep2 / median(Recruit2_rep2, na.rm=TRUE),
+         Recruit2_rep3_norm = Recruit2_rep3 / median(Recruit2_rep3, na.rm=TRUE),
+         Recruit2_rep4_norm = Recruit2_rep4 / median(Recruit2_rep4, na.rm=TRUE),
+         Recruit1plug_rep1_norm = Recruit1plug_rep1 / median(Recruit1plug_rep1, na.rm=TRUE),
+         Recruit1plug_rep2_norm = Recruit1plug_rep2 / median(Recruit1plug_rep2, na.rm=TRUE),
+         Recruit1plug_rep3_norm = Recruit1plug_rep3 / median(Recruit1plug_rep3, na.rm=TRUE),
+         Recruit1plug_rep4_norm = Recruit1plug_rep4 / median(Recruit1plug_rep4, na.rm=TRUE),
+         Recruit2plug_rep1_norm = Recruit2plug_rep1 / median(Recruit2plug_rep1, na.rm=TRUE),
+         Recruit2plug_rep2_norm = Recruit2plug_rep2 / median(Recruit2plug_rep2, na.rm=TRUE),
+         Recruit2plug_rep3_norm = Recruit2plug_rep3 / median(Recruit2plug_rep3, na.rm=TRUE),
+         Recruit2plug_rep4_norm = Recruit2plug_rep4 / median(Recruit2plug_rep4, na.rm=TRUE),
+         Recruit2plug_rep5_norm = Recruit2plug_rep5 / median(Recruit2plug_rep5, na.rm=TRUE),
+         Recruit3plug_rep1_norm = Recruit3plug_rep1 / median(Recruit3plug_rep1, na.rm=TRUE),
+         Recruit3plug_rep2_norm = Recruit3plug_rep2 / median(Recruit3plug_rep2, na.rm=TRUE),
+         Recruit3plug_rep3_norm = Recruit3plug_rep3 / median(Recruit3plug_rep3, na.rm=TRUE),
+         Recruit3plug_rep4_norm = Recruit3plug_rep4 / median(Recruit3plug_rep4, na.rm=TRUE))
 ```
 
 
@@ -272,9 +468,9 @@ Mutate the data to be in long rather than wide format.
 
 ```{r}
 data_neg <- data_neg %>% 
-  gather(Sample, IonCounts, 23:28)
+  gather(Sample, IonCounts, 71:123)
 
-data_neg <- data_neg[c(9, 23, 24)]
+data_neg <- data_neg[c(9, 71, 72)]
 ```
 
 Add lifestage column for categorizing  
@@ -303,7 +499,7 @@ data_summary_neg<-data_plotting_neg[c(1,2,4)]
   #spread(Lifestage, mean) %>%
   #write_csv("Mcap2020/Output/Metabolomics/mean_norm_counts_lifestage_neg.csv")
 
-metab_compounds_neg<-ggplot(data_plotting_neg, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
+metab_compounds_neg<-ggplot(data_summary_neg, aes(y=mean, x=compound, fill=Lifestage, group=Lifestage)) + 
   geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
   theme_classic()+
   xlab("Metabolites")+
@@ -338,19 +534,32 @@ Convert data to wide format.
 ```{r}
 data_pca_neg<-data_neg%>%
   spread(compound, IonCounts)
+
+data_pca_neg<-data_pca_neg%>%
+  filter(!(Sample=="Larvae2_rep1_norm"))%>%
+  filter(!(Sample=="Larvae2_rep2_norm"))%>%
+  filter(!(Sample=="Larvae4_rep1_norm"))%>%
+  filter(!(Sample=="Larvae4_rep2_norm"))%>%
+  filter(!(Sample=="Larvae6_rep1_norm"))%>%
+  filter(!(Sample=="Larvae6_rep2_norm"))
+#manualluy remove samples that were run in different runs as the metabolite profiles are different and result in a large number of NA's
+
+#remove columns with na's 
+data_pca_neg<-data_pca_neg%>%
+    select_if(~ !any(is.na(.)))
 ```
  
 Plot PCA with lifestage in colors.  
 
 ```{r}
-scaled.pca.neg<-prcomp(data_pca_neg[c(4:76)],scale=TRUE, center=TRUE) 
+scaled.pca.neg<-prcomp(data_pca_neg[c(4:139)],scale=TRUE, center=TRUE) 
 
 pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
-  scale_colour_manual(values=c("orange", "darkgray", "purple")) +
-  scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
-  xlim(-0.75,0.75)+
-  ylim(-0.75, 0.75)+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
    theme(legend.text = element_text(size=18), 
          legend.position="right",
         plot.background = element_blank(),
@@ -370,40 +579,40 @@ Plot compounds grouping by increasing over ontogeny, decreasing, or no apparent 
 Add a column to distinguish increasing, decreasing, or variable trends.  
 ```{r}
 #assign trends to neg dataset
-trends_neg<-data_summary_neg%>%
-  spread(Lifestage, mean)%>%
-  mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
-                      ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
+#trends_neg<-data_summary_neg%>%
+  #spread(Lifestage, mean)%>%
+  #mutate(Trend=ifelse(Larvae2>Larvae4 & Larvae4>Larvae6, "Decreasing", 
+    #                  ifelse(Larvae2<Larvae4 & Larvae4<Larvae6, "Increasing", "Variable")))
 ```
 
 ```{r}
-trends_neg<-trends_neg%>%
-  gather(Lifestage, IonCounts, 2:4)
+#trends_neg<-trends_neg%>%
+ # gather(Lifestage, IonCounts, 2:4)
   
-metab_trends_neg<-ggplot(trends_neg, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
-  facet_wrap(~Trend, scales = "free")+
-  geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
-  theme_classic()+
-  xlab("Metabolites")+
-  ylab("Normalized Ion Count")+
-  theme(
-    legend.position="right", 
-    panel.border=element_rect(colour="black", fill=NA, size=1),
-    strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-    text = element_text(size = 16, color="black"), 
-    axis.text.y = element_text(size=14, color="black"), 
-    axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
-    axis.title = element_text(face="bold"));metab_trends_neg
+#metab_trends_neg<-ggplot(trends_neg, aes(y=IonCounts, x=compound, fill=Lifestage, group=Lifestage)) + 
+#  facet_wrap(~Trend, scales = "free")+
+ # geom_bar(stat="identity", position=position_dodge())+ #change to change boxplot width
+  #theme_classic()+
+#  xlab("Metabolites")+
+ # ylab("Normalized Ion Count")+
+  #theme(
+   # legend.position="right", 
+  #  panel.border=element_rect(colour="black", fill=NA, size=1),
+   # strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+  #  text = element_text(size = 16, color="black"), 
+   # axis.text.y = element_text(size=14, color="black"), 
+  #  axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
+   # axis.title = element_text(face="bold"));metab_trends_neg
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale_neg.pdf", plot=metab_trends_neg, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_fullscale_neg.pdf", plot=metab_trends_neg, dpi=300, width=35, height=8, units="in")
 
-trend_short_neg<-metab_trends_neg + ylim(0,100)
+#trend_short_neg<-metab_trends_neg + ylim(0,100)
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale_neg.pdf", plot=trend_short_neg, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_shortscale_neg.pdf", plot=trend_short_neg, dpi=300, width=35, height=8, units="in")
 
-trend_shortest_neg<-metab_trends_neg + ylim(0,20)
+#trend_shortest_neg<-metab_trends_neg + ylim(0,20)
 
-ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/trends_shortestscale_neg.pdf", plot=trend_shortest_neg, dpi=300, width=35, height=8, units="in")
 ```
 
 Generate a dataframe with normalized counts for positive and negative polarity datasets.  
@@ -430,9 +639,9 @@ write_csv(normalized_counts_pos_neg, file="Mcap2020/Output/Metabolomics/normaliz
 # Selecting metabolite polarity and generating final dataframe   
 
 Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.    
-
+ 
 ```{r}
-#datan is positive and data_neg are negative dataframes 
+#data is positive and data_neg are negative dataframes  
 data<-data%>%
   mutate(Polarity="Positive")
 
@@ -462,8 +671,7 @@ corrplots<-ggplot(data=correlation, aes(x=log(1+Positive), y=log(1+Negative)))+
   facet_wrap(~compound, scales="free")+
   geom_smooth(method='lm', color='red')+
   theme_classic()+
-  theme(text=element_text(size=14, face="bold"))
-corrplots
+  theme(text=element_text(size=14, face="bold"));corrplots
 
 ggsave("Mcap2020/Figures/Metabolomics/Correlation_plot.pdf", corrplots, width=20, height=16)
 ```
@@ -475,7 +683,7 @@ Relationship between positive and negative polarities are generally positive. So
 polarity<-data_full%>%
   gather("Polarity", "IonCounts", 5:6)%>%
   group_by(Polarity, compound)%>%
-  summarise(mean=mean(IonCounts))%>% #summarize across samples (lifestages)
+  summarise(mean=mean(IonCounts, na.rm=TRUE))%>% #summarize across samples (lifestages)
   arrange(compound)%>% #list by compound
   replace_na(list(mean=0)) #replace NA with 0 to allow us to calculate higher values between polarities 
 
@@ -538,23 +746,36 @@ Convert data to wide format.
 data_pca_full<-peaks_selected%>%
   dplyr::select(Lifestage, Rep, compound, value)%>%
   spread(compound, value)
+
+data_pca_full<-data_pca_full%>%
+  mutate(Sample=paste(Lifestage, Rep))%>%
+  filter(!(Sample=="Larvae2 rep1"))%>%
+  filter(!(Sample=="Larvae2 rep2"))%>%
+  filter(!(Sample=="Larvae4 rep1"))%>%
+  filter(!(Sample=="Larvae4 rep2"))%>%
+  filter(!(Sample=="Larvae6 rep1"))%>%
+  filter(!(Sample=="Larvae6 rep2"))
+
+#remove columns with na's
+data_pca_full<-data_pca_full%>%
+    select_if(~ !any(is.na(.)))
 ```
 
 Plot PCA and view scree plot with lifestage in colors.   
 
 ```{r}
-scaled.pca<-prcomp(data_pca_full[c(3:123)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca_full[c(3:97)],scale=TRUE, center=TRUE) 
 
 fviz_eig(scaled.pca)
 
-pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
-  scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
-  scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
+pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  #scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
+  #scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
   theme_classic()+
-  xlim(-0.75,0.75)+
-  ylim(-0.75, 0.75)+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
    theme(legend.text = element_text(size=18), 
-         legend.position="none",
+         #legend.position="none",
         plot.background = element_blank(),
         legend.title = element_text(size=18, face="bold"), 
         axis.text = element_text(size=18), 
@@ -580,6 +801,17 @@ Load data if starting from this point.
 
 ```{r}
 metabolites <- read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+
+metabolites<-metabolites%>%
+  mutate(Sample=paste(Lifestage, Rep))%>%
+  filter(!(Sample=="Larvae2 rep1"))%>%
+  filter(!(Sample=="Larvae2 rep2"))%>%
+  filter(!(Sample=="Larvae4 rep1"))%>%
+  filter(!(Sample=="Larvae4 rep2"))%>%
+  filter(!(Sample=="Larvae6 rep1"))%>%
+  filter(!(Sample=="Larvae6 rep2"))%>%
+  drop_na() #remove samples with na's
+  
 ```
 
 log_norm_count indicates normalized ion counts that are log transformed for analysis.   
@@ -595,9 +827,9 @@ X <- metabolites%>%
   dplyr::select(Lifestage, Rep, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
-Y <- as.factor(X$Lifestage[1:6]) #select treatment names
+Y <- as.factor(X$Lifestage) #select treatment names
 
-X<-X[3:123] #pull only data columns
+X<-X[3:199] #pull only data columns
 
 dim(X) ## display number of samples and metabolite features
 ```
@@ -606,8 +838,8 @@ Generate PLSDA.
 ```{r}
 # PLSDA without variable selection
 MyResult.plsda <- plsda(X,Y) # 1 Run the method
-#plotIndiv(MyResult.plsda)    # 2 Plot the samples
-#plotVar(MyResult.plsda, cutoff = 0.7)    
+plotIndiv(MyResult.plsda)    # 2 Plot the samples
+plotVar(MyResult.plsda, cutoff = 0.7)    
 
 plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA")
 ```
@@ -625,13 +857,15 @@ plotLoadings(MyResult.plsda2, comp = 2, contrib = 'max', method = 'median', ndis
 
 Validate PLS-DA.   
 ```{r}
-#set.seed(30) 
-#MyPerf.plsda <- perf(MyResult.plsda2, validation = "Mfold", folds=2, #fold #? 
-                     #progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
+set.seed(30) 
+MyPerf.plsda <- perf(MyResult.plsda2, validation = "Mfold", folds=2, #fold #? 
+                     progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
 
-MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
+#MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
 
-plot(MyPerf.plsda, col = color.mixo(5:7), sd = TRUE, legend.position = "horizontal")
+plot(MyPerf.plsda,  sd = TRUE)
+# optional setting for above: col = color.mixo(5:7)
+#legend.position = "vertical"
 ```
 
 NOT WORKING: 
@@ -732,3 +966,5 @@ head(comp2.select.metabolites)
 #head(comp4.select.metabolites)
 
 ```
+
+Next add plots for determining metabolite features via Kevin Wong methods.  

@@ -1,8 +1,8 @@
 Lifestage,Rep,HPF,Development,compound,norm_counts,log_norm_counts
-Egg,rep1,1,Embryo,1-Methylhistidine,11.034804930383336,1.0804390552803729
-Egg,rep2,1,Embryo,1-Methylhistidine,10.62884961747218,1.0655367543247711
-Egg,rep3,1,Embryo,1-Methylhistidine,14.28575538157832,1.1842869052763818
-Egg,rep4,1,Embryo,1-Methylhistidine,14.640792828606376,1.1942587635807291
+Egg,rep1,1,Egg,1-Methylhistidine,11.034804930383336,1.0804390552803729
+Egg,rep2,1,Egg,1-Methylhistidine,10.62884961747218,1.0655367543247711
+Egg,rep3,1,Egg,1-Methylhistidine,14.28575538157832,1.1842869052763818
+Egg,rep4,1,Egg,1-Methylhistidine,14.640792828606376,1.1942587635807291
 Embryo,rep1,5,Embryo,1-Methylhistidine,8.303288404298033,0.9686364844046664
 Embryo,rep2,5,Embryo,1-Methylhistidine,6.677917136743185,0.8852434207210345
 Embryo,rep3,5,Embryo,1-Methylhistidine,8.553636594192769,0.9801687173598902
@@ -33,10 +33,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,1-Methylhistidine,0.894293291801
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,1-Methylhistidine,0.7355913793259287,0.2394474843239193
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,1-Methylhistidine,1.2785663571043155,0.3576616807589786
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,1-Methylhistidine,0.45056858984954945,0.16153826915309064
-Egg,rep1,1,Embryo,3-Methylindole,0.4965241205927535,0.17508372107992715
-Egg,rep2,1,Embryo,3-Methylindole,0.380878111373577,0.14015534556336995
-Egg,rep3,1,Embryo,3-Methylindole,0.4163371535200887,0.15116664776344355
-Egg,rep4,1,Embryo,3-Methylindole,0.4159155792256138,0.15103736029623552
+Egg,rep1,1,Egg,3-Methylindole,0.4965241205927535,0.17508372107992715
+Egg,rep2,1,Egg,3-Methylindole,0.380878111373577,0.14015534556336995
+Egg,rep3,1,Egg,3-Methylindole,0.4163371535200887,0.15116664776344355
+Egg,rep4,1,Egg,3-Methylindole,0.4159155792256138,0.15103736029623552
 Embryo,rep1,5,Embryo,3-Methylindole,0.470568111594411,0.16748514431711947
 Embryo,rep2,5,Embryo,3-Methylindole,0.4596389538268761,0.1642454449956519
 Embryo,rep3,5,Embryo,3-Methylindole,0.704782594938052,0.2316690027778562
@@ -67,10 +67,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,3-Methylindole,1.018982360619532
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,3-Methylindole,1.6559146970546406,0.424214122204494
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,3-Methylindole,3.8589607414349683,0.6865433901420269
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,3-Methylindole,1.4850697930107197,0.39533859037067476
-Egg,rep1,1,Embryo,5-Hydroxylysine,2.4724237219296503,0.5406327144502898
-Egg,rep2,1,Embryo,5-Hydroxylysine,2.8173453381098112,0.5817614504000653
-Egg,rep3,1,Embryo,5-Hydroxylysine,3.7566723789766336,0.6773032399415594
-Egg,rep4,1,Embryo,5-Hydroxylysine,3.2783122464789893,0.6312724777516757
+Egg,rep1,1,Egg,5-Hydroxylysine,2.4724237219296503,0.5406327144502898
+Egg,rep1,1,Embryo,5-Hydroxylysine,NA,NA
+Egg,rep2,1,Egg,5-Hydroxylysine,2.8173453381098112,0.5817614504000653
+Egg,rep2,1,Embryo,5-Hydroxylysine,NA,NA
+Egg,rep3,1,Egg,5-Hydroxylysine,3.7566723789766336,0.6773032399415594
+Egg,rep3,1,Embryo,5-Hydroxylysine,NA,NA
+Egg,rep4,1,Egg,5-Hydroxylysine,3.2783122464789893,0.6312724777516757
+Egg,rep4,1,Embryo,5-Hydroxylysine,NA,NA
 Embryo,rep1,5,Embryo,5-Hydroxylysine,3.0516270890335515,0.6076294661483094
 Embryo,rep2,5,Embryo,5-Hydroxylysine,2.796478649154257,0.5793809618115744
 Embryo,rep3,5,Embryo,5-Hydroxylysine,3.1207796139334465,0.6149793883629827
@@ -108,10 +112,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,5-Hydroxylysine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,5-Hydroxylysine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,5-Hydroxylysine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,5-Hydroxylysine,NA,NA
-Egg,rep1,1,Embryo,5-Methylcytosine,0.5603117301948559,0.19321137346901754
-Egg,rep2,1,Embryo,5-Methylcytosine,0.6017519069585717,0.20459524971155973
-Egg,rep3,1,Embryo,5-Methylcytosine,0.4234909762201257,0.1533547184164289
-Egg,rep4,1,Embryo,5-Methylcytosine,0.7776595590001205,0.24984859251476235
+Egg,rep1,1,Egg,5-Methylcytosine,0.5603117301948559,0.19321137346901754
+Egg,rep2,1,Egg,5-Methylcytosine,0.6017519069585717,0.20459524971155973
+Egg,rep3,1,Egg,5-Methylcytosine,0.4234909762201257,0.1533547184164289
+Egg,rep4,1,Egg,5-Methylcytosine,0.7776595590001205,0.24984859251476235
 Embryo,rep1,5,Embryo,5-Methylcytosine,0.7893307735662228,0.25269063115204465
 Embryo,rep2,5,Embryo,5-Methylcytosine,1.4076808394146734,0.3815989166108507
 Embryo,rep3,5,Embryo,5-Methylcytosine,1.9596221227189667,0.4712362649460584
@@ -142,10 +146,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,5-Methylcytosine,1.5626608113412
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,5-Methylcytosine,0.9589115455475888,0.2920148259141402
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,5-Methylcytosine,1.609640926604376,0.41658075472435346
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,5-Methylcytosine,1.5812060461394042,0.4118226737146104
-Egg,rep1,1,Embryo,Acetyl glycine,0.9962763005334415,0.30022065092552597
-Egg,rep2,1,Embryo,Acetyl glycine,1.0957837499017866,0.3213464686411279
-Egg,rep3,1,Embryo,Acetyl glycine,1.0133020999922953,0.3039089465308337
-Egg,rep4,1,Embryo,Acetyl glycine,1.2679084825918467,0.3556255253940269
+Egg,rep1,1,Egg,Acetyl glycine,0.9962763005334415,0.30022065092552597
+Egg,rep1,1,Embryo,Acetyl glycine,NA,NA
+Egg,rep2,1,Egg,Acetyl glycine,1.0957837499017866,0.3213464686411279
+Egg,rep2,1,Embryo,Acetyl glycine,NA,NA
+Egg,rep3,1,Egg,Acetyl glycine,1.0133020999922953,0.3039089465308337
+Egg,rep3,1,Embryo,Acetyl glycine,NA,NA
+Egg,rep4,1,Egg,Acetyl glycine,1.2679084825918467,0.3556255253940269
+Egg,rep4,1,Embryo,Acetyl glycine,NA,NA
 Embryo,rep1,5,Embryo,Acetyl glycine,1.9311069172774973,0.4670316603820567
 Embryo,rep2,5,Embryo,Acetyl glycine,1.988441530642529,0.47544476320877793
 Embryo,rep3,5,Embryo,Acetyl glycine,2.4706505645820553,0.5404108898127962
@@ -183,10 +191,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Acetyl glycine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Acetyl glycine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Acetyl glycine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Acetyl glycine,NA,NA
-Egg,rep1,1,Embryo,Adenosine,25.420027243113427,1.4219332611031765
-Egg,rep2,1,Embryo,Adenosine,40.594684405155924,1.6190378334870286
-Egg,rep3,1,Embryo,Adenosine,5.409431935822086,0.8068195399602736
-Egg,rep4,1,Embryo,Adenosine,8.199552675635084,0.9637667104731218
+Egg,rep1,1,Egg,Adenosine,25.420027243113427,1.4219332611031765
+Egg,rep1,1,Embryo,Adenosine,NA,NA
+Egg,rep2,1,Egg,Adenosine,40.594684405155924,1.6190378334870286
+Egg,rep2,1,Embryo,Adenosine,NA,NA
+Egg,rep3,1,Egg,Adenosine,5.409431935822086,0.8068195399602736
+Egg,rep3,1,Embryo,Adenosine,NA,NA
+Egg,rep4,1,Egg,Adenosine,8.199552675635084,0.9637667104731218
+Egg,rep4,1,Embryo,Adenosine,NA,NA
 Embryo,rep1,5,Embryo,Adenosine,1.5700711935891913,0.40994515389731984
 Embryo,rep2,5,Embryo,Adenosine,1.6198764780973551,0.41828081569176184
 Embryo,rep3,5,Embryo,Adenosine,1.7197549644447143,0.4345297781580156
@@ -224,10 +236,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Adenosine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Adenosine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Adenosine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Adenosine,NA,NA
-Egg,rep1,1,Embryo,AMP,12.995132997370257,1.1459770299725678
-Egg,rep2,1,Embryo,AMP,12.162100628320257,1.1193252067919783
-Egg,rep3,1,Embryo,AMP,9.968430407001447,1.0401444840606473
-Egg,rep4,1,Embryo,AMP,8.356288453525236,0.9711036026030396
+Egg,rep1,1,Egg,AMP,12.995132997370257,1.1459770299725678
+Egg,rep1,1,Embryo,AMP,NA,NA
+Egg,rep2,1,Egg,AMP,12.162100628320257,1.1193252067919783
+Egg,rep2,1,Embryo,AMP,NA,NA
+Egg,rep3,1,Egg,AMP,9.968430407001447,1.0401444840606473
+Egg,rep3,1,Embryo,AMP,NA,NA
+Egg,rep4,1,Egg,AMP,8.356288453525236,0.9711036026030396
+Egg,rep4,1,Embryo,AMP,NA,NA
 Embryo,rep1,5,Embryo,AMP,1.5738843814963823,0.410589034562976
 Embryo,rep2,5,Embryo,AMP,2.8271005808286596,0.5828698761583543
 Embryo,rep3,5,Embryo,AMP,2.889794829241605,0.5899266946732329
@@ -265,10 +281,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,AMP,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,AMP,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,AMP,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,AMP,NA,NA
-Egg,rep1,1,Embryo,Arginine,13.624774140068345,1.1650891677128896
-Egg,rep2,1,Embryo,Arginine,13.534363462522293,1.1623960164457998
-Egg,rep3,1,Embryo,Arginine,12.240787724068726,1.1219138230220977
-Egg,rep4,1,Embryo,Arginine,13.121568285336007,1.149882930415932
+Egg,rep1,1,Egg,Arginine,13.624774140068345,1.1650891677128896
+Egg,rep1,1,Embryo,Arginine,NA,NA
+Egg,rep2,1,Egg,Arginine,13.534363462522293,1.1623960164457998
+Egg,rep2,1,Embryo,Arginine,NA,NA
+Egg,rep3,1,Egg,Arginine,12.240787724068726,1.1219138230220977
+Egg,rep3,1,Embryo,Arginine,NA,NA
+Egg,rep4,1,Egg,Arginine,13.121568285336007,1.149882930415932
+Egg,rep4,1,Embryo,Arginine,NA,NA
 Embryo,rep1,5,Embryo,Arginine,14.025677643902604,1.176834067388337
 Embryo,rep2,5,Embryo,Arginine,13.459009769217069,1.1601385511541806
 Embryo,rep3,5,Embryo,Arginine,14.447141055073418,1.188848112311145
@@ -306,10 +326,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Arginine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Arginine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Arginine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Arginine,NA,NA
-Egg,rep1,1,Embryo,Arginine-Alanine,1.028700203983001,0.30721787287085445
-Egg,rep2,1,Embryo,Arginine-Alanine,1.4122831619714757,0.3824282854182643
-Egg,rep3,1,Embryo,Arginine-Alanine,1.298364845974882,0.36141897039953563
-Egg,rep4,1,Embryo,Arginine-Alanine,1.4875208316756783,0.3957667264203414
+Egg,rep1,1,Egg,Arginine-Alanine,1.028700203983001,0.30721787287085445
+Egg,rep1,1,Embryo,Arginine-Alanine,NA,NA
+Egg,rep2,1,Egg,Arginine-Alanine,1.4122831619714757,0.3824282854182643
+Egg,rep2,1,Embryo,Arginine-Alanine,NA,NA
+Egg,rep3,1,Egg,Arginine-Alanine,1.298364845974882,0.36141897039953563
+Egg,rep3,1,Embryo,Arginine-Alanine,NA,NA
+Egg,rep4,1,Egg,Arginine-Alanine,1.4875208316756783,0.3957667264203414
+Egg,rep4,1,Embryo,Arginine-Alanine,NA,NA
 Embryo,rep1,5,Embryo,Arginine-Alanine,0.3146552751397605,0.11881188839126325
 Embryo,rep2,5,Embryo,Arginine-Alanine,0.5634480193657667,0.19408344664202337
 Embryo,rep3,5,Embryo,Arginine-Alanine,0.5948623009180558,0.20272319238818268
@@ -347,10 +371,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Arginine-Alanine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Arginine-Alanine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Arginine-Alanine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Arginine-Alanine,NA,NA
-Egg,rep1,1,Embryo,Arginine-Glutamine,7.604957460052389,0.9347487276664641
-Egg,rep2,1,Embryo,Arginine-Glutamine,8.919481832558086,0.996488986353947
-Egg,rep3,1,Embryo,Arginine-Glutamine,5.598271290899838,0.8194301677899014
-Egg,rep4,1,Embryo,Arginine-Glutamine,6.610249421893369,0.8813988907754124
+Egg,rep1,1,Egg,Arginine-Glutamine,7.604957460052389,0.9347487276664641
+Egg,rep1,1,Embryo,Arginine-Glutamine,NA,NA
+Egg,rep2,1,Egg,Arginine-Glutamine,8.919481832558086,0.996488986353947
+Egg,rep2,1,Embryo,Arginine-Glutamine,NA,NA
+Egg,rep3,1,Egg,Arginine-Glutamine,5.598271290899838,0.8194301677899014
+Egg,rep3,1,Embryo,Arginine-Glutamine,NA,NA
+Egg,rep4,1,Egg,Arginine-Glutamine,6.610249421893369,0.8813988907754124
+Egg,rep4,1,Embryo,Arginine-Glutamine,NA,NA
 Embryo,rep1,5,Embryo,Arginine-Glutamine,2.7271011251215813,0.5713711763563291
 Embryo,rep2,5,Embryo,Arginine-Glutamine,2.715991987146253,0.5700747688463839
 Embryo,rep3,5,Embryo,Arginine-Glutamine,3.839581525894634,0.6848078102287015
@@ -388,10 +416,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Arginine-Glutamine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Arginine-Glutamine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Arginine-Glutamine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Arginine-Glutamine,NA,NA
-Egg,rep1,1,Embryo,Arginine-Valine,0.4715819233396043,0.1677844443927952
-Egg,rep2,1,Embryo,Arginine-Valine,0.49688443157241785,0.17518827150681754
-Egg,rep3,1,Embryo,Arginine-Valine,0.30633781595817083,0.11605549901811706
-Egg,rep4,1,Embryo,Arginine-Valine,0.5008507660364896,0.1763375112246456
+Egg,rep1,1,Egg,Arginine-Valine,0.4715819233396043,0.1677844443927952
+Egg,rep2,1,Egg,Arginine-Valine,0.49688443157241785,0.17518827150681754
+Egg,rep3,1,Egg,Arginine-Valine,0.30633781595817083,0.11605549901811706
+Egg,rep4,1,Egg,Arginine-Valine,0.5008507660364896,0.1763375112246456
 Embryo,rep1,5,Embryo,Arginine-Valine,0.224910415191919,0.08810432738586155
 Embryo,rep2,5,Embryo,Arginine-Valine,0.49947062433257094,0.17593796204937603
 Embryo,rep3,5,Embryo,Arginine-Valine,0.46448859383198315,0.16568599352863145
@@ -422,10 +450,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Arginine-Valine,0.61861980704234
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Arginine-Valine,0.17561675132673082,0.07026576569330448
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Arginine-Valine,0.4823416924635292,0.1709483237829364
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Arginine-Valine,0.4448890755449928,0.15983450748853198
-Egg,rep1,1,Embryo,Asparagine,0.6307077234453389,0.21237612813433737
-Egg,rep2,1,Embryo,Asparagine,0.5860032948411771,0.20030408520721904
-Egg,rep3,1,Embryo,Asparagine,0.8607706774135062,0.2696928536946446
-Egg,rep4,1,Embryo,Asparagine,0.7031721941251694,0.23125855822560532
+Egg,rep1,1,Egg,Asparagine,0.6307077234453389,0.21237612813433737
+Egg,rep1,1,Embryo,Asparagine,NA,NA
+Egg,rep2,1,Egg,Asparagine,0.5860032948411771,0.20030408520721904
+Egg,rep2,1,Embryo,Asparagine,NA,NA
+Egg,rep3,1,Egg,Asparagine,0.8607706774135062,0.2696928536946446
+Egg,rep3,1,Embryo,Asparagine,NA,NA
+Egg,rep4,1,Egg,Asparagine,0.7031721941251694,0.23125855822560532
+Egg,rep4,1,Embryo,Asparagine,NA,NA
 Embryo,rep1,5,Embryo,Asparagine,0.6964627501198999,0.2295443281161294
 Embryo,rep2,5,Embryo,Asparagine,0.6694643927829502,0.2225771606274115
 Embryo,rep3,5,Embryo,Asparagine,0.7843491591366217,0.25147984053854616
@@ -463,10 +495,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Asparagine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Asparagine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Asparagine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Asparagine,NA,NA
-Egg,rep1,1,Embryo,Betaine,10755.617231987742,4.031675714781769
-Egg,rep2,1,Embryo,Betaine,12332.139803834596,4.091073654526833
-Egg,rep3,1,Embryo,Betaine,11793.912740756836,4.071694732305295
-Egg,rep4,1,Embryo,Betaine,13065.865935376123,4.116171435309039
+Egg,rep1,1,Egg,Betaine,10755.617231987742,4.031675714781769
+Egg,rep1,1,Embryo,Betaine,NA,NA
+Egg,rep2,1,Egg,Betaine,12332.139803834596,4.091073654526833
+Egg,rep2,1,Embryo,Betaine,NA,NA
+Egg,rep3,1,Egg,Betaine,11793.912740756836,4.071694732305295
+Egg,rep3,1,Embryo,Betaine,NA,NA
+Egg,rep4,1,Egg,Betaine,13065.865935376123,4.116171435309039
+Egg,rep4,1,Embryo,Betaine,NA,NA
 Embryo,rep1,5,Embryo,Betaine,24000.079196979666,4.380230769993098
 Embryo,rep2,5,Embryo,Betaine,23126.221887566662,4.3641234671259
 Embryo,rep3,5,Embryo,Betaine,25285.423539262854,4.402887407952508
@@ -504,10 +540,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Betaine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Betaine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Betaine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Betaine,NA,NA
-Egg,rep1,1,Embryo,Carnitine,900.3047810075725,2.9548716748051884
-Egg,rep2,1,Embryo,Carnitine,1043.2388140778844,3.0187998317846385
-Egg,rep3,1,Embryo,Carnitine,939.3828721738619,2.973304710427253
-Egg,rep4,1,Embryo,Carnitine,1028.4529801616773,3.0126065151865276
+Egg,rep1,1,Egg,Carnitine,900.3047810075725,2.9548716748051884
+Egg,rep2,1,Egg,Carnitine,1043.2388140778844,3.0187998317846385
+Egg,rep3,1,Egg,Carnitine,939.3828721738619,2.973304710427253
+Egg,rep4,1,Egg,Carnitine,1028.4529801616773,3.0126065151865276
 Embryo,rep1,5,Embryo,Carnitine,2270.650863510908,3.356341584212344
 Embryo,rep2,5,Embryo,Carnitine,2083.50086466063,3.3190020796097195
 Embryo,rep3,5,Embryo,Carnitine,2337.266439564987,3.3688939964066464
@@ -538,10 +574,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Carnitine,2050.245202388519,3.31
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Carnitine,2064.683812668968,3.315063846262975
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Carnitine,883.7606619143656,2.946825804858776
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Carnitine,1365.1505305952844,3.1354985551325383
-Egg,rep1,1,Embryo,CDP-Choline,14.514339694849923,1.1907332963245996
-Egg,rep2,1,Embryo,CDP-Choline,16.52621931113133,1.2436882418555522
-Egg,rep3,1,Embryo,CDP-Choline,20.732949911797792,1.3371186790800795
-Egg,rep4,1,Embryo,CDP-Choline,19.109055288028976,1.3033916681684332
+Egg,rep1,1,Egg,CDP-Choline,14.514339694849923,1.1907332963245996
+Egg,rep2,1,Egg,CDP-Choline,16.52621931113133,1.2436882418555522
+Egg,rep3,1,Egg,CDP-Choline,20.732949911797792,1.3371186790800795
+Egg,rep4,1,Egg,CDP-Choline,19.109055288028976,1.3033916681684332
 Embryo,rep1,5,Embryo,CDP-Choline,30.58926745424196,1.499539554861489
 Embryo,rep2,5,Embryo,CDP-Choline,28.048663003259726,1.4631261483040103
 Embryo,rep3,5,Embryo,CDP-Choline,35.36124372876821,1.560638729756287
@@ -572,10 +608,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,CDP-Choline,0.13686652858141338,
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,CDP-Choline,0.36972734684845227,0.13663412661354193
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,CDP-Choline,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,CDP-Choline,0.08899700219098479,0.037026684224365294
-Egg,rep1,1,Embryo,Creatinine,4.611166590655194,0.7490531627202601
-Egg,rep2,1,Embryo,Creatinine,5.021684431514505,0.7797179924183683
-Egg,rep3,1,Embryo,Creatinine,3.175706392947078,0.6207299544564401
-Egg,rep4,1,Embryo,Creatinine,5.545413728824115,0.8159371030588907
+Egg,rep1,1,Egg,Creatinine,4.611166590655194,0.7490531627202601
+Egg,rep1,1,Embryo,Creatinine,NA,NA
+Egg,rep2,1,Egg,Creatinine,5.021684431514505,0.7797179924183683
+Egg,rep2,1,Embryo,Creatinine,NA,NA
+Egg,rep3,1,Egg,Creatinine,3.175706392947078,0.6207299544564401
+Egg,rep3,1,Embryo,Creatinine,NA,NA
+Egg,rep4,1,Egg,Creatinine,5.545413728824115,0.8159371030588907
+Egg,rep4,1,Embryo,Creatinine,NA,NA
 Embryo,rep1,5,Embryo,Creatinine,5.192657891605197,0.7918770884235912
 Embryo,rep2,5,Embryo,Creatinine,4.535784269434631,0.743179157239947
 Embryo,rep3,5,Embryo,Creatinine,5.354837874815743,0.8031044752722384
@@ -613,10 +653,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Creatinine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Creatinine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Creatinine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Creatinine,NA,NA
-Egg,rep1,1,Embryo,Cytosine,4.149767904103047,0.7117876561793024
-Egg,rep2,1,Embryo,Cytosine,4.719674172434976,0.7573712894321915
-Egg,rep3,1,Embryo,Cytosine,4.508934967398139,0.7410676455868199
-Egg,rep4,1,Embryo,Cytosine,5.438321325505757,0.808772647778554
+Egg,rep1,1,Egg,Cytosine,4.149767904103047,0.7117876561793024
+Egg,rep2,1,Egg,Cytosine,4.719674172434976,0.7573712894321915
+Egg,rep3,1,Egg,Cytosine,4.508934967398139,0.7410676455868199
+Egg,rep4,1,Egg,Cytosine,5.438321325505757,0.808772647778554
 Embryo,rep1,5,Embryo,Cytosine,16.25713384568529,1.2369686674878162
 Embryo,rep2,5,Embryo,Cytosine,10.150728221574578,1.047303230817733
 Embryo,rep3,5,Embryo,Cytosine,14.944548875109925,1.2026122361018996
@@ -647,10 +687,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Cytosine,1.6101629895350884,0.41
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Cytosine,1.340278681192759,0.36926757642630087
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Cytosine,1.3481298457868305,0.37072210865289373
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Cytosine,0.9842331189050392,0.29759269418237216
-Egg,rep1,1,Embryo,Deoxycarnitine,13.143832596286886,1.1505671074725117
-Egg,rep2,1,Embryo,Deoxycarnitine,16.13808236755591,1.2339622257680265
-Egg,rep3,1,Embryo,Deoxycarnitine,15.409179166741904,1.2150868569659175
-Egg,rep4,1,Embryo,Deoxycarnitine,16.06421668844363,1.232086357326385
+Egg,rep1,1,Egg,Deoxycarnitine,13.143832596286886,1.1505671074725117
+Egg,rep2,1,Egg,Deoxycarnitine,16.13808236755591,1.2339622257680265
+Egg,rep3,1,Egg,Deoxycarnitine,15.409179166741904,1.2150868569659175
+Egg,rep4,1,Egg,Deoxycarnitine,16.06421668844363,1.232086357326385
 Embryo,rep1,5,Embryo,Deoxycarnitine,21.596821456004882,1.3540473541385276
 Embryo,rep2,5,Embryo,Deoxycarnitine,17.415576754538456,1.2651853250041836
 Embryo,rep3,5,Embryo,Deoxycarnitine,20.43272030365435,1.3310772964682787
@@ -681,10 +721,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Deoxycarnitine,11.88054753249737
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Deoxycarnitine,18.792440655563883,1.2964993514518521
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Deoxycarnitine,16.314006039779258,1.238397564679616
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Deoxycarnitine,16.575856094124322,1.2449164880531245
-Egg,rep1,1,Embryo,Glutamate,58.25044150936827,1.7726915908740055
-Egg,rep2,1,Embryo,Glutamate,61.13245778569545,1.7933185334240473
-Egg,rep3,1,Embryo,Glutamate,72.32448124486483,1.8652489991222165
-Egg,rep4,1,Embryo,Glutamate,72.23827089621011,1.8647380823650617
+Egg,rep1,1,Egg,Glutamate,58.25044150936827,1.7726915908740055
+Egg,rep1,1,Embryo,Glutamate,NA,NA
+Egg,rep2,1,Egg,Glutamate,61.13245778569545,1.7933185334240473
+Egg,rep2,1,Embryo,Glutamate,NA,NA
+Egg,rep3,1,Egg,Glutamate,72.32448124486483,1.8652489991222165
+Egg,rep3,1,Embryo,Glutamate,NA,NA
+Egg,rep4,1,Egg,Glutamate,72.23827089621011,1.8647380823650617
+Egg,rep4,1,Embryo,Glutamate,NA,NA
 Embryo,rep1,5,Embryo,Glutamate,68.90047954185631,1.844480155168681
 Embryo,rep2,5,Embryo,Glutamate,73.38752372689244,1.871500101796888
 Embryo,rep3,5,Embryo,Glutamate,83.83896907868878,1.9285953825442297
@@ -722,10 +766,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glutamate,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glutamate,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glutamate,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glutamate,NA,NA
-Egg,rep1,1,Embryo,Glutamine,16.23208530830781,1.2363378359559745
-Egg,rep2,1,Embryo,Glutamine,16.767569511812038,1.2496280232019756
-Egg,rep3,1,Embryo,Glutamine,16.4159674405961,1.2409476041139598
-Egg,rep4,1,Embryo,Glutamine,18.496783579777123,1.289962970912757
+Egg,rep1,1,Egg,Glutamine,16.23208530830781,1.2363378359559745
+Egg,rep1,1,Embryo,Glutamine,NA,NA
+Egg,rep2,1,Egg,Glutamine,16.767569511812038,1.2496280232019756
+Egg,rep2,1,Embryo,Glutamine,NA,NA
+Egg,rep3,1,Egg,Glutamine,16.4159674405961,1.2409476041139598
+Egg,rep3,1,Embryo,Glutamine,NA,NA
+Egg,rep4,1,Egg,Glutamine,18.496783579777123,1.289962970912757
+Egg,rep4,1,Embryo,Glutamine,NA,NA
 Embryo,rep1,5,Embryo,Glutamine,31.714526532223683,1.5147406392628218
 Embryo,rep2,5,Embryo,Glutamine,29.075891156818074,1.4782185044659046
 Embryo,rep3,5,Embryo,Glutamine,32.336163996813006,1.5229156239603732
@@ -763,10 +811,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glutamine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glutamine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glutamine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glutamine,NA,NA
-Egg,rep1,1,Embryo,Glutaryl-carnitine,1.4706411358911,0.39280966809709644
-Egg,rep2,1,Embryo,Glutaryl-carnitine,1.659486053911644,0.42479771726419546
-Egg,rep3,1,Embryo,Glutaryl-carnitine,1.8871770995790642,0.46047342434173605
-Egg,rep4,1,Embryo,Glutaryl-carnitine,1.76759401187551,0.44210238226812487
+Egg,rep1,1,Egg,Glutaryl-carnitine,1.4706411358911,0.39280966809709644
+Egg,rep2,1,Egg,Glutaryl-carnitine,1.659486053911644,0.42479771726419546
+Egg,rep3,1,Egg,Glutaryl-carnitine,1.8871770995790642,0.46047342434173605
+Egg,rep4,1,Egg,Glutaryl-carnitine,1.76759401187551,0.44210238226812487
 Embryo,rep1,5,Embryo,Glutaryl-carnitine,2.544042838424211,0.549498962757566
 Embryo,rep2,5,Embryo,Glutaryl-carnitine,1.722912469704443,0.43503368080549965
 Embryo,rep3,5,Embryo,Glutaryl-carnitine,2.0220718076401902,0.48030477942437916
@@ -797,10 +845,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Glutaryl-carnitine,5.04505813304
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Glutaryl-carnitine,8.458255472275548,0.9758110403519731
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Glutaryl-carnitine,0.9840277186106615,0.2975477353360857
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Glutaryl-carnitine,2.655033865544791,0.5628914052476666
-Egg,rep1,1,Embryo,Glycerophosphocholine,3.30105909305089,0.633575409447749
-Egg,rep2,1,Embryo,Glycerophosphocholine,2.540556210278835,0.5490714936867475
-Egg,rep3,1,Embryo,Glycerophosphocholine,7.172818525278056,0.9123718556610796
-Egg,rep4,1,Embryo,Glycerophosphocholine,2.923330994530455,0.5936549492292555
+Egg,rep1,1,Egg,Glycerophosphocholine,3.30105909305089,0.633575409447749
+Egg,rep2,1,Egg,Glycerophosphocholine,2.540556210278835,0.5490714936867475
+Egg,rep3,1,Egg,Glycerophosphocholine,7.172818525278056,0.9123718556610796
+Egg,rep4,1,Egg,Glycerophosphocholine,2.923330994530455,0.5936549492292555
 Embryo,rep1,5,Embryo,Glycerophosphocholine,2.8840135683810844,0.5892807383993917
 Embryo,rep2,5,Embryo,Glycerophosphocholine,3.773271357080948,0.6788161244003955
 Embryo,rep3,5,Embryo,Glycerophosphocholine,3.1356879428470705,0.6165477617559983
@@ -831,10 +879,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,9.90665139
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,1.2205504442428106,0.34646064348918426
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,66.83770791324693,1.831471165642443
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.36780186784172,0.5273465334706855
-Egg,rep1,1,Embryo,GTP,0.005351872566971396,0.0023180911776400537
-Egg,rep2,1,Embryo,GTP,0.003385187622377688,0.0014676855084081763
-Egg,rep3,1,Embryo,GTP,0.006163662130639918,0.002668628611755486
-Egg,rep4,1,Embryo,GTP,0.009647068725953035,0.004169588741836859
+Egg,rep1,1,Egg,GTP,0.005351872566971396,0.0023180911776400537
+Egg,rep2,1,Egg,GTP,0.003385187622377688,0.0014676855084081763
+Egg,rep3,1,Egg,GTP,0.006163662130639918,0.002668628611755486
+Egg,rep4,1,Egg,GTP,0.009647068725953035,0.004169588741836859
 Embryo,rep1,5,Embryo,GTP,0.19813472620968076,0.07850565574914814
 Embryo,rep2,5,Embryo,GTP,0.01836091699248839,0.007901723461582457
 Embryo,rep3,5,Embryo,GTP,0.03418143040048504,0.014596735382479041
@@ -865,10 +913,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,GTP,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,GTP,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,GTP,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,GTP,0,0
-Egg,rep1,1,Embryo,Guanidinoacetate,3.558016017619549,0.6587758470294293
-Egg,rep2,1,Embryo,Guanidinoacetate,3.745644650928664,0.6762952155672496
-Egg,rep3,1,Embryo,Guanidinoacetate,3.6160731382501967,0.6642726812756734
-Egg,rep4,1,Embryo,Guanidinoacetate,3.6401684171886575,0.6665337437721872
+Egg,rep1,1,Egg,Guanidinoacetate,3.558016017619549,0.6587758470294293
+Egg,rep1,1,Embryo,Guanidinoacetate,NA,NA
+Egg,rep2,1,Egg,Guanidinoacetate,3.745644650928664,0.6762952155672496
+Egg,rep2,1,Embryo,Guanidinoacetate,NA,NA
+Egg,rep3,1,Egg,Guanidinoacetate,3.6160731382501967,0.6642726812756734
+Egg,rep3,1,Embryo,Guanidinoacetate,NA,NA
+Egg,rep4,1,Egg,Guanidinoacetate,3.6401684171886575,0.6665337437721872
+Egg,rep4,1,Embryo,Guanidinoacetate,NA,NA
 Embryo,rep1,5,Embryo,Guanidinoacetate,5.547616984723258,0.8160832666033266
 Embryo,rep2,5,Embryo,Guanidinoacetate,4.845354699968837,0.7668108695723413
 Embryo,rep3,5,Embryo,Guanidinoacetate,5.760704578760705,0.8299919590662512
@@ -906,10 +958,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Guanidinoacetate,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Guanidinoacetate,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Guanidinoacetate,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Guanidinoacetate,NA,NA
-Egg,rep1,1,Embryo,Guanosine,0.3857956131175353,0.1416991821944874
-Egg,rep2,1,Embryo,Guanosine,0.3902813057988578,0.14310268312863253
-Egg,rep3,1,Embryo,Guanosine,0.14215285510813516,0.05772422973091385
-Egg,rep4,1,Embryo,Guanosine,0.10208768662291708,0.04221615014322227
+Egg,rep1,1,Egg,Guanosine,0.3857956131175353,0.1416991821944874
+Egg,rep1,1,Embryo,Guanosine,NA,NA
+Egg,rep2,1,Egg,Guanosine,0.3902813057988578,0.14310268312863253
+Egg,rep2,1,Embryo,Guanosine,NA,NA
+Egg,rep3,1,Egg,Guanosine,0.14215285510813516,0.05772422973091385
+Egg,rep3,1,Embryo,Guanosine,NA,NA
+Egg,rep4,1,Egg,Guanosine,0.10208768662291708,0.04221615014322227
+Egg,rep4,1,Embryo,Guanosine,NA,NA
 Embryo,rep1,5,Embryo,Guanosine,0,0
 Embryo,rep2,5,Embryo,Guanosine,0,0
 Embryo,rep3,5,Embryo,Guanosine,0,0
@@ -947,10 +1003,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Guanosine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Guanosine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Guanosine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Guanosine,NA,NA
-Egg,rep1,1,Embryo,Histidine,1.5497527169370946,0.4064980632272069
-Egg,rep2,1,Embryo,Histidine,1.1980723172826793,0.342041976749964
-Egg,rep3,1,Embryo,Histidine,2.5929335148659525,0.5554491809135298
-Egg,rep4,1,Embryo,Histidine,1.7780684293831706,0.44374293907528106
+Egg,rep1,1,Egg,Histidine,1.5497527169370946,0.4064980632272069
+Egg,rep1,1,Embryo,Histidine,NA,NA
+Egg,rep2,1,Egg,Histidine,1.1980723172826793,0.342041976749964
+Egg,rep2,1,Embryo,Histidine,NA,NA
+Egg,rep3,1,Egg,Histidine,2.5929335148659525,0.5554491809135298
+Egg,rep3,1,Embryo,Histidine,NA,NA
+Egg,rep4,1,Egg,Histidine,1.7780684293831706,0.44374293907528106
+Egg,rep4,1,Embryo,Histidine,NA,NA
 Embryo,rep1,5,Embryo,Histidine,0.7168924782238197,0.23474309797032833
 Embryo,rep2,5,Embryo,Histidine,0.7404680632853559,0.24066605860784385
 Embryo,rep3,5,Embryo,Histidine,1.036885303581221,0.3089665746927544
@@ -988,10 +1048,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Histidine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Histidine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Histidine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Histidine,NA,NA
-Egg,rep1,1,Embryo,Homoarginine,16.27999597630864,1.2375436370163029
-Egg,rep2,1,Embryo,Homoarginine,19.22241668638434,1.305833054857608
-Egg,rep3,1,Embryo,Homoarginine,19.875125971310926,1.3196291049211555
-Egg,rep4,1,Embryo,Homoarginine,20.76850206068192,1.3378285452945466
+Egg,rep1,1,Egg,Homoarginine,16.27999597630864,1.2375436370163029
+Egg,rep1,1,Embryo,Homoarginine,NA,NA
+Egg,rep2,1,Egg,Homoarginine,19.22241668638434,1.305833054857608
+Egg,rep2,1,Embryo,Homoarginine,NA,NA
+Egg,rep3,1,Egg,Homoarginine,19.875125971310926,1.3196291049211555
+Egg,rep3,1,Embryo,Homoarginine,NA,NA
+Egg,rep4,1,Egg,Homoarginine,20.76850206068192,1.3378285452945466
+Egg,rep4,1,Embryo,Homoarginine,NA,NA
 Embryo,rep1,5,Embryo,Homoarginine,9.92848136523602,1.038559816064912
 Embryo,rep2,5,Embryo,Homoarginine,8.797425121138826,0.991111952976832
 Embryo,rep3,5,Embryo,Homoarginine,10.347693003754085,1.054907578042123
@@ -1029,10 +1093,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Homoarginine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Homoarginine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Homoarginine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Homoarginine,NA,NA
-Egg,rep1,1,Embryo,Homocitrulline,1.8559382348247482,0.4557488107494985
-Egg,rep2,1,Embryo,Homocitrulline,2.0521802285323667,0.4846101747435536
-Egg,rep3,1,Embryo,Homocitrulline,1.9537389988869553,0.4703721171265575
-Egg,rep4,1,Embryo,Homocitrulline,2.0819407738536913,0.4888242885564198
+Egg,rep1,1,Egg,Homocitrulline,1.8559382348247482,0.4557488107494985
+Egg,rep1,1,Embryo,Homocitrulline,NA,NA
+Egg,rep2,1,Egg,Homocitrulline,2.0521802285323667,0.4846101747435536
+Egg,rep2,1,Embryo,Homocitrulline,NA,NA
+Egg,rep3,1,Egg,Homocitrulline,1.9537389988869553,0.4703721171265575
+Egg,rep3,1,Embryo,Homocitrulline,NA,NA
+Egg,rep4,1,Egg,Homocitrulline,2.0819407738536913,0.4888242885564198
+Egg,rep4,1,Embryo,Homocitrulline,NA,NA
 Embryo,rep1,5,Embryo,Homocitrulline,2.288925024547801,0.5170539732709472
 Embryo,rep2,5,Embryo,Homocitrulline,2.616998143507994,0.5583482858519043
 Embryo,rep3,5,Embryo,Homocitrulline,2.7626989992948903,0.5754994779069512
@@ -1070,10 +1138,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Homocitrulline,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Homocitrulline,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Homocitrulline,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Homocitrulline,NA,NA
-Egg,rep1,1,Embryo,Hypoxanthine,0.12831249257848285,0.052429396639681554
-Egg,rep2,1,Embryo,Hypoxanthine,0.1141223959884732,0.04693290446650371
-Egg,rep3,1,Embryo,Hypoxanthine,0.043701714176149584,0.0185763967532832
-Egg,rep4,1,Embryo,Hypoxanthine,0.11306416861183341,0.046520202313784856
+Egg,rep1,1,Egg,Hypoxanthine,0.12831249257848285,0.052429396639681554
+Egg,rep2,1,Egg,Hypoxanthine,0.1141223959884732,0.04693290446650371
+Egg,rep3,1,Egg,Hypoxanthine,0.043701714176149584,0.0185763967532832
+Egg,rep4,1,Egg,Hypoxanthine,0.11306416861183341,0.046520202313784856
 Embryo,rep1,5,Embryo,Hypoxanthine,0.22921491769484237,0.08962782219387538
 Embryo,rep2,5,Embryo,Hypoxanthine,0.33192525831330844,0.12447985485467757
 Embryo,rep3,5,Embryo,Hypoxanthine,0.21469882738651497,0.08446861224067995
@@ -1104,10 +1172,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Hypoxanthine,3.3215256611975157,
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Hypoxanthine,1.2502026007944083,0.3522216223095089
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Hypoxanthine,2.037367110656709,0.4824972859904035
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Hypoxanthine,1.7105766718901945,0.43306169632714064
-Egg,rep1,1,Embryo,Indole,11.775388017719367,1.106374099522625
-Egg,rep2,1,Embryo,Indole,9.227223283751767,1.0097577376971343
-Egg,rep3,1,Embryo,Indole,9.838416602605562,1.0349658402301158
-Egg,rep4,1,Embryo,Indole,12.997219374523306,1.1460417692323754
+Egg,rep1,1,Egg,Indole,11.775388017719367,1.106374099522625
+Egg,rep2,1,Egg,Indole,9.227223283751767,1.0097577376971343
+Egg,rep3,1,Egg,Indole,9.838416602605562,1.0349658402301158
+Egg,rep4,1,Egg,Indole,12.997219374523306,1.1460417692323754
 Embryo,rep1,5,Embryo,Indole,28.523665796716795,1.4701702805373356
 Embryo,rep2,5,Embryo,Indole,12.431843282511018,1.1281356159815603
 Embryo,rep3,5,Embryo,Indole,15.193791273949683,1.2093485372400197
@@ -1138,10 +1206,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Indole,24.04225919389275,1.39867
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Indole,29.754179163463466,1.487904140088895
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Indole,9.69449509149605,1.0291602854803987
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Indole,11.026657965762093,1.080144959952109
-Egg,rep1,1,Embryo,L-Octanoylcarnitine,1.9862967593401455,0.4751329629804261
-Egg,rep2,1,Embryo,L-Octanoylcarnitine,2.2456516973725447,0.511301912278478
-Egg,rep3,1,Embryo,L-Octanoylcarnitine,1.4317281903386785,0.38591502946865086
-Egg,rep4,1,Embryo,L-Octanoylcarnitine,2.542600589530304,0.5493221905660002
+Egg,rep1,1,Egg,L-Octanoylcarnitine,1.9862967593401455,0.4751329629804261
+Egg,rep2,1,Egg,L-Octanoylcarnitine,2.2456516973725447,0.511301912278478
+Egg,rep3,1,Egg,L-Octanoylcarnitine,1.4317281903386785,0.38591502946865086
+Egg,rep4,1,Egg,L-Octanoylcarnitine,2.542600589530304,0.5493221905660002
 Embryo,rep1,5,Embryo,L-Octanoylcarnitine,1.7120584017147225,0.4332990374329849
 Embryo,rep2,5,Embryo,L-Octanoylcarnitine,1.3317492108698454,0.3676818384573301
 Embryo,rep3,5,Embryo,L-Octanoylcarnitine,1.6807856023900927,0.4282620823819278
@@ -1172,10 +1240,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,L-Octanoylcarnitine,4.7697089039
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,L-Octanoylcarnitine,1.4448938163690492,0.3882600021236962
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,L-Octanoylcarnitine,6.781797354993239,0.8910799171958
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,L-Octanoylcarnitine,2.6903650135293042,0.5670693242949888
-Egg,rep1,1,Embryo,L-Palmitoylcarnitine,13.36491023462206,1.1573029164588322
-Egg,rep2,1,Embryo,L-Palmitoylcarnitine,13.142355045287271,1.1505217360527518
-Egg,rep3,1,Embryo,L-Palmitoylcarnitine,13.82291650508348,1.1709336623105135
-Egg,rep4,1,Embryo,L-Palmitoylcarnitine,14.041281880254331,1.1772848502049271
+Egg,rep1,1,Egg,L-Palmitoylcarnitine,13.36491023462206,1.1573029164588322
+Egg,rep2,1,Egg,L-Palmitoylcarnitine,13.142355045287271,1.1505217360527518
+Egg,rep3,1,Egg,L-Palmitoylcarnitine,13.82291650508348,1.1709336623105135
+Egg,rep4,1,Egg,L-Palmitoylcarnitine,14.041281880254331,1.1772848502049271
 Embryo,rep1,5,Embryo,L-Palmitoylcarnitine,3.9617849067104114,0.6956379336859934
 Embryo,rep2,5,Embryo,L-Palmitoylcarnitine,4.504161690303949,0.7406911832535019
 Embryo,rep3,5,Embryo,L-Palmitoylcarnitine,4.346033521188882,0.7280316775820815
@@ -1206,10 +1274,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,L-Palmitoylcarnitine,23.01490490
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,L-Palmitoylcarnitine,17.83500476135831,1.2749657343259273
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,L-Palmitoylcarnitine,11.567580206942925,1.0992516655986662
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,L-Palmitoylcarnitine,28.34106487614836,1.4674758716559628
-Egg,rep1,1,Embryo,Lysine,19.762375309056587,1.3172770372595097
-Egg,rep2,1,Embryo,Lysine,22.34138983986732,1.3681267121127092
-Egg,rep3,1,Embryo,Lysine,25.20754909861378,1.4184264080996893
-Egg,rep4,1,Embryo,Lysine,25.71352119597659,1.426731137560539
+Egg,rep1,1,Egg,Lysine,19.762375309056587,1.3172770372595097
+Egg,rep1,1,Embryo,Lysine,NA,NA
+Egg,rep2,1,Egg,Lysine,22.34138983986732,1.3681267121127092
+Egg,rep2,1,Embryo,Lysine,NA,NA
+Egg,rep3,1,Egg,Lysine,25.20754909861378,1.4184264080996893
+Egg,rep3,1,Embryo,Lysine,NA,NA
+Egg,rep4,1,Egg,Lysine,25.71352119597659,1.426731137560539
+Egg,rep4,1,Embryo,Lysine,NA,NA
 Embryo,rep1,5,Embryo,Lysine,25.604098156749316,1.424948541509728
 Embryo,rep2,5,Embryo,Lysine,19.406990079310834,1.3097789533518664
 Embryo,rep3,5,Embryo,Lysine,25.123042003733786,1.4170237487328456
@@ -1247,10 +1319,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Lysine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Lysine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Lysine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Lysine,NA,NA
-Egg,rep1,1,Embryo,Mannose-6-phosphate,0.2519439496766302,0.09758488567069573
-Egg,rep2,1,Embryo,Mannose-6-phosphate,0.066339256983519,0.02789539793222466
-Egg,rep3,1,Embryo,Mannose-6-phosphate,0.057802045700344584,0.02440440257284292
-Egg,rep4,1,Embryo,Mannose-6-phosphate,0.246258518163424,0.09560813972791941
+Egg,rep1,1,Egg,Mannose-6-phosphate,0.2519439496766302,0.09758488567069573
+Egg,rep1,1,Embryo,Mannose-6-phosphate,NA,NA
+Egg,rep2,1,Egg,Mannose-6-phosphate,0.066339256983519,0.02789539793222466
+Egg,rep2,1,Embryo,Mannose-6-phosphate,NA,NA
+Egg,rep3,1,Egg,Mannose-6-phosphate,0.057802045700344584,0.02440440257284292
+Egg,rep3,1,Embryo,Mannose-6-phosphate,NA,NA
+Egg,rep4,1,Egg,Mannose-6-phosphate,0.246258518163424,0.09560813972791941
+Egg,rep4,1,Embryo,Mannose-6-phosphate,NA,NA
 Embryo,rep1,5,Embryo,Mannose-6-phosphate,0.1948731114696694,0.07732178820093
 Embryo,rep2,5,Embryo,Mannose-6-phosphate,0.23852765867954515,0.09290570965239807
 Embryo,rep3,5,Embryo,Mannose-6-phosphate,0.24211604098786838,0.09416217040303028
@@ -1288,10 +1364,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Mannose-6-phosphate,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Mannose-6-phosphate,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Mannose-6-phosphate,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Mannose-6-phosphate,NA,NA
-Egg,rep1,1,Embryo,Methionine,1.0037236994665584,0.3018378349247678
-Egg,rep2,1,Embryo,Methionine,0.7603831883318715,0.2456072123962682
-Egg,rep3,1,Embryo,Methionine,0.8574684362875694,0.26892144258733436
-Egg,rep4,1,Embryo,Methionine,0.9043996601319756,0.27975809529626594
+Egg,rep1,1,Egg,Methionine,1.0037236994665584,0.3018378349247678
+Egg,rep1,1,Embryo,Methionine,NA,NA
+Egg,rep2,1,Egg,Methionine,0.7603831883318715,0.2456072123962682
+Egg,rep2,1,Embryo,Methionine,NA,NA
+Egg,rep3,1,Egg,Methionine,0.8574684362875694,0.26892144258733436
+Egg,rep3,1,Embryo,Methionine,NA,NA
+Egg,rep4,1,Egg,Methionine,0.9043996601319756,0.27975809529626594
+Egg,rep4,1,Embryo,Methionine,NA,NA
 Embryo,rep1,5,Embryo,Methionine,0.6502551862822799,0.21755110628969548
 Embryo,rep2,5,Embryo,Methionine,0.5751015927131895,0.19730857065375945
 Embryo,rep3,5,Embryo,Methionine,0.566298968502511,0.19487466192270705
@@ -1329,10 +1409,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Methionine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Methionine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Methionine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Methionine,NA,NA
-Egg,rep1,1,Embryo,NAD+,2.29087431334421,0.5173112958272166
-Egg,rep2,1,Embryo,NAD+,2.7117129029469127,0.5695743766287438
-Egg,rep3,1,Embryo,NAD+,3.641808603455928,0.6666872291451845
-Egg,rep4,1,Embryo,NAD+,3.6463286895565465,0.667109929315147
+Egg,rep1,1,Egg,NAD+,2.29087431334421,0.5173112958272166
+Egg,rep1,1,Embryo,NAD+,NA,NA
+Egg,rep2,1,Egg,NAD+,2.7117129029469127,0.5695743766287438
+Egg,rep2,1,Embryo,NAD+,NA,NA
+Egg,rep3,1,Egg,NAD+,3.641808603455928,0.6666872291451845
+Egg,rep3,1,Embryo,NAD+,NA,NA
+Egg,rep4,1,Egg,NAD+,3.6463286895565465,0.667109929315147
+Egg,rep4,1,Embryo,NAD+,NA,NA
 Embryo,rep1,5,Embryo,NAD+,3.4340184982655315,0.646797500613807
 Embryo,rep2,5,Embryo,NAD+,3.142266707217575,0.6172380582812033
 Embryo,rep3,5,Embryo,NAD+,3.4509511869942715,0.6484528314572524
@@ -1370,10 +1454,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NAD+,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NAD+,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NAD+,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NAD+,NA,NA
-Egg,rep1,1,Embryo,NG-dimethyl-L-arginine,4.178814115290863,0.7142303230371563
-Egg,rep2,1,Embryo,NG-dimethyl-L-arginine,4.589273387531663,0.7473553527350041
-Egg,rep3,1,Embryo,NG-dimethyl-L-arginine,5.088500329184679,0.7845103338538053
-Egg,rep4,1,Embryo,NG-dimethyl-L-arginine,5.636962920147026,0.8219693913017504
+Egg,rep1,1,Egg,NG-dimethyl-L-arginine,4.178814115290863,0.7142303230371563
+Egg,rep1,1,Embryo,NG-dimethyl-L-arginine,NA,NA
+Egg,rep2,1,Egg,NG-dimethyl-L-arginine,4.589273387531663,0.7473553527350041
+Egg,rep2,1,Embryo,NG-dimethyl-L-arginine,NA,NA
+Egg,rep3,1,Egg,NG-dimethyl-L-arginine,5.088500329184679,0.7845103338538053
+Egg,rep3,1,Embryo,NG-dimethyl-L-arginine,NA,NA
+Egg,rep4,1,Egg,NG-dimethyl-L-arginine,5.636962920147026,0.8219693913017504
+Egg,rep4,1,Embryo,NG-dimethyl-L-arginine,NA,NA
 Embryo,rep1,5,Embryo,NG-dimethyl-L-arginine,3.4462821537465564,0.6479970188503923
 Embryo,rep2,5,Embryo,NG-dimethyl-L-arginine,3.793926646411311,0.6806913844530538
 Embryo,rep3,5,Embryo,NG-dimethyl-L-arginine,3.938823192706917,0.6936234789240129
@@ -1411,10 +1499,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NG-dimethyl-L-arginine,NA,
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NG-dimethyl-L-arginine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NG-dimethyl-L-arginine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NG-dimethyl-L-arginine,NA,NA
-Egg,rep1,1,Embryo,Nicotinamide riboside,1.8095608352638757,0.44863844028689454
-Egg,rep2,1,Embryo,Nicotinamide riboside,2.1921127263136397,0.5040782196309302
-Egg,rep3,1,Embryo,Nicotinamide riboside,0.9866979000077046,0.29813183271908333
-Egg,rep4,1,Embryo,Nicotinamide riboside,1.6915383119805243,0.4300005660440762
+Egg,rep1,1,Egg,Nicotinamide riboside,1.8095608352638757,0.44863844028689454
+Egg,rep2,1,Egg,Nicotinamide riboside,2.1921127263136397,0.5040782196309302
+Egg,rep3,1,Egg,Nicotinamide riboside,0.9866979000077046,0.29813183271908333
+Egg,rep4,1,Egg,Nicotinamide riboside,1.6915383119805243,0.4300005660440762
 Embryo,rep1,5,Embryo,Nicotinamide riboside,7.093181591197727,0.9081192850076973
 Embryo,rep2,5,Embryo,Nicotinamide riboside,8.81452913064447,0.9918694683916284
 Embryo,rep3,5,Embryo,Nicotinamide riboside,7.41073218327887,0.924833804277887
@@ -1445,10 +1533,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Nicotinamide riboside,16.3579450
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Nicotinamide riboside,15.103808566282048,1.2069285992438923
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Nicotinamide riboside,4.598985165620593,0.7481093168435007
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Nicotinamide riboside,10.158526708176502,1.0476068572586006
-Egg,rep1,1,Embryo,Nicotinamide ribotide,0.1408629002797678,0.057233457538773604
-Egg,rep2,1,Embryo,Nicotinamide ribotide,0.23985125291651768,0.09336958523280822
-Egg,rep3,1,Embryo,Nicotinamide ribotide,0.2965664092270382,0.1127947659354709
-Egg,rep4,1,Embryo,Nicotinamide ribotide,0.3200610105338207,0.12059400387695501
+Egg,rep1,1,Egg,Nicotinamide ribotide,0.1408629002797678,0.057233457538773604
+Egg,rep2,1,Egg,Nicotinamide ribotide,0.23985125291651768,0.09336958523280822
+Egg,rep3,1,Egg,Nicotinamide ribotide,0.2965664092270382,0.1127947659354709
+Egg,rep4,1,Egg,Nicotinamide ribotide,0.3200610105338207,0.12059400387695501
 Embryo,rep1,5,Embryo,Nicotinamide ribotide,0.21212141018129135,0.08354612241359871
 Embryo,rep2,5,Embryo,Nicotinamide ribotide,0.23349189784351507,0.09113630118415837
 Embryo,rep3,5,Embryo,Nicotinamide ribotide,0.2492711132059155,0.09665669793558986
@@ -1479,10 +1567,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Nicotinamide ribotide,0.16934188
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Nicotinamide ribotide,0.2576682243899316,0.09956608839031744
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Nicotinamide ribotide,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Nicotinamide ribotide,0.07129381323584254,0.029908596851870462
-Egg,rep1,1,Embryo,O-Butanoylcarnitine,7.008132092039687,0.9035312281039809
-Egg,rep2,1,Embryo,O-Butanoylcarnitine,7.423420052956314,0.9254884583114356
-Egg,rep3,1,Embryo,O-Butanoylcarnitine,4.744393688605285,0.7592441963682679
-Egg,rep4,1,Embryo,O-Butanoylcarnitine,9.247697674692184,1.0106263044659751
+Egg,rep1,1,Egg,O-Butanoylcarnitine,7.008132092039687,0.9035312281039809
+Egg,rep2,1,Egg,O-Butanoylcarnitine,7.423420052956314,0.9254884583114356
+Egg,rep3,1,Egg,O-Butanoylcarnitine,4.744393688605285,0.7592441963682679
+Egg,rep4,1,Egg,O-Butanoylcarnitine,9.247697674692184,1.0106263044659751
 Embryo,rep1,5,Embryo,O-Butanoylcarnitine,3.3033613362991847,0.6338078136104242
 Embryo,rep2,5,Embryo,O-Butanoylcarnitine,2.5374117261849283,0.5486856111304771
 Embryo,rep3,5,Embryo,O-Butanoylcarnitine,1.9453339863332837,0.4691345487656936
@@ -1513,10 +1601,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,O-Butanoylcarnitine,5.1113071396
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,O-Butanoylcarnitine,1.896631006918417,0.46189317526391155
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,O-Butanoylcarnitine,2.937983395340479,0.5952738805864551
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,O-Butanoylcarnitine,4.698585090740045,0.7557670375034368
-Egg,rep1,1,Embryo,O-Decanoyl-L-carnitine,2.5900204588067055,0.5550969235425367
-Egg,rep2,1,Embryo,O-Decanoyl-L-carnitine,2.489255131905176,0.5427327259191858
-Egg,rep3,1,Embryo,O-Decanoyl-L-carnitine,2.5909412736561035,0.5552083027212704
-Egg,rep4,1,Embryo,O-Decanoyl-L-carnitine,3.0422986859522707,0.6066284004381541
+Egg,rep1,1,Egg,O-Decanoyl-L-carnitine,2.5900204588067055,0.5550969235425367
+Egg,rep2,1,Egg,O-Decanoyl-L-carnitine,2.489255131905176,0.5427327259191858
+Egg,rep3,1,Egg,O-Decanoyl-L-carnitine,2.5909412736561035,0.5552083027212704
+Egg,rep4,1,Egg,O-Decanoyl-L-carnitine,3.0422986859522707,0.6066284004381541
 Embryo,rep1,5,Embryo,O-Decanoyl-L-carnitine,1.4367909505016494,0.3868182731577194
 Embryo,rep2,5,Embryo,O-Decanoyl-L-carnitine,2.1008359010344773,0.49147878359916364
 Embryo,rep3,5,Embryo,O-Decanoyl-L-carnitine,2.235280416093834,0.5099119288638516
@@ -1547,10 +1635,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,O-Decanoyl-L-carnitine,5.5376382
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,O-Decanoyl-L-carnitine,3.0806746914565895,0.6107319744996789
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,O-Decanoyl-L-carnitine,5.5886115134475105,0.8187939008484899
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,O-Decanoyl-L-carnitine,4.048654436857409,0.7031756457396614
-Egg,rep1,1,Embryo,Ornithine,1.6550119689691725,0.4240664832500864
-Egg,rep2,1,Embryo,Ornithine,1.7742053443016386,0.4431386040323276
-Egg,rep3,1,Embryo,Ornithine,2.06556852826601,0.4865110288681246
-Egg,rep4,1,Embryo,Ornithine,2.3131943846226766,0.5202469166222218
+Egg,rep1,1,Egg,Ornithine,1.6550119689691725,0.4240664832500864
+Egg,rep1,1,Embryo,Ornithine,NA,NA
+Egg,rep2,1,Egg,Ornithine,1.7742053443016386,0.4431386040323276
+Egg,rep2,1,Embryo,Ornithine,NA,NA
+Egg,rep3,1,Egg,Ornithine,2.06556852826601,0.4865110288681246
+Egg,rep3,1,Embryo,Ornithine,NA,NA
+Egg,rep4,1,Egg,Ornithine,2.3131943846226766,0.5202469166222218
+Egg,rep4,1,Embryo,Ornithine,NA,NA
 Embryo,rep1,5,Embryo,Ornithine,1.24624689132327,0.3514574890788181
 Embryo,rep2,5,Embryo,Ornithine,1.1745824217678327,0.3373758730915303
 Embryo,rep3,5,Embryo,Ornithine,1.690525723207675,0.4298371485452136
@@ -1588,10 +1680,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Ornithine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Ornithine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Ornithine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Ornithine,NA,NA
-Egg,rep1,1,Embryo,Pantothenate,10.125719934441078,1.0463281233328612
-Egg,rep2,1,Embryo,Pantothenate,12.168779824933054,1.1195455365526827
-Egg,rep3,1,Embryo,Pantothenate,11.556915764576885,1.0988829808890863
-Egg,rep4,1,Embryo,Pantothenate,15.07203472709474,1.2060708621280303
+Egg,rep1,1,Egg,Pantothenate,10.125719934441078,1.0463281233328612
+Egg,rep1,1,Embryo,Pantothenate,NA,NA
+Egg,rep2,1,Egg,Pantothenate,12.168779824933054,1.1195455365526827
+Egg,rep2,1,Embryo,Pantothenate,NA,NA
+Egg,rep3,1,Egg,Pantothenate,11.556915764576885,1.0988829808890863
+Egg,rep3,1,Embryo,Pantothenate,NA,NA
+Egg,rep4,1,Egg,Pantothenate,15.07203472709474,1.2060708621280303
+Egg,rep4,1,Embryo,Pantothenate,NA,NA
 Embryo,rep1,5,Embryo,Pantothenate,28.78331368420353,1.4739730156023096
 Embryo,rep2,5,Embryo,Pantothenate,20.55614501960691,1.333571096662863
 Embryo,rep3,5,Embryo,Pantothenate,18.27988081648915,1.2851043448727724
@@ -1629,10 +1725,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Pantothenate,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Pantothenate,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Pantothenate,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Pantothenate,NA,NA
-Egg,rep1,1,Embryo,Phosphocholine,11.291517952697445,1.0896055198085024
-Egg,rep2,1,Embryo,Phosphocholine,11.93552172784085,1.1117839497864535
-Egg,rep3,1,Embryo,Phosphocholine,13.216652949578672,1.1527973617504563
-Egg,rep4,1,Embryo,Phosphocholine,13.92981793942918,1.174054511785081
+Egg,rep1,1,Egg,Phosphocholine,11.291517952697445,1.0896055198085024
+Egg,rep1,1,Embryo,Phosphocholine,NA,NA
+Egg,rep2,1,Egg,Phosphocholine,11.93552172784085,1.1117839497864535
+Egg,rep2,1,Embryo,Phosphocholine,NA,NA
+Egg,rep3,1,Egg,Phosphocholine,13.216652949578672,1.1527973617504563
+Egg,rep3,1,Embryo,Phosphocholine,NA,NA
+Egg,rep4,1,Egg,Phosphocholine,13.92981793942918,1.174054511785081
+Egg,rep4,1,Embryo,Phosphocholine,NA,NA
 Embryo,rep1,5,Embryo,Phosphocholine,4.142836806158621,0.7112027433937561
 Embryo,rep2,5,Embryo,Phosphocholine,3.9667750876514405,0.6960744941197538
 Embryo,rep3,5,Embryo,Phosphocholine,4.241195386621461,0.7194303500765405
@@ -1670,10 +1770,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Phosphocholine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Phosphocholine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Phosphocholine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Phosphocholine,NA,NA
-Egg,rep1,1,Embryo,Pipecolic acid,38.66605554963108,1.5984190157451164
-Egg,rep2,1,Embryo,Pipecolic acid,45.66412227025592,1.6689831013704393
-Egg,rep3,1,Embryo,Pipecolic acid,43.036202304775884,1.643809858228947
-Egg,rep4,1,Embryo,Pipecolic acid,47.382816732618714,1.6846911483545928
+Egg,rep1,1,Egg,Pipecolic acid,38.66605554963108,1.5984190157451164
+Egg,rep1,1,Embryo,Pipecolic acid,NA,NA
+Egg,rep2,1,Egg,Pipecolic acid,45.66412227025592,1.6689831013704393
+Egg,rep2,1,Embryo,Pipecolic acid,NA,NA
+Egg,rep3,1,Egg,Pipecolic acid,43.036202304775884,1.643809858228947
+Egg,rep3,1,Embryo,Pipecolic acid,NA,NA
+Egg,rep4,1,Egg,Pipecolic acid,47.382816732618714,1.6846911483545928
+Egg,rep4,1,Embryo,Pipecolic acid,NA,NA
 Embryo,rep1,5,Embryo,Pipecolic acid,47.96507362186614,1.6898864118298735
 Embryo,rep2,5,Embryo,Pipecolic acid,42.684758228939025,1.6403299364738249
 Embryo,rep3,5,Embryo,Pipecolic acid,48.20437450145375,1.6920037153159044
@@ -1711,10 +1815,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Pipecolic acid,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Pipecolic acid,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Pipecolic acid,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Pipecolic acid,NA,NA
-Egg,rep1,1,Embryo,PosIS_Glutamine-2H5-15N2,157.74277569660174,2.2006939698916175
-Egg,rep2,1,Embryo,PosIS_Glutamine-2H5-15N2,202.80401429847382,2.30921273399085
-Egg,rep3,1,Embryo,PosIS_Glutamine-2H5-15N2,102.7547061712021,2.0160078048330923
-Egg,rep4,1,Embryo,PosIS_Glutamine-2H5-15N2,124.55046725277771,2.0988183333366783
+Egg,rep1,1,Egg,PosIS_Glutamine-2H5-15N2,157.74277569660174,2.2006939698916175
+Egg,rep2,1,Egg,PosIS_Glutamine-2H5-15N2,202.80401429847382,2.30921273399085
+Egg,rep3,1,Egg,PosIS_Glutamine-2H5-15N2,102.7547061712021,2.0160078048330923
+Egg,rep4,1,Egg,PosIS_Glutamine-2H5-15N2,124.55046725277771,2.0988183333366783
 Embryo,rep1,5,Embryo,PosIS_Glutamine-2H5-15N2,477.5033311591893,2.67988496551729
 Embryo,rep2,5,Embryo,PosIS_Glutamine-2H5-15N2,603.4059287699438,2.7813287157918096
 Embryo,rep3,5,Embryo,PosIS_Glutamine-2H5-15N2,562.2643166854541,2.75071223915037
@@ -1745,10 +1849,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,PosIS_Glutamine-2H5-15N2,11680.6
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,PosIS_Glutamine-2H5-15N2,3230.000090379539,3.509336970165999
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,PosIS_Glutamine-2H5-15N2,17784.95583766439,4.250077209632491
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,PosIS_Glutamine-2H5-15N2,5453.322074151153,3.7367407791679073
-Egg,rep1,1,Embryo,PosIS_Inosine-15N4,13.249384912216223,1.1537961180290388
-Egg,rep2,1,Embryo,PosIS_Inosine-15N4,20.12321634288693,1.3247600470822691
-Egg,rep3,1,Embryo,PosIS_Inosine-15N4,3.4587377363130254,0.6492119278280128
-Egg,rep4,1,Embryo,PosIS_Inosine-15N4,15.02688070695124,1.2048490043515871
+Egg,rep1,1,Egg,PosIS_Inosine-15N4,13.249384912216223,1.1537961180290388
+Egg,rep2,1,Egg,PosIS_Inosine-15N4,20.12321634288693,1.3247600470822691
+Egg,rep3,1,Egg,PosIS_Inosine-15N4,3.4587377363130254,0.6492119278280128
+Egg,rep4,1,Egg,PosIS_Inosine-15N4,15.02688070695124,1.2048490043515871
 Embryo,rep1,5,Embryo,PosIS_Inosine-15N4,55.01129728653906,1.7482756315485972
 Embryo,rep2,5,Embryo,PosIS_Inosine-15N4,58.624986330514396,1.7754282924828395
 Embryo,rep3,5,Embryo,PosIS_Inosine-15N4,28.435050512253806,1.4688647854233456
@@ -1779,10 +1883,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,PosIS_Inosine-15N4,537.162379959
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,PosIS_Inosine-15N4,59.446085730741956,1.7813681827719865
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,PosIS_Inosine-15N4,812.1427016178665,2.910166768333063
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,PosIS_Inosine-15N4,286.704128639031,2.4589460941888435
-Egg,rep1,1,Embryo,PosIS_Lysine-2H8,2.911797387474675,0.5923763523066434
-Egg,rep2,1,Embryo,PosIS_Lysine-2H8,3.649697919222208,0.66742473863696
-Egg,rep3,1,Embryo,PosIS_Lysine-2H8,2.010381968664262,0.47862160401860276
-Egg,rep4,1,Embryo,PosIS_Lysine-2H8,2.327507295698702,0.5221190163565442
+Egg,rep1,1,Egg,PosIS_Lysine-2H8,2.911797387474675,0.5923763523066434
+Egg,rep2,1,Egg,PosIS_Lysine-2H8,3.649697919222208,0.66742473863696
+Egg,rep3,1,Egg,PosIS_Lysine-2H8,2.010381968664262,0.47862160401860276
+Egg,rep4,1,Egg,PosIS_Lysine-2H8,2.327507295698702,0.5221190163565442
 Embryo,rep1,5,Embryo,PosIS_Lysine-2H8,6.098051854732529,0.851139167756282
 Embryo,rep2,5,Embryo,PosIS_Lysine-2H8,6.983998867887952,0.9022204666973946
 Embryo,rep3,5,Embryo,PosIS_Lysine-2H8,6.914507319565853,0.8984238850791642
@@ -1813,10 +1917,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,PosIS_Lysine-2H8,75.581594022972
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,PosIS_Lysine-2H8,21.17149517058316,1.3457949814518129
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,PosIS_Lysine-2H8,104.83389471093331,2.0246247785544487
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,PosIS_Lysine-2H8,31.693636825117554,1.5144632339859403
-Egg,rep1,1,Embryo,PosIS_Serine-13C3-15N1,2.6106344952876683,0.5575835269995585
-Egg,rep2,1,Embryo,PosIS_Serine-13C3-15N1,3.674698087016216,0.6697535674273788
-Egg,rep3,1,Embryo,PosIS_Serine-13C3-15N1,1.9397660690822474,0.46831277294657564
-Egg,rep4,1,Embryo,PosIS_Serine-13C3-15N1,2.3822474120280264,0.5292053731459484
+Egg,rep1,1,Egg,PosIS_Serine-13C3-15N1,2.6106344952876683,0.5575835269995585
+Egg,rep2,1,Egg,PosIS_Serine-13C3-15N1,3.674698087016216,0.6697535674273788
+Egg,rep3,1,Egg,PosIS_Serine-13C3-15N1,1.9397660690822474,0.46831277294657564
+Egg,rep4,1,Egg,PosIS_Serine-13C3-15N1,2.3822474120280264,0.5292053731459484
 Embryo,rep1,5,Embryo,PosIS_Serine-13C3-15N1,6.040618900164698,0.8476108371410278
 Embryo,rep2,5,Embryo,PosIS_Serine-13C3-15N1,7.956883633188022,0.9521569319466714
 Embryo,rep3,5,Embryo,PosIS_Serine-13C3-15N1,6.758035276165598,0.889751750026764
@@ -1847,10 +1951,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,PosIS_Serine-13C3-15N1,121.24280
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,PosIS_Serine-13C3-15N1,31.991521303963136,1.518402342180182
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,PosIS_Serine-13C3-15N1,163.27768027037027,2.215578561646366
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,PosIS_Serine-13C3-15N1,56.987121533944936,1.7633315510149699
-Egg,rep1,1,Embryo,Proline,7.563443856269508,0.9326484547461645
-Egg,rep2,1,Embryo,Proline,7.996709753937274,0.954083709775986
-Egg,rep3,1,Embryo,Proline,8.044295715157226,0.9563747537353989
-Egg,rep4,1,Embryo,Proline,8.848700167004123,0.9933789160257391
+Egg,rep1,1,Egg,Proline,7.563443856269508,0.9326484547461645
+Egg,rep1,1,Embryo,Proline,NA,NA
+Egg,rep2,1,Egg,Proline,7.996709753937274,0.954083709775986
+Egg,rep2,1,Embryo,Proline,NA,NA
+Egg,rep3,1,Egg,Proline,8.044295715157226,0.9563747537353989
+Egg,rep3,1,Embryo,Proline,NA,NA
+Egg,rep4,1,Egg,Proline,8.848700167004123,0.9933789160257391
+Egg,rep4,1,Embryo,Proline,NA,NA
 Embryo,rep1,5,Embryo,Proline,5.91826849386172,0.8399974127144583
 Embryo,rep2,5,Embryo,Proline,7.08448952590798,0.9076526027111419
 Embryo,rep3,5,Embryo,Proline,8.511039115295214,0.9782279677666232
@@ -1888,10 +1996,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Proline,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Proline,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Proline,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Proline,NA,NA
-Egg,rep1,1,Embryo,S-adenosyl-L-methionine,1.122432155042208,0.32683381662542815
-Egg,rep2,1,Embryo,S-adenosyl-L-methionine,1.1483813015854638,0.33211136384235984
-Egg,rep3,1,Embryo,S-adenosyl-L-methionine,1.6590164180383555,0.4247210188815665
-Egg,rep4,1,Embryo,S-adenosyl-L-methionine,1.5871164255493166,0.4128159732994135
+Egg,rep1,1,Egg,S-adenosyl-L-methionine,1.122432155042208,0.32683381662542815
+Egg,rep1,1,Embryo,S-adenosyl-L-methionine,NA,NA
+Egg,rep2,1,Egg,S-adenosyl-L-methionine,1.1483813015854638,0.33211136384235984
+Egg,rep2,1,Embryo,S-adenosyl-L-methionine,NA,NA
+Egg,rep3,1,Egg,S-adenosyl-L-methionine,1.6590164180383555,0.4247210188815665
+Egg,rep3,1,Embryo,S-adenosyl-L-methionine,NA,NA
+Egg,rep4,1,Egg,S-adenosyl-L-methionine,1.5871164255493166,0.4128159732994135
+Egg,rep4,1,Embryo,S-adenosyl-L-methionine,NA,NA
 Embryo,rep1,5,Embryo,S-adenosyl-L-methionine,0.4123197533415812,0.14993303339473063
 Embryo,rep2,5,Embryo,S-adenosyl-L-methionine,0.4806264219348353,0.17044549514621965
 Embryo,rep3,5,Embryo,S-adenosyl-L-methionine,0.5116667697802064,0.17945606630046912
@@ -1929,10 +2041,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,S-adenosyl-L-methionine,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,S-adenosyl-L-methionine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,S-adenosyl-L-methionine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,S-adenosyl-L-methionine,NA,NA
-Egg,rep1,1,Embryo,Taurine,4.274153697447155,0.7221527816918811
-Egg,rep2,1,Embryo,Taurine,4.956197260556073,0.774969072517406
-Egg,rep3,1,Embryo,Taurine,5.641507772649226,0.822266685242523
-Egg,rep4,1,Embryo,Taurine,4.46882366982503,0.7378939207312791
+Egg,rep1,1,Egg,Taurine,4.274153697447155,0.7221527816918811
+Egg,rep1,1,Embryo,Taurine,NA,NA
+Egg,rep2,1,Egg,Taurine,4.956197260556073,0.774969072517406
+Egg,rep2,1,Embryo,Taurine,NA,NA
+Egg,rep3,1,Egg,Taurine,5.641507772649226,0.822266685242523
+Egg,rep3,1,Embryo,Taurine,NA,NA
+Egg,rep4,1,Egg,Taurine,4.46882366982503,0.7378939207312791
+Egg,rep4,1,Embryo,Taurine,NA,NA
 Embryo,rep1,5,Embryo,Taurine,6.844562217891647,0.894568711892486
 Embryo,rep2,5,Embryo,Taurine,10.429061513644365,1.0580105701871336
 Embryo,rep3,5,Embryo,Taurine,13.67733742261168,1.1666472784992892
@@ -1970,10 +2086,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Taurine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Taurine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Taurine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Taurine,NA,NA
-Egg,rep1,1,Embryo,Threonine,1.4084059148263213,0.38172968512424776
-Egg,rep2,1,Embryo,Threonine,1.148367299152693,0.3321085332465533
-Egg,rep3,1,Embryo,Threonine,1.3041705881051555,0.362514628713952
-Egg,rep4,1,Embryo,Threonine,1.211087956889456,0.344606019119621
+Egg,rep1,1,Egg,Threonine,1.4084059148263213,0.38172968512424776
+Egg,rep1,1,Embryo,Threonine,NA,NA
+Egg,rep2,1,Egg,Threonine,1.148367299152693,0.3321085332465533
+Egg,rep2,1,Embryo,Threonine,NA,NA
+Egg,rep3,1,Egg,Threonine,1.3041705881051555,0.362514628713952
+Egg,rep3,1,Embryo,Threonine,NA,NA
+Egg,rep4,1,Egg,Threonine,1.211087956889456,0.344606019119621
+Egg,rep4,1,Embryo,Threonine,NA,NA
 Embryo,rep1,5,Embryo,Threonine,1.59044034429325,0.4133735952942171
 Embryo,rep2,5,Embryo,Threonine,1.4423311239546635,0.38780454394856434
 Embryo,rep3,5,Embryo,Threonine,1.5609575296577336,0.40840237628637943
@@ -2011,10 +2131,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Threonine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Threonine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Threonine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Threonine,NA,NA
-Egg,rep1,1,Embryo,Trigonelline,299.14258767222685,2.477327622478501
-Egg,rep2,1,Embryo,Trigonelline,332.5695446472179,2.5231863920992676
-Egg,rep3,1,Embryo,Trigonelline,320.45585911861866,2.5071213459777244
-Egg,rep4,1,Embryo,Trigonelline,351.3173612312115,2.54693404454695
+Egg,rep1,1,Egg,Trigonelline,299.14258767222685,2.477327622478501
+Egg,rep2,1,Egg,Trigonelline,332.5695446472179,2.5231863920992676
+Egg,rep3,1,Egg,Trigonelline,320.45585911861866,2.5071213459777244
+Egg,rep4,1,Egg,Trigonelline,351.3173612312115,2.54693404454695
 Embryo,rep1,5,Embryo,Trigonelline,541.5676299243752,2.7344538797967988
 Embryo,rep2,5,Embryo,Trigonelline,572.9678648094502,2.7588875778916844
 Embryo,rep3,5,Embryo,Trigonelline,626.1837048805435,2.7973947662382526
@@ -2045,10 +2165,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Trigonelline,1565.4803037024508,
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Trigonelline,951.0043768344656,2.9786389450553643
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Trigonelline,1150.004922704081,3.0610771810569393
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Trigonelline,1270.0764688039078,3.104171678784211
-Egg,rep1,1,Embryo,1-Methylimidazole acetic acid,2.5918494534359837,0.5553181256255052
-Egg,rep2,1,Embryo,1-Methylimidazole acetic acid,3.2458498480781257,0.6279646315388442
-Egg,rep3,1,Embryo,1-Methylimidazole acetic acid,2.4813914658139984,0.5417528603667441
-Egg,rep4,1,Embryo,1-Methylimidazole acetic acid,3.4577478562982904,0.6491154998294596
+Egg,rep1,1,Egg,1-Methylimidazole acetic acid,2.5918494534359837,0.5553181256255052
+Egg,rep2,1,Egg,1-Methylimidazole acetic acid,3.2458498480781257,0.6279646315388442
+Egg,rep3,1,Egg,1-Methylimidazole acetic acid,2.4813914658139984,0.5417528603667441
+Egg,rep4,1,Egg,1-Methylimidazole acetic acid,3.4577478562982904,0.6491154998294596
 Embryo,rep1,5,Embryo,1-Methylimidazole acetic acid,10.152553022561154,1.0473742966839736
 Embryo,rep2,5,Embryo,1-Methylimidazole acetic acid,5.795066523916279,0.8321937128460455
 Embryo,rep3,5,Embryo,1-Methylimidazole acetic acid,5.952667578788571,0.8421514653774154
@@ -2079,10 +2199,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,1-Methylimidazole acetic acid,6.
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,1-Methylimidazole acetic acid,3.8545256457412376,0.6861467997431575
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,1-Methylimidazole acetic acid,5.062368767335963,0.7826423504987811
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,1-Methylimidazole acetic acid,5.506684247923309,0.8133597320893552
-Egg,rep1,1,Embryo,2-Furoyl glycine,0.3373968985810437,0.12626031173759117
-Egg,rep2,1,Embryo,2-Furoyl glycine,0.42086659898582895,0.15255330520126364
-Egg,rep3,1,Embryo,2-Furoyl glycine,0.1741246154108274,0.06971419308977808
-Egg,rep4,1,Embryo,2-Furoyl glycine,0.4002617837196971,0.14620923610450443
+Egg,rep1,1,Egg,2-Furoyl glycine,0.3373968985810437,0.12626031173759117
+Egg,rep2,1,Egg,2-Furoyl glycine,0.42086659898582895,0.15255330520126364
+Egg,rep3,1,Egg,2-Furoyl glycine,0.1741246154108274,0.06971419308977808
+Egg,rep4,1,Egg,2-Furoyl glycine,0.4002617837196971,0.14620923610450443
 Embryo,rep1,5,Embryo,2-Furoyl glycine,0.03566534270508218,0.015219443347435031
 Embryo,rep2,5,Embryo,2-Furoyl glycine,1.0070325791918866,0.30255442223757223
 Embryo,rep3,5,Embryo,2-Furoyl glycine,0.8491240465342723,0.26696604632320536
@@ -2113,10 +2233,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,2-Furoyl glycine,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,2-Furoyl glycine,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,2-Furoyl glycine,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,2-Furoyl glycine,0,0
-Egg,rep1,1,Embryo,4-Aminobutyrate,7.053353240016991,0.9059767487417059
-Egg,rep2,1,Embryo,4-Aminobutyrate,8.414346784069041,0.9737901918071764
-Egg,rep3,1,Embryo,4-Aminobutyrate,5.388069197697205,0.8053696119146746
-Egg,rep4,1,Embryo,4-Aminobutyrate,5.949541259266726,0.8419561376628476
+Egg,rep1,1,Egg,4-Aminobutyrate,7.053353240016991,0.9059767487417059
+Egg,rep2,1,Egg,4-Aminobutyrate,8.414346784069041,0.9737901918071764
+Egg,rep3,1,Egg,4-Aminobutyrate,5.388069197697205,0.8053696119146746
+Egg,rep4,1,Egg,4-Aminobutyrate,5.949541259266726,0.8419561376628476
 Embryo,rep1,5,Embryo,4-Aminobutyrate,8.919372516974196,0.9964842002756752
 Embryo,rep2,5,Embryo,4-Aminobutyrate,8.176544432611514,0.9626791717921703
 Embryo,rep3,5,Embryo,4-Aminobutyrate,11.326023952882007,1.0908230073500658
@@ -2147,10 +2267,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,4-Aminobutyrate,33.2058838360465
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,4-Aminobutyrate,14.693783448987205,1.1957276556926861
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,4-Aminobutyrate,44.54332452926657,1.6584247296611316
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,4-Aminobutyrate,15.820327471035538,1.2258344467222557
-Egg,rep1,1,Embryo,4-Guanidinobutanoic acid,0,0
-Egg,rep2,1,Embryo,4-Guanidinobutanoic acid,0,0
-Egg,rep3,1,Embryo,4-Guanidinobutanoic acid,0,0
-Egg,rep4,1,Embryo,4-Guanidinobutanoic acid,0,0
+Egg,rep1,1,Egg,4-Guanidinobutanoic acid,0,0
+Egg,rep2,1,Egg,4-Guanidinobutanoic acid,0,0
+Egg,rep3,1,Egg,4-Guanidinobutanoic acid,0,0
+Egg,rep4,1,Egg,4-Guanidinobutanoic acid,0,0
 Embryo,rep1,5,Embryo,4-Guanidinobutanoic acid,0.18178911046312757,0.07253998387722109
 Embryo,rep2,5,Embryo,4-Guanidinobutanoic acid,0.31124210470154484,0.117682886219822
 Embryo,rep3,5,Embryo,4-Guanidinobutanoic acid,0.11045217098082662,0.045499857502741214
@@ -2181,10 +2301,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,4-Guanidinobutanoic acid,8.27671
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,4-Guanidinobutanoic acid,4.56654275540917,0.7455855491391206
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,4-Guanidinobutanoic acid,9.692658544204953,1.0290856984297023
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,4-Guanidinobutanoic acid,5.730241360377902,0.8280306392017915
-Egg,rep1,1,Embryo,5- Methylthioadenosine,1.7872921237754038,0.44518248758493484
-Egg,rep2,1,Embryo,5- Methylthioadenosine,1.5274104405576014,0.402675775198446
-Egg,rep3,1,Embryo,5- Methylthioadenosine,1.768295465439677,0.4422124413345523
-Egg,rep4,1,Embryo,5- Methylthioadenosine,2.053305562880301,0.484770268966957
+Egg,rep1,1,Egg,5- Methylthioadenosine,1.7872921237754038,0.44518248758493484
+Egg,rep2,1,Egg,5- Methylthioadenosine,1.5274104405576014,0.402675775198446
+Egg,rep3,1,Egg,5- Methylthioadenosine,1.768295465439677,0.4422124413345523
+Egg,rep4,1,Egg,5- Methylthioadenosine,2.053305562880301,0.484770268966957
 Embryo,rep1,5,Embryo,5- Methylthioadenosine,0.13809622608378316,0.05617898322817361
 Embryo,rep2,5,Embryo,5- Methylthioadenosine,1.9653020264275827,0.4720689343716742
 Embryo,rep3,5,Embryo,5- Methylthioadenosine,2.0355470629878827,0.4822369705436718
@@ -2215,10 +2335,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,5- Methylthioadenosine,5.7150239
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,5- Methylthioadenosine,5.655404737366656,0.8231744715101849
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,5- Methylthioadenosine,2.436816146469381,0.5361563000425216
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,5- Methylthioadenosine,2.895921468239673,0.5906101940346309
-Egg,rep1,1,Embryo,5-Hydroxytryptophan,0.48451503552117847,0.17158460059209196
-Egg,rep2,1,Embryo,5-Hydroxytryptophan,0.62741340929044,0.2114978901018046
-Egg,rep3,1,Embryo,5-Hydroxytryptophan,0.16959072896924385,0.06803391709201978
-Egg,rep4,1,Embryo,5-Hydroxytryptophan,0.7468858156390589,0.2422645184582929
+Egg,rep1,1,Egg,5-Hydroxytryptophan,0.48451503552117847,0.17158460059209196
+Egg,rep1,1,Embryo,5-Hydroxytryptophan,NA,NA
+Egg,rep2,1,Egg,5-Hydroxytryptophan,0.62741340929044,0.2114978901018046
+Egg,rep2,1,Embryo,5-Hydroxytryptophan,NA,NA
+Egg,rep3,1,Egg,5-Hydroxytryptophan,0.16959072896924385,0.06803391709201978
+Egg,rep3,1,Embryo,5-Hydroxytryptophan,NA,NA
+Egg,rep4,1,Egg,5-Hydroxytryptophan,0.7468858156390589,0.2422645184582929
+Egg,rep4,1,Embryo,5-Hydroxytryptophan,NA,NA
 Embryo,rep1,5,Embryo,5-Hydroxytryptophan,0.6851522322014638,0.2266391399959091
 Embryo,rep2,5,Embryo,5-Hydroxytryptophan,0.853174604987268,0.267916340209369
 Embryo,rep3,5,Embryo,5-Hydroxytryptophan,0.6737332973774044,0.2236862561033989
@@ -2256,10 +2380,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,5-Hydroxytryptophan,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,5-Hydroxytryptophan,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,5-Hydroxytryptophan,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,5-Hydroxytryptophan,NA,NA
-Egg,rep1,1,Embryo,Acetyl-arginine,0,0
-Egg,rep2,1,Embryo,Acetyl-arginine,0,0
-Egg,rep3,1,Embryo,Acetyl-arginine,0,0
-Egg,rep4,1,Embryo,Acetyl-arginine,0,0
+Egg,rep1,1,Egg,Acetyl-arginine,0,0
+Egg,rep2,1,Egg,Acetyl-arginine,0,0
+Egg,rep3,1,Egg,Acetyl-arginine,0,0
+Egg,rep4,1,Egg,Acetyl-arginine,0,0
 Embryo,rep1,5,Embryo,Acetyl-arginine,0,0
 Embryo,rep2,5,Embryo,Acetyl-arginine,0,0
 Embryo,rep3,5,Embryo,Acetyl-arginine,0,0
@@ -2290,10 +2414,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Acetyl-arginine,0.20315766293368
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Acetyl-arginine,0.2436758288693603,0.09470719379536782
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Acetyl-arginine,0.30657654331506384,0.11613485712926101
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Acetyl-arginine,0.21832138569382112,0.0857618676253625
-Egg,rep1,1,Embryo,Acetyllysine,4.702946083291922,0.75609926570408
-Egg,rep2,1,Embryo,Acetyllysine,5.510502267806153,0.8136144945163146
-Egg,rep3,1,Embryo,Acetyllysine,5.535318248732399,0.8152667411595655
-Egg,rep4,1,Embryo,Acetyllysine,5.741247810157893,0.828740292219045
+Egg,rep1,1,Egg,Acetyllysine,4.702946083291922,0.75609926570408
+Egg,rep2,1,Egg,Acetyllysine,5.510502267806153,0.8136144945163146
+Egg,rep3,1,Egg,Acetyllysine,5.535318248732399,0.8152667411595655
+Egg,rep4,1,Egg,Acetyllysine,5.741247810157893,0.828740292219045
 Embryo,rep1,5,Embryo,Acetyllysine,8.315941907230021,0.9692267716780034
 Embryo,rep2,5,Embryo,Acetyllysine,6.883189552118678,0.8967019693447504
 Embryo,rep3,5,Embryo,Acetyllysine,7.517366193650991,0.9303053196023482
@@ -2324,10 +2448,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Acetyllysine,2.7393897227550226,
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Acetyllysine,1.5761490046337343,0.41097097903664975
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Acetyllysine,1.0833943937973933,0.3187714911847326
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Acetyllysine,2.1047110843013366,0.4920211921674667
-Egg,rep1,1,Embryo,ADP-ribose,1.2798464946614256,0.3579056063136944
-Egg,rep2,1,Embryo,ADP-ribose,1.6065325437432634,0.4160631516608462
-Egg,rep3,1,Embryo,ADP-ribose,1.2763754935545153,0.35724390154034036
-Egg,rep4,1,Embryo,ADP-ribose,1.0947921705851675,0.3211409420300914
+Egg,rep1,1,Egg,ADP-ribose,1.2798464946614256,0.3579056063136944
+Egg,rep2,1,Egg,ADP-ribose,1.6065325437432634,0.4160631516608462
+Egg,rep3,1,Egg,ADP-ribose,1.2763754935545153,0.35724390154034036
+Egg,rep4,1,Egg,ADP-ribose,1.0947921705851675,0.3211409420300914
 Embryo,rep1,5,Embryo,ADP-ribose,1.672020885174499,0.4268398483695973
 Embryo,rep2,5,Embryo,ADP-ribose,1.9160309423252269,0.46479212801692693
 Embryo,rep3,5,Embryo,ADP-ribose,2.3618813010441473,0.5265823756080403
@@ -2358,10 +2482,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,ADP-ribose,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,ADP-ribose,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,ADP-ribose,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,ADP-ribose,0,0
-Egg,rep1,1,Embryo,Carnosine,0.19009866363528422,0.0755829675237451
-Egg,rep2,1,Embryo,Carnosine,0.14519871505427395,0.05888085205899917
-Egg,rep3,1,Embryo,Carnosine,0.9427398566234776,0.2884146501124803
-Egg,rep4,1,Embryo,Carnosine,0.2199418711402173,0.08633913752353314
+Egg,rep1,1,Egg,Carnosine,0.19009866363528422,0.0755829675237451
+Egg,rep2,1,Egg,Carnosine,0.14519871505427395,0.05888085205899917
+Egg,rep3,1,Egg,Carnosine,0.9427398566234776,0.2884146501124803
+Egg,rep4,1,Egg,Carnosine,0.2199418711402173,0.08633913752353314
 Embryo,rep1,5,Embryo,Carnosine,0.3335154906374838,0.12499806498975365
 Embryo,rep2,5,Embryo,Carnosine,0.2904865953164434,0.11075349775215772
 Embryo,rep3,5,Embryo,Carnosine,0.1790307673489318,0.07152513835676633
@@ -2392,10 +2516,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Carnosine,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Carnosine,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Carnosine,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Carnosine,0,0
-Egg,rep1,1,Embryo,Citrulline,0.5078632156706155,0.17836194672354333
-Egg,rep2,1,Embryo,Citrulline,0.8622310228095111,0.2700335572616866
-Egg,rep3,1,Embryo,Citrulline,0.8963204933930383,0.2779117384606087
-Egg,rep4,1,Embryo,Citrulline,0.5207595242286038,0.1820605450474873
+Egg,rep1,1,Egg,Citrulline,0.5078632156706155,0.17836194672354333
+Egg,rep1,1,Embryo,Citrulline,NA,NA
+Egg,rep2,1,Egg,Citrulline,0.8622310228095111,0.2700335572616866
+Egg,rep2,1,Embryo,Citrulline,NA,NA
+Egg,rep3,1,Egg,Citrulline,0.8963204933930383,0.2779117384606087
+Egg,rep3,1,Embryo,Citrulline,NA,NA
+Egg,rep4,1,Egg,Citrulline,0.5207595242286038,0.1820605450474873
+Egg,rep4,1,Embryo,Citrulline,NA,NA
 Embryo,rep1,5,Embryo,Citrulline,0.17911063290390566,0.07155455573591825
 Embryo,rep2,5,Embryo,Citrulline,0.23865912327276856,0.09295180577068209
 Embryo,rep3,5,Embryo,Citrulline,0.30623399280346136,0.11602098144194431
@@ -2433,10 +2561,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Citrulline,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Citrulline,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Citrulline,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Citrulline,NA,NA
-Egg,rep1,1,Embryo,CMP,0.4167813948141281,0.15130284506046776
-Egg,rep2,1,Embryo,CMP,0.44441438524553023,0.1596918050120894
-Egg,rep3,1,Embryo,CMP,0.4151433663501289,0.1508004399032363
-Egg,rep4,1,Embryo,CMP,0.5279569873617711,0.18411112883760336
+Egg,rep1,1,Egg,CMP,0.4167813948141281,0.15130284506046776
+Egg,rep1,1,Embryo,CMP,NA,NA
+Egg,rep2,1,Egg,CMP,0.44441438524553023,0.1596918050120894
+Egg,rep2,1,Embryo,CMP,NA,NA
+Egg,rep3,1,Egg,CMP,0.4151433663501289,0.1508004399032363
+Egg,rep3,1,Embryo,CMP,NA,NA
+Egg,rep4,1,Egg,CMP,0.5279569873617711,0.18411112883760336
+Egg,rep4,1,Embryo,CMP,NA,NA
 Embryo,rep1,5,Embryo,CMP,0.5572084595063601,0.19234675434933046
 Embryo,rep2,5,Embryo,CMP,0.510660462950875,0.17916686299084922
 Embryo,rep3,5,Embryo,CMP,0.5497407914491625,0.19025906445597332
@@ -2474,10 +2606,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,CMP,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,CMP,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,CMP,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,CMP,NA,NA
-Egg,rep1,1,Embryo,Creatine,0.3223177974979004,0.12133584328367693
-Egg,rep2,1,Embryo,Creatine,0.4252552219259872,0.15389264087033666
-Egg,rep3,1,Embryo,Creatine,0.44005014821575317,0.1583776162023036
-Egg,rep4,1,Embryo,Creatine,0.2979214026329173,0.11324839397719905
+Egg,rep1,1,Egg,Creatine,0.3223177974979004,0.12133584328367693
+Egg,rep2,1,Egg,Creatine,0.4252552219259872,0.15389264087033666
+Egg,rep3,1,Egg,Creatine,0.44005014821575317,0.1583776162023036
+Egg,rep4,1,Egg,Creatine,0.2979214026329173,0.11324839397719905
 Embryo,rep1,5,Embryo,Creatine,0.9608591883919699,0.29244640758922075
 Embryo,rep2,5,Embryo,Creatine,0.6377757616016133,0.21425443944785327
 Embryo,rep3,5,Embryo,Creatine,0.8473060682240114,0.2665388568525464
@@ -2508,10 +2640,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Creatine,6.1333060992618,0.85329
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Creatine,3.037924075164008,0.6061581486721797
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Creatine,9.86302007895262,1.0359505822771937
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Creatine,6.003268015582932,0.8453007471478529
-Egg,rep1,1,Embryo,CTP,0.004087646889315978,0.001771624062992943
-Egg,rep2,1,Embryo,CTP,0,0
-Egg,rep3,1,Embryo,CTP,0,0
-Egg,rep4,1,Embryo,CTP,0,0
+Egg,rep1,1,Egg,CTP,0.004087646889315978,0.001771624062992943
+Egg,rep2,1,Egg,CTP,0,0
+Egg,rep3,1,Egg,CTP,0,0
+Egg,rep4,1,Egg,CTP,0,0
 Embryo,rep1,5,Embryo,CTP,0.08209066635378977,0.03426365101776198
 Embryo,rep2,5,Embryo,CTP,0.007479960785363455,0.00323641659290868
 Embryo,rep3,5,Embryo,CTP,0.014284358179603635,0.006159728050091573
@@ -2542,10 +2674,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,CTP,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,CTP,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,CTP,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,CTP,0,0
-Egg,rep1,1,Embryo,Deoxyadenosine,1.3123678743035117,0.3640569270974605
-Egg,rep2,1,Embryo,Deoxyadenosine,1.3936491079717641,0.3790604862371656
-Egg,rep3,1,Embryo,Deoxyadenosine,0.4349773156279701,0.15684503572125413
-Egg,rep4,1,Embryo,Deoxyadenosine,0.7850156822542305,0.2516420359588889
+Egg,rep1,1,Egg,Deoxyadenosine,1.3123678743035117,0.3640569270974605
+Egg,rep2,1,Egg,Deoxyadenosine,1.3936491079717641,0.3790604862371656
+Egg,rep3,1,Egg,Deoxyadenosine,0.4349773156279701,0.15684503572125413
+Egg,rep4,1,Egg,Deoxyadenosine,0.7850156822542305,0.2516420359588889
 Embryo,rep1,5,Embryo,Deoxyadenosine,1.1723489197654713,0.3369295823157649
 Embryo,rep2,5,Embryo,Deoxyadenosine,1.0292682757482172,0.3073394659467013
 Embryo,rep3,5,Embryo,Deoxyadenosine,1.1600603946241799,0.3344658940608089
@@ -2576,10 +2708,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Deoxyadenosine,1.389653818780658
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Deoxyadenosine,0.28940404007483467,0.11038902664711922
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Deoxyadenosine,1.6838809841621467,0.428763253275023
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Deoxyadenosine,0.9650543191122313,0.2933745598842955
-Egg,rep1,1,Embryo,Diethanolamine,21.536044181946497,1.3528776854134976
-Egg,rep2,1,Embryo,Diethanolamine,32.683024052941164,1.527411075421091
-Egg,rep3,1,Embryo,Diethanolamine,20.2435086153824,1.3272262471767717
-Egg,rep4,1,Embryo,Diethanolamine,28.02537597480274,1.4627778539997458
+Egg,rep1,1,Egg,Diethanolamine,21.536044181946497,1.3528776854134976
+Egg,rep2,1,Egg,Diethanolamine,32.683024052941164,1.527411075421091
+Egg,rep3,1,Egg,Diethanolamine,20.2435086153824,1.3272262471767717
+Egg,rep4,1,Egg,Diethanolamine,28.02537597480274,1.4627778539997458
 Embryo,rep1,5,Embryo,Diethanolamine,73.49515576083506,1.8721280325504375
 Embryo,rep2,5,Embryo,Diethanolamine,136.69069907644996,2.1389046049177893
 Embryo,rep3,5,Embryo,Diethanolamine,51.195981688924114,1.7176370700999712
@@ -2610,10 +2742,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Diethanolamine,1003.206620432574
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Diethanolamine,354.44783717660937,2.550775875984086
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Diethanolamine,2429.179517764339,3.385638356188762
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Diethanolamine,888.820522447677,2.949302417913487
-Egg,rep1,1,Embryo,FAD,0.3681507583372463,0.13613395550290447
-Egg,rep2,1,Embryo,FAD,0.4755194689988022,0.16894494424801856
-Egg,rep3,1,Embryo,FAD,0.4762986392936916,0.16917421946415875
-Egg,rep4,1,Embryo,FAD,0.5593275601945842,0.1929373548567574
+Egg,rep1,1,Egg,FAD,0.3681507583372463,0.13613395550290447
+Egg,rep1,1,Embryo,FAD,NA,NA
+Egg,rep2,1,Egg,FAD,0.4755194689988022,0.16894494424801856
+Egg,rep2,1,Embryo,FAD,NA,NA
+Egg,rep3,1,Egg,FAD,0.4762986392936916,0.16917421946415875
+Egg,rep3,1,Embryo,FAD,NA,NA
+Egg,rep4,1,Egg,FAD,0.5593275601945842,0.1929373548567574
+Egg,rep4,1,Embryo,FAD,NA,NA
 Embryo,rep1,5,Embryo,FAD,0.593605035193477,0.2023806932892669
 Embryo,rep2,5,Embryo,FAD,0.5086760693237741,0.1785960015999125
 Embryo,rep3,5,Embryo,FAD,0.5660893725202558,0.19481654245043967
@@ -2651,10 +2787,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,FAD,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,FAD,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,FAD,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,FAD,NA,NA
-Egg,rep1,1,Embryo,GDP,0.05483973682638165,0.023186481719963997
-Egg,rep2,1,Embryo,GDP,0.057004989262178396,0.02407703726383023
-Egg,rep3,1,Embryo,GDP,0.06614962378348523,0.02781815799599787
-Egg,rep4,1,Embryo,GDP,0.06900666781670614,0.02898041408339977
+Egg,rep1,1,Egg,GDP,0.05483973682638165,0.023186481719963997
+Egg,rep2,1,Egg,GDP,0.057004989262178396,0.02407703726383023
+Egg,rep3,1,Egg,GDP,0.06614962378348523,0.02781815799599787
+Egg,rep4,1,Egg,GDP,0.06900666781670614,0.02898041408339977
 Embryo,rep1,5,Embryo,GDP,0.0794105946524663,0.03318667644600328
 Embryo,rep2,5,Embryo,GDP,0.07600709050035385,0.031815133184488975
 Embryo,rep3,5,Embryo,GDP,0.09185026780396935,0.038163084957424695
@@ -2685,10 +2821,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,GDP,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,GDP,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,GDP,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,GDP,0,0
-Egg,rep1,1,Embryo,GDP-Mannose,0.2599250474031688,0.10034470982595277
-Egg,rep2,1,Embryo,GDP-Mannose,0.3210135865388063,0.12090728432799287
-Egg,rep3,1,Embryo,GDP-Mannose,0.3964237053149921,0.14501721267158052
-Egg,rep4,1,Embryo,GDP-Mannose,0.4243316894493554,0.15361113685942093
+Egg,rep1,1,Egg,GDP-Mannose,0.2599250474031688,0.10034470982595277
+Egg,rep2,1,Egg,GDP-Mannose,0.3210135865388063,0.12090728432799287
+Egg,rep3,1,Egg,GDP-Mannose,0.3964237053149921,0.14501721267158052
+Egg,rep4,1,Egg,GDP-Mannose,0.4243316894493554,0.15361113685942093
 Embryo,rep1,5,Embryo,GDP-Mannose,0.42569062021931775,0.15402529233982323
 Embryo,rep2,5,Embryo,GDP-Mannose,0.4598050432156736,0.16429485968228968
 Embryo,rep3,5,Embryo,GDP-Mannose,0.5560091187003712,0.19201213776269926
@@ -2719,10 +2855,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,GDP-Mannose,0.17407039794723117,
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,GDP-Mannose,0.14025041704678587,0.05700023975628635
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,GDP-Mannose,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,GDP-Mannose,0,0
-Egg,rep1,1,Embryo,Glycyl-L-proline,0.4373175895063331,0.15755274038946682
-Egg,rep2,1,Embryo,Glycyl-L-proline,0.5433746792850406,0.18847137090616628
-Egg,rep3,1,Embryo,Glycyl-L-proline,0.4760920565155049,0.16911344311711465
-Egg,rep4,1,Embryo,Glycyl-L-proline,0.5724708871647085,0.19658261363351595
+Egg,rep1,1,Egg,Glycyl-L-proline,0.4373175895063331,0.15755274038946682
+Egg,rep2,1,Egg,Glycyl-L-proline,0.5433746792850406,0.18847137090616628
+Egg,rep3,1,Egg,Glycyl-L-proline,0.4760920565155049,0.16911344311711465
+Egg,rep4,1,Egg,Glycyl-L-proline,0.5724708871647085,0.19658261363351595
 Embryo,rep1,5,Embryo,Glycyl-L-proline,0.888410690540114,0.27609645036408814
 Embryo,rep2,5,Embryo,Glycyl-L-proline,0.9330372898085343,0.2862402319912389
 Embryo,rep3,5,Embryo,Glycyl-L-proline,0.8697098857234321,0.2717742242883901
@@ -2753,10 +2889,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Glycyl-L-proline,3.0670168798051
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Glycyl-L-proline,2.0268794219215325,0.48099512084519835
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Glycyl-L-proline,1.9082086090520978,0.4636255557326619
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Glycyl-L-proline,1.3144227845908345,0.3644426961209861
-Egg,rep1,1,Embryo,Homocysteine,0.24353767181048752,0.09465894635030551
-Egg,rep2,1,Embryo,Homocysteine,0.17692091894528952,0.07074728219813746
-Egg,rep3,1,Embryo,Homocysteine,0.18755329066435308,0.07465310741031513
-Egg,rep4,1,Embryo,Homocysteine,0.1647734492023485,0.0662414624185403
+Egg,rep1,1,Egg,Homocysteine,0.24353767181048752,0.09465894635030551
+Egg,rep1,1,Embryo,Homocysteine,NA,NA
+Egg,rep2,1,Egg,Homocysteine,0.17692091894528952,0.07074728219813746
+Egg,rep2,1,Embryo,Homocysteine,NA,NA
+Egg,rep3,1,Egg,Homocysteine,0.18755329066435308,0.07465310741031513
+Egg,rep3,1,Embryo,Homocysteine,NA,NA
+Egg,rep4,1,Egg,Homocysteine,0.1647734492023485,0.0662414624185403
+Egg,rep4,1,Embryo,Homocysteine,NA,NA
 Embryo,rep1,5,Embryo,Homocysteine,0.31223074441733484,0.1180102086799168
 Embryo,rep2,5,Embryo,Homocysteine,0.3532063519964024,0.13136402771372013
 Embryo,rep3,5,Embryo,Homocysteine,0.3177374023983102,0.11982887304100692
@@ -2794,10 +2934,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Homocysteine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Homocysteine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Homocysteine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Homocysteine,NA,NA
-Egg,rep1,1,Embryo,Hypotaurine,0,0
-Egg,rep2,1,Embryo,Hypotaurine,0.04862882081660257,0.02062178981639063
-Egg,rep3,1,Embryo,Hypotaurine,0.061161344233088784,0.025781421208487712
-Egg,rep4,1,Embryo,Hypotaurine,0.09562470696465694,0.0396618172816584
+Egg,rep1,1,Egg,Hypotaurine,0,0
+Egg,rep1,1,Embryo,Hypotaurine,NA,NA
+Egg,rep2,1,Egg,Hypotaurine,0.04862882081660257,0.02062178981639063
+Egg,rep2,1,Embryo,Hypotaurine,NA,NA
+Egg,rep3,1,Egg,Hypotaurine,0.061161344233088784,0.025781421208487712
+Egg,rep3,1,Embryo,Hypotaurine,NA,NA
+Egg,rep4,1,Egg,Hypotaurine,0.09562470696465694,0.0396618172816584
+Egg,rep4,1,Embryo,Hypotaurine,NA,NA
 Embryo,rep1,5,Embryo,Hypotaurine,0,0
 Embryo,rep2,5,Embryo,Hypotaurine,0,0
 Embryo,rep3,5,Embryo,Hypotaurine,0,0
@@ -2835,10 +2979,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Hypotaurine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Hypotaurine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Hypotaurine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Hypotaurine,NA,NA
-Egg,rep1,1,Embryo,IMP,0.07647188823819055,0.03200269282885711
-Egg,rep2,1,Embryo,IMP,0.1334794748306181,0.05441366028211293
-Egg,rep3,1,Embryo,IMP,0.8247354761404048,0.26119991559848477
-Egg,rep4,1,Embryo,IMP,0.0935402424975463,0.03883476979070032
+Egg,rep1,1,Egg,IMP,0.07647188823819055,0.03200269282885711
+Egg,rep1,1,Embryo,IMP,NA,NA
+Egg,rep2,1,Egg,IMP,0.1334794748306181,0.05441366028211293
+Egg,rep2,1,Embryo,IMP,NA,NA
+Egg,rep3,1,Egg,IMP,0.8247354761404048,0.26119991559848477
+Egg,rep3,1,Embryo,IMP,NA,NA
+Egg,rep4,1,Egg,IMP,0.0935402424975463,0.03883476979070032
+Egg,rep4,1,Embryo,IMP,NA,NA
 Embryo,rep1,5,Embryo,IMP,0.017361243679525448,0.007475189186118848
 Embryo,rep2,5,Embryo,IMP,0.027636616516137164,0.011839570553034787
 Embryo,rep3,5,Embryo,IMP,0.028562198953720176,0.012230559371153995
@@ -2876,10 +3024,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,IMP,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,IMP,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,IMP,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,IMP,NA,NA
-Egg,rep1,1,Embryo,Inosine,0.289896435327103,0.11055484256939162
-Egg,rep2,1,Embryo,Inosine,0.6380380355643318,0.21432398194449792
-Egg,rep3,1,Embryo,Inosine,0.03173927123673511,0.013569961468126076
-Egg,rep4,1,Embryo,Inosine,0.17955992950419944,0.07172001083568119
+Egg,rep1,1,Egg,Inosine,0.289896435327103,0.11055484256939162
+Egg,rep2,1,Egg,Inosine,0.6380380355643318,0.21432398194449792
+Egg,rep3,1,Egg,Inosine,0.03173927123673511,0.013569961468126076
+Egg,rep4,1,Egg,Inosine,0.17955992950419944,0.07172001083568119
 Embryo,rep1,5,Embryo,Inosine,0.07473210641249241,0.03130022312981456
 Embryo,rep2,5,Embryo,Inosine,0.03255562144519143,0.013913455423928653
 Embryo,rep3,5,Embryo,Inosine,0,0
@@ -2910,10 +3058,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Inosine,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Inosine,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Inosine,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Inosine,1.1576940026219988,0.33398985443608137
-Egg,rep1,1,Embryo,Isoleucine,227.98520915253667,2.3598074308512818
-Egg,rep2,1,Embryo,Isoleucine,266.9569379422127,2.4280650062798386
-Egg,rep3,1,Embryo,Isoleucine,250.72793172081597,2.4009314075197197
-Egg,rep4,1,Embryo,Isoleucine,304.18544887589616,2.484563822783641
+Egg,rep1,1,Egg,Isoleucine,227.98520915253667,2.3598074308512818
+Egg,rep2,1,Egg,Isoleucine,266.9569379422127,2.4280650062798386
+Egg,rep3,1,Egg,Isoleucine,250.72793172081597,2.4009314075197197
+Egg,rep4,1,Egg,Isoleucine,304.18544887589616,2.484563822783641
 Embryo,rep1,5,Embryo,Isoleucine,677.714634694766,2.831687213709896
 Embryo,rep2,5,Embryo,Isoleucine,423.7689446280087,2.628152757438504
 Embryo,rep3,5,Embryo,Isoleucine,452.7507465499068,2.6568173525835372
@@ -2944,10 +3092,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Isoleucine,539.6062974535078,2.7
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Isoleucine,490.43299740446366,2.6914643139461565
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Isoleucine,418.4670036825617,2.6226978038245683
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Isoleucine,395.35703674153507,2.598086572863445
-Egg,rep1,1,Embryo,Isopentenyl pyrophosphate,0.11290565729494483,0.046458350091388
-Egg,rep2,1,Embryo,Isopentenyl pyrophosphate,0.2985802419631234,0.11346879075014593
-Egg,rep3,1,Embryo,Isopentenyl pyrophosphate,0.11014657427965262,0.04538032310948008
-Egg,rep4,1,Embryo,Isopentenyl pyrophosphate,0.14771556825128787,0.05983427269245148
+Egg,rep1,1,Egg,Isopentenyl pyrophosphate,0.11290565729494483,0.046458350091388
+Egg,rep2,1,Egg,Isopentenyl pyrophosphate,0.2985802419631234,0.11346879075014593
+Egg,rep3,1,Egg,Isopentenyl pyrophosphate,0.11014657427965262,0.04538032310948008
+Egg,rep4,1,Egg,Isopentenyl pyrophosphate,0.14771556825128787,0.05983427269245148
 Embryo,rep1,5,Embryo,Isopentenyl pyrophosphate,0.17385594200128482,0.06961480267588444
 Embryo,rep2,5,Embryo,Isopentenyl pyrophosphate,0.2144854431055678,0.08439231369297052
 Embryo,rep3,5,Embryo,Isopentenyl pyrophosphate,0.26255528578114623,0.1012504044413766
@@ -2978,10 +3126,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Isopentenyl pyrophosphate,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Isopentenyl pyrophosphate,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Isopentenyl pyrophosphate,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Isopentenyl pyrophosphate,0,0
-Egg,rep1,1,Embryo,Itaconic acid,1.8594506451142025,0.4562826049080317
-Egg,rep2,1,Embryo,Itaconic acid,1.9987271897159014,0.47693695746002485
-Egg,rep3,1,Embryo,Itaconic acid,2.3393244670043534,0.5236586195285637
-Egg,rep4,1,Embryo,Itaconic acid,2.3327070222319284,0.5227971365766434
+Egg,rep1,1,Egg,Itaconic acid,1.8594506451142025,0.4562826049080317
+Egg,rep2,1,Egg,Itaconic acid,1.9987271897159014,0.47693695746002485
+Egg,rep3,1,Egg,Itaconic acid,2.3393244670043534,0.5236586195285637
+Egg,rep4,1,Egg,Itaconic acid,2.3327070222319284,0.5227971365766434
 Embryo,rep1,5,Embryo,Itaconic acid,2.1032772134204754,0.491820572516614
 Embryo,rep2,5,Embryo,Itaconic acid,2.1940517890102034,0.5043419535992741
 Embryo,rep3,5,Embryo,Itaconic acid,2.3661422674053623,0.5271324671488417
@@ -3012,10 +3160,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Itaconic acid,1.0952028672370924
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Itaconic acid,1.3771124504932422,0.37604972673178294
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Itaconic acid,0.22640462734183464,0.08863378048398457
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Itaconic acid,0.5098311364239475,0.17892837734601844
-Egg,rep1,1,Embryo,N N N-Trimethyllysine,296.4388606902752,2.473397708909553
-Egg,rep2,1,Embryo,N N N-Trimethyllysine,340.8432094958055,2.5338269573301284
-Egg,rep3,1,Embryo,N N N-Trimethyllysine,381.7601679159749,2.582926736434039
-Egg,rep4,1,Embryo,N N N-Trimethyllysine,399.3491391400674,2.6024388989925074
+Egg,rep1,1,Egg,N N N-Trimethyllysine,296.4388606902752,2.473397708909553
+Egg,rep2,1,Egg,N N N-Trimethyllysine,340.8432094958055,2.5338269573301284
+Egg,rep3,1,Egg,N N N-Trimethyllysine,381.7601679159749,2.582926736434039
+Egg,rep4,1,Egg,N N N-Trimethyllysine,399.3491391400674,2.6024388989925074
 Embryo,rep1,5,Embryo,N N N-Trimethyllysine,332.45505137003386,2.52303730074857
 Embryo,rep2,5,Embryo,N N N-Trimethyllysine,289.024917336727,2.4624353116816144
 Embryo,rep3,5,Embryo,N N N-Trimethyllysine,323.19065725200596,2.5108004948975515
@@ -3046,10 +3194,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,N N N-Trimethyllysine,3.18476253
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,N N N-Trimethyllysine,5.074055622853311,0.7834787646299338
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,N N N-Trimethyllysine,3.498601762706735,0.6530775490859938
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,N N N-Trimethyllysine,4.575213533932652,0.7462615057709057
-Egg,rep1,1,Embryo,N-Acetyl-Glucosamine,0.13758764575481658,0.05598486695667805
-Egg,rep2,1,Embryo,N-Acetyl-Glucosamine,0.1471124532300202,0.05960599455633991
-Egg,rep3,1,Embryo,N-Acetyl-Glucosamine,0.10110973000752967,0.04183060031796208
-Egg,rep4,1,Embryo,N-Acetyl-Glucosamine,0.11033604016340515,0.04545443671657359
+Egg,rep1,1,Egg,N-Acetyl-Glucosamine,0.13758764575481658,0.05598486695667805
+Egg,rep2,1,Egg,N-Acetyl-Glucosamine,0.1471124532300202,0.05960599455633991
+Egg,rep3,1,Egg,N-Acetyl-Glucosamine,0.10110973000752967,0.04183060031796208
+Egg,rep4,1,Egg,N-Acetyl-Glucosamine,0.11033604016340515,0.04545443671657359
 Embryo,rep1,5,Embryo,N-Acetyl-Glucosamine,0.047325695107729326,0.02008175865329809
 Embryo,rep2,5,Embryo,N-Acetyl-Glucosamine,0.13210994825191782,0.05388860671120979
 Embryo,rep3,5,Embryo,N-Acetyl-Glucosamine,0.08182149204191715,0.034155605117224146
@@ -3080,10 +3228,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,N-Acetyl-Glucosamine,0.246131751
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,N-Acetyl-Glucosamine,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,N-Acetyl-Glucosamine,0.24498783524088058,0.09516510796704054
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,N-Acetyl-Glucosamine,0.3554910771441468,0.1320966630748855
-Egg,rep1,1,Embryo,N-acetyl-L-ornithine,0.6422787102102692,0.21544686291422435
-Egg,rep2,1,Embryo,N-acetyl-L-ornithine,0.7097710875416364,0.23293796882939438
-Egg,rep3,1,Embryo,N-acetyl-L-ornithine,2.094592693396954,0.4906034957953203
-Egg,rep4,1,Embryo,N-acetyl-L-ornithine,0.7780478981863083,0.24994345609303445
+Egg,rep1,1,Egg,N-acetyl-L-ornithine,0.6422787102102692,0.21544686291422435
+Egg,rep1,1,Embryo,N-acetyl-L-ornithine,NA,NA
+Egg,rep2,1,Egg,N-acetyl-L-ornithine,0.7097710875416364,0.23293796882939438
+Egg,rep2,1,Embryo,N-acetyl-L-ornithine,NA,NA
+Egg,rep3,1,Egg,N-acetyl-L-ornithine,2.094592693396954,0.4906034957953203
+Egg,rep3,1,Embryo,N-acetyl-L-ornithine,NA,NA
+Egg,rep4,1,Egg,N-acetyl-L-ornithine,0.7780478981863083,0.24994345609303445
+Egg,rep4,1,Embryo,N-acetyl-L-ornithine,NA,NA
 Embryo,rep1,5,Embryo,N-acetyl-L-ornithine,0.04360233710796963,0.018535043015341385
 Embryo,rep2,5,Embryo,N-acetyl-L-ornithine,0.33911954169560826,0.1268193477225663
 Embryo,rep3,5,Embryo,N-acetyl-L-ornithine,0.678691626125727,0.22497092402836819
@@ -3121,10 +3273,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,N-acetyl-L-ornithine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,N-acetyl-L-ornithine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,N-acetyl-L-ornithine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,N-acetyl-L-ornithine,NA,NA
-Egg,rep1,1,Embryo,N-carbomoyl-L-aspartate,0.06521511244024034,0.02743731924160047
-Egg,rep2,1,Embryo,N-carbomoyl-L-aspartate,0.02043251633359358,0.00878428905893422
-Egg,rep3,1,Embryo,N-carbomoyl-L-aspartate,0.009944295441790261,0.004297420466397123
-Egg,rep4,1,Embryo,N-carbomoyl-L-aspartate,0.0219748834050866,0.009440222479110394
+Egg,rep1,1,Egg,N-carbomoyl-L-aspartate,0.06521511244024034,0.02743731924160047
+Egg,rep2,1,Egg,N-carbomoyl-L-aspartate,0.02043251633359358,0.00878428905893422
+Egg,rep3,1,Egg,N-carbomoyl-L-aspartate,0.009944295441790261,0.004297420466397123
+Egg,rep4,1,Egg,N-carbomoyl-L-aspartate,0.0219748834050866,0.009440222479110394
 Embryo,rep1,5,Embryo,N-carbomoyl-L-aspartate,0,0
 Embryo,rep2,5,Embryo,N-carbomoyl-L-aspartate,0,0
 Embryo,rep3,5,Embryo,N-carbomoyl-L-aspartate,0,0
@@ -3155,10 +3307,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,N-carbomoyl-L-aspartate,0.154625
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,N-carbomoyl-L-aspartate,0.05361861862273091,0.02268343649213689
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,N-carbomoyl-L-aspartate,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,N-carbomoyl-L-aspartate,0,0
-Egg,rep1,1,Embryo,N6-Acetyl-L-lysine,0.5967727877449875,0.20324312274534123
-Egg,rep2,1,Embryo,N6-Acetyl-L-lysine,0.5387179839304512,0.18715902967812784
-Egg,rep3,1,Embryo,N6-Acetyl-L-lysine,0.48578943165864047,0.17195726491006644
-Egg,rep4,1,Embryo,N6-Acetyl-L-lysine,0.49285598373695316,0.1740179132272769
+Egg,rep1,1,Egg,N6-Acetyl-L-lysine,0.5967727877449875,0.20324312274534123
+Egg,rep2,1,Egg,N6-Acetyl-L-lysine,0.5387179839304512,0.18715902967812784
+Egg,rep3,1,Egg,N6-Acetyl-L-lysine,0.48578943165864047,0.17195726491006644
+Egg,rep4,1,Egg,N6-Acetyl-L-lysine,0.49285598373695316,0.1740179132272769
 Embryo,rep1,5,Embryo,N6-Acetyl-L-lysine,1.5442777352628987,0.40556451747497807
 Embryo,rep2,5,Embryo,N6-Acetyl-L-lysine,1.243099958861363,0.3508486274013456
 Embryo,rep3,5,Embryo,N6-Acetyl-L-lysine,1.3763201878524007,0.37590495754181025
@@ -3189,10 +3341,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,N6-Acetyl-L-lysine,6.53577376146
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,N6-Acetyl-L-lysine,4.318467908006774,0.7257865430230251
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,3.512497041644193,0.6544169301939308
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,3.611367034729645,0.663829690602391
-Egg,rep1,1,Embryo,NADH,0.2692087622686662,0.10353306168853454
-Egg,rep2,1,Embryo,NADH,0.5272454687431044,0.18390884527709667
-Egg,rep3,1,Embryo,NADH,0.5165615877966958,0.18086005176975878
-Egg,rep4,1,Embryo,NADH,0.5312855254550687,0.18505617735277635
+Egg,rep1,1,Egg,NADH,0.2692087622686662,0.10353306168853454
+Egg,rep1,1,Embryo,NADH,NA,NA
+Egg,rep2,1,Egg,NADH,0.5272454687431044,0.18390884527709667
+Egg,rep2,1,Embryo,NADH,NA,NA
+Egg,rep3,1,Egg,NADH,0.5165615877966958,0.18086005176975878
+Egg,rep3,1,Embryo,NADH,NA,NA
+Egg,rep4,1,Egg,NADH,0.5312855254550687,0.18505617735277635
+Egg,rep4,1,Embryo,NADH,NA,NA
 Embryo,rep1,5,Embryo,NADH,0,0
 Embryo,rep2,5,Embryo,NADH,0.026178172620228174,0.011222772732729995
 Embryo,rep3,5,Embryo,NADH,0,0
@@ -3230,10 +3386,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADH,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADH,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADH,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADH,NA,NA
-Egg,rep1,1,Embryo,NADP+,0.05405865664676744,0.022864779329283384
-Egg,rep2,1,Embryo,NADP+,0.031121365651840642,0.013309785875956687
-Egg,rep3,1,Embryo,NADP+,0.11219075521247233,0.04617928079941757
-Egg,rep4,1,Embryo,NADP+,0.16979358256160518,0.06810923451257649
+Egg,rep1,1,Egg,NADP+,0.05405865664676744,0.022864779329283384
+Egg,rep1,1,Embryo,NADP+,NA,NA
+Egg,rep2,1,Egg,NADP+,0.031121365651840642,0.013309785875956687
+Egg,rep2,1,Embryo,NADP+,NA,NA
+Egg,rep3,1,Egg,NADP+,0.11219075521247233,0.04617928079941757
+Egg,rep3,1,Embryo,NADP+,NA,NA
+Egg,rep4,1,Egg,NADP+,0.16979358256160518,0.06810923451257649
+Egg,rep4,1,Embryo,NADP+,NA,NA
 Embryo,rep1,5,Embryo,NADP+,0.18875559115452004,0.07509257259686478
 Embryo,rep2,5,Embryo,NADP+,0.19633382797762022,0.0778523831799524
 Embryo,rep3,5,Embryo,NADP+,0.22790101288982187,0.08916335761257345
@@ -3271,10 +3431,14 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADP+,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADP+,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADP+,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADP+,NA,NA
-Egg,rep1,1,Embryo,NADPH,0.029346838414756393,0.012561734946494435
-Egg,rep2,1,Embryo,NADPH,0.08799856010125452,0.03662832060067814
-Egg,rep3,1,Embryo,NADPH,0.12774012236159557,0.05220903189243486
-Egg,rep4,1,Embryo,NADPH,0.13735414539112278,0.05589571485597342
+Egg,rep1,1,Egg,NADPH,0.029346838414756393,0.012561734946494435
+Egg,rep1,1,Embryo,NADPH,NA,NA
+Egg,rep2,1,Egg,NADPH,0.08799856010125452,0.03662832060067814
+Egg,rep2,1,Embryo,NADPH,NA,NA
+Egg,rep3,1,Egg,NADPH,0.12774012236159557,0.05220903189243486
+Egg,rep3,1,Embryo,NADPH,NA,NA
+Egg,rep4,1,Egg,NADPH,0.13735414539112278,0.05589571485597342
+Egg,rep4,1,Embryo,NADPH,NA,NA
 Embryo,rep1,5,Embryo,NADPH,0.20670595004771636,0.08160145416537132
 Embryo,rep2,5,Embryo,NADPH,0.16274759355386761,0.06548544935976755
 Embryo,rep3,5,Embryo,NADPH,0.08610503318445628,0.035871826290314636
@@ -3312,10 +3476,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADPH,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADPH,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADPH,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADPH,NA,NA
-Egg,rep1,1,Embryo,O-Acylcarnitine,0.16531783758354646,0.06644439427413672
-Egg,rep2,1,Embryo,O-Acylcarnitine,0.10466145509626953,0.0432292004545385
-Egg,rep3,1,Embryo,O-Acylcarnitine,0.09242810385299927,0.038392864290177214
-Egg,rep4,1,Embryo,O-Acylcarnitine,0.18637986703529322,0.07422376806949435
+Egg,rep1,1,Egg,O-Acylcarnitine,0.16531783758354646,0.06644439427413672
+Egg,rep2,1,Egg,O-Acylcarnitine,0.10466145509626953,0.0432292004545385
+Egg,rep3,1,Egg,O-Acylcarnitine,0.09242810385299927,0.038392864290177214
+Egg,rep4,1,Egg,O-Acylcarnitine,0.18637986703529322,0.07422376806949435
 Embryo,rep1,5,Embryo,O-Acylcarnitine,0.12829870843403968,0.052424091004517795
 Embryo,rep2,5,Embryo,O-Acylcarnitine,0.17200429055118596,0.06892920157908008
 Embryo,rep3,5,Embryo,O-Acylcarnitine,0.1998348923943287,0.07912148750139843
@@ -3346,10 +3510,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,O-Acylcarnitine,0.73871950927607
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,O-Acylcarnitine,0.338559005102062,0.126637520106754
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,O-Acylcarnitine,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,O-Acylcarnitine,0.2795309379618825,0.10705079121866175
-Egg,rep1,1,Embryo,Ophthalmate,0.3037404144250851,0.11519112835493611
-Egg,rep2,1,Embryo,Ophthalmate,0.32525885640756635,0.12230071520073436
-Egg,rep3,1,Embryo,Ophthalmate,0.39682202640953657,0.14514107478123608
-Egg,rep4,1,Embryo,Ophthalmate,0.4359978662168227,0.15715379457832335
+Egg,rep1,1,Egg,Ophthalmate,0.3037404144250851,0.11519112835493611
+Egg,rep1,1,Embryo,Ophthalmate,NA,NA
+Egg,rep2,1,Egg,Ophthalmate,0.32525885640756635,0.12230071520073436
+Egg,rep2,1,Embryo,Ophthalmate,NA,NA
+Egg,rep3,1,Egg,Ophthalmate,0.39682202640953657,0.14514107478123608
+Egg,rep3,1,Embryo,Ophthalmate,NA,NA
+Egg,rep4,1,Egg,Ophthalmate,0.4359978662168227,0.15715379457832335
+Egg,rep4,1,Embryo,Ophthalmate,NA,NA
 Embryo,rep1,5,Embryo,Ophthalmate,0.36622170706634605,0.13552118129467283
 Embryo,rep2,5,Embryo,Ophthalmate,0.4007620926641749,0.1463643803844059
 Embryo,rep3,5,Embryo,Ophthalmate,0.309333727526167,0.1170503551455653
@@ -3387,10 +3555,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Ophthalmate,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Ophthalmate,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Ophthalmate,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Ophthalmate,NA,NA
-Egg,rep1,1,Embryo,Phenethylamine,13.106912958933393,1.1494319867109617
-Egg,rep2,1,Embryo,Phenethylamine,17.175387652557095,1.2594836824510782
-Egg,rep3,1,Embryo,Phenethylamine,10.478947978394087,1.0599020877035898
-Egg,rep4,1,Embryo,Phenethylamine,9.352788542043188,1.015057343542525
+Egg,rep1,1,Egg,Phenethylamine,13.106912958933393,1.1494319867109617
+Egg,rep2,1,Egg,Phenethylamine,17.175387652557095,1.2594836824510782
+Egg,rep3,1,Egg,Phenethylamine,10.478947978394087,1.0599020877035898
+Egg,rep4,1,Egg,Phenethylamine,9.352788542043188,1.015057343542525
 Embryo,rep1,5,Embryo,Phenethylamine,5.69784997257677,0.8259354154027486
 Embryo,rep2,5,Embryo,Phenethylamine,4.855517214507372,0.7675652620874239
 Embryo,rep3,5,Embryo,Phenethylamine,6.05562548910057,0.8485355204891804
@@ -3421,10 +3589,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Phenethylamine,8.761779959340373
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Phenethylamine,13.796356828269866,1.1701547961956658
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Phenethylamine,54.4744312856779,1.7440928586145839
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Phenethylamine,35.36229869524384,1.5606513299708453
-Egg,rep1,1,Embryo,Pirbuterol,3.20195073398333,0.6234509561887787
-Egg,rep2,1,Embryo,Pirbuterol,3.3925171903832783,0.6427134698085372
-Egg,rep3,1,Embryo,Pirbuterol,2.8382922842111125,0.5841380429859033
-Egg,rep4,1,Embryo,Pirbuterol,3.724374417719543,0.6743443091586322
+Egg,rep1,1,Egg,Pirbuterol,3.20195073398333,0.6234509561887787
+Egg,rep2,1,Egg,Pirbuterol,3.3925171903832783,0.6427134698085372
+Egg,rep3,1,Egg,Pirbuterol,2.8382922842111125,0.5841380429859033
+Egg,rep4,1,Egg,Pirbuterol,3.724374417719543,0.6743443091586322
 Embryo,rep1,5,Embryo,Pirbuterol,2.126314320345884,0.49503263994333613
 Embryo,rep2,5,Embryo,Pirbuterol,4.929676126605429,0.7730309732513977
 Embryo,rep3,5,Embryo,Pirbuterol,5.5533442554973975,0.8164629825961335
@@ -3455,10 +3623,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Pirbuterol,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Pirbuterol,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Pirbuterol,0.7041132979277317,0.23149846544776073
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Pirbuterol,0.27516277098733666,0.10556562479326538
-Egg,rep1,1,Embryo,Porphobilinogen,0.24750152212009222,0.0960410841935867
-Egg,rep2,1,Embryo,Porphobilinogen,0.19448478184309248,0.0771806210564526
-Egg,rep3,1,Embryo,Porphobilinogen,0.2819580919545443,0.10787382804521867
-Egg,rep4,1,Embryo,Porphobilinogen,0.28950131037989335,0.11042178780041441
+Egg,rep1,1,Egg,Porphobilinogen,0.24750152212009222,0.0960410841935867
+Egg,rep2,1,Egg,Porphobilinogen,0.19448478184309248,0.0771806210564526
+Egg,rep3,1,Egg,Porphobilinogen,0.2819580919545443,0.10787382804521867
+Egg,rep4,1,Egg,Porphobilinogen,0.28950131037989335,0.11042178780041441
 Embryo,rep1,5,Embryo,Porphobilinogen,0.4573987442783255,0.1635783909927889
 Embryo,rep2,5,Embryo,Porphobilinogen,0.3723573355644254,0.13746720806020815
 Embryo,rep3,5,Embryo,Porphobilinogen,0.5639680987169668,0.19422789022479714
@@ -3489,10 +3657,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Porphobilinogen,0.30907820114702
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Porphobilinogen,0.419820615791388,0.15223347783859154
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Porphobilinogen,0.408592011965957,0.14878522120742504
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Porphobilinogen,0.15585017925772832,0.06290154469143613
-Egg,rep1,1,Embryo,PosIS_Alanine-2H4-15N,125.92663116439732,2.103552753334432
-Egg,rep2,1,Embryo,PosIS_Alanine-2H4-15N,167.7403161644391,2.2272188584984756
-Egg,rep3,1,Embryo,PosIS_Alanine-2H4-15N,80.75053471849431,1.9124906019993815
-Egg,rep4,1,Embryo,PosIS_Alanine-2H4-15N,90.65718023081017,1.9621664923476034
+Egg,rep1,1,Egg,PosIS_Alanine-2H4-15N,125.92663116439732,2.103552753334432
+Egg,rep2,1,Egg,PosIS_Alanine-2H4-15N,167.7403161644391,2.2272188584984756
+Egg,rep3,1,Egg,PosIS_Alanine-2H4-15N,80.75053471849431,1.9124906019993815
+Egg,rep4,1,Egg,PosIS_Alanine-2H4-15N,90.65718023081017,1.9621664923476034
 Embryo,rep1,5,Embryo,PosIS_Alanine-2H4-15N,381.1934273839978,2.5822832141805185
 Embryo,rep2,5,Embryo,PosIS_Alanine-2H4-15N,412.11747252147904,2.616073563553666
 Embryo,rep3,5,Embryo,PosIS_Alanine-2H4-15N,395.1286833376853,2.597836290433244
@@ -3523,10 +3691,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,PosIS_Alanine-2H4-15N,13656.5772
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,PosIS_Alanine-2H4-15N,3163.3926725201586,3.5002903701882513
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,PosIS_Alanine-2H4-15N,22840.376018857776,4.358722263295186
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,PosIS_Alanine-2H4-15N,6557.887322825738,3.816830170085546
-Egg,rep1,1,Embryo,Riboflavin,0.06194953897724131,0.026103880714944593
-Egg,rep2,1,Embryo,Riboflavin,0.07383196961276715,0.030936329427679064
-Egg,rep3,1,Embryo,Riboflavin,0.07604744684156907,0.03183142137421421
-Egg,rep4,1,Embryo,Riboflavin,0.09853272084608429,0.04081299732503988
+Egg,rep1,1,Egg,Riboflavin,0.06194953897724131,0.026103880714944593
+Egg,rep2,1,Egg,Riboflavin,0.07383196961276715,0.030936329427679064
+Egg,rep3,1,Egg,Riboflavin,0.07604744684156907,0.03183142137421421
+Egg,rep4,1,Egg,Riboflavin,0.09853272084608429,0.04081299732503988
 Embryo,rep1,5,Embryo,Riboflavin,0.09770289702647042,0.04048481038550812
 Embryo,rep2,5,Embryo,Riboflavin,0.04646099416284417,0.019723045063098587
 Embryo,rep3,5,Embryo,Riboflavin,0.09012598900447565,0.03747669350708276
@@ -3557,10 +3725,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Riboflavin,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Riboflavin,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Riboflavin,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Riboflavin,0,0
-Egg,rep1,1,Embryo,Ribothymidine,0.03135214938483675,0.013406978010974069
-Egg,rep2,1,Embryo,Ribothymidine,0.01256778041305332,0.005424104157437915
-Egg,rep3,1,Embryo,Ribothymidine,0.02358804056409724,0.010125203018819593
-Egg,rep4,1,Embryo,Ribothymidine,0.020194331796854578,0.008682906260266212
+Egg,rep1,1,Egg,Ribothymidine,0.03135214938483675,0.013406978010974069
+Egg,rep2,1,Egg,Ribothymidine,0.01256778041305332,0.005424104157437915
+Egg,rep3,1,Egg,Ribothymidine,0.02358804056409724,0.010125203018819593
+Egg,rep4,1,Egg,Ribothymidine,0.020194331796854578,0.008682906260266212
 Embryo,rep1,5,Embryo,Ribothymidine,0.08758846392691562,0.036464592369439906
 Embryo,rep2,5,Embryo,Ribothymidine,0.0279574668645731,0.011975145507351475
 Embryo,rep3,5,Embryo,Ribothymidine,0.029480964217082455,0.012618320636505963
@@ -3591,10 +3759,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Ribothymidine,0.3384233387482323
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Ribothymidine,0.1174342399861528,0.048221974710936616
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Ribothymidine,4.743960694101276,0.7592114593691103
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Ribothymidine,4.953900964979075,0.7748016064744933
-Egg,rep1,1,Embryo,S-Adenosyl-homocysteine,7.726926739320003,0.9408613301729082
-Egg,rep2,1,Embryo,S-Adenosyl-homocysteine,9.800116357683583,1.0334284344895135
-Egg,rep3,1,Embryo,S-Adenosyl-homocysteine,8.09231452941595,0.9586744508130575
-Egg,rep4,1,Embryo,S-Adenosyl-homocysteine,12.174295577192964,1.1197274030028572
+Egg,rep1,1,Egg,S-Adenosyl-homocysteine,7.726926739320003,0.9408613301729082
+Egg,rep2,1,Egg,S-Adenosyl-homocysteine,9.800116357683583,1.0334284344895135
+Egg,rep3,1,Egg,S-Adenosyl-homocysteine,8.09231452941595,0.9586744508130575
+Egg,rep4,1,Egg,S-Adenosyl-homocysteine,12.174295577192964,1.1197274030028572
 Embryo,rep1,5,Embryo,S-Adenosyl-homocysteine,1.4232281489148682,0.3843943052436646
 Embryo,rep2,5,Embryo,S-Adenosyl-homocysteine,12.759730503978938,1.1386099279561055
 Embryo,rep3,5,Embryo,S-Adenosyl-homocysteine,12.20772973736272,1.120828173612331
@@ -3625,10 +3793,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,S-Adenosyl-homocysteine,0.535605
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,S-Adenosyl-homocysteine,1.47210189115072,0.3930663668425756
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,S-Adenosyl-homocysteine,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,S-Adenosyl-homocysteine,0,0
-Egg,rep1,1,Embryo,S-Carboxymethyl-L-cysteine,0.2177592123245972,0.08556142368548673
-Egg,rep2,1,Embryo,S-Carboxymethyl-L-cysteine,0.23387999325350453,0.09127292241828086
-Egg,rep3,1,Embryo,S-Carboxymethyl-L-cysteine,0.2025035391485648,0.08008636324165354
-Egg,rep4,1,Embryo,S-Carboxymethyl-L-cysteine,0.2109936668198836,0.08314187190244979
+Egg,rep1,1,Egg,S-Carboxymethyl-L-cysteine,0.2177592123245972,0.08556142368548673
+Egg,rep2,1,Egg,S-Carboxymethyl-L-cysteine,0.23387999325350453,0.09127292241828086
+Egg,rep3,1,Egg,S-Carboxymethyl-L-cysteine,0.2025035391485648,0.08008636324165354
+Egg,rep4,1,Egg,S-Carboxymethyl-L-cysteine,0.2109936668198836,0.08314187190244979
 Embryo,rep1,5,Embryo,S-Carboxymethyl-L-cysteine,0.5831076891611009,0.19951045827214267
 Embryo,rep2,5,Embryo,S-Carboxymethyl-L-cysteine,0.23098904586579502,0.09025418831620174
 Embryo,rep3,5,Embryo,S-Carboxymethyl-L-cysteine,0.5874872426510335,0.20071024390510184
@@ -3659,10 +3827,14 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,S-Carboxymethyl-L-cysteine,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,S-Carboxymethyl-L-cysteine,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,S-Carboxymethyl-L-cysteine,0.19003720428275273,0.07556053900776713
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,S-Carboxymethyl-L-cysteine,0,0
-Egg,rep1,1,Embryo,Thiamine,0.1042663381156268,0.04307383355956184
-Egg,rep2,1,Embryo,Thiamine,0.14042757604374798,0.05706771019725865
-Egg,rep3,1,Embryo,Thiamine,0.04605464084285518,0.019554370570215123
-Egg,rep4,1,Embryo,Thiamine,0.16579931493022068,0.06662379577488925
+Egg,rep1,1,Egg,Thiamine,0.1042663381156268,0.04307383355956184
+Egg,rep1,1,Embryo,Thiamine,NA,NA
+Egg,rep2,1,Egg,Thiamine,0.14042757604374798,0.05706771019725865
+Egg,rep2,1,Embryo,Thiamine,NA,NA
+Egg,rep3,1,Egg,Thiamine,0.04605464084285518,0.019554370570215123
+Egg,rep3,1,Embryo,Thiamine,NA,NA
+Egg,rep4,1,Egg,Thiamine,0.16579931493022068,0.06662379577488925
+Egg,rep4,1,Embryo,Thiamine,NA,NA
 Embryo,rep1,5,Embryo,Thiamine,0.12697046923493077,0.05191253608484107
 Embryo,rep2,5,Embryo,Thiamine,0.34500292483596423,0.12872322875384584
 Embryo,rep3,5,Embryo,Thiamine,0.11254643061064717,0.04631814472013273
@@ -3700,10 +3872,10 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Thiamine,NA,NA
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Thiamine,NA,NA
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Thiamine,NA,NA
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Thiamine,NA,NA
-Egg,rep1,1,Embryo,Tryptamine,0.04543851807144181,0.019298497175268055
-Egg,rep2,1,Embryo,Tryptamine,0.05406871167433291,0.02286892219375421
-Egg,rep3,1,Embryo,Tryptamine,0.013935929904133384,0.006010513016839512
-Egg,rep4,1,Embryo,Tryptamine,0.05332192938598055,0.02256112597005384
+Egg,rep1,1,Egg,Tryptamine,0.04543851807144181,0.019298497175268055
+Egg,rep2,1,Egg,Tryptamine,0.05406871167433291,0.02286892219375421
+Egg,rep3,1,Egg,Tryptamine,0.013935929904133384,0.006010513016839512
+Egg,rep4,1,Egg,Tryptamine,0.05332192938598055,0.02256112597005384
 Embryo,rep1,5,Embryo,Tryptamine,0.06965914770946095,0.029245409599492973
 Embryo,rep2,5,Embryo,Tryptamine,0.03442453818151119,0.014698814144599047
 Embryo,rep3,5,Embryo,Tryptamine,0.08997221601704368,0.0374154276798238
@@ -3734,10 +3906,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Tryptamine,4.798222976832959,0.7
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Tryptamine,10.77645607595608,1.0710146165786456
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Tryptamine,7.624196983897083,0.9357186676064058
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Tryptamine,9.251226196026403,1.0107758164471434
-Egg,rep1,1,Embryo,Urocanate,0,0
-Egg,rep2,1,Embryo,Urocanate,0,0
-Egg,rep3,1,Embryo,Urocanate,0.020200833171644134,0.00868567387238803
-Egg,rep4,1,Embryo,Urocanate,0.023942115468766335,0.010275406207141817
+Egg,rep1,1,Egg,Urocanate,0,0
+Egg,rep2,1,Egg,Urocanate,0,0
+Egg,rep3,1,Egg,Urocanate,0.020200833171644134,0.00868567387238803
+Egg,rep4,1,Egg,Urocanate,0.023942115468766335,0.010275406207141817
 Embryo,rep1,5,Embryo,Urocanate,0.10011475431918834,0.04143798931115195
 Embryo,rep2,5,Embryo,Urocanate,0.11777190262703521,0.048353188579760537
 Embryo,rep3,5,Embryo,Urocanate,0.06108688598838091,0.025750947106201644
@@ -3768,10 +3940,10 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,Urocanate,16.708033944716895,1.2
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,Urocanate,0.4114629735579618,0.1496694899286516
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Urocanate,58.520933799097044,1.7746697360561998
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Urocanate,49.16370549485578,1.7003896094919202
-Egg,rep1,1,Embryo,UTP,0.004877349264730905,0.0021130569921977167
-Egg,rep2,1,Embryo,UTP,0.008632698803021747,0.0037330434181229825
-Egg,rep3,1,Embryo,UTP,0,0
-Egg,rep4,1,Embryo,UTP,0.011623397351943227,0.005018865377122817
+Egg,rep1,1,Egg,UTP,0.004877349264730905,0.0021130569921977167
+Egg,rep2,1,Egg,UTP,0.008632698803021747,0.0037330434181229825
+Egg,rep3,1,Egg,UTP,0,0
+Egg,rep4,1,Egg,UTP,0.011623397351943227,0.005018865377122817
 Embryo,rep1,5,Embryo,UTP,0.12408172433249887,0.050797886977173745
 Embryo,rep2,5,Embryo,UTP,0.0438756456405236,0.018648765305305078
 Embryo,rep3,5,Embryo,UTP,0.028174555009972055,0.012066851859843193
@@ -3802,9 +3974,13 @@ Recruit2,rep3,231 recruit,Metamorphosed Recruit,UTP,0,0
 Recruit2,rep4,231 recruit,Metamorphosed Recruit,UTP,0,0
 Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,UTP,0,0
 Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,UTP,0,0
+Egg,rep1,1,Egg,ADP,NA,NA
 Egg,rep1,1,Embryo,ADP,0.7261161503440418,0.23707001603520508
+Egg,rep2,1,Egg,ADP,NA,NA
 Egg,rep2,1,Embryo,ADP,0.7515457299561916,0.24342148051090223
+Egg,rep3,1,Egg,ADP,NA,NA
 Egg,rep3,1,Embryo,ADP,0.8008925499064016,0.2554878014509419
+Egg,rep4,1,Egg,ADP,NA,NA
 Egg,rep4,1,Embryo,ADP,0.8051978957155722,0.25652481859968806
 Embryo,rep1,5,Embryo,ADP,0.8332646323839983,0.26322516004608365
 Embryo,rep2,5,Embryo,ADP,0.4389066461239759,0.15803261854509945
@@ -3843,9 +4019,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,ADP,0.13368143834716686,0.
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,ADP,0.1490960782674138,0.060356342454091175
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,ADP,0.1326683933279935,0.05410278186066996
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,ADP,0.052524660556352326,0.02223228010682895
+Egg,rep1,1,Egg,Aspartate,NA,NA
 Egg,rep1,1,Embryo,Aspartate,2.103279150196846,0.4918208435626631
+Egg,rep2,1,Egg,Aspartate,NA,NA
 Egg,rep2,1,Embryo,Aspartate,2.483162898579717,0.5419737857703097
+Egg,rep3,1,Egg,Aspartate,NA,NA
 Egg,rep3,1,Embryo,Aspartate,2.3107575093980244,0.5199273727825833
+Egg,rep4,1,Egg,Aspartate,NA,NA
 Egg,rep4,1,Embryo,Aspartate,2.569178614168395,0.5525682821127704
 Embryo,rep1,5,Embryo,Aspartate,4.0042682171703285,0.6993405788222018
 Embryo,rep2,5,Embryo,Aspartate,3.0143363403770222,0.6036137569532495
@@ -3884,9 +4064,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Aspartate,2.11770163438406
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Aspartate,1.3668467263149116,0.37417013453619463
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Aspartate,1.6873110855165123,0.42931794365799686
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Aspartate,1.8752468232828556,0.45867513229125845
+Egg,rep1,1,Egg,ATP,NA,NA
 Egg,rep1,1,Embryo,ATP,0.08830231029689008,0.03674955111295929
+Egg,rep2,1,Egg,ATP,NA,NA
 Egg,rep2,1,Embryo,ATP,0.12036952565929833,0.0493612873900166
+Egg,rep3,1,Egg,ATP,NA,NA
 Egg,rep3,1,Embryo,ATP,0.2801657174892283,0.10726619272025431
+Egg,rep4,1,Egg,ATP,NA,NA
 Egg,rep4,1,Embryo,ATP,0.40571807726129067,0.14789822981139872
 Embryo,rep1,5,Embryo,ATP,4.580638386737847,0.7466838820879976
 Embryo,rep2,5,Embryo,ATP,1.0781181447517325,0.3176702343449284
@@ -3925,9 +4109,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,ATP,0.14161462622741153,0.
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,ATP,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,ATP,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,ATP,0,0
+Egg,rep1,1,Egg,Glucose-6-phosphate,NA,NA
 Egg,rep1,1,Embryo,Glucose-6-phosphate,2.2027175716833196,0.5055186425453387
+Egg,rep2,1,Egg,Glucose-6-phosphate,NA,NA
 Egg,rep2,1,Embryo,Glucose-6-phosphate,2.072490735265839,0.4874905819965751
+Egg,rep3,1,Egg,Glucose-6-phosphate,NA,NA
 Egg,rep3,1,Embryo,Glucose-6-phosphate,2.5818767368862234,0.554110636395416
+Egg,rep4,1,Egg,Glucose-6-phosphate,NA,NA
 Egg,rep4,1,Embryo,Glucose-6-phosphate,2.914028824824658,0.5926240196909641
 Embryo,rep1,5,Embryo,Glucose-6-phosphate,5.061790264807067,0.7826009058995158
 Embryo,rep2,5,Embryo,Glucose-6-phosphate,3.0196045296210423,0.6041833269521477
@@ -3966,9 +4154,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glucose-6-phosphate,0.1586
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glucose-6-phosphate,0.20330295175181826,0.08037498204490963
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glucose-6-phosphate,0.13157363937723254,0.05368282177686437
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glucose-6-phosphate,1.2452065247153703,0.35125629563732114
+Egg,rep1,1,Egg,Glutathione,NA,NA
 Egg,rep1,1,Embryo,Glutathione,0.5404502670024778,0.18764768180580355
+Egg,rep2,1,Egg,Glutathione,NA,NA
 Egg,rep2,1,Embryo,Glutathione,1.538615511147726,0.40459692929773405
+Egg,rep3,1,Egg,Glutathione,NA,NA
 Egg,rep3,1,Embryo,Glutathione,0.21553886839747405,0.08476885051843762
+Egg,rep4,1,Egg,Glutathione,NA,NA
 Egg,rep4,1,Embryo,Glutathione,1.0453264393634407,0.31076263239232055
 Embryo,rep1,5,Embryo,Glutathione,2.8507336027691283,0.5855434747771827
 Embryo,rep2,5,Embryo,Glutathione,1.778130978041641,0.4437527171754655
@@ -4007,9 +4199,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glutathione,0,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glutathione,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glutathione,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glutathione,1.8174349128059688,0.4498538919459298
+Egg,rep1,1,Egg,Glycerol-3-phosphate,NA,NA
 Egg,rep1,1,Embryo,Glycerol-3-phosphate,1.1153349737835918,0.32537914984187194
+Egg,rep2,1,Egg,Glycerol-3-phosphate,NA,NA
 Egg,rep2,1,Embryo,Glycerol-3-phosphate,1.5907020882988079,0.41341747518320315
+Egg,rep3,1,Egg,Glycerol-3-phosphate,NA,NA
 Egg,rep3,1,Embryo,Glycerol-3-phosphate,1.3943905016689915,0.37919498102854066
+Egg,rep4,1,Egg,Glycerol-3-phosphate,NA,NA
 Egg,rep4,1,Embryo,Glycerol-3-phosphate,1.1785290085252382,0.33816334722268476
 Embryo,rep1,5,Embryo,Glycerol-3-phosphate,0.457606899666008,0.16364041539167157
 Embryo,rep2,5,Embryo,Glycerol-3-phosphate,0.38451064332257107,0.1412962987009467
@@ -4048,9 +4244,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glycerol-3-phosphate,0,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glycerol-3-phosphate,0.7590350363742793,0.24527448979997268
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glycerol-3-phosphate,0.25159170500985123,0.09746267617407038
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glycerol-3-phosphate,0.29745378522986937,0.11309189740519442
+Egg,rep1,1,Egg,GMP,NA,NA
 Egg,rep1,1,Embryo,GMP,0.4193203588494896,0.152080432369142
+Egg,rep2,1,Egg,GMP,NA,NA
 Egg,rep2,1,Embryo,GMP,0.326643598839665,0.12275426585874284
+Egg,rep3,1,Egg,GMP,NA,NA
 Egg,rep3,1,Embryo,GMP,0.2303841025927677,0.09004071111076889
+Egg,rep4,1,Egg,GMP,NA,NA
 Egg,rep4,1,Embryo,GMP,0.2124411901967065,0.08366068220834383
 Embryo,rep1,5,Embryo,GMP,0.15219421602987615,0.0615256907545825
 Embryo,rep2,5,Embryo,GMP,0.11259762403834285,0.04633812816625201
@@ -4089,9 +4289,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,GMP,0.08781669614668874,0.
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,GMP,0.15974747052429072,0.06436343397067164
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,GMP,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,GMP,1.0202845258674882,0.30541253742309776
+Egg,rep1,1,Egg,Guanine,NA,NA
 Egg,rep1,1,Embryo,Guanine,0.2571620294799025,0.09939125539009908
+Egg,rep2,1,Egg,Guanine,NA,NA
 Egg,rep2,1,Embryo,Guanine,0.255859644955633,0.09894110530297502
+Egg,rep3,1,Egg,Guanine,NA,NA
 Egg,rep3,1,Embryo,Guanine,0.141237650021097,0.05737609082125133
+Egg,rep4,1,Egg,Guanine,NA,NA
 Egg,rep4,1,Embryo,Guanine,0.2733689472698254,0.10495425483063545
 Embryo,rep1,5,Embryo,Guanine,0.4955554394059029,0.17480251671992617
 Embryo,rep2,5,Embryo,Guanine,0.20623379708765704,0.08143149266672339
@@ -4130,9 +4334,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Guanine,0.6154575494951711
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Guanine,0.2271327034032947,0.08889153032232366
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Guanine,0.2881950737533838,0.10998163401736735
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Guanine,0.9656431211321209,0.2935046708755237
+Egg,rep1,1,Egg,Montiporic Acid A,NA,NA
 Egg,rep1,1,Embryo,Montiporic Acid A,1179.2029157721554,3.0719566832585756
+Egg,rep2,1,Egg,Montiporic Acid A,NA,NA
 Egg,rep2,1,Embryo,Montiporic Acid A,671.4527315480339,2.827661762058329
+Egg,rep3,1,Egg,Montiporic Acid A,NA,NA
 Egg,rep3,1,Embryo,Montiporic Acid A,686.4759915537472,2.8372575360764256
+Egg,rep4,1,Egg,Montiporic Acid A,NA,NA
 Egg,rep4,1,Embryo,Montiporic Acid A,835.1639421975395,2.9222914355867005
 Embryo,rep1,5,Embryo,Montiporic Acid A,1616.704303862557,3.2088991409247027
 Embryo,rep2,5,Embryo,Montiporic Acid A,709.5015486563752,2.8515650288816237
@@ -4171,9 +4379,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Montiporic Acid A,3485.656
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Montiporic Acid A,2979.5220336148464,3.4742923367147243
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Montiporic Acid A,3910.998696234284,3.592398701376722
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Montiporic Acid A,4201.7535883347555,3.6235339276300773
+Egg,rep1,1,Egg,Montiporic Acid B,NA,NA
 Egg,rep1,1,Embryo,Montiporic Acid B,231.25154904002943,2.3659586192740476
+Egg,rep2,1,Egg,Montiporic Acid B,NA,NA
 Egg,rep2,1,Embryo,Montiporic Acid B,110.95378709160475,2.049038789162642
+Egg,rep3,1,Egg,Montiporic Acid B,NA,NA
 Egg,rep3,1,Embryo,Montiporic Acid B,117.5763321915848,2.0739980126003505
+Egg,rep4,1,Egg,Montiporic Acid B,NA,NA
 Egg,rep4,1,Embryo,Montiporic Acid B,164.12471423939678,2.2178120790443216
 Embryo,rep1,5,Embryo,Montiporic Acid B,345.57664299568245,2.5397992907498117
 Embryo,rep2,5,Embryo,Montiporic Acid B,107.94618396998361,2.037212022927358
@@ -4212,9 +4424,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Montiporic Acid B,571.3163
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Montiporic Acid B,450.4326448699721,2.654592961419333
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Montiporic Acid B,509.30427582537726,2.7078292072888983
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Montiporic Acid B,635.2312397015534,2.8036149896643217
+Egg,rep1,1,Egg,Nicotinate,NA,NA
 Egg,rep1,1,Embryo,Nicotinate,4.077679838404068,0.7056653139465447
+Egg,rep2,1,Egg,Nicotinate,NA,NA
 Egg,rep2,1,Embryo,Nicotinate,2.2248489673067438,0.5085093796840838
+Egg,rep3,1,Egg,Nicotinate,NA,NA
 Egg,rep3,1,Embryo,Nicotinate,1.3720619898127049,0.3751260343894471
+Egg,rep4,1,Egg,Nicotinate,NA,NA
 Egg,rep4,1,Embryo,Nicotinate,1.3373393291451792,0.36872176676854923
 Embryo,rep1,5,Embryo,Nicotinate,1.75130746052756,0.43953912581291066
 Embryo,rep2,5,Embryo,Nicotinate,2.6661096146795815,0.5642054459886605
@@ -4253,9 +4469,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Nicotinate,1.2848652361463
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Nicotinate,1.4813763692616486,0.39469264202175586
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Nicotinate,1.3454043720000237,0.37021773037234834
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Nicotinate,0.3842556649929599,0.14121630951476252
+Egg,rep1,1,Egg,O-Phosphorylethanolamine,NA,NA
 Egg,rep1,1,Embryo,O-Phosphorylethanolamine,1.1122645912891556,0.3247483188520431
+Egg,rep2,1,Egg,O-Phosphorylethanolamine,NA,NA
 Egg,rep2,1,Embryo,O-Phosphorylethanolamine,1.171613435409717,0.3367825198993966
+Egg,rep3,1,Egg,O-Phosphorylethanolamine,NA,NA
 Egg,rep3,1,Embryo,O-Phosphorylethanolamine,1.2659419946334747,0.35524878825772505
+Egg,rep4,1,Egg,O-Phosphorylethanolamine,NA,NA
 Egg,rep4,1,Embryo,O-Phosphorylethanolamine,1.3227893776594444,0.36600983129514375
 Embryo,rep1,5,Embryo,O-Phosphorylethanolamine,2.401477046866858,0.5316675446916473
 Embryo,rep2,5,Embryo,O-Phosphorylethanolamine,1.6087692026496683,0.41643565884364775
@@ -4294,9 +4514,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,O-Phosphorylethanolamine,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,O-Phosphorylethanolamine,0.14550714942720966,0.05899780408595443
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,O-Phosphorylethanolamine,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,O-Phosphorylethanolamine,0.1022333136702897,0.042273532913856354
+Egg,rep1,1,Egg,Serine,NA,NA
 Egg,rep1,1,Embryo,Serine,2.0781784621722497,0.48829379512179283
+Egg,rep2,1,Egg,Serine,NA,NA
 Egg,rep2,1,Embryo,Serine,2.241394842485381,0.5107319367613428
+Egg,rep3,1,Egg,Serine,NA,NA
 Egg,rep3,1,Embryo,Serine,2.3072554703587524,0.5194677434718583
+Egg,rep4,1,Egg,Serine,NA,NA
 Egg,rep4,1,Embryo,Serine,2.4358445744856847,0.5360335096499113
 Embryo,rep1,5,Embryo,Serine,2.0354698433910285,0.48222592262688047
 Embryo,rep2,5,Embryo,Serine,1.4185216898508481,0.3835499865933172
@@ -4335,9 +4559,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Serine,4.816811998570995,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Serine,3.9448683000250915,0.6941547292326845
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Serine,4.403072619165934,0.7326408046465627
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Serine,5.22010579110368,0.7937977712023702
+Egg,rep1,1,Egg,Tryptophan,NA,NA
 Egg,rep1,1,Embryo,Tryptophan,0.42314462909762024,0.1532490381217059
+Egg,rep2,1,Egg,Tryptophan,NA,NA
 Egg,rep2,1,Embryo,Tryptophan,0.3607033012699772,0.13376343845207353
+Egg,rep3,1,Egg,Tryptophan,NA,NA
 Egg,rep3,1,Embryo,Tryptophan,0.34202279393781165,0.12775989228404888
+Egg,rep4,1,Egg,Tryptophan,NA,NA
 Egg,rep4,1,Embryo,Tryptophan,0.40930852077209345,0.14900607770951316
 Embryo,rep1,5,Embryo,Tryptophan,0.7364161648295396,0.2396538201657367
 Embryo,rep2,5,Embryo,Tryptophan,0.5050700333488769,0.1775567088264227
@@ -4376,9 +4604,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Tryptophan,1.5382143977229
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Tryptophan,1.074981185717869,0.31701416322837456
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Tryptophan,1.7547005723706954,0.44007439925519215
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Tryptophan,2.85511649392986,0.5860375060981303
+Egg,rep1,1,Egg,Tyrosine,NA,NA
 Egg,rep1,1,Embryo,Tyrosine,0.557622169756053,0.19246211990270407
+Egg,rep2,1,Egg,Tyrosine,NA,NA
 Egg,rep2,1,Embryo,Tyrosine,0.46787202556001406,0.16668819385265904
+Egg,rep3,1,Egg,Tyrosine,NA,NA
 Egg,rep3,1,Embryo,Tyrosine,0.49948903145222107,0.17594329330515096
+Egg,rep4,1,Egg,Tyrosine,NA,NA
 Egg,rep4,1,Embryo,Tyrosine,0.5389565608067827,0.18722636143761173
 Embryo,rep1,5,Embryo,Tyrosine,1.04412333774545,0.31050709659292697
 Embryo,rep2,5,Embryo,Tyrosine,0.8122289939725964,0.25821307443080566
@@ -4417,9 +4649,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Tyrosine,11.34582368506900
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Tyrosine,7.704856593360653,0.9397616208037061
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Tyrosine,10.837570084715537,1.0732625632734307
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Tyrosine,19.99803745233547,1.3221787059981829
+Egg,rep1,1,Egg,UDP-N-acetyl-glucosamine,NA,NA
 Egg,rep1,1,Embryo,UDP-N-acetyl-glucosamine,12.837658034774442,1.1410625938317525
+Egg,rep2,1,Egg,UDP-N-acetyl-glucosamine,NA,NA
 Egg,rep2,1,Embryo,UDP-N-acetyl-glucosamine,13.22928948718266,1.153183214947268
+Egg,rep3,1,Egg,UDP-N-acetyl-glucosamine,NA,NA
 Egg,rep3,1,Embryo,UDP-N-acetyl-glucosamine,12.921184664009598,1.143676194408919
+Egg,rep4,1,Egg,UDP-N-acetyl-glucosamine,NA,NA
 Egg,rep4,1,Embryo,UDP-N-acetyl-glucosamine,14.04843969910315,1.1774914723419212
 Embryo,rep1,5,Embryo,UDP-N-acetyl-glucosamine,13.890685723999226,1.172914697704614
 Embryo,rep2,5,Embryo,UDP-N-acetyl-glucosamine,11.956140729220762,1.1124756566576892
@@ -4458,9 +4694,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,UDP-N-acetyl-glucosamine,1
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,UDP-N-acetyl-glucosamine,1.710714942720963,0.4330838498149412
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,UDP-N-acetyl-glucosamine,1.3380889600860562,0.3688610312652912
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,UDP-N-acetyl-glucosamine,2.63395566056173,0.5603796239926956
+Egg,rep1,1,Egg,Acetyl CoA,NA,NA
 Egg,rep1,1,Embryo,Acetyl CoA,0.10927593745991783,0.045039592325730946
+Egg,rep2,1,Egg,Acetyl CoA,NA,NA
 Egg,rep2,1,Embryo,Acetyl CoA,0.15653320229724196,0.06315810521515074
+Egg,rep3,1,Egg,Acetyl CoA,NA,NA
 Egg,rep3,1,Embryo,Acetyl CoA,0.27620037514265966,0.10591886794846558
+Egg,rep4,1,Egg,Acetyl CoA,NA,NA
 Egg,rep4,1,Embryo,Acetyl CoA,0.2048969809334419,0.08094991618495309
 Embryo,rep1,5,Embryo,Acetyl CoA,0.4651364107026563,0.16587806131639768
 Embryo,rep2,5,Embryo,Acetyl CoA,0.30217660374583505,0.11466988809630194
@@ -4499,9 +4739,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Acetyl CoA,0,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Acetyl CoA,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Acetyl CoA,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Acetyl CoA,0.06956414382897623,0.029206835168068015
+Egg,rep1,1,Egg,ADP-D-Glucose,NA,NA
 Egg,rep1,1,Embryo,ADP-D-Glucose,0.06430686437593595,0.0270668631949024
+Egg,rep2,1,Egg,ADP-D-Glucose,NA,NA
 Egg,rep2,1,Embryo,ADP-D-Glucose,0.06921107891549504,0.0290634501658099
+Egg,rep3,1,Egg,ADP-D-Glucose,NA,NA
 Egg,rep3,1,Embryo,ADP-D-Glucose,0.07256649607652109,0.030424226715856113
+Egg,rep4,1,Egg,ADP-D-Glucose,NA,NA
 Egg,rep4,1,Embryo,ADP-D-Glucose,0.07950409896531781,0.03322429572503357
 Embryo,rep1,5,Embryo,ADP-D-Glucose,0.13104166931534952,0.05347860529712707
 Embryo,rep2,5,Embryo,ADP-D-Glucose,0.13146362080491947,0.053640594934433905
@@ -4540,9 +4784,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,ADP-D-Glucose,0,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,ADP-D-Glucose,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,ADP-D-Glucose,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,ADP-D-Glucose,0.04835828098037224,0.020509730034467266
+Egg,rep1,1,Egg,Alanine,NA,NA
 Egg,rep1,1,Embryo,Alanine,4.01258887485061,0.700062085880612
+Egg,rep2,1,Egg,Alanine,NA,NA
 Egg,rep2,1,Embryo,Alanine,4.411265231315659,0.7332988212498632
+Egg,rep3,1,Egg,Alanine,NA,NA
 Egg,rep3,1,Embryo,Alanine,3.8868362096393225,0.6890277831775699
+Egg,rep4,1,Egg,Alanine,NA,NA
 Egg,rep4,1,Embryo,Alanine,4.330191521161185,0.7267428141089602
 Embryo,rep1,5,Embryo,Alanine,1.8930401088290834,0.46135445470653735
 Embryo,rep2,5,Embryo,Alanine,2.039637365873561,0.48282177459753445
@@ -4581,9 +4829,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Alanine,5.85365047341732,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Alanine,5.4017442930010935,0.8062983229857962
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Alanine,4.58475500312787,0.7470041258628263
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Alanine,6.486613462892583,0.8742854108939864
+Egg,rep1,1,Egg,CDP-ethanolamine,NA,NA
 Egg,rep1,1,Embryo,CDP-ethanolamine,3.431599792064249,0.6465605333210083
+Egg,rep2,1,Egg,CDP-ethanolamine,NA,NA
 Egg,rep2,1,Embryo,CDP-ethanolamine,3.679937160441494,0.6702400216517465
+Egg,rep3,1,Egg,CDP-ethanolamine,NA,NA
 Egg,rep3,1,Embryo,CDP-ethanolamine,3.634661804387609,0.6660180487616394
+Egg,rep4,1,Egg,CDP-ethanolamine,NA,NA
 Egg,rep4,1,Embryo,CDP-ethanolamine,4.2582026313404455,0.7208373181677132
 Embryo,rep1,5,Embryo,CDP-ethanolamine,6.7710099887130735,0.8904774671946555
 Embryo,rep2,5,Embryo,CDP-ethanolamine,5.05716187728051,0.7822691803118487
@@ -4622,9 +4874,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,CDP-ethanolamine,0.3489342
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,CDP-ethanolamine,0.3564779663851489,0.13241274379974374
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,CDP-ethanolamine,0.1889144834924547,0.07515061771121458
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,CDP-ethanolamine,0.4800982759446521,0.17029055274865526
+Egg,rep1,1,Egg,Coenzyme A,NA,NA
 Egg,rep1,1,Embryo,Coenzyme A,0.06383128245487586,0.026872756804060097
+Egg,rep2,1,Egg,Coenzyme A,NA,NA
 Egg,rep2,1,Embryo,Coenzyme A,0.1490149903514643,0.060325694645165524
+Egg,rep3,1,Egg,Coenzyme A,NA,NA
 Egg,rep3,1,Embryo,Coenzyme A,0.04927213220229204,0.020888138514412274
+Egg,rep4,1,Egg,Coenzyme A,NA,NA
 Egg,rep4,1,Embryo,Coenzyme A,0.1416936347873286,0.05754957976658889
 Embryo,rep1,5,Embryo,Coenzyme A,0.8352931703533986,0.26370544847745203
 Embryo,rep2,5,Embryo,Coenzyme A,0.30452477761817637,0.11545233232903762
@@ -4663,9 +4919,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Coenzyme A,0.0922132508377
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Coenzyme A,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Coenzyme A,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Coenzyme A,0.056116773379021774,0.023711940196229544
+Egg,rep1,1,Egg,Lysine-Glutamine,NA,NA
 Egg,rep1,1,Embryo,Lysine-Glutamine,0.14593217945684986,0.05915891522366258
+Egg,rep2,1,Egg,Lysine-Glutamine,NA,NA
 Egg,rep2,1,Embryo,Lysine-Glutamine,0.10898672612937721,0.044926347949642384
+Egg,rep3,1,Egg,Lysine-Glutamine,NA,NA
 Egg,rep3,1,Embryo,Lysine-Glutamine,0.10027554329765623,0.04150145965666244
+Egg,rep4,1,Egg,Lysine-Glutamine,NA,NA
 Egg,rep4,1,Embryo,Lysine-Glutamine,0.11388202353774983,0.04683919511077635
 Embryo,rep1,5,Embryo,Lysine-Glutamine,0.1387875954055593,0.05644272781434772
 Embryo,rep2,5,Embryo,Lysine-Glutamine,0.11996863444957039,0.049205860102130544
@@ -4704,9 +4964,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Lysine-Glutamine,0.4332307
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Lysine-Glutamine,0.3118454720294344,0.11788268062090046
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Lysine-Glutamine,0.279897452687336,0.10717517471340644
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Lysine-Glutamine,0.41031128997679117,0.14931498258308726
+Egg,rep1,1,Egg,Montiporic Acid C,NA,NA
 Egg,rep1,1,Embryo,Montiporic Acid C,2530.3460968858326,3.4033515278891375
+Egg,rep2,1,Egg,Montiporic Acid C,NA,NA
 Egg,rep2,1,Embryo,Montiporic Acid C,1381.8798703742823,3.1407844549469464
+Egg,rep3,1,Egg,Montiporic Acid C,NA,NA
 Egg,rep3,1,Embryo,Montiporic Acid C,1420.8576394220083,3.152856115726743
+Egg,rep4,1,Egg,Montiporic Acid C,NA,NA
 Egg,rep4,1,Embryo,Montiporic Acid C,1755.6470891491485,3.2446845203855563
 Embryo,rep1,5,Embryo,Montiporic Acid C,2904.546326523986,3.4632278042949567
 Embryo,rep2,5,Embryo,Montiporic Acid C,1443.7509125600438,3.1597929774555458
@@ -4745,9 +5009,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Montiporic Acid C,6610.327
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Montiporic Acid C,6653.255288903759,3.823099458455768
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Montiporic Acid C,7028.351934893564,3.846915287456053
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Montiporic Acid C,8213.166589354967,3.9145635064192597
+Egg,rep1,1,Egg,N-acetyl-glutamate,NA,NA
 Egg,rep1,1,Embryo,N-acetyl-glutamate,0.25382375733030127,0.09823649455039965
+Egg,rep2,1,Egg,N-acetyl-glutamate,NA,NA
 Egg,rep2,1,Embryo,N-acetyl-glutamate,0.1884250218655436,0.07497178714351875
+Egg,rep3,1,Egg,N-acetyl-glutamate,NA,NA
 Egg,rep3,1,Embryo,N-acetyl-glutamate,0.19381446216698317,0.07693683573949965
+Egg,rep4,1,Egg,N-acetyl-glutamate,NA,NA
 Egg,rep4,1,Embryo,N-acetyl-glutamate,0.1563128781518476,0.06307536251845938
 Embryo,rep1,5,Embryo,N-acetyl-glutamate,0.1420618854761296,0.05768963787882587
 Embryo,rep2,5,Embryo,N-acetyl-glutamate,0.18749047667363952,0.07463013539612767
@@ -4786,9 +5054,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,N-acetyl-glutamate,1.06489
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,N-acetyl-glutamate,0.9909239903001922,0.29905467980474226
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,N-acetyl-glutamate,1.008993352548774,0.3029784997367198
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,N-acetyl-glutamate,0.8682590573162796,0.2714370963921146
+Egg,rep1,1,Egg,N-Acetylaspartate,NA,NA
 Egg,rep1,1,Embryo,N-Acetylaspartate,0.8223358828092562,0.2606284267569782
+Egg,rep2,1,Egg,N-Acetylaspartate,NA,NA
 Egg,rep2,1,Embryo,N-Acetylaspartate,0.27839558239240064,0.1066652612299925
+Egg,rep3,1,Egg,N-Acetylaspartate,NA,NA
 Egg,rep3,1,Embryo,N-Acetylaspartate,0.4835195013569637,0.17129325963570705
+Egg,rep4,1,Egg,N-Acetylaspartate,NA,NA
 Egg,rep4,1,Embryo,N-Acetylaspartate,0.2945048107864124,0.11210366874857353
 Embryo,rep1,5,Embryo,N-Acetylaspartate,0.18122208582486113,0.07233155856242313
 Embryo,rep2,5,Embryo,N-Acetylaspartate,0.38291903254670756,0.1407967536830306
@@ -4827,9 +5099,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,N-Acetylaspartate,6.334127
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,N-Acetylaspartate,0.9141567020653902,0.2819774883293188
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,N-Acetylaspartate,0.9869068012137298,0.2981774963660462
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,N-Acetylaspartate,0.6918608061404039,0.22836462961801293
+Egg,rep1,1,Egg,UDP,NA,NA
 Egg,rep1,1,Embryo,UDP,0.10316926177912436,0.04264215234682752
+Egg,rep2,1,Egg,UDP,NA,NA
 Egg,rep2,1,Embryo,UDP,0.10670153370532234,0.0440305118072202
+Egg,rep3,1,Egg,UDP,NA,NA
 Egg,rep3,1,Embryo,UDP,0.11974050863835221,0.04911738988121811
+Egg,rep4,1,Egg,UDP,NA,NA
 Egg,rep4,1,Embryo,UDP,0.1344174403430749,0.05477289466069182
 Embryo,rep1,5,Embryo,UDP,0.15298453592956046,0.06182348248507425
 Embryo,rep2,5,Embryo,UDP,0.03664770427291988,0.01563119025094937
@@ -4868,9 +5144,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,UDP,0,0
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,UDP,0,0
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,UDP,0,0
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,UDP,0,0
+Egg,rep1,1,Egg,UDP-D-Glucose,NA,NA
 Egg,rep1,1,Embryo,UDP-D-Glucose,2.2929415089023544,0.5175840165951291
+Egg,rep2,1,Egg,UDP-D-Glucose,NA,NA
 Egg,rep2,1,Embryo,UDP-D-Glucose,2.429783922468569,0.5352667602073427
+Egg,rep3,1,Egg,UDP-D-Glucose,NA,NA
 Egg,rep3,1,Embryo,UDP-D-Glucose,2.783428628436833,0.5778855457389217
+Egg,rep4,1,Egg,UDP-D-Glucose,NA,NA
 Egg,rep4,1,Embryo,UDP-D-Glucose,3.2769832673792045,0.6311375511922578
 Embryo,rep1,5,Embryo,UDP-D-Glucose,3.713527871443062,0.6733460794408084
 Embryo,rep2,5,Embryo,UDP-D-Glucose,2.6205641627374363,0.5587762483435553
@@ -4909,9 +5189,13 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,UDP-D-Glucose,0.5389032074
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,UDP-D-Glucose,0.7362120578643703,0.23960276803858194
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,UDP-D-Glucose,0.292702712183486,0.11149865999011903
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,UDP-D-Glucose,1.2660932366386286,0.355277774602686
+Egg,rep1,1,Egg,UMP,NA,NA
 Egg,rep1,1,Embryo,UMP,1.5201318895489322,0.4014232699103012
+Egg,rep2,1,Egg,UMP,NA,NA
 Egg,rep2,1,Embryo,UMP,1.391665266082826,0.37870039635911523
+Egg,rep3,1,Egg,UMP,NA,NA
 Egg,rep3,1,Embryo,UMP,1.5409046301321212,0.4049883646235101
+Egg,rep4,1,Egg,UMP,NA,NA
 Egg,rep4,1,Embryo,UMP,1.2160379013146334,0.3455771839404352
 Embryo,rep1,5,Embryo,UMP,0.6301313228770401,0.2122225924429223
 Embryo,rep2,5,Embryo,UMP,0.8453676949679004,0.2660829135765878

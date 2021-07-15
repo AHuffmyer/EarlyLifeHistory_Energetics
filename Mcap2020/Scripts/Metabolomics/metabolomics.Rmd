@@ -202,7 +202,7 @@ data<-data%>%
 
 #add development column with larger categories 
 data<-data%>%
-  mutate(Development = if_else(Lifestage == "Egg", "Embryo", 
+  mutate(Development = if_else(Lifestage == "Egg", "Egg", 
                                if_else(Lifestage =="Embryo", "Embryo", 
                                        if_else(Lifestage == "Larvae1", "Embryo", 
                                                if_else(Lifestage=="Larvae3", "Larvae", 
@@ -915,7 +915,7 @@ plotIndiv(MyResult.plsda)    # 2 Plot the samples
 plotVar(MyResult.plsda, cutoff = 0.7)    
 
 pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf")
-plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, Lifestage")
+plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, HPF")
 dev.off() 
 ```
 

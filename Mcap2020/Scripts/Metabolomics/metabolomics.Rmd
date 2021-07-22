@@ -32,6 +32,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 if ("mixOmics" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("mixOmics") 
 if ("RVAideMemoire" %in% rownames(installed.packages()) == 'FALSE') install.packages('RVAideMemoire') 
+if ("VennDiagram" %in% rownames(installed.packages()) == 'FALSE') install.packages('VennDiagram') 
 
 #load packages
 library("ggplot2")
@@ -43,6 +44,7 @@ library('cowplot')
 library("mixOmics")
 library("tidyverse")
 library("RVAideMemoire")
+library("VennDiagram")
 
 ```
 
@@ -1402,6 +1404,43 @@ MvC_VIP_1 %>%
 dev.off()
 ```
 
+Plot venn diagram showing shared metabolites for each life stage comparison.  
+
+```{r}
+### Compare for Venn Diagram (https://github.com/gaospecial/ggVennDiagram)
+
+venn.x <- list(
+   EGGvEMBRYO = sample(EvE_VIP_1$Metabolite),
+   EMBRYOvLARVAE = sample(EvL_VIP_1$Metabolite),
+   LARVAEvMETAMORPHOSED = sample(LvM_VIP_1$Metabolite),
+   LARVAEvCALCIFYING = sample(LvC_VIP_1$Metabolite),
+   METAMORPHOSEDvCALCIFYING = sample(MvC_VIP_1$Metabolite) 
+ )
+ 
+ #myCol <- c("#8B0046", "#468B00")
+ 
+ venn.diagram(venn.x,
+              filename = 'Mcap2020/Figures/Metabolomics/Developmental_venn.png',
+              output = TRUE,
+              height = 500, 
+              width = 500,
+              resolution = 300,
+              category.names = c("Egg vs \nEmbryo", "Embryo vs \nLarvae", "Larvae vs \nMetamorphosed Recruit", "Larvae vs \nCalcifying Recruit", "Metamorphosed vs \nCalcifying Recruit"),
+              lwd = 1,
+              col = c("blue", "orange", "green", "yellow", "purple"),
+              fill = c(alpha("blue",0.3), alpha("orange", 0.3), alpha("green", 0.3), alpha("yellow", 0.3), alpha("purple", 0.3)),
+              cex = 0.2,
+              fontfamily = "sans",
+              fontface = "bold",
+              cat.cex = 0.2,
+              cat.default.pos = "text",
+              #cat.pos = c(12, -12),
+              cat.dist = c(0.3, 0.3, 0.3, 0.3, 0.4),
+              cat.fontfamily = "sans",
+              cat.fontface = "bold", 
+              margin=c(0.4,0.4,0.4,0.4)
+              )
+```
 
 # Validation of VIP by t-tests  
 

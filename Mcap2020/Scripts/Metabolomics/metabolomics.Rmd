@@ -13,6 +13,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
+
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -30,6 +31,7 @@ if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 if ("mixOmics" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("mixOmics") 
+if ("RVAideMemoire" %in% rownames(installed.packages()) == 'FALSE') install.packages('RVAideMemoire') 
 
 #load packages
 library("ggplot2")
@@ -40,6 +42,7 @@ library('naniar')
 library('cowplot')
 library("mixOmics")
 library("tidyverse")
+library("RVAideMemoire")
 
 ```
 
@@ -63,7 +66,7 @@ library("tidyverse")
 
 # Data processing and exploration  
 ## Positive Polarity  
-
+ 
 Load data  
 ```{r}
 dataset1<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_11292020_Rutgers.csv", sep=",", na.strings=NA, header=TRUE)
@@ -121,11 +124,18 @@ data<- data %>%
     Recruit2_rep3 = Recruit.2_F39_21, 
     Recruit2_rep4 = Recruit.2_F40_25, 
     Recruit2plug_rep1 = Recruit.2_Plug_31, 
-    Recruit2plug_rep2 = Recruit.2_Plug_34
+    Recruit2plug_rep2 = Recruit.2_Plug_34, 
+    Recruit2plug_rep3 = Recruit.2_Plug_40,
+    Recruit2plug_rep4 = Recruit.2_Plug_41,
+    Recruit2plug_rep5 = Recruit.2_Plug_42,
+    Recruit3plug_rep1 = Recruit.3_Plug_30, 
+    Recruit3plug_rep2 = Recruit.3_Plug_33, 
+    Recruit3plug_rep3 = Recruit.3_Plug_36,
+    Recruit3plug_rep4 = Recruit.3_Plug_38
     )
 
-```
-
+``` 
+  
 Conduct normalization of samples by normalizing each metabolite ion count to the median ion count across metabolites within that sample.  
 
 ```{r}
@@ -175,16 +185,25 @@ data<- data %>%
          Recruit1plug_rep3_norm = Recruit1plug_rep3 / median(Recruit1plug_rep3, na.rm=TRUE),
          Recruit1plug_rep4_norm = Recruit1plug_rep4 / median(Recruit1plug_rep4, na.rm=TRUE),
          Recruit2plug_rep1_norm = Recruit2plug_rep1 / median(Recruit2plug_rep1, na.rm=TRUE),
-         Recruit2plug_rep2_norm = Recruit2plug_rep2 / median(Recruit2plug_rep2, na.rm=TRUE))
+         Recruit2plug_rep2_norm = Recruit2plug_rep2 / median(Recruit2plug_rep2, na.rm=TRUE), 
+         Recruit2plug_rep3_norm = Recruit2plug_rep3 / median(Recruit2plug_rep3, na.rm=TRUE),
+         Recruit2plug_rep4_norm = Recruit2plug_rep4 / median(Recruit2plug_rep4, na.rm=TRUE),          
+         Recruit2plug_rep5_norm = Recruit2plug_rep5 / median(Recruit2plug_rep5, na.rm=TRUE),            
+         Recruit3plug_rep1_norm = Recruit3plug_rep1 / median(Recruit3plug_rep1, na.rm=TRUE),
+         Recruit3plug_rep2_norm = Recruit3plug_rep2 / median(Recruit3plug_rep2, na.rm=TRUE), 
+         Recruit3plug_rep3_norm = Recruit3plug_rep3 / median(Recruit3plug_rep3, na.rm=TRUE),
+         Recruit3plug_rep4_norm = Recruit3plug_rep4 / median(Recruit3plug_rep4, na.rm=TRUE)
+         )
 ```
+
 
 Mutate the data to be in long rather than wide format.  
 
 ```{r}
 data <- data %>% 
-  gather(Sample, IonCounts, 64:109)
+  gather(Sample, IonCounts, 71:123)
 
-data <- data[c(9, 64, 65)]
+data <- data[c(9, 71,72)]
 ```
 
 Add lifestage column for categorizing  
@@ -196,36 +215,46 @@ data<-data%>%
 data$Lifestage<-as.factor(data$Lifestage)
 
 data<-data%>%
-  filter(!(Lifestage=="Larvae2"))%>%
-  filter(!(Lifestage=="Larvae4"))%>%
-  filter(!(Lifestage=="Larvae6"))
+  filter(!(Lifestage=="Larvae2" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae2" & Rep=="rep2"))%>%
+  filter(!(Lifestage=="Larvae4" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae4" & Rep=="rep2"))%>%
+  filter(!(Lifestage=="Larvae6" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae6" & Rep=="rep2"))
+
 
 #add development column with larger categories 
 data<-data%>%
   mutate(Development = if_else(Lifestage == "Egg", "Egg", 
                                if_else(Lifestage =="Embryo", "Embryo", 
                                        if_else(Lifestage == "Larvae1", "Embryo", 
+                                               if_else(Lifestage == "Larvae2", "Larvae",
                                                if_else(Lifestage=="Larvae3", "Larvae", 
+                                                       if_else(Lifestage == "Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
+                                                               if_else(Lifestage == "Larvae6", "Larvae",
                                                                if_else(Lifestage == "Recruit1", "Metamorphosed Recruit", 
                                                                        if_else(Lifestage == "Recruit2", "Metamorphosed Recruit", 
                                                                                if_else(Lifestage =="Recruit1plug", "Calcifying Recruit", 
                                                                                        if_else(Lifestage == "Recruit2plug", "Calcifying Recruit", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA")))))))))))
+                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA"))))))))))))))
 
 data<-data%>%
   mutate(HPF = if_else(Lifestage == "Egg", "1", 
                                if_else(Lifestage =="Embryo", "5", 
                                        if_else(Lifestage == "Larvae1", "38", 
+                                               if_else(Lifestage=="Larvae2", "65", 
                                                if_else(Lifestage=="Larvae3", "93", 
+                                                       if_else(Lifestage == "Larvae4", "163",
                                                        if_else(Lifestage == "Larvae5", "183 larvae", 
+                                                               if_else(Lifestage == "Larvae6", "231 larvae",
                                                                if_else(Lifestage == "Recruit1", "183 recruit", 
                                                                        if_else(Lifestage == "Recruit2", "231 recruit", 
                                                                                if_else(Lifestage =="Recruit1plug", "183 recruit plug", 
                                                                                        if_else(Lifestage == "Recruit2plug", "231 recruit plug", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA")))))))))))
+                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA"))))))))))))))
 
-data$HPF<-fct_relevel(data$HPF, "1", "5", "38", "93", "183 larvae", "183 recruit", "183 recruit plug", "231 recruit", "231 recruit plug")
+data$HPF<-fct_relevel(data$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 recruit", "183 recruit plug", "231 larvae", "231 recruit", "231 recruit plug", "255 recruit plug")
 ```
 
 Create plot showing normalized ion counts (count / sample median) for each lifestage.  
@@ -258,17 +287,18 @@ metab_compounds<-ggplot(data_summary, aes(y=mean, x=compound, fill=Lifestage, gr
     text = element_text(size = 16, color="black"), 
     axis.text.y = element_text(size=14, color="black"), 
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
-    axis.title = element_text(face="bold"));metab_compounds
+    axis.title = element_text(face="bold")
+    );metab_compounds
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_pos.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_pos.pdf", plot=metab_compounds, dpi=300, width=25, height=8, units="in")
 
-metabl_short<-metab_compounds + ylim(0,100)
+#metabl_short<-metab_compounds + ylim(0,100)
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_pos.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_pos.pdf", plot=metabl_short, dpi=300, width=25, height=8, units="in")
 
-metabl_shortest<-metab_compounds + ylim(0,20)
+#metabl_shortest<-metab_compounds + ylim(0,20)
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_pos.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_pos.pdf", plot=metabl_shortest, dpi=300, width=25, height=8, units="in")
 
 ```
 
@@ -293,7 +323,7 @@ Plot PCA with lifestage in colors.
 ```{r}
 scaled.pca<-prcomp(data_pca[c(6:133)],scale=TRUE, center=TRUE) 
 
-pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
   #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
@@ -306,7 +336,20 @@ pcaPlot1<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="HPF", loadi
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot1
 
-pcaPlot1a<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot1b<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  theme_classic()+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         legend.position="right",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot1b
+
+pcaPlot1a<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
   #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
@@ -440,7 +483,7 @@ data_neg<- data_neg %>%
     Recruit3plug_rep4 = Recruit.3_Plug_38)
 
 ```
-
+ 
 
 Conduct normalization of samples by normalizing each metabolite ion count to the median ion count across metabolites within that sample.  
 
@@ -520,35 +563,46 @@ data_neg<-data_neg%>%
 data_neg$Lifestage<-as.factor(data_neg$Lifestage)
 
 data_neg<-data_neg%>%
-  filter(!(Lifestage=="Larvae2"))%>%
-  filter(!(Lifestage=="Larvae4"))%>%
-  filter(!(Lifestage=="Larvae6"))
+  filter(!(Lifestage=="Larvae2" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae2" & Rep=="rep2"))%>%
+  filter(!(Lifestage=="Larvae4" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae4" & Rep=="rep2"))%>%
+  filter(!(Lifestage=="Larvae6" & Rep=="rep1"))%>%
+  filter(!(Lifestage=="Larvae6" & Rep=="rep2"))
 
 data_neg<-data_neg%>%
-  mutate(Development = if_else(Lifestage == "Egg", "Embryo", 
+  mutate(Development = if_else(Lifestage == "Egg", "Egg", 
                                if_else(Lifestage =="Embryo", "Embryo", 
                                        if_else(Lifestage == "Larvae1", "Embryo", 
+                                                if_else(Lifestage == "Larvae2", "Larvae",
                                                if_else(Lifestage=="Larvae3", "Larvae", 
+                                                       if_else(Lifestage=="Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
+                                                                if_else(Lifestage == "Larvae6", "Larvae",
                                                                if_else(Lifestage == "Recruit1", "Metamorphosed Recruit", 
                                                                        if_else(Lifestage == "Recruit2", "Metamorphosed Recruit", 
                                                                                if_else(Lifestage =="Recruit1plug", "Calcifying Recruit", 
                                                                                        if_else(Lifestage == "Recruit2plug", "Calcifying Recruit", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA")))))))))))
+                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA"))))))))))))))
 
 data_neg<-data_neg%>%
   mutate(HPF = if_else(Lifestage == "Egg", "1", 
                                if_else(Lifestage =="Embryo", "5", 
                                        if_else(Lifestage == "Larvae1", "38", 
+                                                if_else(Lifestage=="Larvae2", "65", 
                                                if_else(Lifestage=="Larvae3", "93", 
+                                                        if_else(Lifestage == "Larvae4", "163",
                                                        if_else(Lifestage == "Larvae5", "183 larvae", 
+                                                                if_else(Lifestage == "Larvae6", "231 larvae",
                                                                if_else(Lifestage == "Recruit1", "183 recruit", 
                                                                        if_else(Lifestage == "Recruit2", "231 recruit", 
                                                                                if_else(Lifestage =="Recruit1plug", "183 recruit plug", 
                                                                                        if_else(Lifestage == "Recruit2plug", "231 recruit plug", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA")))))))))))
+                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA"))))))))))))))
 
-data_neg$HPF<-fct_relevel(data_neg$HPF, "1", "5", "38", "93", "183 larvae", "183 recruit", "183 recruit plug", "231 recruit", "231 recruit plug", "255 recruit plug")
+data_neg$HPF<-fct_relevel(data_neg$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 recruit", "183 recruit plug", "231 larvae", "231 recruit", "231 recruit plug", "255 recruit plug")
+
+data_neg$Development<-as.factor(data_neg$Development)
 ```
 
 Create plot showing normalized ion counts (count / sample median) for each lifestage.  
@@ -581,17 +635,18 @@ metab_compounds_neg<-ggplot(data_summary_neg, aes(y=mean, x=compound, fill=Lifes
     text = element_text(size = 16, color="black"), 
     axis.text.y = element_text(size=14, color="black"), 
     axis.text.x = element_text(size=12, color="black", angle=90, vjust = 1, hjust=1), 
-    axis.title = element_text(face="bold"));metab_compounds_neg
+    axis.title = element_text(face="bold")
+    );metab_compounds_neg
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_neg.pdf", plot=metab_compounds_neg, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_fullscale_neg.pdf", plot=metab_compounds_neg, dpi=300, width=25, height=8, units="in")
 
-metabl_short_neg<-metab_compounds_neg + ylim(0,100)
+#metabl_short_neg<-metab_compounds_neg + ylim(0,100)
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_neg.pdf", plot=metabl_short_neg, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_shortscale_neg.pdf", plot=metabl_short_neg, dpi=300, width=25, height=8, units="in")
 
-metabl_shortest_neg<-metab_compounds_neg + ylim(0,20)
+#metabl_shortest_neg<-metab_compounds_neg + ylim(0,20)
 
-ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_neg.pdf", plot=metabl_shortest_neg, dpi=300, width=25, height=8, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/compounds_shortestscale_neg.pdf", plot=metabl_shortest_neg, dpi=300, width=25, height=8, units="in")
 
 ```
 
@@ -616,7 +671,7 @@ Plot PCA with lifestage in colors.
 ```{r}
 scaled.pca.neg<-prcomp(data_pca_neg[c(6:141)],scale=TRUE, center=TRUE) 
 
-pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
   #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
@@ -629,7 +684,20 @@ pcaPlot1_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour=
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot1_neg
 
-pcaPlot1a_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot1b_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
+  #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
+  theme_classic()+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         legend.position="right",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot1b_neg
+
+pcaPlot1a_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("orange", "darkgray", "purple")) +
   #scale_fill_manual(values=c("orange", "darkgray", "purple")) + 
   theme_classic()+
@@ -827,15 +895,15 @@ data_pca_full<-peaks_selected%>%
 data_pca_full<-data_pca_full%>%
     select_if(~ !any(is.na(.)))
 ```
-
+ 
 Plot PCA and view scree plot with lifestage in colors.   
 
 ```{r}
-scaled.pca<-prcomp(data_pca_full[c(5:99)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca_full[c(5:203)],scale=TRUE, center=TRUE) 
 
 fviz_eig(scaled.pca)
 
-pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="HPF", loadings=FALSE,  colour="HPF", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
   #scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
   theme_classic()+
@@ -848,7 +916,20 @@ pcaPlot_full<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="HP
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot_full
 
-pcaPlot_full2<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=FALSE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+pcaPlot_full3<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Lifestage", loadings=FALSE,  colour="Lifestage", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
+  #scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
+  #scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
+  theme_classic()+
+  #xlim(-0.75,0.75)+
+  #ylim(-0.75, 0.75)+
+   theme(legend.text = element_text(size=18), 
+         #legend.position="none",
+        plot.background = element_blank(),
+        legend.title = element_text(size=18, face="bold"), 
+        axis.text = element_text(size=18), 
+        axis.title = element_text(size=18,  face="bold"));pcaPlot_full3
+
+pcaPlot_full2<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="Development", loadings=FALSE,  colour="Development", loadings.label.colour="black", loadings.colour="black", loadings.label=FALSE, frame=TRUE, ,loadings.label.size=5, loadings.label.vjust=-1, size=5) + 
   #scale_colour_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) +
   #scale_fill_manual(values=c("#80CDC1", "#80CDC1", "#80CDC1")) + 
   theme_classic()+
@@ -917,8 +998,24 @@ plotVar(MyResult.plsda, cutoff = 0.7)
 pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf")
 plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, HPF")
 dev.off() 
+
+plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, HPF")
+plotVar(MyResult.plsda)
+plotLoadings(MyResult.plsda)
+plotArrow(MyResult.plsda)
+auroc(MyResult.plsda)
+
+pdf("Mcap2020/Figures/Metabolomics/CIM_Timepoint.pdf")
+cim(MyResult.plsda, mapping="Y", row.names = metabolites$HPF, xlab = "Metabolites", ylab="Timepoint", margins=c(10,7))
+dev.off()
 ```
 
+Extract top 50 metabolite loadings contributing to components. 
+```{r, message=FALSE}
+MyResult.plsda_timepoint <- plsda(X,Y, ncomp=9) #number of components is classes-1
+#selectVar(MyResult.plsda2, comp=1)$value
+
+```
 
 Plot by developmental stage.  
 ```{r}
@@ -941,23 +1038,381 @@ plotVar(MyResult.plsda.D, cutoff = 0.7)
 pdf("Mcap2020/Figures/Metabolomics/PLSDA_Development.pdf")
 plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, Development")
 dev.off() 
+
+plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, Development")
+plotVar(MyResult.plsda.D)
+plotLoadings(MyResult.plsda.D)
+plotArrow(MyResult.plsda.D)
+auroc(MyResult.plsda.D)
+
+
+pdf("Mcap2020/Figures/Metabolomics/CIM_Development.pdf")
+cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10))
+dev.off()
 ```
 
-Plot top 50 metabolite loadings contributing to 2 components. Here, comp1 separates larvae from recruit and comp2 separates larval 1 and larval 2.  
+Extract top 50 metabolite loadings contributing to components. 
 ```{r, message=FALSE}
-MyResult.plsda2 <- plsda(X,Y, ncomp=2) #number of components is classes-1 (3 classes of lifestages - 1 = 2)
+MyResult.plsda_develop <- plsda(X,Y, ncomp=4) #number of components is classes-1 
 #selectVar(MyResult.plsda2, comp=1)$value
-
-plotLoadings(MyResult.plsda2, comp = 1, contrib = 'max', method = 'median', ndisplay = 50) #top 50 metabolites contributing to variation on component 1
-plotLoadings(MyResult.plsda2, comp = 2, contrib = 'max', method = 'median', ndisplay = 50) #top 50 metabolites contributing to variation on component 2
 ```
 
-# Validation of preliminary PLS-DA 
+# Extract VIP scores from PLS-DA's   
+
+Extractions from groups as a whole - will do stage specific extractions later for comparisons.  
+
+Time points: 
+
+```{r}
+#extract
+Timepoint_VIP <- PLSDA.VIP(MyResult.plsda_timepoint)
+Timepoint_VIP_DF <- as.data.frame(Timepoint_VIP[["tab"]])
+Timepoint_VIP_DF
+
+# Converting row names to column
+Timepoint_VIP_table <- rownames_to_column(Timepoint_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+Timepoint_VIP_1 <- Timepoint_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+Timepoint_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Timepoint Groupings") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+
+pdf("Mcap2020/Figures/Metabolomics/Timepoint_VIP.pdf")
+Timepoint_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Timepoint Groupings") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off() 
+```
+
+Developmental groups: 
+
+```{r}
+#extract
+Develop_VIP <- PLSDA.VIP(MyResult.plsda_develop)
+Develop_VIP_DF <- as.data.frame(Develop_VIP[["tab"]])
+Develop_VIP_DF
+
+# Converting row names to column
+Develop_VIP_table <- rownames_to_column(Develop_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+Develop_VIP_1 <- Develop_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+Develop_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Developmental Groupings") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/Development_VIP.pdf")
+Develop_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Developmental Groupings") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+Generate VIPs for developmental group comparisons 
+
+1. Eggs vs embryos  
+
+```{r}
+
+#assigning datasets 
+X <- metabolites%>%
+  filter(Development==c("Egg","Embryo"))%>%
+  droplevels()%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+
+X<-X[5:203] #pull only data columns
+
+MyResult.plsda_EvE <- plsda(X,Y, ncomp=4)
+
+#extract
+EvE_VIP <- PLSDA.VIP(MyResult.plsda_EvE)
+EvE_VIP_DF <- as.data.frame(EvE_VIP[["tab"]])
+
+# Converting row names to column
+EvE_VIP_table <- rownames_to_column(EvE_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+EvE_VIP_1 <- EvE_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+EvE_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Eggs vs Embryos") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP.pdf")
+EvE_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Eggs vs Embryos") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+
+2. Embryos vs larvae  
+
+```{r}
+
+#assigning datasets 
+X <- metabolites%>%
+  filter(Development==c("Egg","Larvae"))%>%
+  droplevels()%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+
+X<-X[5:203] #pull only data columns
+
+MyResult.plsda_EvL <- plsda(X,Y, ncomp=4)
+
+#extract
+EvL_VIP <- PLSDA.VIP(MyResult.plsda_EvL)
+EvL_VIP_DF <- as.data.frame(EvL_VIP[["tab"]])
+
+# Converting row names to column
+EvL_VIP_table <- rownames_to_column(EvL_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+EvL_VIP_1 <- EvL_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+EvL_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Embryos vs Larvae") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP.pdf")
+EvL_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Embryos vs Larvae") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+3. Larvae vs metamorphosed recruits  
+
+```{r}
+
+#assigning datasets 
+X <- metabolites%>%
+  filter(Development==c("Larvae","Metamorphosed Recruit"))%>%
+  droplevels()%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+
+X<-X[5:203] #pull only data columns
+
+MyResult.plsda_LvM <- plsda(X,Y, ncomp=4)
+
+#extract
+LvM_VIP <- PLSDA.VIP(MyResult.plsda_LvM)
+LvM_VIP_DF <- as.data.frame(LvM_VIP[["tab"]])
+
+# Converting row names to column
+LvM_VIP_table <- rownames_to_column(LvM_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+LvM_VIP_1 <- LvM_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+LvM_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Larvae vs Metamorphosed Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf")
+LvM_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Larvae vs Metamorphosed Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+4. Larvae vs calcifying recruits  
+```{r}
+
+#assigning datasets 
+X <- metabolites%>%
+  filter(Development==c("Larvae","Calcifying Recruit"))%>%
+  droplevels()%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+
+X<-X[5:203] #pull only data columns
+
+MyResult.plsda_LvC <- plsda(X,Y, ncomp=4)
+
+#extract
+LvC_VIP <- PLSDA.VIP(MyResult.plsda_LvC)
+LvC_VIP_DF <- as.data.frame(LvC_VIP[["tab"]])
+
+# Converting row names to column
+LvC_VIP_table <- rownames_to_column(LvC_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+LvC_VIP_1 <- LvC_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+LvC_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Larvae vs Calcifying Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP.pdf")
+LvC_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Larvae vs Calcifying Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+5. Metamorphosed vs calcifying recruits  
+
+```{r}
+
+#assigning datasets 
+X <- metabolites%>%
+  filter(Development==c("Metamorphosed Recruit","Calcifying Recruit"))%>%
+  droplevels()%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+
+X<-X[5:203] #pull only data columns
+
+MyResult.plsda_MvC <- plsda(X,Y, ncomp=4)
+
+#extract
+MvC_VIP <- PLSDA.VIP(MyResult.plsda_MvC)
+MvC_VIP_DF <- as.data.frame(MvC_VIP[["tab"]])
+
+# Converting row names to column
+MvC_VIP_table <- rownames_to_column(MvC_VIP_DF, var = "Metabolite")
+
+#filter for VIP > 1
+MvC_VIP_1 <- MvC_VIP_table %>% 
+  filter(VIP >= 1)
+
+#plot
+MvC_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Metamorphosed vs Calcifying Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+pdf("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP.pdf")
+MvC_VIP_1 %>%
+  arrange(VIP) %>%
+  ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point() +
+  ylab("Metabolite") +
+  xlab("VIP Score") +
+  ggtitle("Metamorphosed vs Calcifying Recruits") +
+  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+dev.off()
+```
+
+
+# Validation of VIP by t-tests  
+
+# Validation of PLS-DA 
+
+## Timepoint  
 
 Validate PLS-DA.   
 ```{r}
 set.seed(30) 
-MyPerf.plsda <- perf(MyResult.plsda2, validation = "Mfold", folds=2, #fold #? 
+MyPerf.plsda <- perf(MyResult.plsda_timepoint, validation = "Mfold", folds=8, #fold #? 
                      progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
 
 #MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
@@ -967,24 +1422,47 @@ plot(MyPerf.plsda,  sd = TRUE)
 #legend.position = "vertical"
 ```
 
-NOT WORKING: 
+
+## Development
+
+Validate PLS-DA.   
+```{r}
+set.seed(30) 
+MyPerf.plsda <- perf(MyResult.plsda_develop, validation = "Mfold", folds=4, #fold #? 
+                     progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
+
+#MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
+
+plot(MyPerf.plsda,  sd = TRUE)
+# optional setting for above: col = color.mixo(5:7)
+#legend.position = "vertical"
+```
+
+NCOMP NOT WORKING BELOW THIS POINT, REEVALUATE: 
 ```{r}
 # Assessing optimal number of variables to keep 
 list.keepX <- c(5:10,  seq(20, 100, 10))
 list.keepX # to output the grid of values tested
 
+X <- metabolites%>%
+  dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
+  spread(compound, log_norm_counts) #generate spread data frame
+
+Y <- as.factor(X$Development) #select treatment names
+Y
+
+X<-X[5:201] #pull only data columns
+
 set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
 tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 4, # we suggest to push ncomp a bit more, e.g. 4
-                                 validation = 'loo',
+                                 validation = 'Mfold', folds=4,
                                  measure = "BER", test.keepX = list.keepX)   # we suggest nrepeat = 50
 
 error <- tune.splsda.srbct$error.rate
 ncomp <- tune.splsda.srbct$choice.ncomp$ncomp # optimal number of components based on t-tests on the error rate
 ncomp
 
-###ncomp coming back as null for my data - too few groups? 
-
-select.keepX <- tune.splsda.srbct$choice.keepX[1:ncomp]  # optimal number of variables to select
+select.keepX <- tune.splsda.srbct$choice.keepX# optimal number of variables to select
 select.keepX
 
 plot(tune.splsda.srbct, col = color.jet(ncomp))

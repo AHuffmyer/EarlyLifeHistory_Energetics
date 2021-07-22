@@ -228,7 +228,7 @@ data<-data%>%
   mutate(Development = if_else(Lifestage == "Egg", "Egg", 
                                if_else(Lifestage =="Embryo", "Embryo", 
                                        if_else(Lifestage == "Larvae1", "Embryo", 
-                                               if_else(Lifestage == "Larvae2", "Larvae",
+                                               if_else(Lifestage == "Larvae2", "Embryo",
                                                if_else(Lifestage=="Larvae3", "Larvae", 
                                                        if_else(Lifestage == "Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
@@ -574,7 +574,7 @@ data_neg<-data_neg%>%
   mutate(Development = if_else(Lifestage == "Egg", "Egg", 
                                if_else(Lifestage =="Embryo", "Embryo", 
                                        if_else(Lifestage == "Larvae1", "Embryo", 
-                                                if_else(Lifestage == "Larvae2", "Larvae",
+                                                if_else(Lifestage == "Larvae2", "Embryo",
                                                if_else(Lifestage=="Larvae3", "Larvae", 
                                                        if_else(Lifestage=="Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
@@ -995,18 +995,18 @@ MyResult.plsda <- plsda(X,Y) # 1 Run the method
 plotIndiv(MyResult.plsda)    # 2 Plot the samples
 plotVar(MyResult.plsda, cutoff = 0.7)    
 
-pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf")
+pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=7, height=7)
 plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, HPF")
 dev.off() 
 
 plotIndiv(MyResult.plsda, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, HPF")
-plotVar(MyResult.plsda)
-plotLoadings(MyResult.plsda)
-plotArrow(MyResult.plsda)
-auroc(MyResult.plsda)
+#plotVar(MyResult.plsda)
+#plotLoadings(MyResult.plsda)
+#plotArrow(MyResult.plsda)
+#auroc(MyResult.plsda)
 
-pdf("Mcap2020/Figures/Metabolomics/CIM_Timepoint.pdf")
-cim(MyResult.plsda, mapping="Y", row.names = metabolites$HPF, xlab = "Metabolites", ylab="Timepoint", margins=c(10,7))
+pdf("Mcap2020/Figures/Metabolomics/CIM_Timepoint.pdf", width=7, height=7)
+cim(MyResult.plsda, mapping="Y", row.names = metabolites$HPF, xlab = "Metabolites", ylab="Hours Post Fertilization", margins=c(10,7), row.cex=0.5)
 dev.off()
 ```
 
@@ -1035,19 +1035,19 @@ MyResult.plsda.D <- plsda(X,Y) # 1 Run the method
 plotIndiv(MyResult.plsda.D)    # 2 Plot the samples
 plotVar(MyResult.plsda.D, cutoff = 0.7)    
 
-pdf("Mcap2020/Figures/Metabolomics/PLSDA_Development.pdf")
+pdf("Mcap2020/Figures/Metabolomics/PLSDA_Development.pdf", width=7, height=7)
 plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, Development")
 dev.off() 
 
 plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title="PLS-DA, Development")
-plotVar(MyResult.plsda.D)
-plotLoadings(MyResult.plsda.D)
-plotArrow(MyResult.plsda.D)
-auroc(MyResult.plsda.D)
+#plotVar(MyResult.plsda.D)
+#plotLoadings(MyResult.plsda.D)
+#plotArrow(MyResult.plsda.D)
+#auroc(MyResult.plsda.D)
 
 
-pdf("Mcap2020/Figures/Metabolomics/CIM_Development.pdf")
-cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10))
+pdf("Mcap2020/Figures/Metabolomics/CIM_Development.pdf", width=7, height=7)
+cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10), row.cex=0.5)
 dev.off()
 ```
 
@@ -1088,7 +1088,7 @@ Timepoint_VIP_1 %>%
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
 
-pdf("Mcap2020/Figures/Metabolomics/Timepoint_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/Timepoint_VIP.pdf", width=6, height=11)
 Timepoint_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1127,7 +1127,7 @@ Develop_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/Development_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/Development_VIP.pdf", , width=6, height=11)
 Develop_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1181,7 +1181,7 @@ EvE_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP.pdf", width=6, height=11)
 EvE_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1234,7 +1234,7 @@ EvL_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP.pdf", width=6, height=11)
 EvL_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1286,7 +1286,7 @@ LvM_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=6, height=11)
 LvM_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1337,7 +1337,7 @@ LvC_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP.pdf", width=6, height=11)
 LvC_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
@@ -1389,7 +1389,7 @@ MvC_VIP_1 %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
-pdf("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP.pdf")
+pdf("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP.pdf", width=6, height=11)
 MvC_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +

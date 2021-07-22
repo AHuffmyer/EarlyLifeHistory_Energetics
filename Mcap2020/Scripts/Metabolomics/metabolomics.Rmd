@@ -1047,7 +1047,7 @@ plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, title
 
 
 pdf("Mcap2020/Figures/Metabolomics/CIM_Development.pdf", width=7, height=7)
-cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10), row.cex=0.5)
+cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10), row.cex=0.5, col.cex=0.5)
 dev.off()
 ```
 

@@ -108,8 +108,8 @@ r_plot<-PRdf %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.2)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
     ylab(expression(bold(paste("R (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -140,8 +140,8 @@ p_plot<-PRdf %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.2)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
     ylab(expression(bold(paste("P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -172,8 +172,8 @@ gp_plot<-PRdf %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position=position_jitterdodge(0.2)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
     ylab(expression(bold(paste("GP (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -204,8 +204,8 @@ pr_plot<-PRdf %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.2)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#80CDC1","#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
     ylab(expression(bold(paste("P:R")))) +
     scale_y_continuous(limits=c(-0.5, 10), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -382,7 +382,7 @@ Rplot1<-ggplot(data=PRdata, aes(x=dpf, y=R.nmol.org.min, colour=Lifestage, group
 
 Rplot2<-Rplot1+theme(legend.position="none")
 
-ggsave("Mcap2020/Figures/Respiration/mcap_R.pdf", plot=Rplot1, height=8, width=7, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Respiration/mcap_R.pdf", plot=Rplot1, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
 
 Generate mean table  
@@ -420,7 +420,7 @@ Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Lifestage, group
 
 Pplot2<-Pplot1+theme(legend.position="none")
 
-ggsave("Mcap2020/Figures/Respiration/mcap_P.pdf", plot=Pplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Respiration/mcap_P.pdf", plot=Pplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
  
 Generate mean table.   
@@ -458,7 +458,7 @@ GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Lifestage, gro
 
 GPplot2<-GPplot1+theme(legend.position="none") 
 
-ggsave("Mcap2020/Figures/Respiration/mcap_GP.pdf", plot=GPplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Respiration/mcap_GP.pdf", plot=GPplot2, height=8, width=7, units = c("in"), dpi=300) #output figure
 ```
  
 Generate mean table.  
@@ -497,7 +497,7 @@ PRplot1<-ggplot(data=PRdata, aes(x=dpf, y=ratio, colour=Lifestage, group=interac
 
 PRplot2<-PRplot1+theme(legend.position="right") 
 
-ggsave("Mcap2020/Figures/Respiration/mcap_PR.pdf", plot=PRplot1, height=8, width=8, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Respiration/mcap_PR.pdf", plot=PRplot1, height=8, width=8, units = c("in"), dpi=300) #output figure
 ``` 
 
 
@@ -519,7 +519,7 @@ Combine plots above into a single panel.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 mcap_respiration<-plot_grid(Rplot2, Pplot2, GPplot2, PRplot2, labels = c("A", "B", "C", "D"), label_size=18, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(0.75,0.75,0.75,1), align="h")
 
-ggsave(filename="Mcap2020/Figures/Respiration/mcap_PR_panel.pdf", plot=mcap_respiration, dpi=300, width=24, height=6, units="in")
+#ggsave(filename="Mcap2020/Figures/Respiration/mcap_PR_panel.pdf", plot=mcap_respiration, dpi=300, width=24, height=6, units="in")
 ```
 
 

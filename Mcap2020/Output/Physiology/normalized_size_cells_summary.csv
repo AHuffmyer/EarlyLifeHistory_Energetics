@@ -1,8 +1,8 @@
 Lifestage,HPF,n,Mean,SE
 Egg,1,4,7746,578
 Embryo,5,4,9923,654
-Larvae,38,4,5285,881
-Larvae,65,4,16867,1846
+Embryo,38,4,5285,881
+Embryo,65,4,16867,1846
 Larvae,93,4,14756,2165
 Larvae,163,4,14732,1010
 Larvae,183,4,17732,788

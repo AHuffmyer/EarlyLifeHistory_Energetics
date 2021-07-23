@@ -1,8 +1,8 @@
 lifestage,hpf,group
 Egg Fertilized,1,Egg
 Embryo 1,5,Embryo
-Larvae 1,38,Larvae
-Larvae 2,65,Larvae
+Larvae 1,38,Embryo
+Larvae 2,65,Embryo
 Larvae 3,93,Larvae
 Larvae 4,163,Larvae
 Larvae 5,183,Larvae

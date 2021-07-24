@@ -1,0 +1,70 @@
+Metabolite,VIP,direction
+Nicotinamide ribotide,2.1582428446199957,Decrease
+Tryptamine,2.0251156796821586,Decrease
+S-adenosyl-L-methionine,1.976997552129717,Nonsig
+CDP-Choline (+HAc),1.969942729582254,Nonsig
+Dopamine,1.9432077997563357,Nonsig
+Phenylalanine,1.9234706613503905,Decrease
+ATP,1.875597252678237,Nonsig
+N-carbomoyl-L-aspartate,1.8467980675676878,Nonsig
+Homoarginine,1.8433402061109192,Nonsig
+Cresol,1.7701259855810592,Nonsig
+UMP,1.7648481208211206,Decrease
+O-Acylcarnitine,1.725994834570809,Nonsig
+GTP,1.7163874055743207,Nonsig
+GMP,1.7144951140263878,Decrease
+Phenethylamine,1.711997131972793,Decrease
+Nicotinamide riboside,1.6805988200894795,Decrease
+Adenosine,1.679555038941166,Decrease
+Lysine,1.6748644805271624,Nonsig
+ADP,1.6625443715029609,Nonsig
+Guanine,1.6462250851690483,Nonsig
+Arginine,1.6319605606213816,Nonsig
+Montiporic Acid A,1.6202950631122597,Nonsig
+Montiporic Acid D,1.601796094001183,Nonsig
+Citrate,1.6016717610521338,Nonsig
+Arginine-Valine,1.6012192976095894,Nonsig
+Diethanolamine,1.5953701164824616,Nonsig
+Mannose-6-phosphate,1.593784464761556,Nonsig
+Deoxyadenosine,1.588538808317997,Nonsig
+Citrulline,1.5623810409357477,Decrease
+O-Phosphorylethanolamine,1.5589043023726241,Nonsig
+Pantothenate,1.5520306143861824,Nonsig
+Pirbuterol,1.5477619322301337,Nonsig
+Sucrose,1.5328841299435436,Nonsig
+Ophthalmate,1.5307905989512138,Nonsig
+N N N-Trimethyllysine,1.4877144885112743,Nonsig
+Methionine,1.4613360815182168,Nonsig
+Glucose-6-phosphate,1.4225680819525992,Nonsig
+Asparagine,1.4092074058212207,Nonsig
+Thymidine,1.4027540919207941,Nonsig
+UDP-N-acetyl-glucosamine,1.3855898354462233,Nonsig
+L-Octanoylcarnitine,1.374202799740007,Nonsig
+Adipic acid,1.3719256077401891,Nonsig
+CDP-ethanolamine,1.3635676674273094,Nonsig
+AMP,1.3464898082653909,Nonsig
+Itaconic acid,1.3310480467782249,Nonsig
+Hippuric acid,1.300041863118704,Nonsig
+N-Acetylaspartate,1.2918049754111585,Nonsig
+Guanosine,1.26264388318404,Nonsig
+Arginine-Glutamine,1.2555189084887421,Nonsig
+NG-dimethyl-L-arginine,1.2358468958449884,Nonsig
+5-methylthioadenosine,1.2215482729713099,Nonsig
+Glutaryl-carnitine,1.1720742828657396,Nonsig
+Isocitrate,1.1710236907073808,Nonsig
+Hypoxanthine,1.1587523961204327,Nonsig
+Thiamine,1.1510664204824865,Nonsig
+Hypotaurine,1.1224639824302964,Nonsig
+Glycine,1.1062799395824556,Nonsig
+Phosphoenolpyruvate,1.0953943419632257,Nonsig
+Acetyl CoA,1.0794010583446527,Nonsig
+Acetyl-arginine,1.0645043665987979,Nonsig
+Norvaline,1.0612029499223503,Nonsig
+Ribitol,1.0579433318276583,Nonsig
+Deoxyguanosine,1.0549754595203378,Nonsig
+3-Methylindole,1.0367405483928738,Nonsig
+NegIS_Serine-13C3-15N1,1.0283249893137105,Nonsig
+Montiporic Acid C,1.024550783337787,Nonsig
+2-Furoyl glycine,1.0241607922481129,Nonsig
+Phosphocholine (+HAc),1.0138826520476303,Nonsig
+Uric acid,1.0101953434496305,Nonsig

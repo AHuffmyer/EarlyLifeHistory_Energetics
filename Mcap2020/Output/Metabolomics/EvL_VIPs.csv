@@ -1,0 +1,111 @@
+Metabolite,VIP,direction
+N N N-Trimethyllysine,1.4406105464182841,Increase
+Thymidine,1.4204555446863358,Increase
+Lysine,1.4148890734706587,Increase
+Threonic acid,1.3738449608446444,Increase
+5-Hydroxytryptophan,1.372993378262474,Increase
+AMP,1.3656927597483774,Decrease
+Proline,1.3632566684447534,Decrease
+NegIS_Malate-2H3,1.3610586138517555,Decrease
+a-ketoglutarate,1.3575976534140148,Increase
+Malonic acid,1.3376546430456535,Decrease
+Aspartate,1.3367628751986518,Increase
+NegIS_Inosine-15N4,1.317394611288963,Decrease
+PosIS_Glutamine-2H5-15N2,1.313433916534852,Decrease
+NegIS_Glutamine-2H5-15N2,1.3094372862212327,Decrease
+NegIS_Alanine-2H4-15N,1.3070634885544608,Decrease
+3-Phenylbutyric acid,1.304430285283148,Decrease
+PosIS_Lysine-2H8,1.2946851088020646,Decrease
+S-adenosyl-L-methionine,1.2930841331607483,Increase
+NegIS_Thymine-2H4,1.2916160502941532,Decrease
+Sedoheptulose,1.2872937373983755,Increase
+O-Phosphorylethanolamine,1.2726017087436299,Increase
+Tyrosine,1.271859664637505,Decrease
+Arginine-Alanine,1.2685388334169474,Increase
+1-Methylhistidine,1.2652207202238641,Increase
+Guanine,1.2592022828603837,Decrease
+Threonine,1.2539514997280066,Decrease
+Ribothymidine,1.253469226712206,Decrease
+PosIS_Alanine-2H4-15N,1.2515599162767264,Decrease
+N-acetyl-glutamate,1.232857398418541,Decrease
+5-Hydroxylysine,1.2311050818878226,Increase
+GMP,1.228267288207426,Decrease
+Dopamine,1.2269461580471621,Increase
+Acetyllysine,1.225600260706596,Increase
+Betaine,1.2255311031782248,Decrease
+Alanine,1.2248688525374232,Decrease
+Phosphocholine (+HAc),1.2243274059699278,Increase
+Phosphocholine,1.2218166939868156,Increase
+Homoarginine,1.211557166228002,Increase
+CDP-ethanolamine,1.200759464402626,Increase
+Glycyl-L-proline,1.1991446529893566,Decrease
+N-Acetylaspartate,1.1988156805949906,Decrease
+Acetyl glycine,1.1983952957510162,Decrease
+NegIS_Glucose-2H7-13C6,1.1972149525220037,Decrease
+FAD,1.1955189657548018,Increase
+CMP,1.1922653972756592,Increase
+NegIS_Glycine-13C2_15N1,1.1817383135768147,Decrease
+Carnosine,1.1813864874224542,Increase
+PosIS_Serine-13C3-15N1,1.1806128446539033,Decrease
+Fumarate,1.180263796364731,Decrease
+Adenosine,1.1792977941870904,Decrease
+4-Guanidinobutanoic acid,1.1787783077355836,Decrease
+Lumichrome,1.1785082386241084,Decrease
+Acetyl-arginine,1.1726961284209234,Decrease
+GDP,1.1715110698755546,Increase
+Pipecolic acid,1.1686129375201841,Increase
+Pantothenate,1.1683770952213224,Increase
+Trigonelline,1.1647768541497756,Decrease
+CDP-Choline,1.1616789444293059,Increase
+Valine,1.1585131375343902,Decrease
+Alanine-Alanine,1.1584829394946363,Increase
+5-methylthioadenosine,1.1576523619646724,Increase
+PosIS_Inosine-15N4,1.1547972706517946,Decrease
+NegIS_Serine-13C3-15N1,1.1539951303321818,Decrease
+NAD+,1.152323637659759,Increase
+Inositol,1.148263935299319,Increase
+NegIS_Lysine-2H8,1.1410211800781325,Decrease
+CDP-Choline (+HAc),1.1400494200442663,Increase
+Hypoxanthine,1.1397826203970678,Decrease
+Dihydroorotate,1.135295114423083,Increase
+Acetyl CoA,1.126885666032867,Increase
+Tryptamine,1.1225797009278964,Decrease
+Montiporic Acid A,1.1170928957001767,Increase
+Diethanolamine,1.1147612725181293,Decrease
+Phenylalanine,1.1112912362203233,Decrease
+Montiporic Acid D,1.1066965607966917,Increase
+Arginine,1.1001853916707478,Increase
+Galactitol,1.0975292030997224,Increase
+Glutamate,1.095788246893088,Increase
+Ribitol,1.0953074839209556,Increase
+NG-dimethyl-L-arginine,1.0909960187556695,Increase
+O-Decanoyl-L-carnitine,1.0898351784632472,Decrease
+Lactate,1.089241434089403,Decrease
+Adipic acid,1.086948389237677,Decrease
+Glutaric acid,1.084170449207707,Decrease
+Hydroxyoctanoic acid,1.0812906154311717,Decrease
+Creatine,1.0795525964362014,Decrease
+Succinate,1.0760250812190424,Decrease
+Citrulline,1.0720224165464602,Decrease
+Riboflavin,1.0700787740352349,Increase
+Uridine,1.06670671734403,Increase
+2-Hydroxyglutarate,1.062369883833925,Decrease
+Methionine sulfoxide,1.0600956946166722,Decrease
+Homocitrulline,1.0582842205448895,Increase
+UDP-N-acetyl-glucosamine,1.0572741384300475,Increase
+CTP,1.0561771995217304,Increase
+Pyruvate,1.0544300778771172,Decrease
+Tryptophan,1.0525808641277088,Decrease
+S-Carboxymethyl-L-cysteine,1.051743543229161,Increase
+Raffinose,1.0500174699814666,Increase
+UDP-D-Glucose,1.046540699530331,Increase
+Cresol,1.0419738645625316,Nonsig
+Ophthalmate,1.0324337993384964,Increase
+Urocanate,1.0323178294502875,Decrease
+Phosphoenolpyruvate,1.020241646124879,Decrease
+Itaconic acid,1.018802744801163,Increase
+Sorbitol,1.0148274541184215,Increase
+GTP,1.0137811641377514,Increase
+Uric acid,1.01377932604383,Increase
+2-Hydroxybutyric acid,1.0130961848179627,Decrease
+ADP-ribose,1.0078903236286338,Nonsig

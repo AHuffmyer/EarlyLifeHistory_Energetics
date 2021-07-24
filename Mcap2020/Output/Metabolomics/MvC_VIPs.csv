@@ -1,0 +1,79 @@
+Metabolite,VIP,direction
+Phenethylamine,1.9360392818555352,Decrease
+Cresol,1.9223985434962922,Decrease
+Montiporic Acid D,1.916435637832265,Decrease
+Montiporic Acid C,1.8751102451568984,Decrease
+Montiporic Acid B,1.865663571195454,Decrease
+Montiporic Acid A,1.8541890050054182,Decrease
+Nicotinamide ribotide,1.832785521415609,Increase
+Glutaryl-carnitine,1.79280561048705,Increase
+Indole,1.772482351333516,Increase
+Ophthalmate,1.7343242032087705,Nonsig
+NAD+,1.7036303637518218,Increase
+Mannose-6-phosphate,1.7025860916640416,Nonsig
+Adenosine,1.6885643415613842,Decrease
+Valine,1.6824560582647035,Decrease
+GDP-Mannose,1.6782303827249114,Nonsig
+Glucose-6-phosphate,1.6533659297603944,Increase
+Serine,1.6443526015634051,Decrease
+Glutamate,1.631553543621491,Increase
+Ribothymidine,1.6106895798976097,Decrease
+Nicotinamide riboside,1.5936278028769066,Increase
+Guanosine,1.5778543908809728,Decrease
+Uridine,1.5663698986820516,Nonsig
+Glutamine,1.5509048960267329,Decrease
+Itaconic acid,1.5268954380846378,Increase
+NADPH,1.5059582281338908,Increase
+Arginine-Glutamine,1.5008341868323702,Decrease
+ADP,1.4856343747756862,Increase
+Aspartate,1.4779160071004207,Nonsig
+Pyroglutamate,1.4708508141639125,Nonsig
+Coenzyme A,1.441232835160016,Nonsig
+N-carbomoyl-L-aspartate,1.437293714546548,Nonsig
+Sucrose,1.4369413103395796,Nonsig
+Tryptamine,1.424573786198721,Nonsig
+CDP-Choline,1.4138068568796727,Nonsig
+AMP,1.393690159911181,Increase
+Glucose,1.3814565073668397,Decrease
+Histidine,1.3487814497775312,Nonsig
+N-Acetyl-Glucosamine,1.3467909309198456,Nonsig
+Pirbuterol,1.3403881641252628,Nonsig
+Malate,1.3316300868234756,Nonsig
+Methylphenyllactate,1.3284850034917433,Nonsig
+Acetyl-arginine,1.3124363136945694,Nonsig
+Carnitine,1.3092323780636563,Nonsig
+Lysine-Glutamine,1.3036489439607368,Nonsig
+Cytosine,1.2859726321883094,Nonsig
+Cellobiose,1.2684085309441304,Nonsig
+Taurine,1.2629180849703243,Nonsig
+5-methylthioadenosine,1.2573377000944188,Nonsig
+Tyrosine,1.2417051447899956,Nonsig
+Lactate,1.2270999556457596,Nonsig
+Norvaline,1.226281819520614,Nonsig
+NG-dimethyl-L-arginine,1.2052856705922417,Nonsig
+FAD,1.1837230348057861,Nonsig
+3-Methylindole,1.1570228096983786,Nonsig
+Adipic acid,1.15517811361804,Nonsig
+Galactitol,1.143070556014304,Nonsig
+Fructose,1.1364799985796843,Nonsig
+Phosphocholine,1.129328121605534,Nonsig
+Pterin,1.1103846767118013,Nonsig
+Sorbitol,1.10426022016717,Nonsig
+S-Adenosyl-homocysteine,1.0962505387847377,Nonsig
+Ornithine,1.0935939501679974,Nonsig
+O-Butanoylcarnitine,1.085223462059771,Nonsig
+Creatine,1.0826175445224038,Nonsig
+O-Acylcarnitine,1.0808705204494051,Nonsig
+Acetyllysine,1.055530913934532,Increase
+Proline,1.0535513232259488,Nonsig
+UDP-D-Glucose,1.0529090635026315,Increase
+Thiamine,1.0434752879847229,Nonsig
+L-Palmitoylcarnitine,1.038539656413162,Nonsig
+Isoleucine,1.0374478933117541,Nonsig
+Inositol,1.0280563580577773,Nonsig
+Methionine sulfoxide,1.0280472628219517,Nonsig
+ADP-D-Glucose,1.0262767153055166,Nonsig
+NegIS_Alanine-2H4-15N,1.0174529579764366,Nonsig
+Asparagine,1.0166761606879064,Decrease
+Pipecolic acid,1.0116035968483337,Increase
+N N N-Trimethyllysine,1.0047533496054954,Nonsig

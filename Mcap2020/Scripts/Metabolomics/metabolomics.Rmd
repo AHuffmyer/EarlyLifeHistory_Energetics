@@ -1091,6 +1091,8 @@ Timepoint_VIP_table <- rownames_to_column(Timepoint_VIP_DF, var = "Metabolite")
 Timepoint_VIP_1 <- Timepoint_VIP_table %>% 
   filter(VIP >= 1)
 
+write_csv(Timepoint_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Timepoint_VIPs.csv")
+
 #plot
 Timepoint_VIP_1 %>%
   arrange(VIP) %>%
@@ -1130,6 +1132,8 @@ Develop_VIP_table <- rownames_to_column(Develop_VIP_DF, var = "Metabolite")
 #filter for VIP > 1
 Develop_VIP_1 <- Develop_VIP_table %>% 
   filter(VIP >= 1)
+
+write_csv(Develop_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Develop_VIPs.csv")
 
 #plot
 Develop_VIP_1 %>%
@@ -1249,6 +1253,8 @@ EvE_VIP_plot<-left_join(EvE_VIP_1, EvE_pvalues, by="Metabolite")
 
 EvE_VIP_plot$direction[is.na(EvE_VIP_plot$direction)] <- c("Nonsig")
 EvE_VIP_plot$direction<-as.factor(EvE_VIP_plot$direction)
+
+write_csv(EvE_VIP_plot, "Mcap2020/Output/Metabolomics/EvE_VIPs.csv")
 ```
 
 Plot VIP plot. Remove nonsignificant metabolites determined by t test validations.       
@@ -1382,6 +1388,8 @@ EvL_VIP_plot<-left_join(EvL_VIP_1, EvL_pvalues, by="Metabolite")
 EvL_VIP_plot$direction[is.na(EvL_VIP_plot$direction)] <- c("Nonsig")
 EvL_VIP_plot$direction<-as.factor(EvL_VIP_plot$direction)
 
+write_csv(EvL_VIP_plot, "Mcap2020/Output/Metabolomics/EvL_VIPs.csv")
+
 #plot
 EvL_plota<-EvL_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1502,12 +1510,12 @@ LvM_pvalues<-LvM_pvalues%>%
 Plot VIP plot. Remove nonsignificant metabolites determined by t test validations.       
 
 ```{r}
-
-
 LvM_VIP_plot<-left_join(LvM_VIP_1, LvM_pvalues, by="Metabolite")
 
 LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
 LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
+
+write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
 
 #plot
 LvM_plota<-LvM_VIP_plot %>%
@@ -1635,6 +1643,8 @@ LvC_VIP_plot<-left_join(LvC_VIP_1, LvC_pvalues, by="Metabolite")
 LvC_VIP_plot$direction[is.na(LvC_VIP_plot$direction)] <- c("Nonsig")
 LvC_VIP_plot$direction<-as.factor(LvC_VIP_plot$direction)
 
+write_csv(LvC_VIP_plot, "Mcap2020/Output/Metabolomics/LvC_VIPs.csv")
+
 #plot
 LvC_plota<-LvC_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1758,6 +1768,8 @@ MvC_VIP_plot<-left_join(MvC_VIP_1, MvC_pvalues, by="Metabolite")
 
 MvC_VIP_plot$direction[is.na(MvC_VIP_plot$direction)] <- c("Nonsig")
 MvC_VIP_plot$direction<-as.factor(MvC_VIP_plot$direction)
+
+write_csv(MvC_VIP_plot, "Mcap2020/Output/Metabolomics/MvC_VIPs.csv")
 
 #plot
 MvC_plota<-MvC_VIP_plot %>%

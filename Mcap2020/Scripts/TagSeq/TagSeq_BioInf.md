@@ -98,7 +98,7 @@ echo "Cleaned MultiQC report generated." $(date)
 sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/qc.sh
 ```
 
-
+# Sequencing Info
 
 
 

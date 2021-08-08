@@ -1,0 +1,1647 @@
+---
+title: "Mcap Developmental Timeseries TagSeq WGCNA"
+author: "Erin Chille - Ariana Huffmyer"
+date: "Last updated 2021/08/08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+# RNAseq Expression and Functional Enrichment Analysis 
+
+This script is based off of Langfelder P, Horvath S (2008) WGCNA: an R package for weighted correlation network analysis. BMC Bioinformatics 2008, 9:559 ([link to paper](http://www.biomedcentral.com/1471-2105/9/559))
+
+## Set up workspace
+
+Import necessary libraries
+```{r, message=FALSE, warning=FALSE}
+library("tidyverse")
+library("genefilter")
+library("DESeq2")
+library("RColorBrewer")
+library("WGCNA")
+library("flashClust")
+library("gridExtra")
+library("ComplexHeatmap")
+library("goseq")
+library("dplyr")
+library("clusterProfiler")
+library("simplifyEnrichment")
+```
+
+## Data input, cleaning, and pre-processing
+
+Import the data files 
+```{r}
+treatmentinfo_dev <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(treatmentinfo_dev)
+
+gcount <- as.data.frame(read.csv("Mcap2020/Data/TagSeq/transcript_count_matrix.csv", row.names="gene_id"), colClasses = double)
+head(gcount)
+dim(gcount)
+```
+
+#### Quality-filter gene counts  
+Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests. Here we will filter out the genes that are only present in fewer than two of the 24 ambient samples.
+```{r}
+#keep only ambient treatmentinfo and count data
+#dev <- c("AMB")
+#treatmentinfo_dev <- filter(treatmentinfo, treatment %in% dev)
+#dim(treatmentinfo_dev) #rows should be 24
+
+# delete sample columns corresponding to low and extreme low samples by mapping Null value to them
+#gcount_dev <- gcount[treatmentinfo_dev$sample_id]
+#dim(gcount_dev) #columns should be 24
+
+#create filter for the counts data
+#gfiltdev <- rowSums(count(gcount_dev)) > 0
+#set filter values for PoverA, P=100% percent of the samples have counts over A=10. This means that only 2 out of 24 (0.083) samples need to have counts over 10. Our smallest sample size for our life stages is two (fertilized egg, mid-gastrula, early-gastrula). By setting 2/24 as the P, this means if a particular gene is expressed only in 1 of these smallest life stages, it will be included in the analysis.
+filt <- filterfun(pOverA(0.1,10))
+
+#create filter for the counts data
+gfiltdev <- genefilter(gcount, filt)
+
+#identify genes to keep by count filter
+gkeepdev <- gcount[gfiltdev,]
+
+
+#identify genes to keep by count filter
+gkeepdev <- gcount[gfiltdev,]
+
+#identify gene lists
+gn.keepdev <- rownames(gkeepdev)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+gcount_filt_dev <- as.data.frame(gcount[which(rownames(gcount) %in% gn.keepdev),])
+
+#How many rows do we have before and after filtering?
+nrow(gcount) #Before
+nrow(gcount_filt_dev) #After
+```
+
+### Quality-check of datasets  
+In order for the DESeq2 algorithms to work, the SampleIDs on the treatmentinfo file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match.
+```{r}
+#Checking that all row and column names match. Should return "TRUE"
+all(rownames(treatmentinfo_dev$sample_id) %in% colnames(gcount_filt_dev))
+all(rownames(treatmentinfo_dev$sample_id) == colnames(gcount_filt_dev)) 
+```
+
+### Read normalization
+We are now going normalize our read counts using VST-normalization in DESeq2
+
+#### Construct the DESeq2 dataset
+
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at time_point to test for any differences in gene expression across timepoints.
+```{r}
+#Set DESeq2 design
+gdds_dev <- DESeqDataSetFromMatrix(countData = gcount_filt_dev,
+                              colData = treatmentinfo_dev,
+                              design = ~lifestage)
+```
+
+#### Log-transform the count data
+First we are going to log-transform the data using a variance stabilizing transforamtion (VST). This is only for visualization purposes. Essentially, this is roughly similar to putting the data on the log2 scale. It will deal with the sampling variability of low counts by calculating within-group variability (if blind=FALSE). Importantly, it does not use the design to remove variation in the data, and so can be used to examine if there may be any variability do to technical factors such as extraction batch effects.
+
+To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4. Otherwise, there could be artefacts in our results.
+```{r}
+SF.gdds_dev <- estimateSizeFactors(gdds_dev) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than for to use vst
+print(sizeFactors(SF.gdds_dev)) #View size factors
+```
+
+Our size factors are all less than 4, so we can use VST!
+```{r}
+gvst_dev <- vst(gdds_dev, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
+head(assay(gvst_dev), 3) #view transformed gene count data
+```
+
+
+##### Plot a heatmap of sample-to-sample distances
+```{r}
+gsampleDists_dev <- dist(t(assay(gvst_dev))) #calculate distance matix
+gsampleDistMatrix_dev <- as.matrix(gsampleDists_dev) #distance matrix
+rownames(gsampleDistMatrix_dev) <- colnames(gvst_dev) #assign row names
+colnames(gsampleDistMatrix_dev) <- NULL #assign col names
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
+pheatmap(gsampleDistMatrix_dev, #plot matrix
+         clustering_distance_rows=gsampleDists_dev, #cluster rows
+         clustering_distance_cols=gsampleDists_dev, #cluster columns
+         col=colors) #set colors
+```
+
+
+##### Principal component plot of samples
+```{r}
+gPCAdata_dev <- plotPCA(gvst_dev, intgroup = c("lifestage"), returnData=TRUE)
+percentVar_dev <- round(100*attr(gPCAdata_dev, "percentVar")) #plot PCA of samples with all data
+
+allgenesfilt_PCA <- ggplot(gPCAdata_dev, aes(PC1, PC2, color=lifestage)) + 
+  geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar_dev[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar_dev[2],"% variance")) +
+  #scale_shape_manual(values = c("Unfertilized_egg"=3, "Fertilized_egg"=1, "Cleavage"=10, #"Prawn_chip"=5, "Early_gastrula"=14, "Mid_gastrula"=11, "Late_gastrula"=6, "Planula"=2, #"Adult"=8)) +
+  coord_fixed() +
+    theme_bw() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) # + #Set the plot background
+  #theme(legend.position = ("none")) #set title attributes
+allgenesfilt_PCA
+ggsave("Mcap2020/Output/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA)
+```
+
+### Compile WGCNA Dataset
+
+Transpose the filtered gene count matrix so that the gene IDs are rows and the sample IDs are columns.
+```{r}
+datExpr <- as.data.frame(t(assay(gvst_dev))) #transpose to output to a new data frame with the column names as row names. And make all data numeric
+```
+
+Check for genes and samples with too many missing values with goodSamplesGenes. There shouldn't be any because we performed pre-filtering
+```{r}
+gsg = goodSamplesGenes(datExpr, verbose = 3)
+gsg$allOK #Should return TRUE if not, the R chunk below will take care of flagged data
+```
+
+Remove flagged samples if the allOK is FALSE
+```{r}
+ncol(datExpr) #number genes before
+if (!gsg$allOK) #If the allOK is FALSE...
+{
+# Optionally, print the gene and sample names that are flagged:
+if (sum(!gsg$goodGenes)>0)
+printFlush(paste("Removing genes:", paste(names(datExpr)[!gsg$goodGenes], collapse = ", ")));
+if (sum(!gsg$goodSamples)>0)
+printFlush(paste("Removing samples:", paste(rownames(datExpr)[!gsg$goodSamples], collapse = ", ")));
+# Remove the offending genes and samples from the data:
+datExpr = datExpr[gsg$goodSamples, gsg$goodGenes]
+}
+ncol(datExpr) #number genes after
+```
+
+### Cluster the samples to look for obvious outliers
+
+Look for outliers by examining
+```{r}
+sampleTree = hclust(dist(datExpr), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+```
+There don't look to be any outliers, so we will move on with business as usual.
+
+## Network construction and consensus module detection
+
+### Choosing a soft-thresholding power: Analysis of network topology β
+
+The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.
+```{r, message=FALSE, warning=FALSE}
+# # Choose a set of soft-thresholding powers
+# powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+# 
+# # Call the network topology analysis function
+# sft <-pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+```
+
+Plot the results.
+```{r}
+# sizeGrWindow(9, 5)
+# par(mfrow = c(1,2));
+# cex1 = 0.9;
+# # # Scale-free topology fit index as a function of the soft-thresholding power
+# plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+#      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+#     main = paste("Scale independence"));
+# text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+#     labels=powers,cex=cex1,col="red");
+# # # this line corresponds to using an R^2 cut-off
+# abline(h=0.8,col="red")
+# # # Mean connectivity as a function of the soft-thresholding power
+# plot(sft$fitIndices[,1], sft$fitIndices[,5],
+#     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+#     main = paste("Mean connectivity"))
+# text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+```
+I used a scale-free topology fit index **R^2 of 0.85**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.85 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 23** because it is the loweest power before the R^2=0.8 threshold that maximizes with model fit.
+
+## Step-by-step network construction and module detection: 
+
+### Co-expression adjacency and topological overlap matrix similarity
+
+Adjacency and TOMsimilarity will be executed in supercomputer, Bluewaves, as our dataset is too large for most standard laptops to handle.
+
+Save Rdata necessary for analysis in Bluewaves
+```{r}
+# save(datExpr, file = "Data/datExpr.RData")
+```
+
+
+**To be executed on the Bluewaves server**  
+Co-expression similarity and adjacency, using the soft thresholding power 23 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network** because we have a relatively high softPower, according to (>12): https://peterlangfelder.com/2018/11/25/__trashed/
+```{r, }
+# #Set up workspace
+# getwd() #Display the current working directory
+# #If necessary, change the path below to the directory where the data files are stored. "." means current directory. On Windows use a forward slash / instead of the usual \.
+# workingDir = ".";
+# setwd(WGCNA_dev);
+# library(WGCNA) #Load the WGCNA package
+# options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
+# enableWGCNAThreads() #Allow multi-threading within WGCNA. 
+# 
+# #Load the data saved in the first part
+# adjTOM <- load(file="datExpr.RData")
+# adjTOM
+# 
+# #Run analysis
+# softPower=23 #Set softPower to 23
+# adjacency=adjacency(datExpr, power=softPower,type="signed") #Calculate adjacency
+# TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topological overlap matrix
+# dissTOM= 1-TOM #Calculate dissimilarity in TOM
+# save(adjacency, TOM, dissTOM, file = "../adjTOM.RData") #Save to bluewaves dir
+# save(dissTOM, file = "../dissTOM.RData") #Save to load into RStudio
+```
+
+**Now we can continue using Rstudio**
+
+Load in dissTOM file obtained from previous R chunk
+```{r}
+# dissTOM_in <- load(file="~/Documents/Putnam_Lab.nosync/dissTOM.RData") #CHANGE TO THE PATH ON YOUR LOCAL COMPUTER
+# dissTOM_in
+```
+
+### Clustering using TOM
+
+Form distance matrix
+```{r}
+# geneTree= flashClust(as.dist(dissTOM), method="average")
+```
+
+We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.
+```{r}
+# pdf(file="Output/RNAseq/dissTOMClustering.pdf", width=20, height=20)
+# plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
+# dev.off()
+```
+
+### Module identification using dynamicTreeCut
+
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. I chose 30 as it is the default value chosen by most studies using WGCNA.
+```{r}
+# minModuleSize = 30
+# dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+# deepSplit = 2, pamRespectsDendro = FALSE,
+# minClusterSize = minModuleSize)
+# table(dynamicMods) #list modules and respective sizes
+# save(dynamicMods, geneTree, file = "Data/dyMod_geneTree.RData") #Save to load into RStudio
+```
+Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest.
+
+Load modules calculated from the adjacency matrix
+```{r}
+dyMod_geneTree <- load(file = "2a-WGCNA/Output/dyMod_geneTree.RData")
+dyMod_geneTree
+```
+
+
+Plot the module assignment under the gene dendrogram
+```{r}
+dynamicColors = labels2colors(dynamicMods) # Convert numeric labels into colors
+table(dynamicColors)
+
+#pdf(file="Output/RNAseq/dissTOMColorClustering.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = "Gene dendrogram and module colors")
+#dev.off()
+```
+
+### Merge modules whose expression profiles are very similar or choose not to merge
+
+Plot module similarity based on eigengene value
+```{r}
+#Calculate eigengenes
+MEList = moduleEigengenes(datExpr, colors = dynamicColors, softPower = 23)
+MEs = MEList$eigengenes
+
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+
+#Cluster again and plot the results
+METree = flashClust(as.dist(MEDiss), method = "average")
+
+#pdf(file="Output/RNAseq/eigengeneClustering1.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+#dev.off()
+```
+
+**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
+```{r}
+MEDissThres= 0.15 #merge modules that are 85% similar
+
+#pdf(file="Output/RNAseq/eigengeneClustering2.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+abline(h=MEDissThres, col="red")
+#dev.off()
+
+merge= mergeCloseModules(datExpr, dynamicColors, cutHeight= MEDissThres, verbose =3)
+
+mergedColors= merge$colors
+mergedMEs= merge$newMEs
+
+#pdf(file="Output/RNAseq/mergedClusters.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
+#dev.off()
+```
+
+Save new colors
+```{r}
+moduleColors = mergedColors # Rename to moduleColors
+colorOrder = c("grey", standardColors(50)); # Construct numerical labels corresponding to the colors
+moduleLabels = match(moduleColors, colorOrder)-1;
+MEs = mergedMEs;
+ncol(MEs) #How many modules do we have now?
+```
+
+Instead of 105 modules, we are now working with 34, a much more reasonable number.
+
+### Plot new tree
+```{r}
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+#Cluster again and plot the results
+#pdf(file="Output/RNAseq/eigengeneClustering3.pdf")
+METree = flashClust(as.dist(MEDiss), method = "average")
+MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+#dev.off()
+```
+
+##  Relating modules to developmental stage
+
+### Quantifying module–trait associations
+
+Prepare trait data. Data has to be numeric, so I will substitute time_points and type for numeric values
+```{r}
+allTraits <- names(treatmentinfo_dev$time_point)
+allTraits$Unfertilized_egg <- c(1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+allTraits$Fertilized_egg <- c(0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+allTraits$Cleavage <- c(0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+allTraits$Prawn_chip <- c(0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0)
+allTraits$Early_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0)
+allTraits$Mid_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0)
+allTraits$Late_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0)
+allTraits$Planula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0)
+allTraits$Adult <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1)
+datTraits <- as.data.frame(allTraits)
+dim(datTraits)
+rownames(datTraits) <- treatmentinfo_dev$sample_id
+print(datTraits)
+```
+
+Define numbers of genes and samples
+```{r}
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
+```
+
+Recalculate MEs with color labels
+```{r}
+MEs0 = moduleEigengenes(datExpr, moduleColors,softPower=23)$eigengenes
+MEs = orderMEs(MEs0)
+names(MEs)
+```
+
+Correlations of traits with eigengenes
+```{r}
+moduleTraitCor = cor(MEs, datTraits, use = "p");
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
+Colors=sub("ME","",names(MEs))
+
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average");
+plot(moduleTraitTree, main = "Life stage clustering based on module-trait correlation", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+```
+
+Correlations of genes with eigengenes
+```{r}
+moduleGeneCor=cor(MEs,datExpr)
+moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
+```
+
+### Plot module-trait associations
+
+Represent module trait correlations as a heatmap 
+```{r}
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+head(textMatrix)
+
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+
+#pdf(file="Output/RNAseq/Module-trait-relationships.pdf")
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+#dev.off()
+```
+
+Attempt at complexHeatmap
+```{r}
+#bold sig p-values
+#dendrogram with WGCNA MEtree cut-off
+#colored y-axis
+
+#Create list of pvalues for eigengene correlation with specific life stages
+heatmappval <- signif(moduleTraitPvalue, 1)
+
+#Make list of heatmap row colors
+htmap.colors <- names(MEs)
+htmap.colors <- gsub("ME", "", htmap.colors)
+
+pdf(file = "2a-WGCNA/Output/Fig3-Module-trait-relationship-heatmap.pdf", height = 11.5, width = 8)
+ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Trait Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", row_dend_side = "left",
+        width = unit(4, "in"), height = unit(8.5, "in"), 
+        column_order = 1:9, column_dend_reorder = FALSE, cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"), column_split = 4, column_dend_height = unit(0.5, "in"),
+        cluster_rows = METree, row_split = 9, row_gap = unit(2.5, "mm"), border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] <= 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 8, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 8, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 10),
+row_names_gp = gpar(fontsize = 10, alpha = 0.75, border = TRUE, fill = htmap.colors))
+draw(ht)
+dev.off()
+```
+
+#### Create dataframe that associates module colors with clusters based on the above heatmap and the MEtree dendrogram.
+```{r}
+MEcluster1 <- data.frame(moduleColor = c("grey"), moduleCluster = c(1))
+MEcluster2 <- data.frame(moduleColor = c("coral1", "lavenderblush2", "lightslateblue", "magenta4"), moduleCluster = c(2))
+MEcluster3 <- data.frame(moduleColor = c("mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue"), moduleCluster = c(3))
+MEcluster4 <- data.frame(moduleColor = c("indianred3", "blue2", "plum3", "blue4", "skyblue1",  "brown2", "coral"), moduleCluster = c(4))
+MEcluster5 <- data.frame(moduleColor = c("darkseagreen4", "darkslateblue", "plum4"), moduleCluster = c(5))
+MEcluster6 <- data.frame(moduleColor = c("darkmagenta", "violet"), moduleCluster = c(6))
+MEcluster7 <- data.frame(moduleColor = c("navajowhite1",  "blue", "cyan", "blueviolet", "ivory"), moduleCluster = c(7))
+MEcluster8 <- data.frame(moduleColor = c("mediumpurple1", "salmon", "sienna3"), moduleCluster = c(8))
+MEcluster9 <- data.frame(moduleColor = c("thistle4", "lightsteelblue", "salmon4"), moduleCluster = c(9))
+
+moduleCluster = bind_rows(MEcluster1, MEcluster2, MEcluster3, MEcluster4, MEcluster5, MEcluster6, MEcluster7, MEcluster8, MEcluster9)
+head(moduleCluster)
+```
+
+
+View module eigengene data and make dataframe for Strader plots.
+```{r}
+head(MEs)
+names(MEs)
+Strader_MEs <- MEs
+Strader_MEs$time_point <- treatmentinfo_dev$time_point
+Strader_MEs$sample_id <- rownames(Strader_MEs)
+head(Strader_MEs)
+```
+
+#### Calculate nine over-arching expression patterns using mean eigengene for each module in a cluster
+
+Create a column to the Strader_MEs data frame containing life stage
+```{r}
+Strader_MEs$time_point <- c("Unfertilized_egg", "Unfertilized_egg", "Unfertilized_egg", "Fertilized_egg", "Fertilized_egg", "Cleavage", "Cleavage", "Cleavage", "Prawn_chip", "Prawn_chip", "Prawn_chip", "Early_gastrula", "Early_gastrula", "Early_gastrula", "Mid_gastrula", "Mid_gastrula", "Late_gastrula", "Late_gastrula", "Planula", "Planula", "Planula", "Adult", "Adult", "Adult")
+
+C2_Strader_MEs <- select(Strader_MEs, MEcoral1:MEmagenta4)
+C2_Strader_MEs$Mean <- rowMeans(C2_Strader_MEs)
+C3_Strader_MEs <- select(Strader_MEs, MEmediumpurple3:MEmidnightblue)
+C3_Strader_MEs$Mean <- rowMeans(C3_Strader_MEs)
+C4_Strader_MEs <- select(Strader_MEs, MEindianred3:MEcoral)
+C4_Strader_MEs$Mean <- rowMeans(C4_Strader_MEs)
+C5_Strader_MEs <- select(Strader_MEs, MEdarkseagreen4:MEplum4)
+C5_Strader_MEs$Mean <- rowMeans(C5_Strader_MEs)
+C6_Strader_MEs <- select(Strader_MEs, MEdarkmagenta:MEviolet)
+C6_Strader_MEs$Mean <- rowMeans(C6_Strader_MEs)
+C7_Strader_MEs <- select(Strader_MEs, MEnavajowhite1:MEivory)
+C7_Strader_MEs$Mean <- rowMeans(C7_Strader_MEs)
+C8_Strader_MEs <- select(Strader_MEs, MEmediumpurple1:MEsienna3)
+C8_Strader_MEs$Mean <- rowMeans(C8_Strader_MEs)
+C9_Strader_MEs <- select(Strader_MEs, MEthistle4:MEsalmon4)
+C9_Strader_MEs$Mean <- rowMeans(C9_Strader_MEs)
+
+expressionProfile_data <- as.data.frame(cbind(time_point = Strader_MEs$time_point, cluster1= Strader_MEs$MEgrey, cluster2 = C2_Strader_MEs$Mean, cluster3 = C3_Strader_MEs$Mean, cluster4 = C4_Strader_MEs$Mean, cluster5 = C5_Strader_MEs$Mean, cluster6 = C6_Strader_MEs$Mean, cluster7 = C7_Strader_MEs$Mean, cluster8 = C8_Strader_MEs$Mean, cluster9 = C9_Strader_MEs$Mean))
+cols.num <- c(2:10)
+
+expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
+sapply(expressionProfile_data, class)
+
+dim(expressionProfile_data)
+head(expressionProfile_data)
+```
+
+Set timepoint order for plotting
+```{r}
+time_point_order = c("Unfertilized_egg", "Fertilized_egg", "Cleavage", "Prawn_chip", "Early_gastrula", "Mid_gastrula", "Late_gastrula", "Planula", "Adult") #Set time_point order
+```
+
+
+Plot mean module eigengene for each cluster
+```{r, warning=FALSE, message=FALSE}
+Cluster1Plot <- expressionProfile_data %>%
+        select(time_point, cluster1) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster1)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ylab("Mean Module Eigenegene") +
+  theme_bw() + 
+  ggtitle("A)") +
+  theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_text(size = 14), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=18)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 1", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
+Cluster2Plot <- expressionProfile_data %>%
+        select(time_point, cluster2) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster2)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("B)") +
+  theme_bw() + 
+  theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 4", size = 6)  +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
+Cluster3Plot <- expressionProfile_data %>%
+        select(time_point, cluster3) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster3)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("C)") +
+  theme_bw() + 
+ theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 6", size = 6)  +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster4Plot <- expressionProfile_data %>%
+        select(time_point, cluster4) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster4)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("D)") +
+  ylab("Mean Module Eigenegene") +
+  theme_bw() + 
+ theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_text(size = 14), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 7", size = 6)  +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster5Plot <- expressionProfile_data %>%
+        select(time_point, cluster5) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster5)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("E)") +
+  theme_bw() + 
+ theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster6Plot <- expressionProfile_data %>%
+        select(time_point, cluster6) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster6)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("F)") +
+  theme_bw() + 
+  theme(axis.text.x=element_blank(), #set x-axis label size
+        axis.title.x=element_blank(), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 2", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster7Plot <- expressionProfile_data %>%
+        select(time_point, cluster7) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster7)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("G)") +
+  ylab("Mean Module Eigenegene") +
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_text(size = 14), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 5", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster8Plot <- expressionProfile_data %>%
+        select(time_point, cluster8) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster8)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+        scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("H)") +
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+Cluster9Plot <- expressionProfile_data %>%
+        select(time_point, cluster9) %>% 
+  group_by(time_point) %>% 
+  ggplot(aes(x=time_point, y=cluster9)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("I)") +
+  xlab("Time Point") +
+  theme_bw() + #Set background color
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+```
+
+Compile plots into 1 graph, aligning by y-axis and save
+```{r}
+expressionProfiles <- cowplot::plot_grid(Cluster1Plot, Cluster2Plot, Cluster3Plot, Cluster4Plot, Cluster5Plot, Cluster6Plot, Cluster7Plot, Cluster8Plot, Cluster9Plot, align = "v", ncol = 3, nrow = 3)
+ggsave("2a-WGCNA/Output/SFig1-RNAseq-expressionProfiles.pdf", expressionProfiles, height = 16, width = 21, units = "in")
+```
+
+###  Gene relationship to trait and important modules: Gene Significance and Module Membership
+
+We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the gene and the time_point. For each module, we also define a quantitative measure of module membership MM as the correlation of the module eigengene and the gene expression profile. 
+
+Define variable weight containing the weight column of datTrait
+```{r}
+time_point <- as.data.frame(c(1,1,1,
+                              2,2,
+                              3,3,3,
+                              4,4,4,
+                              5,5,5,
+                              6,6,
+                              7,7,
+                              8,8,8,
+                              9,9,9))
+names(time_point) = "timepoint"
+dim(time_point)
+```
+
+Colors of the modules
+```{r}
+modNames = substring(names(MEs), 3)
+
+geneModuleMembership = as.data.frame(cor(datExpr, MEs, use = "p"));
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples));
+
+names(geneModuleMembership) = paste("MM", modNames, sep="");
+names(MMPvalue) = paste("p.MM", modNames, sep="");
+
+geneTraitSignificance = as.data.frame(cor(datExpr, time_point, use = "p"));
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
+
+names(geneTraitSignificance) = paste("GS.", names(time_point), sep="");
+names(GSPvalue) = paste("p.GS.", names(time_point), sep="");
+```
+
+
+### Summary output of network analysis results
+
+#### Make a dataframe that connects traits, genes, and gene annotation
+
+Import annotation file.
+```{r}
+Mcap.annot <- read_tsv( "0-BLAST-GO-KO/Output/200824_Mcap_Blast_GO_KO.tsv", col_names = TRUE) #biological annotation information
+tail(Mcap.annot)
+dim(Mcap.annot)
+```
+
+Match up genes in datExpr to annotation file
+```{r}
+names(Mcap.annot)
+probes = names(datExpr)
+probes2annot = match(probes, Mcap.annot$gene_id)
+
+# The following is the number of probes without annotation... Should return 0.
+sum(is.na(probes2annot))
+```
+
+Create the starting data frame
+```{r}
+geneInfo0 = data.frame(gene_id = probes,
+Accession = Mcap.annot$description[probes2annot],
+Bitscore = Mcap.annot$bitscore[probes2annot],
+eValue = Mcap.annot$eValue[probes2annot],
+Description = Mcap.annot$protein_names[probes2annot],
+KEGG = Mcap.annot$ko[probes2annot],
+Annotation.GO.ID = Mcap.annot$GO_IDs[probes2annot],
+Annotation.GO.Term = Mcap.annot$GO_terms[probes2annot],
+moduleColor = moduleColors,
+geneTraitSignificance,
+GSPvalue)
+```
+
+
+Order modules by their significance for time_point
+```{r}
+modOrder = order(-abs(cor(MEs, time_point, use = "p")))
+```
+
+Add module membership information in the chosen order
+```{r}
+for (mod in 1:ncol(geneModuleMembership))
+{
+oldNames = names(geneInfo0)
+geneInfo0 = data.frame(geneInfo0, geneModuleMembership[, modOrder[mod]],
+MMPvalue[, modOrder[mod]]);
+names(geneInfo0) = c(oldNames, paste("MM.", modNames[modOrder[mod]], sep=""),
+paste("p.MM.", modNames[modOrder[mod]], sep=""))
+}
+```
+
+Order the genes in the geneInfo variable first by module color, then by geneTraitSignificance
+```{r}
+geneOrder = order(geneInfo0$moduleColor, -abs(geneInfo0$GS.timepoint));
+geneInfo = geneInfo0[geneOrder, ]
+head(geneInfo)
+```
+Add module cluster in geneInfo
+```{r}
+geneInfo <- left_join(geneInfo, moduleCluster, by = "moduleColor")
+dim(geneInfo)
+head(geneInfo)
+```
+
+Save geneInfo as a CSV
+```{r}
+head(geneInfo)
+geneInfo$Annotation.GO.ID <- gsub(";NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
+geneInfo$Annotation.GO.ID <- gsub("NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
+
+write.csv(geneInfo, file = "2a-WGCNA/Output/geneInfo.csv")
+```
+
+### Gene Ontology Analysis of each developmental phase: Maternal, Early ZGA, Late ZGA, Adult and other individual life stages
+
+Obtain module color of all expressed genes (poverA = 0.85,5). Select all significantly-expressed maternal genes (p<0.05)
+```{r}
+#Prepare dataframe
+genes.GO <- as.data.frame(t(datExpr))
+genes.GO <- cbind(gene_id = rownames(genes.GO), genes.GO)
+rownames(genes.GO) <- NULL
+
+#Maternal
+genesMat.GO <- genes.GO[,c(1:6)]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesMat.GO$gene_id <- as.factor(genesMat.GO$gene_id) #Make factor for merge
+genesMat.GO <- merge(geneColor, genesMat.GO) #append module information
+head(genesMat.GO)
+
+MatColors <- c("grey", "coral1", "lightslateblue", "mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue")
+genesMat.GO.sig <- filter(genesMat.GO, moduleColor%in%MatColors)
+head(genesMat.GO.sig)
+dim(genesMat.GO.sig)
+
+#Unfertilized Unfertilized Eggs
+genesUE.GO <- genes.GO[,c(1:4)]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesUE.GO$gene_id <- as.factor(genesUE.GO$gene_id) #Make factor for merge
+genesUE.GO <- merge(geneColor, genesUE.GO) #append module information
+head(genesUE.GO)
+
+UEColors <- c("grey", "coral1", "mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue")
+genesUE.GO.sig <- filter(genesUE.GO, moduleColor%in%UEColors)
+head(genesUE.GO.sig)
+dim(genesUE.GO.sig)
+
+#Fertilized Eggs
+genesFE.GO <- genes.GO[,c(1, 5:6)]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesFE.GO$gene_id <- as.factor(genesFE.GO$gene_id) #Make factor for merge
+genesFE.GO <- merge(geneColor, genesFE.GO) #append module information
+head(genesFE.GO)
+
+FEColors <- c("coral1", "lightslateblue", "mediumpurple3", "antiquewhite2", "midnightblue")
+genesFE.GO.sig <- filter(genesFE.GO, moduleColor%in%FEColors)
+head(genesFE.GO.sig)
+dim(genesFE.GO.sig)
+
+#Early ZGA
+genesZGA1.GO <- genes.GO[,c(1, 7:15)]
+genesZGA1.GO$gene_id <- as.factor(genesZGA1.GO$gene_id) #Make factor for merge
+genesZGA1.GO <- merge(geneColor, genesZGA1.GO) #append module info ZGA1ion
+head(genesZGA1.GO)
+
+ZGA1Colors <- c("magenta4","indianred3", "blue2", "plum3", "blue4", "skyblue1", "brown2", "coral", "darkslateblue", "plum4", "violet")
+genesZGA1.GO.sig <- filter(genesZGA1.GO, moduleColor%in%ZGA1Colors)
+head(genesZGA1.GO.sig)
+dim(genesZGA1.GO.sig)
+
+#Cleavage
+genesClvg.GO <- genes.GO[,c(1, 7:9)]
+genesClvg.GO$gene_id <- as.factor(genesClvg.GO$gene_id) #Make factor for merge
+genesClvg.GO <- merge(geneColor, genesClvg.GO) #append module info Clvgion
+head(genesClvg.GO)
+
+ClvgColors <- c("blue2", "violet")
+genesClvg.GO.sig <- filter(genesClvg.GO, moduleColor%in%ClvgColors)
+head(genesClvg.GO.sig)
+dim(genesClvg.GO.sig)
+
+#Prawn Chip
+genesPC.GO <- genes.GO[,c(1, 10:12)]
+genesPC.GO$gene_id <- as.factor(genesPC.GO$gene_id) #Make factor for merge
+genesPC.GO <- merge(geneColor, genesPC.GO) #append module info PCion
+head(genesPC.GO)
+
+PCColors <- c("indianred3", "blue2", "plum3", "blue4", "coral", "violet")
+genesPC.GO.sig <- filter(genesPC.GO, moduleColor%in%PCColors)
+head(genesPC.GO.sig)
+dim(genesPC.GO.sig)
+
+#Early Gastrula
+genesEG.GO <- genes.GO[,c(1, 13:15)]
+genesEG.GO$gene_id <- as.factor(genesEG.GO$gene_id) #Make factor for merge
+genesEG.GO <- merge(geneColor, genesEG.GO) #append module info EGion
+head(genesEG.GO)
+
+EGColors <- c("magenta4", "plum3", "blue4", "skyblue1", "brown2", "coral", "darkslateblue", "plum4")
+genesEG.GO.sig <- filter(genesEG.GO, moduleColor%in%EGColors)
+head(genesEG.GO.sig)
+dim(genesEG.GO.sig)
+
+#Late ZGA
+genesZGA2.GO <- genes.GO[,c(1, 16:22)]
+genesZGA2.GO$gene_id <- as.factor(genesZGA2.GO$gene_id) #Make factor for merge
+genesZGA2.GO <- merge(geneColor, genesZGA2.GO) #append module info ZGA2ion
+head(genesZGA2.GO)
+
+ZGA2Colors <- c("magenta4", "skyblue1", "darkseagreen", "darkslateblue", "thistle4", "salmon4", "mediumpurple1", "sienna3", "salmon", "blue")
+genesZGA2.GO.sig <- filter(genesZGA2.GO, moduleColor%in%ZGA2Colors)
+head(genesZGA2.GO.sig)
+dim(genesZGA2.GO.sig)
+
+#Mid Gastrula
+genesMG.GO <- genes.GO[,c(1, 16:17)]
+genesMG.GO$gene_id <- as.factor(genesMG.GO$gene_id) #Make factor for merge
+genesMG.GO <- merge(geneColor, genesMG.GO) #append module info MGion
+head(genesMG.GO)
+
+MGColors <- c("magenta4", "skyblue1", "darkseagreen", "darkslateblue", "thistle4", "salmon4")
+genesMG.GO.sig <- filter(genesMG.GO, moduleColor%in%MGColors)
+head(genesMG.GO.sig)
+dim(genesMG.GO.sig)
+
+#Late Gastrula
+genesLG.GO <- genes.GO[,c(1, 18:19)]
+genesLG.GO$gene_id <- as.factor(genesLG.GO$gene_id) #Make factor for merge
+genesLG.GO <- merge(geneColor, genesLG.GO) #append module info LGion
+head(genesLG.GO)
+
+LGColors <- c("mediumpurple1", "sienna3", "thistle4", "salmon4")
+genesLG.GO.sig <- filter(genesLG.GO, moduleColor%in%LGColors)
+head(genesLG.GO.sig)
+dim(genesLG.GO.sig)
+
+#Planula
+genesPln.GO <- genes.GO[,c(1, 20:22)]
+genesPln.GO$gene_id <- as.factor(genesPln.GO$gene_id) #Make factor for merge
+genesPln.GO <- merge(geneColor, genesPln.GO) #append module info Plnion
+head(genesPln.GO)
+
+PlnColors <- c("blue", "salmon", "sienna3")
+genesPln.GO.sig <- filter(genesPln.GO, moduleColor%in%PlnColors)
+head(genesPln.GO.sig)
+dim(genesPln.GO.sig)
+
+#Adult
+genesAdult.GO <- genes.GO[,c(1, 23:25)]
+genesAdult.GO$gene_id <- as.factor(genesAdult.GO$gene_id) #Make factor for merge
+genesAdult.GO <- merge(geneColor, genesAdult.GO) #append module info Adult
+head(genesAdult.GO)
+
+AdultColors <- c("antiquewhite4", "thistle", "navajowhite1", "blue", "cyan", "blueviolet", "ivory")
+genesAdult.GO.sig <- filter(genesAdult.GO, moduleColor%in%AdultColors)
+head(genesAdult.GO.sig)
+dim(genesAdult.GO.sig)
+```
+
+Find the length of each gene using the stringtie_merged.gtf as a map
+```{r}
+map <- read.csv(file="1-QC-Align-Assemble/Output/stringtie_merged.gtf", header=FALSE, sep="\t", skip=2) #load sample info
+map <- subset(map, V3=="transcript")
+map <- map[,c(1,4,5,9)]
+map <- separate(map, V9, into = c("gene_id", "transcript_id", "gene_name"), sep=";")
+map$gene_id <- gsub("gene_id ","",map$gene_id) #remove extra characters
+map$gene_id <- gsub(" ","",map$gene_id) #remove extra characters
+map$transcript_id <- gsub("transcript_id ","",map$transcript_id) #remove extra characters
+map$transcript_id <- gsub(" ","",map$transcript_id) #remove extra characters
+map$gene_name <- gsub("ref_gene_id ","",map$gene_name) #remove extra characters
+# map$gene_name <- gsub("gene_name ","",map$gene_name) #remove extra characters
+map$gene_name <- gsub(" ","",map$gene_name) #remove extra characters
+# map$gene_name <- gsub("xlocXLOC_[0-9][0-9][0-9][0-9][0-9][0-9]", "unknown", map$gene_name)
+colnames(map) <- c("scaffold", "start", "stop", "gene_name", "transcript_id", "gene_id")
+dim(map)
+head(map)
+
+map <- filter(map, gene_id %in% genes.GO$gene_id) #Filter for those genes in our set of interest
+dim(map) #Should be 32772
+
+#Calculate gene length
+map <- map %>% mutate(gene_length=(map$stop-map$start))
+map <- select(map, gene_id, gene_length)
+```
+
+Build a data frame that links the gene IDs, modules, and counts of expressed maternal genes (poverA = 0.09,5) and the gene lengths.
+```{r}
+GOref <- merge(genes.GO, map, by.x="gene_id")
+head(GOref)
+dim(GOref) #Should have 32772
+```
+
+GOseq requires a vector of all genes and all differentially expressed genes. 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#Maternal
+Matgene.vector <- as.vector(genesMat.GO.sig$gene_id)
+Matgene.vector=as.integer(GOref$gene_id%in%Matgene.vector)
+names(Matgene.vector)=GOref$gene_id
+head(Matgene.vector)
+MatID.vector <- GOref$gene_id #Make ID vector
+head(MatID.vector)
+dim(MatID.vector)
+MatLength.vector <- GOref$gene_length #Make length vector
+head(MatLength.vector)
+
+UEgene.vector <- as.vector(genesUE.GO.sig$gene_id)
+UEgene.vector=as.integer(GOref$gene_id%in%UEgene.vector)
+names(UEgene.vector)=GOref$gene_id
+head(UEgene.vector)
+UEID.vector <- GOref$gene_id #Make ID vector
+head(UEID.vector)
+dim(UEID.vector)
+UELength.vector <- GOref$gene_length #Make length vector
+head(UELength.vector)
+
+FEgene.vector <- as.vector(genesFE.GO.sig$gene_id)
+FEgene.vector=as.integer(GOref$gene_id%in%FEgene.vector)
+names(FEgene.vector)=GOref$gene_id
+head(FEgene.vector)
+FEID.vector <- GOref$gene_id #Make ID vector
+head(FEID.vector)
+dim(FEID.vector)
+FELength.vector <- GOref$gene_length #Make length vector
+head(FELength.vector)
+
+#First ZGA
+ZGA1gene.vector <- as.vector(genesZGA1.GO.sig$gene_id)
+ZGA1gene.vector=as.integer(GOref$gene_id%in%ZGA1gene.vector)
+names(ZGA1gene.vector)=GOref$gene_id
+head(ZGA1gene.vector)
+ZGA1ID.vector <- GOref$gene_id #Make ID vector
+head(ZGA1ID.vector)
+ZGA1Length.vector <- GOref$gene_length #Make length vector
+head(ZGA1Length.vector)
+
+Clvggene.vector <- as.vector(genesClvg.GO.sig$gene_id)
+Clvggene.vector=as.integer(GOref$gene_id%in%Clvggene.vector)
+names(Clvggene.vector)=GOref$gene_id
+head(Clvggene.vector)
+ClvgID.vector <- GOref$gene_id #Make ID vector
+head(ClvgID.vector)
+ClvgLength.vector <- GOref$gene_length #Make length vector
+head(ClvgLength.vector)
+
+PCgene.vector <- as.vector(genesPC.GO.sig$gene_id)
+PCgene.vector=as.integer(GOref$gene_id%in%PCgene.vector)
+names(PCgene.vector)=GOref$gene_id
+head(PCgene.vector)
+PCID.vector <- GOref$gene_id #Make ID vector
+head(PCID.vector)
+PCLength.vector <- GOref$gene_length #Make length vector
+head(PCLength.vector)
+
+EGgene.vector <- as.vector(genesEG.GO.sig$gene_id)
+EGgene.vector=as.integer(GOref$gene_id%in%EGgene.vector)
+names(EGgene.vector)=GOref$gene_id
+head(EGgene.vector)
+EGID.vector <- GOref$gene_id #Make ID vector
+head(EGID.vector)
+EGLength.vector <- GOref$gene_length #Make length vector
+head(EGLength.vector)
+
+#Second ZGA
+ZGA2gene.vector <- as.vector(genesZGA2.GO.sig$gene_id)
+ZGA2gene.vector=as.integer(GOref$gene_id%in%ZGA2gene.vector)
+names(ZGA2gene.vector)=GOref$gene_id
+head(ZGA2gene.vector)
+ZGA2ID.vector <- GOref$gene_id #Make ID vector
+head(ZGA2ID.vector)
+ZGA2Length.vector <- GOref$gene_length #Make length vector
+head(ZGA2Length.vector)
+
+MGgene.vector <- as.vector(genesMG.GO.sig$gene_id)
+MGgene.vector=as.integer(GOref$gene_id%in%MGgene.vector)
+names(MGgene.vector)=GOref$gene_id
+head(MGgene.vector)
+MGID.vector <- GOref$gene_id #Make ID vector
+head(MGID.vector)
+MGLength.vector <- GOref$gene_length #Make length vector
+head(MGLength.vector)
+
+LGgene.vector <- as.vector(genesLG.GO.sig$gene_id)
+LGgene.vector=as.integer(GOref$gene_id%in%LGgene.vector)
+names(LGgene.vector)=GOref$gene_id
+head(LGgene.vector)
+LGID.vector <- GOref$gene_id #Make ID vector
+head(LGID.vector)
+LGLength.vector <- GOref$gene_length #Make length vector
+head(LGLength.vector)
+
+Plngene.vector <- as.vector(genesPln.GO.sig$gene_id)
+Plngene.vector=as.integer(GOref$gene_id%in%Plngene.vector)
+names(Plngene.vector)=GOref$gene_id
+head(Plngene.vector)
+PlnID.vector <- GOref$gene_id #Make ID vector
+head(PlnID.vector)
+PlnLength.vector <- GOref$gene_length #Make length vector
+head(PlnLength.vector)
+
+#Adult
+Adultgene.vector <- as.vector(genesAdult.GO.sig$gene_id)
+Adultgene.vector=as.integer(GOref$gene_id%in%Adultgene.vector)
+names(Adultgene.vector)=GOref$gene_id
+head(Adultgene.vector)
+AdultID.vector <- GOref$gene_id #Make ID vector
+head(AdultID.vector)
+AdultLength.vector <- GOref$gene_length #Make length vector
+head(AdultLength.vector)
+
+#Calculate Probability Weighting Function
+pwf.Mat<-nullp(Matgene.vector, MatID.vector, bias.data=MatLength.vector) #weight vector by length of gene
+pwf.UE<-nullp(UEgene.vector, UEID.vector, bias.data=UELength.vector) #weight vector by length of gene
+pwf.FE<-nullp(FEgene.vector, FEID.vector, bias.data=FELength.vector) #weight vector by length of gene
+pwf.ZGA1<-nullp(ZGA1gene.vector, ZGA1ID.vector, bias.data=ZGA1Length.vector) #weight vector by length of gene
+pwf.Clvg<-nullp(Clvggene.vector, ClvgID.vector, bias.data=ClvgLength.vector) #weight vector by length of gene
+pwf.PC<-nullp(PCgene.vector, PCID.vector, bias.data=PCLength.vector) #weight vector by length of gene
+pwf.EG<-nullp(EGgene.vector, EGID.vector, bias.data=EGLength.vector) #weight vector by length of gene
+pwf.ZGA2<-nullp(ZGA2gene.vector, ZGA2ID.vector, bias.data=ZGA2Length.vector) #weight vector by length of gene
+pwf.MG<-nullp(MGgene.vector, MGID.vector, bias.data=MGLength.vector) #weight vector by length of gene
+pwf.LG<-nullp(LGgene.vector, LGID.vector, bias.data=LGLength.vector) #weight vector by length of gene
+pwf.Pln<-nullp(Plngene.vector, PlnID.vector, bias.data=PlnLength.vector) #weight vector by length of gene
+pwf.Adult<-nullp(Adultgene.vector, AdultID.vector, bias.data=AdultLength.vector) #weight vector by length of gene
+```
+
+Prepare GO term dataframe
+```{r}
+GO.annot <- select(geneInfo, gene_id, Annotation.GO.ID)
+splitted <- strsplit(as.character(GO.annot$Annotation.GO.ID), ";") #split into multiple GO ids
+GO.terms <- data.frame(v1 = rep.int(GO.annot$gene_id, sapply(splitted, length)), v2 = unlist(splitted)) #list all genes with each of their GO terms in a single row
+colnames(GO.terms) <- c("gene_id", "GO.ID")
+head(GO.terms)
+tail(GO.terms)
+
+GO.terms$GO.ID<- as.character(GO.terms$GO.ID)
+GO.terms$GO.ID <- replace_na(GO.terms$GO.ID, "unknown")
+GO.terms$GO.ID <- as.factor(GO.terms$GO.ID)
+GO.terms$gene_id <- as.factor(GO.terms$gene_id)
+GO.terms$GO.ID <- gsub(" ", "", GO.terms$GO.ID)
+GO.terms <- unique(GO.terms)
+
+dim(GO.terms)
+head(GO.terms, 10)
+tail(GO.terms, 10)
+```
+
+Find enriched GO terms, "selection-unbiased testing for category enrichment amongst significantly expressed genes for RNA-seq data"
+```{r, warning=FALSE, message=FALSE}
+GOwall.Mat <- goseq(pwf.Mat, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+dim(GOwall.Mat)
+head(GOwall.Mat)
+GOwall.UE <- goseq(pwf.UE, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.FE <- goseq(pwf.FE, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.ZGA1 <- goseq(pwf.ZGA1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.Clvg <- goseq(pwf.Clvg, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.PC <- goseq(pwf.PC, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.EG <- goseq(pwf.EG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.ZGA2 <- goseq(pwf.ZGA2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.MG <- goseq(pwf.MG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.LG <- goseq(pwf.LG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.Pln <- goseq(pwf.Pln, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.Adult <- goseq(pwf.Adult, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+```
+
+Find only enriched GO terms that are statistically significant at cutoff
+```{r}
+Mat.GO.05<-GOwall.Mat$category[GOwall.Mat$over_represented_pvalue<.05]
+Mat.GO.05<-data.frame(Mat.GO.05)
+colnames(Mat.GO.05) <- c("category")
+Mat.GO.05 <- merge(Mat.GO.05, GOwall.Mat, by="category")
+Mat.GO.05 <- Mat.GO.05[order(Mat.GO.05$ontology, Mat.GO.05$over_represented_pvalue, -Mat.GO.05$numDEInCat),]
+Mat.GO.05$term <- as.factor(Mat.GO.05$term)
+dim(Mat.GO.05) #Number of sig GO terms
+nrow(filter(Mat.GO.05, ontology=="BP")) #number sig BP terms
+
+UE.GO.05<-GOwall.UE$category[GOwall.UE$over_represented_pvalue<.05]
+UE.GO.05<-data.frame(UE.GO.05)
+colnames(UE.GO.05) <- c("category")
+UE.GO.05 <- merge(UE.GO.05, GOwall.UE, by="category")
+UE.GO.05 <- UE.GO.05[order(UE.GO.05$ontology, UE.GO.05$over_represented_pvalue, -UE.GO.05$numDEInCat),]
+UE.GO.05$term <- as.factor(UE.GO.05$term)
+dim(UE.GO.05) #Number of sig GO terms
+nrow(filter(UE.GO.05, ontology=="BP")) #number sig BP terms
+
+FE.GO.05<-GOwall.FE$category[GOwall.FE$over_represented_pvalue<.05]
+FE.GO.05<-data.frame(FE.GO.05)
+colnames(FE.GO.05) <- c("category")
+FE.GO.05 <- merge(FE.GO.05, GOwall.FE, by="category")
+FE.GO.05 <- FE.GO.05[order(FE.GO.05$ontology, FE.GO.05$over_represented_pvalue, -FE.GO.05$numDEInCat),]
+FE.GO.05$term <- as.factor(FE.GO.05$term)
+dim(FE.GO.05) #Number of sig GO terms
+nrow(filter(FE.GO.05, ontology=="BP")) #number sig BP terms
+
+ZGA1.GO.05<-GOwall.ZGA1$category[GOwall.ZGA1$over_represented_pvalue<.05]
+ZGA1.GO.05<-data.frame(ZGA1.GO.05)
+colnames(ZGA1.GO.05) <- c("category")
+ZGA1.GO.05 <- merge(ZGA1.GO.05, GOwall.ZGA1, by="category")
+ZGA1.GO.05 <- ZGA1.GO.05[order(ZGA1.GO.05$ontology, ZGA1.GO.05$over_represented_pvalue, -ZGA1.GO.05$numDEInCat),]
+ZGA1.GO.05$term <- as.factor(ZGA1.GO.05$term)
+dim(ZGA1.GO.05) #Number of sig GO terms
+nrow(filter(ZGA1.GO.05, ontology=="BP")) #number sig BP terms
+
+Clvg.GO.05<-GOwall.Clvg$category[GOwall.Clvg$over_represented_pvalue<.05]
+Clvg.GO.05<-data.frame(Clvg.GO.05)
+colnames(Clvg.GO.05) <- c("category")
+Clvg.GO.05 <- merge(Clvg.GO.05, GOwall.Clvg, by="category")
+Clvg.GO.05 <- Clvg.GO.05[order(Clvg.GO.05$ontology, Clvg.GO.05$over_represented_pvalue, -Clvg.GO.05$numDEInCat),]
+Clvg.GO.05$term <- as.factor(Clvg.GO.05$term)
+dim(Clvg.GO.05) #Number of sig GO terms
+nrow(filter(Clvg.GO.05, ontology=="BP")) #number sig BP terms
+
+PC.GO.05<-GOwall.PC$category[GOwall.PC$over_represented_pvalue<.05]
+PC.GO.05<-data.frame(PC.GO.05)
+colnames(PC.GO.05) <- c("category")
+PC.GO.05 <- merge(PC.GO.05, GOwall.PC, by="category")
+PC.GO.05 <- PC.GO.05[order(PC.GO.05$ontology, PC.GO.05$over_represented_pvalue, -PC.GO.05$numDEInCat),]
+PC.GO.05$term <- as.factor(PC.GO.05$term)
+dim(PC.GO.05) #Number of sig GO terms
+nrow(filter(PC.GO.05, ontology=="BP")) #number sig BP terms
+
+EG.GO.05<-GOwall.EG$category[GOwall.EG$over_represented_pvalue<.05]
+EG.GO.05<-data.frame(EG.GO.05)
+colnames(EG.GO.05) <- c("category")
+EG.GO.05 <- merge(EG.GO.05, GOwall.EG, by="category")
+EG.GO.05 <- EG.GO.05[order(EG.GO.05$ontology, EG.GO.05$over_represented_pvalue, -EG.GO.05$numDEInCat),]
+EG.GO.05$term <- as.factor(EG.GO.05$term)
+dim(EG.GO.05) #Number of sig GO terms
+nrow(filter(EG.GO.05, ontology=="BP")) #number sig BP terms
+
+ZGA2.GO.05<-GOwall.ZGA2$category[GOwall.ZGA2$over_represented_pvalue<.05]
+ZGA2.GO.05<-data.frame(ZGA2.GO.05)
+colnames(ZGA2.GO.05) <- c("category")
+ZGA2.GO.05 <- merge(ZGA2.GO.05, GOwall.ZGA2, by="category")
+ZGA2.GO.05 <- ZGA2.GO.05[order(ZGA2.GO.05$ontology, ZGA2.GO.05$over_represented_pvalue, -ZGA2.GO.05$numDEInCat),]
+ZGA2.GO.05$term <- as.factor(ZGA2.GO.05$term)
+dim(ZGA2.GO.05) #Number of sig GO terms
+nrow(filter(ZGA2.GO.05, ontology=="BP")) #number sig BP terms
+
+MG.GO.05<-GOwall.MG$category[GOwall.MG$over_represented_pvalue<.05]
+MG.GO.05<-data.frame(MG.GO.05)
+colnames(MG.GO.05) <- c("category")
+MG.GO.05 <- merge(MG.GO.05, GOwall.MG, by="category")
+MG.GO.05 <- MG.GO.05[order(MG.GO.05$ontology, MG.GO.05$over_represented_pvalue, -MG.GO.05$numDEInCat),]
+MG.GO.05$term <- as.factor(MG.GO.05$term)
+dim(MG.GO.05) #Number of sig GO terms
+nrow(filter(MG.GO.05, ontology=="BP")) #number sig BP terms
+
+LG.GO.05<-GOwall.LG$category[GOwall.LG$over_represented_pvalue<.05]
+LG.GO.05<-data.frame(LG.GO.05)
+colnames(LG.GO.05) <- c("category")
+LG.GO.05 <- merge(LG.GO.05, GOwall.LG, by="category")
+LG.GO.05 <- LG.GO.05[order(LG.GO.05$ontology, LG.GO.05$over_represented_pvalue, -LG.GO.05$numDEInCat),]
+LG.GO.05$term <- as.factor(LG.GO.05$term)
+dim(LG.GO.05) #Number of sig GO terms
+nrow(filter(LG.GO.05, ontology=="BP")) #number sig BP terms
+
+Pln.GO.05<-GOwall.Pln$category[GOwall.Pln$over_represented_pvalue<.05]
+Pln.GO.05<-data.frame(Pln.GO.05)
+colnames(Pln.GO.05) <- c("category")
+Pln.GO.05 <- merge(Pln.GO.05, GOwall.Pln, by="category")
+Pln.GO.05 <- Pln.GO.05[order(Pln.GO.05$ontology, Pln.GO.05$over_represented_pvalue, -Pln.GO.05$numDEInCat),]
+Pln.GO.05$term <- as.factor(Pln.GO.05$term)
+dim(Pln.GO.05) #Number of sig GO terms
+nrow(filter(Pln.GO.05, ontology=="BP")) #number sig BP terms
+
+Adult.GO.05<-GOwall.Adult$category[GOwall.Adult$over_represented_pvalue<.05]
+Adult.GO.05<-data.frame(Adult.GO.05)
+colnames(Adult.GO.05) <- c("category")
+Adult.GO.05 <- merge(Adult.GO.05, GOwall.Adult, by="category")
+Adult.GO.05 <- Adult.GO.05[order(Adult.GO.05$ontology, Adult.GO.05$over_represented_pvalue, -Adult.GO.05$numDEInCat),]
+Adult.GO.05$term <- as.factor(Adult.GO.05$term)
+dim(Adult.GO.05) #Number of sig GO terms
+nrow(filter(Adult.GO.05, ontology=="BP")) #number sig BP terms
+```
+
+Correct any un-annotated terms/ontologies
+```{r}
+NAs.ontology <- Mat.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- ZGA1.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- ZGA2.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- Adult.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+```
+*There were no un-annotated functions except genes with unknown functions*
+
+Save significant terms
+```{r, warning=FALSE}
+write.csv(Mat.GO.05, file = "2a-WGCNA/Output/GO.05.Mat.csv", row.names = FALSE)
+write.csv(UE.GO.05, file = "2a-WGCNA/Output/GO.05.UE.csv", row.names = FALSE)
+write.csv(FE.GO.05, file = "2a-WGCNA/Output/GO.05.FE.csv", row.names = FALSE)
+write.csv(ZGA1.GO.05, file = "2a-WGCNA/Output/GO.05.ZGA1.csv", row.names = FALSE)
+write.csv(Clvg.GO.05, file = "2a-WGCNA/Output/GO.05.Clvg.csv", row.names = FALSE)
+write.csv(PC.GO.05, file = "2a-WGCNA/Output/GO.05.PC.csv", row.names = FALSE)
+write.csv(EG.GO.05, file = "2a-WGCNA/Output/GO.05.EG.csv", row.names = FALSE)
+write.csv(ZGA2.GO.05, file = "2a-WGCNA/Output/GO.05.ZGA2.csv", row.names = FALSE)
+write.csv(MG.GO.05, file = "2a-WGCNA/Output/GO.05.MG.csv", row.names = FALSE)
+write.csv(LG.GO.05, file = "2a-WGCNA/Output/GO.05.LG.csv", row.names = FALSE)
+write.csv(Pln.GO.05, file = "2a-WGCNA/Output/GO.05.Pln.csv", row.names = FALSE)
+write.csv(Adult.GO.05, file = "2a-WGCNA/Output/GO.05.Adult.csv", row.names = FALSE)
+```
+
+### KEGG enrichment of maternal modules
+
+### KEGG Pathway Analysis of Maternal Transcriptome
+
+Prepare a KEGG vector of differentially expressed
+```{r}
+# head(KEGGinfo)
+# 
+# KEGGinfo <- select(geneInfo, gene_id, KEGG)
+# KEGGinfo <- filter(KEGGinfo, KEGG != "0") #Keep on Kegg IDs in Kegg column
+# KEGGinfo <- unique(KEGGinfo)
+# KEGGinfo$KEGG <- as.factor(KEGGinfo$KEGG) #Every column must be a factor
+# KEGGinfo$gene_id <- as.factor(KEGGinfo$gene_id) #Every column must be a factor
+# dim(KEGGinfo)
+# head(KEGGinfo)
+# 
+# 
+# 
+# KEGG_input_maternal <- filter(KEGGinfo, gene_id%in%genesMat.GO.sig$gene_id) #Filter for gene IDs in the maternal set
+# head(KEGG_input_maternal)
+# dim(KEGG_input_maternal)
+# write.table(KEGG_input_maternal, "Output/RNAseq/maternal.05.KEGG_mapper_input.txt", quote=FALSE,col.names=FALSE,row.names=FALSE,sep="\t") #TO BE USED FOR KEGG Mapper https://www.genome.jp/kegg/mapper.html.
+```
+
+Perform enrichment analysis
+```{r}
+# KEGG.05.maternal <- enrichKEGG(KEGG_input_maternal$KEGG, organism = "ko", keyType = "kegg", pvalueCutoff = 0.05) #run enrichment with Kegg sig < 0.05
+# KEGG.05.maternal <- KEGG.05.maternal[order(KEGG.05.maternal$p.adjust, -KEGG.05.maternal$Count),] #order by p-value, then count
+# head(KEGG.05.maternal) #analysis of DE genes
+# dim(KEGG.05.maternal)
+# write.csv(KEGG.05.maternal, file = "Output/RNAseq/KEGG.05.maternal.csv")
+```
+
+### Obtain signicant GO terms for each module
+
+Make a list of all module colors
+```{r}
+moduleColor_list <- unique(geneColor$moduleColor)
+moduleColor_list
+```
+
+Obtain module color of all expressed genes (poverA = 0.85,5).
+```{r}
+genes.GO$gene_id <- as.factor(genes.GO$gene_id) #Make factor for merge
+genes.GO <- merge(geneColor, genes.GO) #append module information
+genes.GO$moduleColor <- as.factor(genes.GO$moduleColor) #Make factor for filter
+head(genes.GO)
+dim(genes.GO)
+```
+
+Obtain list of significantly-expressed genes for each module
+```{r}
+antiquewhite2.sig <- filter(genes.GO, moduleColor=="antiquewhite2")
+antiquewhite4.sig <- filter(genes.GO, moduleColor=="antiquewhite4")
+blue.sig <- filter(genes.GO, moduleColor=="blue")
+blue2.sig <- filter(genes.GO, moduleColor=="blue2")
+blue4.sig <- filter(genes.GO, moduleColor=="blue4")
+blueviolet.sig <- filter(genes.GO, moduleColor=="blueviolet")
+brown2.sig <- filter(genes.GO, moduleColor=="brown2")
+coral.sig <- filter(genes.GO, moduleColor=="coral")
+coral1.sig <- filter(genes.GO, moduleColor=="coral1")
+cyan.sig <- filter(genes.GO, moduleColor=="cyan")
+darkmagenta.sig <- filter(genes.GO, moduleColor=="darkmagenta")
+darkseagreen4.sig <- filter(genes.GO, moduleColor=="darkseagreen4")
+darkslateblue.sig <- filter(genes.GO, moduleColor=="darkslateblue")
+grey.sig <- filter(genes.GO, moduleColor=="grey")
+honeydew1.sig <- filter(genes.GO, moduleColor=="honeydew1")
+indianred3.sig <- filter(genes.GO, moduleColor=="indianred3")
+ivory.sig <- filter(genes.GO, moduleColor=="ivory")
+lavenderblush2.sig <- filter(genes.GO, moduleColor=="lavenderblush2")
+lightslateblue.sig <- filter(genes.GO, moduleColor=="lightslateblue")
+lightsteelblue.sig <- filter(genes.GO, moduleColor=="lightsteelblue")
+magenta4.sig <- filter(genes.GO, moduleColor=="magenta4")
+mediumpurple1.sig <- filter(genes.GO, moduleColor=="mediumpurple1")
+mediumpurple3.sig <- filter(genes.GO, moduleColor=="mediumpurple3")
+midnightblue.sig <- filter(genes.GO, moduleColor=="midnightblue")
+navajowhite1.sig <- filter(genes.GO, moduleColor=="navajowhite1")
+plum3.sig <- filter(genes.GO, moduleColor=="plum3")
+plum4.sig <- filter(genes.GO, moduleColor=="plum4")
+salmon.sig <- filter(genes.GO, moduleColor=="salmon")
+salmon4.sig <- filter(genes.GO, moduleColor=="salmon4")
+sienna3.sig <- filter(genes.GO, moduleColor=="sienna3")
+skyblue1.sig <- filter(genes.GO, moduleColor=="skyblue1")
+thistle.sig <- filter(genes.GO, moduleColor=="thistle")
+thistle4.sig <- filter(genes.GO, moduleColor=="thistle4")
+violet.sig <- filter(genes.GO, moduleColor=="violet")
+```
+
+GOseq requires a vector of all genes and all differentially expressed genes. 
+```{r, message=FALSE, warning=FALSE}
+antiquewhite2.vector <- as.vector(antiquewhite2.sig$gene_id)
+antiquewhite2.vector=as.integer(GOref$gene_id%in%antiquewhite2.vector)
+names(antiquewhite2.vector)=GOref$gene_id
+
+antiquewhite4.vector <- as.vector(antiquewhite4.sig$gene_id)
+antiquewhite4.vector=as.integer(GOref$gene_id%in%antiquewhite4.vector)
+names(antiquewhite4.vector)=GOref$gene_id
+
+blue.vector <- as.vector(blue.sig$gene_id)
+blue.vector=as.integer(GOref$gene_id%in%blue.vector)
+names(blue.vector)=GOref$gene_id
+
+blue2.vector <- as.vector(blue2.sig$gene_id)
+blue2.vector=as.integer(GOref$gene_id%in%blue2.vector)
+names(blue2.vector)=GOref$gene_id
+
+blue4.vector <- as.vector(blue4.sig$gene_id)
+blue4.vector=as.integer(GOref$gene_id%in%blue4.vector)
+names(blue4.vector)=GOref$gene_id
+
+blueviolet.vector <- as.vector(blueviolet.sig$gene_id)
+blueviolet.vector=as.integer(GOref$gene_id%in%blueviolet.vector)
+names(blueviolet.vector)=GOref$gene_id
+
+brown2.vector <- as.vector(brown2.sig$gene_id)
+brown2.vector=as.integer(GOref$gene_id%in%brown2.vector)
+names(brown2.vector)=GOref$gene_id
+
+coral.vector <- as.vector(coral.sig$gene_id)
+coral.vector=as.integer(GOref$gene_id%in%coral.vector)
+names(coral.vector)=GOref$gene_id
+
+coral1.vector <- as.vector(coral1.sig$gene_id)
+coral1.vector=as.integer(GOref$gene_id%in%coral1.vector)
+names(coral1.vector)=GOref$gene_id
+
+cyan.vector <- as.vector(cyan.sig$gene_id)
+cyan.vector=as.integer(GOref$gene_id%in%cyan.vector)
+names(cyan.vector)=GOref$gene_id
+
+darkmagenta.vector <- as.vector(darkmagenta.sig$gene_id)
+darkmagenta.vector=as.integer(GOref$gene_id%in%darkmagenta.vector)
+names(darkmagenta.vector)=GOref$gene_id
+
+darkseagreen4.vector <- as.vector(darkseagreen4.sig$gene_id)
+darkseagreen4.vector=as.integer(GOref$gene_id%in%darkseagreen4.vector)
+names(darkseagreen4.vector)=GOref$gene_id
+
+darkslateblue.vector <- as.vector(darkslateblue.sig$gene_id)
+darkslateblue.vector=as.integer(GOref$gene_id%in%darkslateblue.vector)
+names(darkslateblue.vector)=GOref$gene_id
+
+grey.vector <- as.vector(grey.sig$gene_id)
+grey.vector=as.integer(GOref$gene_id%in%grey.vector)
+names(grey.vector)=GOref$gene_id
+
+honeydew1.vector <- as.vector(honeydew1.sig$gene_id)
+honeydew1.vector=as.integer(GOref$gene_id%in%honeydew1.vector)
+names(honeydew1.vector)=GOref$gene_id
+
+indianred3.vector <- as.vector(indianred3.sig$gene_id)
+indianred3.vector=as.integer(GOref$gene_id%in%indianred3.vector)
+names(indianred3.vector)=GOref$gene_id
+
+ivory.vector <- as.vector(ivory.sig$gene_id)
+ivory.vector=as.integer(GOref$gene_id%in%ivory.vector)
+names(ivory.vector)=GOref$gene_id
+
+lavenderblush2.vector <- as.vector(lavenderblush2.sig$gene_id)
+lavenderblush2.vector=as.integer(GOref$gene_id%in%lavenderblush2.vector)
+names(lavenderblush2.vector)=GOref$gene_id
+
+lightslateblue.vector <- as.vector(lightslateblue.sig$gene_id)
+lightslateblue.vector=as.integer(GOref$gene_id%in%lightslateblue.vector)
+names(lightslateblue.vector)=GOref$gene_id
+
+lightsteelblue.vector <- as.vector(lightsteelblue.sig$gene_id)
+lightsteelblue.vector=as.integer(GOref$gene_id%in%lightsteelblue.vector)
+names(lightsteelblue.vector)=GOref$gene_id
+
+magenta4.vector <- as.vector(magenta4.sig$gene_id)
+magenta4.vector=as.integer(GOref$gene_id%in%magenta4.vector)
+names(magenta4.vector)=GOref$gene_id
+
+mediumpurple1.vector <- as.vector(mediumpurple1.sig$gene_id)
+mediumpurple1.vector=as.integer(GOref$gene_id%in%mediumpurple1.vector)
+names(mediumpurple1.vector)=GOref$gene_id
+
+mediumpurple3.vector <- as.vector(mediumpurple3.sig$gene_id)
+mediumpurple3.vector=as.integer(GOref$gene_id%in%mediumpurple3.vector)
+names(mediumpurple3.vector)=GOref$gene_id
+
+midnightblue.vector <- as.vector(midnightblue.sig$gene_id)
+midnightblue.vector=as.integer(GOref$gene_id%in%midnightblue.vector)
+names(midnightblue.vector)=GOref$gene_id
+
+navajowhite1.vector <- as.vector(navajowhite1.sig$gene_id)
+navajowhite1.vector=as.integer(GOref$gene_id%in%navajowhite1.vector)
+names(navajowhite1.vector)=GOref$gene_id
+
+plum3.vector <- as.vector(plum3.sig$gene_id)
+plum3.vector=as.integer(GOref$gene_id%in%plum3.vector)
+names(plum3.vector)=GOref$gene_id
+
+plum4.vector <- as.vector(plum4.sig$gene_id)
+plum4.vector=as.integer(GOref$gene_id%in%plum4.vector)
+names(plum4.vector)=GOref$gene_id
+
+salmon.vector <- as.vector(salmon.sig$gene_id)
+salmon.vector=as.integer(GOref$gene_id%in%salmon.vector)
+names(salmon.vector)=GOref$gene_id
+
+salmon4.vector <- as.vector(salmon4.sig$gene_id)
+salmon4.vector=as.integer(GOref$gene_id%in%salmon4.vector)
+names(salmon4.vector)=GOref$gene_id
+
+sienna3.vector <- as.vector(sienna3.sig$gene_id)
+sienna3.vector=as.integer(GOref$gene_id%in%sienna3.vector)
+names(sienna3.vector)=GOref$gene_id
+
+skyblue1.vector <- as.vector(skyblue1.sig$gene_id)
+skyblue1.vector=as.integer(GOref$gene_id%in%skyblue1.vector)
+names(skyblue1.vector)=GOref$gene_id
+
+thistle.vector <- as.vector(thistle.sig$gene_id)
+thistle.vector=as.integer(GOref$gene_id%in%thistle.vector)
+names(thistle.vector)=GOref$gene_id
+
+thistle4.vector <- as.vector(thistle4.sig$gene_id)
+thistle4.vector=as.integer(GOref$gene_id%in%thistle4.vector)
+names(thistle4.vector)=GOref$gene_id
+
+violet.vector <- as.vector(violet.sig$gene_id)
+violet.vector=as.integer(GOref$gene_id%in%violet.vector)
+names(violet.vector)=GOref$gene_id
+
+vector.list <- list(antiquewhite2.vector, antiquewhite4.vector, blue.vector, blue2.vector, blue4.vector, blueviolet.vector, brown2.vector, coral.vector, coral1.vector, cyan.vector, darkmagenta.vector, darkseagreen4.vector, darkslateblue.vector, grey.vector, honeydew1.vector, indianred3.vector, ivory.vector, lavenderblush2.vector, lightslateblue.vector, lightsteelblue.vector, magenta4.vector, mediumpurple1.vector, mediumpurple3.vector, midnightblue.vector, navajowhite1.vector, plum3.vector, plum4.vector, salmon.vector, salmon4.vector, sienna3.vector, skyblue1.vector, thistle.vector, thistle4.vector, violet.vector)
+length(vector.list)
+```
+
+Calculate Probability Weighting Function
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+pwf <- lapply(vector.list, nullp, MatID.vector, bias.data=MatLength.vector)#weight vector by length of gene
+```
+
+Perform goseq
+```{r, message=FALSE, warning=FALSE}
+GOwall <- lapply(pwf, goseq, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+```
+
+Find only enriched GO terms that are statistically significant at cutoff. Order by p-value and select top 10 most significant terms for each module.
+```{r}
+GO.05<-lapply(GOwall, filter, over_represented_pvalue<.05)
+GO.05 <- lapply(GO.05, function(GO.05){GO.05[order(GO.05$over_represented_pvalue, -GO.05$numDEInCat),]})
+names(GO.05) = moduleColor_list #name the dataframes according to their color
+GO.05.all <- bind_rows(GO.05, .id = "column_label") #merge the dataframes using the name as an identifier
+GO.05.all <- rename(GO.05.all,"moduleColor"="column_label") #rename the identifying column
+GO.05.all <- merge(moduleCluster, GO.05.all, by = "moduleColor") #Add cluster information
+GO.05.all <- GO.05.all[order(factor(GO.05.all$moduleColor, levels = moduleCluster$moduleColor)),] #Match order to heatmap
+GO.05.all <- subset(GO.05.all, select = c(2,1, 3:9)) #make cluster first, then module second
+
+GO.05.top10 <- lapply(GO.05, "[",c(1:10),,drop=FALSE)
+```
+
+Merge list into 1 dataframe to obtain top 10
+```{r}
+names(GO.05.top10) = moduleColor_list #name the dataframes according to their color
+GO.05.top10.all <- bind_rows(GO.05.top10, .id = "column_label") #merge the dataframes using the name as an identifier
+GO.05.top10.all <- rename(GO.05.top10.all, "moduleColor"="column_label") #rename the identifying column
+GO.05.top10.all <- merge(moduleCluster, GO.05.top10.all, by = "moduleColor") #Add cluster information
+GO.05.top10.all <- GO.05.top10.all[order(factor(GO.05.top10.all$moduleColor, levels = moduleCluster$moduleColor)),] #Match order to heatmap
+GO.05.top10.all <- subset(GO.05.top10.all, select = c(2,1, 3:9)) #make cluster first, then module second
+head(GO.05.top10.all)
+tail(GO.05.top10.all)
+str(GO.05.top10.all)
+```
+
+
+Save as CSV
+```{r}
+#write.csv(GO.05.top10.all, file = "Output/RNAseq/WGCNA.GO.05.top10.csv")
+write.csv(GO.05.all, file = "2a-WGCNA/Output/GO.05.allMods.csv")
+```
+

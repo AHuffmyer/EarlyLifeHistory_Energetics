@@ -3,6 +3,8 @@ title: "Mcap Developmental Timeseries TagSeq WGCNA"
 author: "Erin Chille - Ariana Huffmyer"
 date: "Last updated 2021/08/08"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +22,22 @@ This script is based off of Langfelder P, Horvath S (2008) WGCNA: an R package f
 
 Import necessary libraries
 ```{r, message=FALSE, warning=FALSE}
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+
+library(BiocManager)
+if ("simplifyEnrichment" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("simplifyEnrichment") 
+
 library("tidyverse")
 library("genefilter")
 library("DESeq2")
@@ -32,6 +50,7 @@ library("goseq")
 library("dplyr")
 library("clusterProfiler")
 library("simplifyEnrichment")
+library("pheatmap")
 ```
 
 ## Data input, cleaning, and pre-processing
@@ -44,9 +63,17 @@ head(treatmentinfo_dev)
 gcount <- as.data.frame(read.csv("Mcap2020/Data/TagSeq/transcript_count_matrix.csv", row.names="gene_id"), colClasses = double)
 head(gcount)
 dim(gcount)
+
+#remove metamorphosed recruit 1 timepoint that we only had one sample for, D36, AH23
+drop <- c("AH23")
+gcount<-gcount[ , !(names(gcount) %in% drop)]
+
+treatmentinfo_dev <- treatmentinfo_dev%>%
+  filter(!sample_id=="AH23")
 ```
 
 #### Quality-filter gene counts  
+
 Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests. Here we will filter out the genes that are only present in fewer than two of the 24 ambient samples.
 ```{r}
 #keep only ambient treatmentinfo and count data
@@ -134,19 +161,20 @@ pheatmap(gsampleDistMatrix_dev, #plot matrix
          col=colors) #set colors
 ```
 
-
 ##### Principal component plot of samples
 ```{r}
 gPCAdata_dev <- plotPCA(gvst_dev, intgroup = c("lifestage"), returnData=TRUE)
 percentVar_dev <- round(100*attr(gPCAdata_dev, "percentVar")) #plot PCA of samples with all data
 
-allgenesfilt_PCA <- ggplot(gPCAdata_dev, aes(PC1, PC2, color=lifestage)) + 
+allgenesfilt_PCA <- ggplot(gPCAdata_dev, aes(PC1, PC2, shape=lifestage)) + 
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar_dev[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar_dev[2],"% variance")) +
-  #scale_shape_manual(values = c("Unfertilized_egg"=3, "Fertilized_egg"=1, "Cleavage"=10, #"Prawn_chip"=5, "Early_gastrula"=14, "Mid_gastrula"=11, "Late_gastrula"=6, "Planula"=2, #"Adult"=8)) +
-  coord_fixed() +
-    theme_bw() + #Set background color
+  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=1, "2_Embryo"=10, "3_Larvae1"=5, "4_Larvae2"=14, "5_Larvae3"=11, "6_Larvae4"=6, "7_Larvae6"=2, "8_MetamorposedRecruit2"=8, "9_CalcifyingRecruit1"=3)) +
+  #xlim(-40,40)+ 
+  #ylim(-40,40)+
+  coord_fixed()+
+  theme_bw() + #Set background color
   theme(panel.border = element_blank(), # Set border
                      #panel.grid.major = element_blank(), #Set major gridlines 
                      #panel.grid.minor = element_blank(), #Set minor gridlines
@@ -154,7 +182,7 @@ allgenesfilt_PCA <- ggplot(gPCAdata_dev, aes(PC1, PC2, color=lifestage)) +
         plot.background=element_blank()) # + #Set the plot background
   #theme(legend.position = ("none")) #set title attributes
 allgenesfilt_PCA
-ggsave("Mcap2020/Output/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA)
+ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA, width=11, height=8)
 ```
 
 ### Compile WGCNA Dataset
@@ -172,18 +200,18 @@ gsg$allOK #Should return TRUE if not, the R chunk below will take care of flagge
 
 Remove flagged samples if the allOK is FALSE
 ```{r}
-ncol(datExpr) #number genes before
-if (!gsg$allOK) #If the allOK is FALSE...
-{
+#ncol(datExpr) #number genes before
+#if (!gsg$allOK) #If the allOK is FALSE...
+#{
 # Optionally, print the gene and sample names that are flagged:
-if (sum(!gsg$goodGenes)>0)
-printFlush(paste("Removing genes:", paste(names(datExpr)[!gsg$goodGenes], collapse = ", ")));
-if (sum(!gsg$goodSamples)>0)
-printFlush(paste("Removing samples:", paste(rownames(datExpr)[!gsg$goodSamples], collapse = ", ")));
+#if (sum(!gsg$goodGenes)>0)
+#printFlush(paste("Removing genes:", paste(names(datExpr)[!gsg$goodGenes], collapse = ", ")));
+#if (sum(!gsg$goodSamples)>0)
+#printFlush(paste("Removing samples:", paste(rownames(datExpr)[!gsg$goodSamples], collapse = ", ")));
 # Remove the offending genes and samples from the data:
-datExpr = datExpr[gsg$goodSamples, gsg$goodGenes]
-}
-ncol(datExpr) #number genes after
+#datExpr = datExpr[gsg$goodSamples, gsg$goodGenes]
+#}
+#ncol(datExpr) #number genes after
 ```
 
 ### Cluster the samples to look for obvious outliers
@@ -193,7 +221,9 @@ Look for outliers by examining
 sampleTree = hclust(dist(datExpr), method = "average");
 # Plot the sample tree: Open a graphic output window of size 12 by 9 inches
 # The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/TagSeq/outliers.pdf")
 plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
 ```
 There don't look to be any outliers, so we will move on with business as usual.
 
@@ -204,32 +234,32 @@ There don't look to be any outliers, so we will move on with business as usual.
 The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.
 ```{r, message=FALSE, warning=FALSE}
 # # Choose a set of soft-thresholding powers
-# powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
 # 
 # # Call the network topology analysis function
-# sft <-pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+sft <-pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
 ```
 
 Plot the results.
 ```{r}
-# sizeGrWindow(9, 5)
-# par(mfrow = c(1,2));
-# cex1 = 0.9;
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
 # # # Scale-free topology fit index as a function of the soft-thresholding power
-# plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
-#      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
-#     main = paste("Scale independence"));
-# text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
-#     labels=powers,cex=cex1,col="red");
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+     main = paste("Scale independence"));
+ text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+     labels=powers,cex=cex1,col="red");
 # # # this line corresponds to using an R^2 cut-off
-# abline(h=0.8,col="red")
+ abline(h=0.9,col="red")
 # # # Mean connectivity as a function of the soft-thresholding power
-# plot(sft$fitIndices[,1], sft$fitIndices[,5],
-#     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
-#     main = paste("Mean connectivity"))
-# text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+ plot(sft$fitIndices[,1], sft$fitIndices[,5],
+     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+     main = paste("Mean connectivity"))
+ text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 ```
-I used a scale-free topology fit index **R^2 of 0.85**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.85 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 23** because it is the loweest power before the R^2=0.8 threshold that maximizes with model fit.
+I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the loweest power before the R^2=0.9 threshold that maximizes with model fit.
 
 ## Step-by-step network construction and module detection: 
 
@@ -239,73 +269,75 @@ Adjacency and TOMsimilarity will be executed in supercomputer, Bluewaves, as our
 
 Save Rdata necessary for analysis in Bluewaves
 ```{r}
-# save(datExpr, file = "Data/datExpr.RData")
+save(datExpr, file = "Mcap2020/Output/TagSeq/datExpr.RData")
 ```
 
-
-**To be executed on the Bluewaves server**  
-Co-expression similarity and adjacency, using the soft thresholding power 23 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network** because we have a relatively high softPower, according to (>12): https://peterlangfelder.com/2018/11/25/__trashed/
+Co-expression similarity and adjacency, using the soft thresholding power 3 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network** because we have a relatively high softPower, according to (>12): https://peterlangfelder.com/2018/11/25/__trashed/
 ```{r, }
 # #Set up workspace
-# getwd() #Display the current working directory
+#getwd() #Display the current working directory
 # #If necessary, change the path below to the directory where the data files are stored. "." means current directory. On Windows use a forward slash / instead of the usual \.
-# workingDir = ".";
+#workingDir = ".";
 # setwd(WGCNA_dev);
 # library(WGCNA) #Load the WGCNA package
-# options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
-# enableWGCNAThreads() #Allow multi-threading within WGCNA. 
+options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
+enableWGCNAThreads() #Allow multi-threading within WGCNA. 
 # 
 # #Load the data saved in the first part
-# adjTOM <- load(file="datExpr.RData")
-# adjTOM
+adjTOM <- load(file="Mcap2020/Output/TagSeq/datExpr.RData")
+adjTOM
 # 
 # #Run analysis
-# softPower=23 #Set softPower to 23
-# adjacency=adjacency(datExpr, power=softPower,type="signed") #Calculate adjacency
-# TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topological overlap matrix
-# dissTOM= 1-TOM #Calculate dissimilarity in TOM
-# save(adjacency, TOM, dissTOM, file = "../adjTOM.RData") #Save to bluewaves dir
-# save(dissTOM, file = "../dissTOM.RData") #Save to load into RStudio
-```
+softPower=5 #Set softPower to 5
+adjacency=adjacency(datExpr, power=softPower,type="signed") #Calculate adjacency
 
-**Now we can continue using Rstudio**
+TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topological overlap matrix
+#this step can take awhile 
+
+dissTOM= 1-TOM #Calculate dissimilarity in TOM
+
+save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
+
+save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
+```
 
 Load in dissTOM file obtained from previous R chunk
 ```{r}
-# dissTOM_in <- load(file="~/Documents/Putnam_Lab.nosync/dissTOM.RData") #CHANGE TO THE PATH ON YOUR LOCAL COMPUTER
-# dissTOM_in
+dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
+dissTOM_in
 ```
+
 
 ### Clustering using TOM
 
 Form distance matrix
 ```{r}
-# geneTree= flashClust(as.dist(dissTOM), method="average")
+geneTree= flashClust(as.dist(dissTOM), method="average")
 ```
 
 We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.
 ```{r}
-# pdf(file="Output/RNAseq/dissTOMClustering.pdf", width=20, height=20)
-# plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
-# dev.off()
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMClustering.pdf", width=20, height=20)
+plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
+dev.off()
 ```
 
 ### Module identification using dynamicTreeCut
 
 Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. I chose 30 as it is the default value chosen by most studies using WGCNA.
 ```{r}
-# minModuleSize = 30
-# dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
-# deepSplit = 2, pamRespectsDendro = FALSE,
-# minClusterSize = minModuleSize)
-# table(dynamicMods) #list modules and respective sizes
-# save(dynamicMods, geneTree, file = "Data/dyMod_geneTree.RData") #Save to load into RStudio
+minModuleSize = 30
+dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+deepSplit = 2, pamRespectsDendro = FALSE,
+minClusterSize = minModuleSize)
+table(dynamicMods) #list modules and respective sizes
+save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData") #Save to load into RStudio
 ```
 Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest.
 
 Load modules calculated from the adjacency matrix
 ```{r}
-dyMod_geneTree <- load(file = "2a-WGCNA/Output/dyMod_geneTree.RData")
+dyMod_geneTree <- load(file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData")
 dyMod_geneTree
 ```
 
@@ -315,9 +347,9 @@ Plot the module assignment under the gene dendrogram
 dynamicColors = labels2colors(dynamicMods) # Convert numeric labels into colors
 table(dynamicColors)
 
-#pdf(file="Output/RNAseq/dissTOMColorClustering.pdf", width=20, height=20)
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMColorClustering.pdf", width=20, height=20)
 plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = "Gene dendrogram and module colors")
-#dev.off()
+dev.off()
 ```
 
 ### Merge modules whose expression profiles are very similar or choose not to merge
@@ -325,7 +357,7 @@ plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = 
 Plot module similarity based on eigengene value
 ```{r}
 #Calculate eigengenes
-MEList = moduleEigengenes(datExpr, colors = dynamicColors, softPower = 23)
+MEList = moduleEigengenes(datExpr, colors = dynamicColors, softPower = 5)
 MEs = MEList$eigengenes
 
 #Calculate dissimilarity of module eigengenes
@@ -334,28 +366,28 @@ MEDiss = 1-cor(MEs)
 #Cluster again and plot the results
 METree = flashClust(as.dist(MEDiss), method = "average")
 
-#pdf(file="Output/RNAseq/eigengeneClustering1.pdf", width = 20)
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering1.pdf", width = 20)
 plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
-#dev.off()
+dev.off()
 ```
 
 **Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
 ```{r}
 MEDissThres= 0.15 #merge modules that are 85% similar
 
-#pdf(file="Output/RNAseq/eigengeneClustering2.pdf", width = 20)
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering2.pdf", width = 20)
 plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
 abline(h=MEDissThres, col="red")
-#dev.off()
+dev.off()
 
 merge= mergeCloseModules(datExpr, dynamicColors, cutHeight= MEDissThres, verbose =3)
 
 mergedColors= merge$colors
 mergedMEs= merge$newMEs
 
-#pdf(file="Output/RNAseq/mergedClusters.pdf", width=20, height=20)
+pdf(file="Mcap2020/Figures/TagSeq/mergedClusters.pdf", width=20, height=20)
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
-#dev.off()
+dev.off()
 ```
 
 Save new colors
@@ -367,17 +399,17 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-Instead of 105 modules, we are now working with 34, a much more reasonable number.
+Instead of X modules, we are now working with 4, a much more reasonable number.
 
 ### Plot new tree
 ```{r}
 #Calculate dissimilarity of module eigengenes
 MEDiss = 1-cor(MEs)
 #Cluster again and plot the results
-#pdf(file="Output/RNAseq/eigengeneClustering3.pdf")
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering3.pdf")
 METree = flashClust(as.dist(MEDiss), method = "average")
 MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
-#dev.off()
+dev.off()
 ```
 
 ##  Relating modules to developmental stage
@@ -385,21 +417,42 @@ MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", s
 ### Quantifying module–trait associations
 
 Prepare trait data. Data has to be numeric, so I will substitute time_points and type for numeric values
+
+Make a dataframe that has a column for each lifestage name and a row for samples. Populate a 1 for samples that match each lifestage and a 0 for samples not matching respective lifestages 
 ```{r}
-allTraits <- names(treatmentinfo_dev$time_point)
-allTraits$Unfertilized_egg <- c(1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-allTraits$Fertilized_egg <- c(0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-allTraits$Cleavage <- c(0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-allTraits$Prawn_chip <- c(0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0)
-allTraits$Early_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0)
-allTraits$Mid_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0)
-allTraits$Late_gastrula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0)
-allTraits$Planula <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0)
-allTraits$Adult <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1)
-datTraits <- as.data.frame(allTraits)
-dim(datTraits)
-rownames(datTraits) <- treatmentinfo_dev$sample_id
-print(datTraits)
+#datTraits<-treatmentinfo_dev %>%
+  #select(lifestage)
+
+#allTraits <- levels(as.factor(treatmentinfo_dev$lifestage))
+
+#allTraits$`1_Egg`                 <- c(1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`2_Embryo`              <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0)
+#allTraits$`3_Larvae1`             <- c(0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+#allTraits$`4_Larvae2`             <- c(0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`5_Larvae3`             <- c(0,0,0,0,0,0,0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`6_Larvae4`             <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`7_Larvae6`             <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`8_MetamorposedRecruit` <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0)
+#allTraits$`9_CalcifyingRecruit1`  <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1)
+#allTraits$`10_CalcifyingRecruit2` <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0)
+
+#datTraits <- as.data.frame(allTraits)
+#dim(datTraits)
+#rownames(datTraits) <- treatmentinfo_dev$sample_id
+
+#datTraits <- datTraits[11:20]
+
+#print(datTraits)
+```
+
+Automate adding numerical values for treatment and samples  
+```{r}
+treatmentinfo_dev$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(treatmentinfo_dev, names_from = lifestage, values_from = num, id_cols = sample_id))
+allTraits[is.na(allTraits)] <- c("0")
+rownames(allTraits) <- allTraits$sample_id
+datTraits <- allTraits[,c(-1)]
+datTraits
 ```
 
 Define numbers of genes and samples
@@ -410,7 +463,7 @@ nSamples = nrow(datExpr)
 
 Recalculate MEs with color labels
 ```{r}
-MEs0 = moduleEigengenes(datExpr, moduleColors,softPower=23)$eigengenes
+MEs0 = moduleEigengenes(datExpr, moduleColors,softPower=5)$eigengenes
 MEs = orderMEs(MEs0)
 names(MEs)
 ```
@@ -419,10 +472,13 @@ Correlations of traits with eigengenes
 ```{r}
 moduleTraitCor = cor(MEs, datTraits, use = "p");
 moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
-Colors=sub("ME","",names(MEs))
+Colors=sub("ME","", names(MEs))
 
-moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average");
-plot(moduleTraitTree, main = "Life stage clustering based on module-trait correlation", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average")
+
+pdf(file="Mcap2020/Figures/TagSeq/ModuleTraitClusterTree.pdf")
+plot(moduleTraitTree)
+dev.off()
 ```
 
 Correlations of genes with eigengenes
@@ -441,9 +497,9 @@ head(textMatrix)
 
 labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
 
-#pdf(file="Output/RNAseq/Module-trait-relationships.pdf")
+pdf(file="Mcap2020/Figures/TagSeq/Module-trait-relationships.pdf")
 labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
-#dev.off()
+dev.off()
 ```
 
 Attempt at complexHeatmap
@@ -459,13 +515,13 @@ heatmappval <- signif(moduleTraitPvalue, 1)
 htmap.colors <- names(MEs)
 htmap.colors <- gsub("ME", "", htmap.colors)
 
-pdf(file = "2a-WGCNA/Output/Fig3-Module-trait-relationship-heatmap.pdf", height = 11.5, width = 8)
+pdf(file = "Mcap2020/Figures/TagSeq/Module-trait-relationship-heatmap.pdf", height = 11.5, width = 8)
 ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Trait Eigengene Correlation", 
         col = blueWhiteRed(50), 
         row_names_side = "left", row_dend_side = "left",
-        width = unit(4, "in"), height = unit(8.5, "in"), 
-        column_order = 1:9, column_dend_reorder = FALSE, cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"), column_split = 4, column_dend_height = unit(0.5, "in"),
-        cluster_rows = METree, row_split = 9, row_gap = unit(2.5, "mm"), border = TRUE,
+        width = unit(5, "in"), height = unit(8.5, "in"), 
+        column_order = 2:11, column_dend_reorder = TRUE, cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"), column_dend_height = unit(0.5, "in"),
+        cluster_rows = METree, row_gap = unit(2.5, "mm"), border = TRUE,
         cell_fun = function(j, i, x, y, w, h, col) {
         if(heatmappval[i, j] <= 0.05) {
             grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 8, fontface = "bold"))
@@ -479,6 +535,19 @@ draw(ht)
 dev.off()
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 #### Create dataframe that associates module colors with clusters based on the above heatmap and the MEtree dendrogram.
 ```{r}
 MEcluster1 <- data.frame(moduleColor = c("grey"), moduleCluster = c(1))
@@ -487,11 +556,11 @@ MEcluster3 <- data.frame(moduleColor = c("mediumpurple3", "antiquewhite2", "anti
 MEcluster4 <- data.frame(moduleColor = c("indianred3", "blue2", "plum3", "blue4", "skyblue1",  "brown2", "coral"), moduleCluster = c(4))
 MEcluster5 <- data.frame(moduleColor = c("darkseagreen4", "darkslateblue", "plum4"), moduleCluster = c(5))
 MEcluster6 <- data.frame(moduleColor = c("darkmagenta", "violet"), moduleCluster = c(6))
-MEcluster7 <- data.frame(moduleColor = c("navajowhite1",  "blue", "cyan", "blueviolet", "ivory"), moduleCluster = c(7))
-MEcluster8 <- data.frame(moduleColor = c("mediumpurple1", "salmon", "sienna3"), moduleCluster = c(8))
-MEcluster9 <- data.frame(moduleColor = c("thistle4", "lightsteelblue", "salmon4"), moduleCluster = c(9))
+#MEcluster7 <- data.frame(moduleColor = c("navajowhite1",  "blue", "cyan", "blueviolet", "ivory"), moduleCluster = c(7))
+#MEcluster8 <- data.frame(moduleColor = c("mediumpurple1", "salmon", "sienna3"), moduleCluster = c(8))
+#MEcluster9 <- data.frame(moduleColor = c("thistle4", "lightsteelblue", "salmon4"), moduleCluster = c(9))
 
-moduleCluster = bind_rows(MEcluster1, MEcluster2, MEcluster3, MEcluster4, MEcluster5, MEcluster6, MEcluster7, MEcluster8, MEcluster9)
+moduleCluster = bind_rows(MEcluster1, MEcluster2, MEcluster3, MEcluster4, MEcluster5, MEcluster6)
 head(moduleCluster)
 ```
 
@@ -501,7 +570,7 @@ View module eigengene data and make dataframe for Strader plots.
 head(MEs)
 names(MEs)
 Strader_MEs <- MEs
-Strader_MEs$time_point <- treatmentinfo_dev$time_point
+Strader_MEs$lifestage <- treatmentinfo_dev$lifestage
 Strader_MEs$sample_id <- rownames(Strader_MEs)
 head(Strader_MEs)
 ```
@@ -510,7 +579,7 @@ head(Strader_MEs)
 
 Create a column to the Strader_MEs data frame containing life stage
 ```{r}
-Strader_MEs$time_point <- c("Unfertilized_egg", "Unfertilized_egg", "Unfertilized_egg", "Fertilized_egg", "Fertilized_egg", "Cleavage", "Cleavage", "Cleavage", "Prawn_chip", "Prawn_chip", "Prawn_chip", "Early_gastrula", "Early_gastrula", "Early_gastrula", "Mid_gastrula", "Mid_gastrula", "Late_gastrula", "Late_gastrula", "Planula", "Planula", "Planula", "Adult", "Adult", "Adult")
+#Strader_MEs$time_point <- c("Unfertilized_egg", "Unfertilized_egg", "Unfertilized_egg", "Fertilized_egg", "Fertilized_egg", "Cleavage", "Cleavage", "Cleavage", "Prawn_chip", "Prawn_chip", "Prawn_chip", "Early_gastrula", "Early_gastrula", "Early_gastrula", "Mid_gastrula", "Mid_gastrula", "Late_gastrula", "Late_gastrula", "Planula", "Planula", "Planula", "Adult", "Adult", "Adult")
 
 C2_Strader_MEs <- select(Strader_MEs, MEcoral1:MEmagenta4)
 C2_Strader_MEs$Mean <- rowMeans(C2_Strader_MEs)
@@ -522,14 +591,14 @@ C5_Strader_MEs <- select(Strader_MEs, MEdarkseagreen4:MEplum4)
 C5_Strader_MEs$Mean <- rowMeans(C5_Strader_MEs)
 C6_Strader_MEs <- select(Strader_MEs, MEdarkmagenta:MEviolet)
 C6_Strader_MEs$Mean <- rowMeans(C6_Strader_MEs)
-C7_Strader_MEs <- select(Strader_MEs, MEnavajowhite1:MEivory)
-C7_Strader_MEs$Mean <- rowMeans(C7_Strader_MEs)
-C8_Strader_MEs <- select(Strader_MEs, MEmediumpurple1:MEsienna3)
-C8_Strader_MEs$Mean <- rowMeans(C8_Strader_MEs)
-C9_Strader_MEs <- select(Strader_MEs, MEthistle4:MEsalmon4)
-C9_Strader_MEs$Mean <- rowMeans(C9_Strader_MEs)
+#C7_Strader_MEs <- select(Strader_MEs, MEnavajowhite1:MEivory)
+#C7_Strader_MEs$Mean <- rowMeans(C7_Strader_MEs)
+#C8_Strader_MEs <- select(Strader_MEs, MEmediumpurple1:MEsienna3)
+#C8_Strader_MEs$Mean <- rowMeans(C8_Strader_MEs)
+#C9_Strader_MEs <- select(Strader_MEs, MEthistle4:MEsalmon4)
+#C9_Strader_MEs$Mean <- rowMeans(C9_Strader_MEs)
 
-expressionProfile_data <- as.data.frame(cbind(time_point = Strader_MEs$time_point, cluster1= Strader_MEs$MEgrey, cluster2 = C2_Strader_MEs$Mean, cluster3 = C3_Strader_MEs$Mean, cluster4 = C4_Strader_MEs$Mean, cluster5 = C5_Strader_MEs$Mean, cluster6 = C6_Strader_MEs$Mean, cluster7 = C7_Strader_MEs$Mean, cluster8 = C8_Strader_MEs$Mean, cluster9 = C9_Strader_MEs$Mean))
+expressionProfile_data <- as.data.frame(cbind(time_point = Strader_MEs$lifestage, cluster1= Strader_MEs$MEgrey, cluster2 = C2_Strader_MEs$Mean, cluster3 = C3_Strader_MEs$Mean, cluster4 = C4_Strader_MEs$Mean, cluster5 = C5_Strader_MEs$Mean, cluster6 = C6_Strader_MEs$Mean))
 cols.num <- c(2:10)
 
 expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)

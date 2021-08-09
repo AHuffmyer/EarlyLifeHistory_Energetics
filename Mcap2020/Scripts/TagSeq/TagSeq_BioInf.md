@@ -253,4 +253,20 @@ scp ashuffmyer@ssh3.hac.uri.edu:/data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequ
 ```
 
 
+# Generate co-expression and adjacency  
 
+Move file to server 
+
+```
+
+```
+
+Create bash script 
+```
+
+```
+
+Move files off server
+```
+
+```

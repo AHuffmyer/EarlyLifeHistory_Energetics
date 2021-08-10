@@ -36,7 +36,7 @@ if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.pa
 if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
 
 library(BiocManager)
-if ("simplifyEnrichment" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("simplifyEnrichment") 
+#if ("simplifyEnrichment" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("simplifyEnrichment") 
 
 library("tidyverse")
 library("genefilter")
@@ -49,7 +49,7 @@ library("ComplexHeatmap")
 library("goseq")
 library("dplyr")
 library("clusterProfiler")
-library("simplifyEnrichment")
+#library("simplifyEnrichment") #need to install package
 library("pheatmap")
 ```
 
@@ -137,11 +137,11 @@ First we are going to log-transform the data using a variance stabilizing transf
 
 To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4. Otherwise, there could be artefacts in our results.
 ```{r}
-SF.gdds_dev <- estimateSizeFactors(gdds_dev) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than for to use vst
+SF.gdds_dev <- estimateSizeFactors(gdds_dev) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than 4 for us to use vst
 print(sizeFactors(SF.gdds_dev)) #View size factors
 ```
 
-Our size factors are all less than 4, so we can use VST!
+Our size factors are all less than 4, so we can use VST! VST = variance stabilizing transformation to minimize effects of small counts and normalize wrt library size
 ```{r}
 gvst_dev <- vst(gdds_dev, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
 head(assay(gvst_dev), 3) #view transformed gene count data
@@ -155,10 +155,14 @@ gsampleDistMatrix_dev <- as.matrix(gsampleDists_dev) #distance matrix
 rownames(gsampleDistMatrix_dev) <- colnames(gvst_dev) #assign row names
 colnames(gsampleDistMatrix_dev) <- NULL #assign col names
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
-pheatmap(gsampleDistMatrix_dev, #plot matrix
+
+pdf("Mcap2020/Figures/TagSeq/pheatmap.pdf")
+pht=pheatmap(gsampleDistMatrix_dev, #plot matrix
          clustering_distance_rows=gsampleDists_dev, #cluster rows
          clustering_distance_cols=gsampleDists_dev, #cluster columns
          col=colors) #set colors
+draw(pht)
+dev.off()
 ```
 
 ##### Principal component plot of samples
@@ -272,7 +276,7 @@ Save Rdata necessary for analysis in Bluewaves
 save(datExpr, file = "Mcap2020/Output/TagSeq/datExpr.RData")
 ```
 
-Co-expression similarity and adjacency, using the soft thresholding power 3 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network** because we have a relatively high softPower, according to (>12): https://peterlangfelder.com/2018/11/25/__trashed/
+Co-expression similarity and adjacency, using the soft thresholding power 5 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**: https://peterlangfelder.com/2018/11/25/__trashed/
 ```{r, }
 # #Set up workspace
 #getwd() #Display the current working directory
@@ -301,7 +305,7 @@ save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Sav
 save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
 ```
 
-Load in dissTOM file obtained from previous R chunk
+Load in dissTOM file obtained from previous R chunk  
 ```{r}
 dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
 dissTOM_in
@@ -390,6 +394,8 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tre
 dev.off()
 ```
 
+There are 6 modules before merging with 85% similarity.  
+
 Save new colors
 ```{r}
 moduleColors = mergedColors # Rename to moduleColors
@@ -399,7 +405,7 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-Instead of X modules, we are now working with 4, a much more reasonable number.
+We have 6 modules after merging (no merging necessary).  
 
 ### Plot new tree
 ```{r}
@@ -455,10 +461,13 @@ datTraits <- allTraits[,c(-1)]
 datTraits
 ```
 
-Define numbers of genes and samples
+Define numbers of genes and samples and print.  
 ```{r}
 nGenes = ncol(datExpr)
 nSamples = nrow(datExpr)
+
+nGenes
+nSamples
 ```
 
 Recalculate MEs with color labels
@@ -536,29 +545,15 @@ dev.off()
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #### Create dataframe that associates module colors with clusters based on the above heatmap and the MEtree dendrogram.
+
 ```{r}
-MEcluster1 <- data.frame(moduleColor = c("grey"), moduleCluster = c(1))
-MEcluster2 <- data.frame(moduleColor = c("coral1", "lavenderblush2", "lightslateblue", "magenta4"), moduleCluster = c(2))
-MEcluster3 <- data.frame(moduleColor = c("mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue"), moduleCluster = c(3))
-MEcluster4 <- data.frame(moduleColor = c("indianred3", "blue2", "plum3", "blue4", "skyblue1",  "brown2", "coral"), moduleCluster = c(4))
-MEcluster5 <- data.frame(moduleColor = c("darkseagreen4", "darkslateblue", "plum4"), moduleCluster = c(5))
-MEcluster6 <- data.frame(moduleColor = c("darkmagenta", "violet"), moduleCluster = c(6))
-#MEcluster7 <- data.frame(moduleColor = c("navajowhite1",  "blue", "cyan", "blueviolet", "ivory"), moduleCluster = c(7))
-#MEcluster8 <- data.frame(moduleColor = c("mediumpurple1", "salmon", "sienna3"), moduleCluster = c(8))
-#MEcluster9 <- data.frame(moduleColor = c("thistle4", "lightsteelblue", "salmon4"), moduleCluster = c(9))
+MEcluster1 <- data.frame(moduleColor = c("yellow"), moduleCluster = c(1))
+MEcluster2 <- data.frame(moduleColor = c("brown"), moduleCluster = c(2))
+MEcluster3 <- data.frame(moduleColor = c("turquoise"), moduleCluster = c(3))
+MEcluster4 <- data.frame(moduleColor = c("blue"), moduleCluster = c(4))
+MEcluster5 <- data.frame(moduleColor = c("green"), moduleCluster = c(5))
+MEcluster6 <- data.frame(moduleColor = c("red"), moduleCluster = c(6))
 
 moduleCluster = bind_rows(MEcluster1, MEcluster2, MEcluster3, MEcluster4, MEcluster5, MEcluster6)
 head(moduleCluster)
@@ -581,16 +576,18 @@ Create a column to the Strader_MEs data frame containing life stage
 ```{r}
 #Strader_MEs$time_point <- c("Unfertilized_egg", "Unfertilized_egg", "Unfertilized_egg", "Fertilized_egg", "Fertilized_egg", "Cleavage", "Cleavage", "Cleavage", "Prawn_chip", "Prawn_chip", "Prawn_chip", "Early_gastrula", "Early_gastrula", "Early_gastrula", "Mid_gastrula", "Mid_gastrula", "Late_gastrula", "Late_gastrula", "Planula", "Planula", "Planula", "Adult", "Adult", "Adult")
 
-C2_Strader_MEs <- select(Strader_MEs, MEcoral1:MEmagenta4)
-C2_Strader_MEs$Mean <- rowMeans(C2_Strader_MEs)
-C3_Strader_MEs <- select(Strader_MEs, MEmediumpurple3:MEmidnightblue)
-C3_Strader_MEs$Mean <- rowMeans(C3_Strader_MEs)
-C4_Strader_MEs <- select(Strader_MEs, MEindianred3:MEcoral)
-C4_Strader_MEs$Mean <- rowMeans(C4_Strader_MEs)
-C5_Strader_MEs <- select(Strader_MEs, MEdarkseagreen4:MEplum4)
-C5_Strader_MEs$Mean <- rowMeans(C5_Strader_MEs)
-C6_Strader_MEs <- select(Strader_MEs, MEdarkmagenta:MEviolet)
-C6_Strader_MEs$Mean <- rowMeans(C6_Strader_MEs)
+#C1_Strader_MEs <- select(Strader_MEs, MEyellow)
+#C1_Strader_MEs$Mean <- rowMeans(C2_Strader_MEs)
+#C2_Strader_MEs <- select(Strader_MEs, MEyellow)
+#C2_Strader_MEs$Mean <- rowMeans(C2_Strader_MEs)
+#C3_Strader_MEs <- select(Strader_MEs, MEbrown)
+#C3_Strader_MEs$Mean <- rowMeans(C3_Strader_MEs)
+#C4_Strader_MEs <- select(Strader_MEs, MEturquoise)
+#C4_Strader_MEs$Mean <- rowMeans(C4_Strader_MEs)
+#C5_Strader_MEs <- select(Strader_MEs, MEblue)
+#C5_Strader_MEs$Mean <- rowMeans(C5_Strader_MEs)
+#C6_Strader_MEs <- select(Strader_MEs, MEgreen)
+#C6_Strader_MEs$Mean <- rowMeans(C6_Strader_MEs)
 #C7_Strader_MEs <- select(Strader_MEs, MEnavajowhite1:MEivory)
 #C7_Strader_MEs$Mean <- rowMeans(C7_Strader_MEs)
 #C8_Strader_MEs <- select(Strader_MEs, MEmediumpurple1:MEsienna3)
@@ -598,11 +595,19 @@ C6_Strader_MEs$Mean <- rowMeans(C6_Strader_MEs)
 #C9_Strader_MEs <- select(Strader_MEs, MEthistle4:MEsalmon4)
 #C9_Strader_MEs$Mean <- rowMeans(C9_Strader_MEs)
 
-expressionProfile_data <- as.data.frame(cbind(time_point = Strader_MEs$lifestage, cluster1= Strader_MEs$MEgrey, cluster2 = C2_Strader_MEs$Mean, cluster3 = C3_Strader_MEs$Mean, cluster4 = C4_Strader_MEs$Mean, cluster5 = C5_Strader_MEs$Mean, cluster6 = C6_Strader_MEs$Mean))
-cols.num <- c(2:10)
+#expressionProfile_data <- as.data.frame(cbind(time_point = Strader_MEs$lifestage, cluster1= Strader_MEs$MEgrey, cluster2 = C2_Strader_MEs$Mean, cluster3 = C3_Strader_MEs$Mean, cluster4 = C4_Strader_MEs$Mean, cluster5 = C5_Strader_MEs$Mean, cluster6 = C6_Strader_MEs$Mean))
 
-expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
-sapply(expressionProfile_data, class)
+expressionProfile_data <- Strader_MEs
+
+expressionProfile_data<-expressionProfile_data%>%
+  droplevels() #drop unused level
+
+levels(expressionProfile_data$lifestage)
+
+#cols.num <- c(2:7)
+
+#expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
+#sapply(expressionProfile_data, class)
 
 dim(expressionProfile_data)
 head(expressionProfile_data)
@@ -610,23 +615,23 @@ head(expressionProfile_data)
 
 Set timepoint order for plotting
 ```{r}
-time_point_order = c("Unfertilized_egg", "Fertilized_egg", "Cleavage", "Prawn_chip", "Early_gastrula", "Mid_gastrula", "Late_gastrula", "Planula", "Adult") #Set time_point order
+time_point_order = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2") #Set time_point order
 ```
 
 
 Plot mean module eigengene for each cluster
 ```{r, warning=FALSE, message=FALSE}
-Cluster1Plot <- expressionProfile_data %>%
-        select(time_point, cluster1) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster1)) +
+YellowPlot <- expressionProfile_data %>%
+        select(lifestage, MEyellow) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEyellow, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
   ylab("Mean Module Eigenegene") +
   theme_bw() + 
-  ggtitle("A)") +
+  ggtitle("Yellow") +
   theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
@@ -638,17 +643,19 @@ Cluster1Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=18)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 1", size = 6) +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 1", size = 6) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
-Cluster2Plot <- expressionProfile_data %>%
-        select(time_point, cluster2) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster2)) +
+
+
+BrownPlot <- expressionProfile_data %>%
+        select(lifestage, MEbrown) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEbrown, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("B)") +
+  ggtitle("Brown") +
   theme_bw() + 
   theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
@@ -661,17 +668,19 @@ Cluster2Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 4", size = 6)  +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 4", size = 6)  +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
-Cluster3Plot <- expressionProfile_data %>%
-        select(time_point, cluster3) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster3)) +
+
+
+TurquoisePlot <- expressionProfile_data %>%
+        select(lifestage, MEturquoise) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEturquoise, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("C)") +
+  ggtitle("Turquoise") +
   theme_bw() + 
  theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
@@ -684,89 +693,21 @@ Cluster3Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 6", size = 6)  +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 6", size = 6)  +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster4Plot <- expressionProfile_data %>%
-        select(time_point, cluster4) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster4)) +
+
+BluePlot <- expressionProfile_data %>%
+        select(lifestage, MEblue) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEblue, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("D)") +
+  ggtitle("Blue") +
   ylab("Mean Module Eigenegene") +
   theme_bw() + 
- theme(axis.text.x=element_blank(), #set x-axis label size
-        axis.title.x=element_blank(), #set x-axis title size
-        axis.ticks.x=element_blank(), #No x-label ticks
-        axis.title.y=element_text(size = 14), #No y-axis title
-        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
-        panel.border = element_blank(), # Set border
-        panel.grid.major = element_blank(), #Set major gridlines
-        panel.grid.minor = element_blank(), #Set minor gridlines
-        axis.line = element_line(colour = "black"), #Set axes color
-        plot.background=element_blank(),
-        plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 7", size = 6)  +
-  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster5Plot <- expressionProfile_data %>%
-        select(time_point, cluster5) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster5)) +
-  geom_jitter(alpha = 0.5) +
-  geom_boxplot(alpha=0) +
-        scale_x_discrete(limits=time_point_order) +
-  #ylim(-0.5,1) +
-  ggtitle("E)") +
-  theme_bw() + 
- theme(axis.text.x=element_blank(), #set x-axis label size
-        axis.title.x=element_blank(), #set x-axis title size
-        axis.ticks.x=element_blank(), #No x-label ticks
-        axis.title.y=element_blank(), #No y-axis title
-        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
-        panel.border = element_blank(), # Set border
-        panel.grid.major = element_blank(), #Set major gridlines
-        panel.grid.minor = element_blank(), #Set minor gridlines
-        axis.line = element_line(colour = "black"), #Set axes color
-        plot.background=element_blank(),
-        plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
-  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster6Plot <- expressionProfile_data %>%
-        select(time_point, cluster6) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster6)) +
-  geom_jitter(alpha = 0.5) +
-  geom_boxplot(alpha=0) +
-        scale_x_discrete(limits=time_point_order) +
-  #ylim(-0.5,1) +
-  ggtitle("F)") +
-  theme_bw() + 
-  theme(axis.text.x=element_blank(), #set x-axis label size
-        axis.title.x=element_blank(), #set x-axis title size
-        axis.ticks.x=element_blank(), #No x-label ticks
-        axis.title.y=element_blank(), #No y-axis title
-        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
-        panel.border = element_blank(), # Set border
-        panel.grid.major = element_blank(), #Set major gridlines
-        panel.grid.minor = element_blank(), #Set minor gridlines
-        axis.line = element_line(colour = "black"), #Set axes color
-        plot.background=element_blank(),
-        plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 2", size = 6) +
-  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster7Plot <- expressionProfile_data %>%
-        select(time_point, cluster7) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster7)) +
-  geom_jitter(alpha = 0.5) +
-  geom_boxplot(alpha=0) +
-        scale_x_discrete(limits=time_point_order) +
-  #ylim(-0.5,1) +
-  ggtitle("G)") +
-  ylab("Mean Module Eigenegene") +
-  theme_bw() + 
+  xlab("Time Point") +
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
         axis.title.x=element_text(size = 14), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
@@ -778,18 +719,20 @@ Cluster7Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 5", size = 6) +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 5", size = 6) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster8Plot <- expressionProfile_data %>%
-        select(time_point, cluster8) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster8)) +
+
+GreenPlot <- expressionProfile_data %>%
+        select(lifestage, MEgreen) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEgreen, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("H)") +
+  ggtitle("Green") +
   theme_bw() + 
+  xlab("Time Point") +
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
         axis.title.x=element_text(size = 14), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
@@ -801,17 +744,19 @@ Cluster8Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
-Cluster9Plot <- expressionProfile_data %>%
-        select(time_point, cluster9) %>% 
-  group_by(time_point) %>% 
-  ggplot(aes(x=time_point, y=cluster9)) +
+
+
+RedPlot <- expressionProfile_data %>%
+        select(lifestage, MEred) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEred, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
   scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("I)") +
+  ggtitle("Red") +
   xlab("Time Point") +
   theme_bw() + #Set background color
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
@@ -825,38 +770,38 @@ Cluster9Plot <- expressionProfile_data %>%
         axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(),
         plot.title = element_text(size=22)) + #Set the plot background
-  annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
 ```
 
 Compile plots into 1 graph, aligning by y-axis and save
 ```{r}
-expressionProfiles <- cowplot::plot_grid(Cluster1Plot, Cluster2Plot, Cluster3Plot, Cluster4Plot, Cluster5Plot, Cluster6Plot, Cluster7Plot, Cluster8Plot, Cluster9Plot, align = "v", ncol = 3, nrow = 3)
-ggsave("2a-WGCNA/Output/SFig1-RNAseq-expressionProfiles.pdf", expressionProfiles, height = 16, width = 21, units = "in")
+expressionProfiles <- cowplot::plot_grid(YellowPlot, BrownPlot, TurquoisePlot, BluePlot, GreenPlot, RedPlot, align = "v", ncol = 3, nrow = 2, rel_heights = c(0.75,1))
+ggsave("Mcap2020/Figures/TagSeq/RNAseq-expressionProfiles.pdf", expressionProfiles, height = 12, width = 21, units = "in")
 ```
 
 ###  Gene relationship to trait and important modules: Gene Significance and Module Membership
 
-We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the gene and the time_point. For each module, we also define a quantitative measure of module membership MM as the correlation of the module eigengene and the gene expression profile. 
+We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the gene and the time_point. For each module, we also define a quantitative measure of module membership MM as the correlation of the module eigengene and the gene expression profile.  
 
 Define variable weight containing the weight column of datTrait
 ```{r}
-time_point <- as.data.frame(c(1,1,1,
-                              2,2,
-                              3,3,3,
-                              4,4,4,
-                              5,5,5,
-                              6,6,
-                              7,7,
-                              8,8,8,
-                              9,9,9))
-names(time_point) = "timepoint"
-dim(time_point)
+lifestage <- as.data.frame(expressionProfile_data$lifestage)
+names(lifestage) = "lifestage_num"
+
+lifestage$lifestage_num <- sub("_[^_]+$", "", lifestage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+
+lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
+dim(lifestage)
 ```
+
 
 Colors of the modules
 ```{r}
-modNames = substring(names(MEs), 3)
+names(datExpr) = gsub(pattern = "*.t1", replacement = "", x = names(datExpr))
+#remove ".ti" from names in datExpr file and assign gene id as probe names
+
+modNames = substring(names(MEs), 3) #pull out module names
 
 geneModuleMembership = as.data.frame(cor(datExpr, MEs, use = "p"));
 MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples));
@@ -864,34 +809,61 @@ MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamp
 names(geneModuleMembership) = paste("MM", modNames, sep="");
 names(MMPvalue) = paste("p.MM", modNames, sep="");
 
-geneTraitSignificance = as.data.frame(cor(datExpr, time_point, use = "p"));
+
+geneTraitSignificance = as.data.frame(cor(datExpr, lifestage, use = "p"));
 GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
 
-names(geneTraitSignificance) = paste("GS.", names(time_point), sep="");
-names(GSPvalue) = paste("p.GS.", names(time_point), sep="");
+names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
+names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
 ```
 
 
-### Summary output of network analysis results
+
+
+
+### Summary output of network analysis results 
 
 #### Make a dataframe that connects traits, genes, and gene annotation
 
-Import annotation file.
+Import annotation file from Erin Chille repository.  
 ```{r}
-Mcap.annot <- read_tsv( "0-BLAST-GO-KO/Output/200824_Mcap_Blast_GO_KO.tsv", col_names = TRUE) #biological annotation information
+Mcap.annot <- read_tsv( "Mcap2020/Data/TagSeq/200824_Mcap_Blast_GO_KO.tsv", col_names = TRUE) #biological annotation information
 tail(Mcap.annot)
 dim(Mcap.annot)
 ```
 
+
+
+
+
 Match up genes in datExpr to annotation file
 ```{r}
 names(Mcap.annot)
+
+names(datExpr) = gsub(pattern = "*.t1", replacement = "", x = names(datExpr))
+
 probes = names(datExpr)
+#remove ".ti" from names in datExpr file and assign gene id as probe names
+
 probes2annot = match(probes, Mcap.annot$gene_id)
 
 # The following is the number of probes without annotation... Should return 0.
 sum(is.na(probes2annot))
+
+row_nas<-which(is.na(probes2annot))
+
+#view the genes that do not have a match in the annotation file
+missing<-as.data.frame(probes[row_nas])
+view(missing)
 ```
+
+NEED TO FIGURE OUT WHY SOME AREN'T MATCHING THE ANNOTATION FILE 
+
+
+
+
+
+
 
 Create the starting data frame
 ```{r}
@@ -911,7 +883,7 @@ GSPvalue)
 
 Order modules by their significance for time_point
 ```{r}
-modOrder = order(-abs(cor(MEs, time_point, use = "p")))
+modOrder = order(-abs(cor(MEs, lifestage, use = "p")))
 ```
 
 Add module membership information in the chosen order
@@ -928,7 +900,7 @@ paste("p.MM.", modNames[modOrder[mod]], sep=""))
 
 Order the genes in the geneInfo variable first by module color, then by geneTraitSignificance
 ```{r}
-geneOrder = order(geneInfo0$moduleColor, -abs(geneInfo0$GS.timepoint));
+geneOrder = order(geneInfo0$moduleColor, -abs(geneInfo0$GS.lifestage_num));
 geneInfo = geneInfo0[geneOrder, ]
 head(geneInfo)
 ```
@@ -945,10 +917,45 @@ head(geneInfo)
 geneInfo$Annotation.GO.ID <- gsub(";NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 geneInfo$Annotation.GO.ID <- gsub("NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 
-write.csv(geneInfo, file = "2a-WGCNA/Output/geneInfo.csv")
+write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv")
+
 ```
 
-### Gene Ontology Analysis of each developmental phase: Maternal, Early ZGA, Late ZGA, Adult and other individual life stages
+
+
+AH STOPPED HERE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Gene Ontology Analysis of each developmental phase
 
 Obtain module color of all expressed genes (poverA = 0.85,5). Select all significantly-expressed maternal genes (p<0.05)
 ```{r}
@@ -957,18 +964,29 @@ genes.GO <- as.data.frame(t(datExpr))
 genes.GO <- cbind(gene_id = rownames(genes.GO), genes.GO)
 rownames(genes.GO) <- NULL
 
-#Maternal
-genesMat.GO <- genes.GO[,c(1:6)]
+#subset columns by developmental phase (need to match by sample number)
+
+#Egg
+genesEgg.GO <- genes.GO[,c("gene_id", "AH1", "AH12", "AH19", "AH26")]
 geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
 geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
-genesMat.GO$gene_id <- as.factor(genesMat.GO$gene_id) #Make factor for merge
-genesMat.GO <- merge(geneColor, genesMat.GO) #append module information
-head(genesMat.GO)
+genesEgg.GO$gene_id <- as.factor(genesEgg.GO$gene_id) #Make factor for merge
+genesEgg.GO <- merge(geneColor, genesEgg.GO) #append module information
+head(genesEgg.GO)
 
-MatColors <- c("grey", "coral1", "lightslateblue", "mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue")
-genesMat.GO.sig <- filter(genesMat.GO, moduleColor%in%MatColors)
-head(genesMat.GO.sig)
-dim(genesMat.GO.sig)
+EggColors <- c("turquoise", "blue", "red") #subset colors significantly related to the egg lifestage
+genesEgg.GO <- filter(genesEgg.GO, moduleColor%in%EggColors)
+head(genesEgg.GO)
+dim(genesEgg.GO)
+
+
+
+
+
+
+
+
+
 
 #Unfertilized Unfertilized Eggs
 genesUE.GO <- genes.GO[,c(1:4)]
@@ -1095,6 +1113,10 @@ genesAdult.GO.sig <- filter(genesAdult.GO, moduleColor%in%AdultColors)
 head(genesAdult.GO.sig)
 dim(genesAdult.GO.sig)
 ```
+
+
+
+
 
 Find the length of each gene using the stringtie_merged.gtf as a map
 ```{r}

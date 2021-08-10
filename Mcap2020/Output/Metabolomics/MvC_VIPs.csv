@@ -9,7 +9,7 @@ Nicotinamide ribotide,1.832785521415609,Increase
 Glutaryl-carnitine,1.79280561048705,Increase
 Indole,1.772482351333516,Increase
 Ophthalmate,1.7343242032087705,Nonsig
-NAD+,1.7036303637518218,Increase
+"NAD+",1.7036303637518218,Increase
 Mannose-6-phosphate,1.7025860916640416,Nonsig
 Adenosine,1.6885643415613842,Decrease
 Valine,1.6824560582647035,Decrease
@@ -23,7 +23,7 @@ Guanosine,1.5778543908809728,Decrease
 Uridine,1.5663698986820516,Nonsig
 Glutamine,1.5509048960267329,Decrease
 Itaconic acid,1.5268954380846378,Increase
-NADPH,1.5059582281338908,Increase
+"NADPH",1.5059582281338908,Increase
 Arginine-Glutamine,1.5008341868323702,Decrease
 ADP,1.4856343747756862,Increase
 Aspartate,1.4779160071004207,Nonsig

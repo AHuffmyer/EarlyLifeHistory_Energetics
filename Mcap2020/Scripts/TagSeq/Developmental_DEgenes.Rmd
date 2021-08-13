@@ -1,0 +1,468 @@
+---
+title: "Mcap Developmental Timeseries TagSeq WGCNA"
+author: "Erin Chille - Ariana Huffmyer"
+date: "Last updated 2021/08/11"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+# BSF Biomineralization Project
+## RNAseq Differential Expression Analysis 
+
+### Set up workspace
+
+Load libraries
+```{r, message=FALSE, warning=FALSE}
+library("genefilter")
+library("DESeq2")
+library("factoextra")
+library("NbClust")
+library("ComplexHeatmap")
+library("tidyverse")
+library("RColorBrewer")
+library("ggplot2")
+library("goseq")
+library("gridExtra")
+library("VennDiagram")
+library("patchwork")
+```
+
+Import the data files 
+```{r}
+#treatment information
+treatmentinfo <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(treatmentinfo)
+
+#gene count matrix
+gcount <- as.data.frame(read.csv("Mcap2020/Data/TagSeq/transcript_count_matrix.csv", row.names="gene_id"), colClasses = double)
+head(gcount)
+dim(gcount)
+
+#remove metamorphosed recruit 1 timepoint that we only had one sample for, D36, AH23
+drop <- c("AH23")
+gcount<-gcount[ , !(names(gcount) %in% drop)]
+
+#remove .ti artifacts in gene names 
+rownames(gcount) = gsub(pattern = "*.t1", replacement = "", x = rownames(gcount)) #remove .ti artifact in gene names
+
+treatmentinfo <- treatmentinfo%>%
+  filter(!sample_id=="AH23")%>%
+  droplevels()
+```
+
+### Analysis of time point 1_Egg
+
+#### Construct DESeq2 dataset
+
+##### Pre-filter gene counts
+Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests. We will  filter out low coverage samples. pOvera = 10% with counts of 10 per gene, as done in WGCNA analysis. *This filter will be used for all life stages*
+```{r}
+#keep only selected life stage from treatmentinfo and count data
+#treatmentinfo_Egg <- filter(treatmentinfo, lifestage=="1_Egg")
+#gcount_Egg <- gcount[, treatmentinfo_Egg$sample_id]
+
+#Set filter values for PoverA, P=10% percent of the samples have counts over A=10. We chose this value allowing only 4 of 40 samples to have a value less than 10 per gene. 
+filt <- filterfun(pOverA(0.1,10))
+
+#create filter for the counts data
+gfilt <- genefilter(gcount, filt)
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify gene lists
+gn.keep <- rownames(gkeep)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+gcount_filt <- as.data.frame(gcount[which(rownames(gcount) %in% gn.keep),])
+head(gcount_filt)
+dim(gcount_filt)
+```
+
+#### Construct the DESeq dataset
+Merge the treatment and time_point columns into a new column , group. Set group as a factor.
+```{r}
+#treatmentinfo_Egg$treatment <- factor(treatmentinfo_Egg$treatment, levels = c("amb","l", "xl"))
+```
+
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at the interaction of time_point and treatment to test for any differences in gene expression across timepoints attributed to treatment.
+```{r}
+#Set DESeq2 design
+gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
+                              colData = treatmentinfo,
+                              design = ~lifestage)
+```
+
+#### Visualize gene count data
+
+We're looking to see if the samples of the same lifestage cluster
+
+##### Log-transform the count data
+First we are going to log-transform the data using a variance stabilizing transforamtion (vst). This is only for visualization purposes. Essentially, this is roughly similar to putting the data on the log2 scale. It will deal with the sampling variability of low counts by calculating within-group variability (if blind=FALSE). Importantly, it does not use the design to remove variation in the data, and so can be used to examine if there may be any variability do to technical factors such as extraction batch effects.
+
+To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4. Otherwise, there could be artifacts in our results.
+```{r}
+SF.gdds <- estimateSizeFactors(gdds) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than 4 to use vst
+print(sizeFactors(SF.gdds)) #View size factors
+```
+
+Our size factors are all less than 4, so we can use VST!
+```{r}
+gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
+```
+
+#### Principal component plot of samples
+```{r}
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE)
+percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
+PCA <- ggplot(gPCAdata, aes(PC1, PC2, color=lifestage)) + 
+  geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  #scale_color_manual(labels = c("pH 7.8", "pH 7.6","pH 7.3"), values = c("amb"="cadetblue", "l"="palevioletred", "xl"="indianred3")) +
+  coord_fixed() +
+  theme_bw() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) + #Set the plot background
+  theme(legend.position = ("right")); PCA #set title attributes
+```
+
+Lifestages are clustering as expected from PCA in WGCNA step.  
+
+#### Differential Gene Expression Analysis
+
+##### Run DE analysis
+
+Run differential expression test using a Wald model. 
+```{r, message = FALSE}
+DEG <- DESeq(gdds) #run differential expression test by group using the Wald model
+```
+
+Explore significant p-values for pairwise lifestage comparisons (conducted chronologically and in biological order) and generate .csv files for each comparison.  
+```{r, message = FALSE}
+#Egg vs embryo
+DEG.results.egg_vs_embryo <- results(DEG, contrast= c("lifestage", "1_Egg","2_Embryo"))
+head(DEG.results.egg_vs_embryo)
+sum(DEG.results.egg_vs_embryo$padj < 0.05, na.rm=TRUE)
+#there are 427 differentially expressed genes 
+DEGs.egg_vs_embryo <- as.data.frame(subset(DEG.results.egg_vs_embryo, padj<0.05))
+DEGs.egg_vs_embryo$contrast <- as.factor(c("egg_vs_embryo"))
+DEGs.egg_vs_embryo$gene_id  <- rownames(DEGs.egg_vs_embryo)
+rownames(DEGs.egg_vs_embryo) <- NULL
+#DEGs.egg_vs_embryo$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEGs.egg_vs_embryo$gene_id) #remove .ti artifact in gene names
+#write.csv(DEGs.egg_vs_embryo, "Mcap2020/Output/TagSeq/DEGs_eggs_vs_embryo.csv")
+
+#Embryo vs larvae 1
+DEG.results.embryo_vs_larvae1 <- results(DEG, contrast= c("lifestage","2_Embryo", "3_Larvae1"))
+head(DEG.results.embryo_vs_larvae1)
+sum(DEG.results.embryo_vs_larvae1$padj < 0.05, na.rm=TRUE)
+#there are 3803 differentially expressed genes 
+DEG.results.embryo_vs_larvae1 <- as.data.frame(subset(DEG.results.embryo_vs_larvae1, padj<0.05))
+DEG.results.embryo_vs_larvae1$contrast <- as.factor(c("embryo_vs_larvae1"))
+DEG.results.embryo_vs_larvae1$gene_id  <- rownames(DEG.results.embryo_vs_larvae1)
+rownames(DEG.results.embryo_vs_larvae1) <- NULL
+#DEG.results.embryo_vs_larvae1$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.embryo_vs_larvae1$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.embryo_vs_larvae1, "Mcap2020/Output/TagSeq/DEGs_embryo_vs_larvae1.csv")
+
+#Larvae 1 vs Larvae 2
+DEG.results.larvae1_vs_larvae2 <- results(DEG, contrast= c("lifestage","3_Larvae1", "4_Larvae2"))
+head(DEG.results.larvae1_vs_larvae2)
+sum(DEG.results.larvae1_vs_larvae2$padj < 0.05, na.rm=TRUE)
+#there are 6449 differentially expressed genes 
+DEG.results.larvae1_vs_larvae2 <- as.data.frame(subset(DEG.results.larvae1_vs_larvae2, padj<0.05))
+DEG.results.larvae1_vs_larvae2$contrast <- as.factor(c("larvae1_vs_larvae2"))
+DEG.results.larvae1_vs_larvae2$gene_id  <- rownames(DEG.results.larvae1_vs_larvae2)
+rownames(DEG.results.larvae1_vs_larvae2) <- NULL
+#DEG.results.larvae1_vs_larvae2$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae1_vs_larvae2$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae1_vs_larvae2, "Mcap2020/Output/TagSeq/DEGs_larvae1_vs_larvae2.csv")
+
+#Larvae 2 vs Larvae 3
+DEG.results.larvae2_vs_larvae3 <- results(DEG, contrast= c("lifestage","4_Larvae2", "5_Larvae3"))
+head(DEG.results.larvae2_vs_larvae3)
+sum(DEG.results.larvae2_vs_larvae3$padj < 0.05, na.rm=TRUE)
+#there are 2299 differentially expressed genes 
+DEG.results.larvae2_vs_larvae3 <- as.data.frame(subset(DEG.results.larvae2_vs_larvae3, padj<0.05))
+DEG.results.larvae2_vs_larvae3$contrast <- as.factor(c("larvae2_vs_larvae3"))
+DEG.results.larvae2_vs_larvae3$gene_id  <- rownames(DEG.results.larvae2_vs_larvae3)
+rownames(DEG.results.larvae2_vs_larvae3) <- NULL
+#DEG.results.larvae2_vs_larvae3$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae2_vs_larvae3$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae2_vs_larvae3, "Mcap2020/Output/TagSeq/DEGs_larvae2_vs_larvae3.csv")
+
+
+#Larvae 3 vs Larvae 4
+DEG.results.larvae3_vs_larvae4 <- results(DEG, contrast= c("lifestage","5_Larvae3", "6_Larvae4"))
+head(DEG.results.larvae3_vs_larvae4)
+sum(DEG.results.larvae3_vs_larvae4$padj < 0.05, na.rm=TRUE)
+#there are 1089 differentially expressed genes 
+DEG.results.larvae3_vs_larvae4 <- as.data.frame(subset(DEG.results.larvae3_vs_larvae4, padj<0.05))
+DEG.results.larvae3_vs_larvae4$contrast <- as.factor(c("larvae3_vs_larvae4"))
+DEG.results.larvae3_vs_larvae4$gene_id  <- rownames(DEG.results.larvae3_vs_larvae4)
+rownames(DEG.results.larvae3_vs_larvae4) <- NULL
+#DEG.results.larvae3_vs_larvae4$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae3_vs_larvae4$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae3_vs_larvae4, "Mcap2020/Output/TagSeq/DEGs_larvae3_vs_larvae4.csv")
+
+#Larvae 4 vs Larvae 6
+DEG.results.larvae4_vs_larvae6 <- results(DEG, contrast= c("lifestage","6_Larvae4", "7_Larvae6"))
+head(DEG.results.larvae4_vs_larvae6)
+sum(DEG.results.larvae4_vs_larvae6$padj < 0.05, na.rm=TRUE)
+#there are 2830 differentially expressed genes 
+DEG.results.larvae4_vs_larvae6 <- as.data.frame(subset(DEG.results.larvae4_vs_larvae6, padj<0.05))
+DEG.results.larvae4_vs_larvae6$contrast <- as.factor(c("larvae4_vs_larvae6"))
+DEG.results.larvae4_vs_larvae6$gene_id  <- rownames(DEG.results.larvae4_vs_larvae6)
+rownames(DEG.results.larvae4_vs_larvae6) <- NULL
+#DEG.results.larvae4_vs_larvae6$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae4_vs_larvae6$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae4_vs_larvae6, "Mcap2020/Output/TagSeq/DEGs_larvae4_vs_larvae6.csv")
+
+#Larvae 6 vs Metamorphosed Recruit 2
+DEG.results.larvae6_vs_meta1 <- results(DEG, contrast= c("lifestage", "7_Larvae6", "8_MetamorposedRecruit2"))
+head(DEG.results.larvae6_vs_meta1)
+sum(DEG.results.larvae6_vs_meta1$padj < 0.05, na.rm=TRUE)
+#there are 344 differentially expressed genes 
+DEG.results.larvae6_vs_meta1 <- as.data.frame(subset(DEG.results.larvae6_vs_meta1, padj<0.05))
+DEG.results.larvae6_vs_meta1$contrast <- as.factor(c("larvae6_vs_meta"))
+DEG.results.larvae6_vs_meta1$gene_id  <- rownames(DEG.results.larvae6_vs_meta1)
+rownames(DEG.results.larvae6_vs_meta1) <- NULL
+#DEG.results.larvae6_vs_meta1$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae6_vs_meta1$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae6_vs_meta1, "Mcap2020/Output/TagSeq/DEGs_larvae6_vs_meta.csv")
+
+#Larvae 6 vs Calcifying Recruit 1
+DEG.results.larvae6_vs_calc1 <- results(DEG, contrast= c("lifestage", "7_Larvae6", "9_CalcifyingRecruit1"))
+head(DEG.results.larvae6_vs_calc1)
+sum(DEG.results.larvae6_vs_calc1$padj < 0.05, na.rm=TRUE)
+#there are 2763 differentially expressed genes 
+DEG.results.larvae6_vs_calc1 <- as.data.frame(subset(DEG.results.larvae6_vs_calc1, padj<0.05))
+DEG.results.larvae6_vs_calc1$contrast <- as.factor(c("larvae6_vs_calc1"))
+DEG.results.larvae6_vs_calc1$gene_id  <- rownames(DEG.results.larvae6_vs_calc1)
+rownames(DEG.results.larvae6_vs_calc1) <- NULL
+#DEG.results.larvae6_vs_calc1$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.larvae6_vs_calc1$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.larvae6_vs_calc1, "Mcap2020/Output/TagSeq/DEGs_larvae6_vs_calc1.csv")
+
+#Metamorphosed Recruit 2 vs Calcifying Recruit 1
+DEG.results.meta1_vs_calc1 <- results(DEG, contrast= c("lifestage", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1"))
+head(DEG.results.meta1_vs_calc1)
+sum(DEG.results.meta1_vs_calc1$padj < 0.05, na.rm=TRUE)
+#there are 2459 differentially expressed genes 
+DEG.results.meta1_vs_calc1 <- as.data.frame(subset(DEG.results.meta1_vs_calc1, padj<0.05))
+DEG.results.meta1_vs_calc1$contrast <- as.factor(c("meta_vs_calc1"))
+DEG.results.meta1_vs_calc1$gene_id  <- rownames(DEG.results.meta1_vs_calc1)
+rownames(DEG.results.meta1_vs_calc1) <- NULL
+#DEG.results.meta1_vs_calc1$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.meta1_vs_calc1$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.meta1_vs_calc1, "Mcap2020/Output/TagSeq/DEGs_meta_vs_calc1.csv")
+
+#Calcifying Recruit 1 vs Calcifying Recruit 2
+DEG.results.calc1_vs_calc2 <- results(DEG, contrast= c("lifestage", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2"))
+head(DEG.results.calc1_vs_calc2)
+sum(DEG.results.calc1_vs_calc2$padj < 0.05, na.rm=TRUE)
+#there are 176 differentially expressed genes 
+DEG.results.calc1_vs_calc2 <- as.data.frame(subset(DEG.results.calc1_vs_calc2, padj<0.05))
+DEG.results.calc1_vs_calc2$contrast <- as.factor(c("calc1_vs_calc2"))
+DEG.results.calc1_vs_calc2$gene_id  <- rownames(DEG.results.calc1_vs_calc2)
+rownames(DEG.results.calc1_vs_calc2) <- NULL
+#DEG.results.calc1_vs_calc2$gene_id = gsub(pattern = "*.t1", replacement = "", x = DEG.results.calc1_vs_calc2$gene_id) #remove .ti artifact in gene names
+#write.csv(DEG.results.calc1_vs_calc2, "Mcap2020/Output/TagSeq/DEGs_calc1_vs_calc2.csv")
+
+```
+
+Generate a data frame of all DEGs from all lifestages.  
+
+```{r}
+DEGs_all <- bind_rows(DEGs.egg_vs_embryo, DEG.results.embryo_vs_larvae1, DEG.results.larvae1_vs_larvae2, DEG.results.larvae2_vs_larvae3, DEG.results.larvae3_vs_larvae4, DEG.results.larvae4_vs_larvae6, DEG.results.larvae6_vs_meta1, DEG.results.larvae6_vs_calc1, DEG.results.meta1_vs_calc1, DEG.results.calc1_vs_calc2)
+write.csv(DEGs_all, "Mcap2020/Output/TagSeq/DEGs_all_lifestages.csv")
+```
+
+
+AH STOPPED HERE 8/12/2021
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### Visualize differentially-expressed genes
+
+
+
+
+
+HAVING TROUBLE WITH THIS SECTION 
+
+
+##### Subset and Log-transform the count data
+
+Subset the gene count matrix by the list of DEGs
+```{r}
+DEGlist <- gdds[unique(DEGs_all$gene_id),] #pulling unique genes out that appear in the DEG's list - might need to remove unique? Without it there are repeats in the genes?
+```
+
+We know from before that our size factors are all less than 4, so we can use VST!
+```{r}
+DEGvst <- vst(DEGlist, blind=FALSE) #apply a variance stabilizing transforamtion to minimize efplncts of small counts and normalize wrt library size
+head(assay(DEGvst)) #view transformed gene count data
+dim(assay(DEGvst))
+```
+
+Make a matrix for computing similarity
+```{r}
+mat <- assay(DEGvst)#[pln_topVarGenes, ] #make an expression object
+mat <- mat - rowMeans(mat) #difference in expression compared to average across all samples
+#mat <- na.omit(mat)
+dim(mat)
+
+```
+
+
+### Compute the optimal number of clusters for plotting
+Find the optimum number of clusters using 30 indexes with the NbClust() package. This took about 45 minutes to run, so it is commented out. Screenshots of the output are provided below.
+```{r}
+ nb <- NbClust(t(mat), distance = "euclidean", min.nc = 2,
+         max.nc = 10, method = "kmeans")
+ 
+ fviz_nbclust(nb)
+```
+
+
+Get and save clustering results with DESeq2 results
+```{r}
+# calc.kmeans <- kmeans(matpln, 2)
+# cluster_res <- data.frame(gene_id = names(calc.kmeans$cluster), cluster = calc.kmeans$cluster)
+# 
+# pln_DEGs_all <- merge(pln_DEGs_all, cluster_res, by = "gene_id")
+# write.csv(pln_DEGs_all, file="4-Differential-Gene-Expression-Analysis/Output/pln_DEGs_all.csv")
+```
+
+NEED TO DO THIS ABOVE PART STILL
+
+#### Plot a heatmap of differentially-expressed genes
+```{r}
+pln_DEGs_all_clust <- read.csv("4-Differential-Gene-Expression-Analysis/Output/pln_DEGs_all.csv", header = TRUE, sep = ",")[,-c(1)]
+pln_DEGs_all_clust <- subset(pln_DEGs_all_clust, select = c(gene_id, cluster))
+
+#Prepare annotations
+hm_ann_row <- unique(pln_DEGs_all_clust)
+rownames(hm_ann_row) <- hm_ann_row$gene_id
+hm_ann_row <- subset(hm_ann_row, select=cluster)
+hm_ann_row$cluster <- gsub(1,"Cluster1",hm_ann_row$cluster)
+hm_ann_row$cluster <- gsub(2,"Cluster2",hm_ann_row$cluster)
+hm_ann_row <- as.matrix(hm_ann_row[rownames(matpln),])
+
+hmTreatment <- colData(pln_DEGvst)[c("treatment")]
+
+hmTreatment$treatment <- gsub("amb", "pH 7.8", hmTreatment$treatment) #replace AMB, l, and xl with pH 7.8, pH 7.6, and pH 7.3 for plotting
+hmTreatment$treatment <- gsub("xl", "pH 7.3", hmTreatment$treatment) #replace AMB, l, and xl with pH 7.8, pH 7.6, and pH 7.3 for plotting
+hmTreatment$treatment <- gsub("l", "pH 7.6", hmTreatment$treatment) #replace AMB, l, and xl with pH 7.8, pH 7.6, and pH 7.3 for plotting
+hmTreatment$treatment <- factor(hmTreatment$treatment, levels=c("pH 7.8", "pH 7.6", "pH 7.3"))
+
+hm_ann_col <- HeatmapAnnotation(df=hmTreatment, col = list(treatment=c("pH 7.8" ="cadetblue", "pH 7.6" ="palevioletred", "pH 7.3"  ="indianred3"))) #make dataframe for column naming
+
+pln_DEGheatmap <-  Heatmap(matpln, column_title = "Treatment", 
+        name = "expression",
+        show_row_names = FALSE, top_annotation = hm_ann_col, show_column_names = FALSE, row_dend_side = "left" ,
+        column_split = 3, column_dend_height = unit(0.5, "in"),
+        km = 2, row_km_repeats = 100, row_title = c("Cluster1", "Cluster2"),
+        row_gap = unit(2.5, "mm"), border = TRUE,
+        column_names_gp =  gpar(fontsize = 10)); pln_DEGheatmap
+
+png(file = "4-Differential-Gene-Expression-Analysis/Output/OA-PLN_DEGheatmap.png")
+pln_DEGheatmap
+dev.off()
+```
+
+### Venn Diagram of pairwise comparisons DEGs in Planula
+```{r}
+pln_l_vs_amb_venn <- as.data.frame(pln_DEGs.l_vs_amb$gene_id)
+colnames(pln_l_vs_amb_venn) <- c("gene_id")
+pln_l_vs_amb_venn$contrast <- as.character(c("Low vs Ambient"))
+head(pln_l_vs_amb_venn)
+
+pln_xl_vs_amb_venn <- as.data.frame(pln_DEGs.xl_vs_amb$gene_id)
+colnames(pln_xl_vs_amb_venn) <- c("gene_id")
+pln_xl_vs_amb_venn$contrast <- as.character(c("Extreme Low vs Ambient"))
+head(pln_xl_vs_amb_venn)
+
+pln_xl_vs_l_venn <- as.data.frame(pln_DEGs.xl_vs_l$gene_id)
+colnames(pln_xl_vs_l_venn) <- c("gene_id")
+pln_xl_vs_l_venn$contrast <- as.character(c("Extreme Low vs Low"))
+head(pln_xl_vs_l_venn)
+
+pln_DEGs_all_venn <- bind_rows(pln_l_vs_amb_venn, pln_xl_vs_amb_venn, pln_xl_vs_l_venn)
+
+# Chart
+futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") #suppress log file generation
+
+venn.diagram(
+       x = list(
+    pln_DEGs_all_venn %>% filter(contrast=="Low vs Ambient") %>% subset(select=gene_id) %>% unlist() , 
+    pln_DEGs_all_venn %>% filter(contrast=="Extreme Low vs Ambient") %>% subset(select=gene_id) %>% unlist() , 
+    pln_DEGs_all_venn %>% filter(contrast=="Extreme Low vs Low") %>% subset(select=gene_id) %>% unlist()
+    ),
+  category.names = c("pH 7.6 vs pH 7.8" , "pH 7.3 vs pH 7.8" , "pH 7.3 vs pH 7.6"),
+        filename = '4-Differential-Gene-Expression-Analysis/Output/venn_OA_pln_DEGs.png',
+  output=TRUE,
+        
+        # Output features
+        imagetype="png" ,
+        height = 700 , 
+        width = 700 , 
+        resolution = 300,
+        compression = "lzw",
+        lwd = 0.75, #line width
+  
+        # Numbers
+        cex = 0.5,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.5,
+        cat.fontface = "bold",
+        cat.default.pos = "outer",
+        cat.pos = c(-27, 18, 135),
+        cat.dist = c(0.055, 0.055, 0.085),
+        cat.fontfamily = "sans",
+        rotation = 1
+)
+```
+
+Put together PCA plots for final and supplementary figures
+```{r}
+SFigX <- fePCA / clvgPCA / pcPCA / gsaPCA + plot_annotation(tag_levels = "a", tag_suffix = ")"); SFigX
+ggsave(file = "4-Differential-Gene-Expression-Analysis/Output/SFig-fe2gsa-PCA.png", SFigX, width = 7.5, height = 11, units = "in")
+# Fig3 <- allgenesfilt_PCA / plnPCA + plot_annotation(tag_levels = "a", tag_suffix = ")") #Must have allgenesfilt_PCA from WGCNA script in environment
+# ggsave(file = "Final_figures/Fig3.png", Fig3, width = 7.5, height = 9, units = "in")
+```

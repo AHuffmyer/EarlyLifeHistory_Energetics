@@ -832,10 +832,6 @@ tail(Mcap.annot)
 dim(Mcap.annot)
 ```
 
-
-
-
-
 Match up genes in datExpr to annotation file
 ```{r}
 names(Mcap.annot)
@@ -858,12 +854,6 @@ view(missing)
 ```
 
 NEED TO FIGURE OUT WHY SOME AREN'T MATCHING THE ANNOTATION FILE 
-
-
-
-
-
-
 
 Create the starting data frame
 ```{r}
@@ -917,47 +907,15 @@ head(geneInfo)
 geneInfo$Annotation.GO.ID <- gsub(";NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 geneInfo$Annotation.GO.ID <- gsub("NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 
-write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv")
+write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for reference/supplement
 
 ```
 
-
-
-AH STOPPED HERE 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Gene Ontology Analysis of each developmental phase
 
-Obtain module color of all expressed genes (poverA = 0.85,5). Select all significantly-expressed maternal genes (p<0.05)
+Obtain module color of all expressed genes (poverA = 0.1,10). Select all significantly-expressed genes (p<0.05)
+
+Need to make these long chunks into loops to clean script  
 ```{r}
 #Prepare dataframe
 genes.GO <- as.data.frame(t(datExpr))
@@ -973,161 +931,143 @@ geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
 genesEgg.GO$gene_id <- as.factor(genesEgg.GO$gene_id) #Make factor for merge
 genesEgg.GO <- merge(geneColor, genesEgg.GO) #append module information
 head(genesEgg.GO)
+dim(genesEgg.GO)
 
-EggColors <- c("turquoise", "blue", "red") #subset colors significantly related to the egg lifestage
+EggColors <- c("turquoise", "blue", "red", "brown") #subset colors significantly related to the egg lifestage based on module map
 genesEgg.GO <- filter(genesEgg.GO, moduleColor%in%EggColors)
 head(genesEgg.GO)
 dim(genesEgg.GO)
 
-
-
-
-
-
-
-
-
-
-#Unfertilized Unfertilized Eggs
-genesUE.GO <- genes.GO[,c(1:4)]
+#Embryo
+genesEmb.GO <- genes.GO[,c("gene_id", "AH28", "AH29", "AH30", "AH31")]
 geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
 geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
-genesUE.GO$gene_id <- as.factor(genesUE.GO$gene_id) #Make factor for merge
-genesUE.GO <- merge(geneColor, genesUE.GO) #append module information
-head(genesUE.GO)
+genesEmb.GO$gene_id <- as.factor(genesEmb.GO$gene_id) #Make factor for merge
+genesEmb.GO <- merge(geneColor, genesEmb.GO) #append module information
+head(genesEmb.GO)
 
-UEColors <- c("grey", "coral1", "mediumpurple3", "antiquewhite2", "antiquewhite4", "thistle", "honeydew1", "midnightblue")
-genesUE.GO.sig <- filter(genesUE.GO, moduleColor%in%UEColors)
-head(genesUE.GO.sig)
-dim(genesUE.GO.sig)
+EmbColors <- c("turquoise", "blue", "red", "brown")
+genesEmb.GO <- filter(genesEmb.GO, moduleColor%in%EmbColors)
+head(genesEmb.GO)
+dim(genesEmb.GO)
 
-#Fertilized Eggs
-genesFE.GO <- genes.GO[,c(1, 5:6)]
+#Larvae1
+genesL1.GO <- genes.GO[,c("gene_id", "AH2", "AH3", "AH4", "AH32")]
 geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
 geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
-genesFE.GO$gene_id <- as.factor(genesFE.GO$gene_id) #Make factor for merge
-genesFE.GO <- merge(geneColor, genesFE.GO) #append module information
-head(genesFE.GO)
+genesL1.GO$gene_id <- as.factor(genesL1.GO$gene_id) #Make factor for merge
+genesL1.GO <- merge(geneColor, genesL1.GO) #append module information
+head(genesL1.GO)
 
-FEColors <- c("coral1", "lightslateblue", "mediumpurple3", "antiquewhite2", "midnightblue")
-genesFE.GO.sig <- filter(genesFE.GO, moduleColor%in%FEColors)
-head(genesFE.GO.sig)
-dim(genesFE.GO.sig)
+L1Colors <- c("red", "green", "blue", "turquoise", "brown")
+genesL1.GO <- filter(genesL1.GO, moduleColor%in%L1Colors)
+head(genesL1.GO)
+dim(genesL1.GO)
 
-#Early ZGA
-genesZGA1.GO <- genes.GO[,c(1, 7:15)]
-genesZGA1.GO$gene_id <- as.factor(genesZGA1.GO$gene_id) #Make factor for merge
-genesZGA1.GO <- merge(geneColor, genesZGA1.GO) #append module info ZGA1ion
-head(genesZGA1.GO)
+#Larvae2
+genesL2.GO <- genes.GO[,c("gene_id", "AH5", "AH6", "AH7", "AH8")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL2.GO$gene_id <- as.factor(genesL2.GO$gene_id) #Make factor for merge
+genesL2.GO <- merge(geneColor, genesL2.GO) #append module information
+head(genesL2.GO)
 
-ZGA1Colors <- c("magenta4","indianred3", "blue2", "plum3", "blue4", "skyblue1", "brown2", "coral", "darkslateblue", "plum4", "violet")
-genesZGA1.GO.sig <- filter(genesZGA1.GO, moduleColor%in%ZGA1Colors)
-head(genesZGA1.GO.sig)
-dim(genesZGA1.GO.sig)
+L2Colors <- c("red")
+genesL2.GO <- filter(genesL2.GO, moduleColor%in%L2Colors)
+head(genesL2.GO)
+dim(genesL2.GO)
 
-#Cleavage
-genesClvg.GO <- genes.GO[,c(1, 7:9)]
-genesClvg.GO$gene_id <- as.factor(genesClvg.GO$gene_id) #Make factor for merge
-genesClvg.GO <- merge(geneColor, genesClvg.GO) #append module info Clvgion
-head(genesClvg.GO)
+#Larvae3
+genesL3.GO <- genes.GO[,c("gene_id", "AH9", "AH10", "AH11", "AH13")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL3.GO$gene_id <- as.factor(genesL3.GO$gene_id) #Make factor for merge
+genesL3.GO <- merge(geneColor, genesL3.GO) #append module information
+head(genesL3.GO)
 
-ClvgColors <- c("blue2", "violet")
-genesClvg.GO.sig <- filter(genesClvg.GO, moduleColor%in%ClvgColors)
-head(genesClvg.GO.sig)
-dim(genesClvg.GO.sig)
+L3Colors <- c("yellow")
+genesL3.GO <- filter(genesL3.GO, moduleColor%in%L3Colors)
+head(genesL3.GO)
+dim(genesL3.GO)
 
-#Prawn Chip
-genesPC.GO <- genes.GO[,c(1, 10:12)]
-genesPC.GO$gene_id <- as.factor(genesPC.GO$gene_id) #Make factor for merge
-genesPC.GO <- merge(geneColor, genesPC.GO) #append module info PCion
-head(genesPC.GO)
+#Larvae4
+genesL4.GO <- genes.GO[,c("gene_id", "AH14", "AH15", "AH16", "AH17")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL4.GO$gene_id <- as.factor(genesL4.GO$gene_id) #Make factor for merge
+genesL4.GO <- merge(geneColor, genesL4.GO) #append module information
+head(genesL4.GO)
 
-PCColors <- c("indianred3", "blue2", "plum3", "blue4", "coral", "violet")
-genesPC.GO.sig <- filter(genesPC.GO, moduleColor%in%PCColors)
-head(genesPC.GO.sig)
-dim(genesPC.GO.sig)
+L4Colors <- c("yellow")
+genesL4.GO <- filter(genesL4.GO, moduleColor%in%L4Colors)
+head(genesL4.GO)
+dim(genesL4.GO)
 
-#Early Gastrula
-genesEG.GO <- genes.GO[,c(1, 13:15)]
-genesEG.GO$gene_id <- as.factor(genesEG.GO$gene_id) #Make factor for merge
-genesEG.GO <- merge(geneColor, genesEG.GO) #append module info EGion
-head(genesEG.GO)
+#Larvae6
+genesL6.GO <- genes.GO[,c("gene_id", "AH18", "AH20", "AH21", "AH22")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL6.GO$gene_id <- as.factor(genesL6.GO$gene_id) #Make factor for merge
+genesL6.GO <- merge(geneColor, genesL6.GO) #append module information
+head(genesL6.GO)
 
-EGColors <- c("magenta4", "plum3", "blue4", "skyblue1", "brown2", "coral", "darkslateblue", "plum4")
-genesEG.GO.sig <- filter(genesEG.GO, moduleColor%in%EGColors)
-head(genesEG.GO.sig)
-dim(genesEG.GO.sig)
+L6Colors <- c("turquoise", "brown")
+genesL6.GO <- filter(genesL6.GO, moduleColor%in%L6Colors)
+head(genesL6.GO)
+dim(genesL6.GO) 
 
-#Late ZGA
-genesZGA2.GO <- genes.GO[,c(1, 16:22)]
-genesZGA2.GO$gene_id <- as.factor(genesZGA2.GO$gene_id) #Make factor for merge
-genesZGA2.GO <- merge(geneColor, genesZGA2.GO) #append module info ZGA2ion
-head(genesZGA2.GO)
+#Metamorphosed
+genesM.GO <- genes.GO[,c("gene_id", "AH24", "AH25", "AH27")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesM.GO$gene_id <- as.factor(genesM.GO$gene_id) #Make factor for merge
+genesM.GO <- merge(geneColor, genesM.GO) #append module information
+head(genesM.GO)
 
-ZGA2Colors <- c("magenta4", "skyblue1", "darkseagreen", "darkslateblue", "thistle4", "salmon4", "mediumpurple1", "sienna3", "salmon", "blue")
-genesZGA2.GO.sig <- filter(genesZGA2.GO, moduleColor%in%ZGA2Colors)
-head(genesZGA2.GO.sig)
-dim(genesZGA2.GO.sig)
+MColors <- c("brown")
+genesM.GO <- filter(genesM.GO, moduleColor%in%MColors)
+head(genesM.GO)
+dim(genesM.GO) 
 
-#Mid Gastrula
-genesMG.GO <- genes.GO[,c(1, 16:17)]
-genesMG.GO$gene_id <- as.factor(genesMG.GO$gene_id) #Make factor for merge
-genesMG.GO <- merge(geneColor, genesMG.GO) #append module info MGion
-head(genesMG.GO)
+#Calcifying1
+genesC1.GO <- genes.GO[,c("gene_id", "AH33", "AH36", "AH37", "39")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesC1.GO$gene_id <- as.factor(genesC1.GO$gene_id) #Make factor for merge
+genesC1.GO <- merge(geneColor, genesC1.GO) #append module information
+head(genesC1.GO)
 
-MGColors <- c("magenta4", "skyblue1", "darkseagreen", "darkslateblue", "thistle4", "salmon4")
-genesMG.GO.sig <- filter(genesMG.GO, moduleColor%in%MGColors)
-head(genesMG.GO.sig)
-dim(genesMG.GO.sig)
+C1Colors <- c("brown")
+genesC1.GO <- filter(genesC1.GO, moduleColor%in%C1Colors)
+head(genesC1.GO)
+dim(genesC1.GO) 
 
-#Late Gastrula
-genesLG.GO <- genes.GO[,c(1, 18:19)]
-genesLG.GO$gene_id <- as.factor(genesLG.GO$gene_id) #Make factor for merge
-genesLG.GO <- merge(geneColor, genesLG.GO) #append module info LGion
-head(genesLG.GO)
+#Calcifying2
+genesC2.GO <- genes.GO[,c("gene_id", "AH34", "AH35", "AH38")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesC2.GO$gene_id <- as.factor(genesC2.GO$gene_id) #Make factor for merge
+genesC2.GO <- merge(geneColor, genesC2.GO) #append module information
+head(genesC2.GO)
 
-LGColors <- c("mediumpurple1", "sienna3", "thistle4", "salmon4")
-genesLG.GO.sig <- filter(genesLG.GO, moduleColor%in%LGColors)
-head(genesLG.GO.sig)
-dim(genesLG.GO.sig)
+C2Colors <- c("brown")
+genesC2.GO <- filter(genesC2.GO, moduleColor%in%C2Colors)
+head(genesC2.GO)
+dim(genesC2.GO) 
 
-#Planula
-genesPln.GO <- genes.GO[,c(1, 20:22)]
-genesPln.GO$gene_id <- as.factor(genesPln.GO$gene_id) #Make factor for merge
-genesPln.GO <- merge(geneColor, genesPln.GO) #append module info Plnion
-head(genesPln.GO)
-
-PlnColors <- c("blue", "salmon", "sienna3")
-genesPln.GO.sig <- filter(genesPln.GO, moduleColor%in%PlnColors)
-head(genesPln.GO.sig)
-dim(genesPln.GO.sig)
-
-#Adult
-genesAdult.GO <- genes.GO[,c(1, 23:25)]
-genesAdult.GO$gene_id <- as.factor(genesAdult.GO$gene_id) #Make factor for merge
-genesAdult.GO <- merge(geneColor, genesAdult.GO) #append module info Adult
-head(genesAdult.GO)
-
-AdultColors <- c("antiquewhite4", "thistle", "navajowhite1", "blue", "cyan", "blueviolet", "ivory")
-genesAdult.GO.sig <- filter(genesAdult.GO, moduleColor%in%AdultColors)
-head(genesAdult.GO.sig)
-dim(genesAdult.GO.sig)
 ```
 
-
-
-
-
-Find the length of each gene using the stringtie_merged.gtf as a map
+Find the length of each gene using the Mcapitata_merged.gtf as a map
 ```{r}
-map <- read.csv(file="1-QC-Align-Assemble/Output/stringtie_merged.gtf", header=FALSE, sep="\t", skip=2) #load sample info
-map <- subset(map, V3=="transcript")
+map <- read.csv(file="Mcap2020/Output/TagSeq/Mcapitata_merged.gtf", header=FALSE, sep="\t", skip=2) #load gtf file from stringtie and DE on cluster
+map <- subset(map, V3=="transcript") #subset transcripts
 map <- map[,c(1,4,5,9)]
 map <- separate(map, V9, into = c("gene_id", "transcript_id", "gene_name"), sep=";")
 map$gene_id <- gsub("gene_id ","",map$gene_id) #remove extra characters
 map$gene_id <- gsub(" ","",map$gene_id) #remove extra characters
 map$transcript_id <- gsub("transcript_id ","",map$transcript_id) #remove extra characters
 map$transcript_id <- gsub(" ","",map$transcript_id) #remove extra characters
+map$transcript_id = gsub(pattern = "*.t1", replacement = "", map$transcript_id) #remove extra characters
 map$gene_name <- gsub("ref_gene_id ","",map$gene_name) #remove extra characters
 # map$gene_name <- gsub("gene_name ","",map$gene_name) #remove extra characters
 map$gene_name <- gsub(" ","",map$gene_name) #remove extra characters
@@ -1144,144 +1084,98 @@ map <- map %>% mutate(gene_length=(map$stop-map$start))
 map <- select(map, gene_id, gene_length)
 ```
 
-Build a data frame that links the gene IDs, modules, and counts of expressed maternal genes (poverA = 0.09,5) and the gene lengths.
+Build a data frame that links the gene IDs, modules, and counts of genes and the gene lengths.
 ```{r}
 GOref <- merge(genes.GO, map, by.x="gene_id")
-head(GOref)
-dim(GOref) #Should have 32772
 ```
 
 GOseq requires a vector of all genes and all differentially expressed genes. 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-#Maternal
-Matgene.vector <- as.vector(genesMat.GO.sig$gene_id)
-Matgene.vector=as.integer(GOref$gene_id%in%Matgene.vector)
-names(Matgene.vector)=GOref$gene_id
-head(Matgene.vector)
-MatID.vector <- GOref$gene_id #Make ID vector
-head(MatID.vector)
-dim(MatID.vector)
-MatLength.vector <- GOref$gene_length #Make length vector
-head(MatLength.vector)
+#Egg
+Egg_gene.vector <- as.vector(genesEgg.GO$gene_id)
+Egg_gene.vector=as.integer(GOref$gene_id%in%Egg_gene.vector)
+names(Egg_gene.vector)=GOref$gene_id
+EggID.vector <- GOref$gene_id #Make ID vector
+EggLength.vector <- GOref$gene_length #Make length vector
 
-UEgene.vector <- as.vector(genesUE.GO.sig$gene_id)
-UEgene.vector=as.integer(GOref$gene_id%in%UEgene.vector)
-names(UEgene.vector)=GOref$gene_id
-head(UEgene.vector)
-UEID.vector <- GOref$gene_id #Make ID vector
-head(UEID.vector)
-dim(UEID.vector)
-UELength.vector <- GOref$gene_length #Make length vector
-head(UELength.vector)
+#Embryo
+Emb_gene.vector <- as.vector(genesEmb.GO$gene_id)
+Emb_gene.vector=as.integer(GOref$gene_id%in%Emb_gene.vector)
+names(Emb_gene.vector)=GOref$gene_id
+EmbID.vector <- GOref$gene_id #Make ID vector
+EmbLength.vector <- GOref$gene_length #Make length vector
 
-FEgene.vector <- as.vector(genesFE.GO.sig$gene_id)
-FEgene.vector=as.integer(GOref$gene_id%in%FEgene.vector)
-names(FEgene.vector)=GOref$gene_id
-head(FEgene.vector)
-FEID.vector <- GOref$gene_id #Make ID vector
-head(FEID.vector)
-dim(FEID.vector)
-FELength.vector <- GOref$gene_length #Make length vector
-head(FELength.vector)
+#Larvae1
+L1_gene.vector <- as.vector(genesL1.GO$gene_id)
+L1_gene.vector=as.integer(GOref$gene_id%in%L1_gene.vector)
+names(L1_gene.vector)=GOref$gene_id
+L1ID.vector <- GOref$gene_id #Make ID vector
+L1Length.vector <- GOref$gene_length #Make length vector
 
-#First ZGA
-ZGA1gene.vector <- as.vector(genesZGA1.GO.sig$gene_id)
-ZGA1gene.vector=as.integer(GOref$gene_id%in%ZGA1gene.vector)
-names(ZGA1gene.vector)=GOref$gene_id
-head(ZGA1gene.vector)
-ZGA1ID.vector <- GOref$gene_id #Make ID vector
-head(ZGA1ID.vector)
-ZGA1Length.vector <- GOref$gene_length #Make length vector
-head(ZGA1Length.vector)
+#Larvae2
+L2_gene.vector <- as.vector(genesL2.GO$gene_id)
+L2_gene.vector=as.integer(GOref$gene_id%in%L2_gene.vector)
+names(L2_gene.vector)=GOref$gene_id
+L2ID.vector <- GOref$gene_id #Make ID vector
+L2Length.vector <- GOref$gene_length #Make length vector
 
-Clvggene.vector <- as.vector(genesClvg.GO.sig$gene_id)
-Clvggene.vector=as.integer(GOref$gene_id%in%Clvggene.vector)
-names(Clvggene.vector)=GOref$gene_id
-head(Clvggene.vector)
-ClvgID.vector <- GOref$gene_id #Make ID vector
-head(ClvgID.vector)
-ClvgLength.vector <- GOref$gene_length #Make length vector
-head(ClvgLength.vector)
+#Larvae3
+L3_gene.vector <- as.vector(genesL3.GO$gene_id)
+L3_gene.vector=as.integer(GOref$gene_id%in%L3_gene.vector)
+names(L3_gene.vector)=GOref$gene_id
+L3ID.vector <- GOref$gene_id #Make ID vector
+L3Length.vector <- GOref$gene_length #Make length vector
 
-PCgene.vector <- as.vector(genesPC.GO.sig$gene_id)
-PCgene.vector=as.integer(GOref$gene_id%in%PCgene.vector)
-names(PCgene.vector)=GOref$gene_id
-head(PCgene.vector)
-PCID.vector <- GOref$gene_id #Make ID vector
-head(PCID.vector)
-PCLength.vector <- GOref$gene_length #Make length vector
-head(PCLength.vector)
+#Larvae4
+L4_gene.vector <- as.vector(genesL4.GO$gene_id)
+L4_gene.vector=as.integer(GOref$gene_id%in%L4_gene.vector)
+names(L4_gene.vector)=GOref$gene_id
+L4ID.vector <- GOref$gene_id #Make ID vector
+L4Length.vector <- GOref$gene_length #Make length vector
 
-EGgene.vector <- as.vector(genesEG.GO.sig$gene_id)
-EGgene.vector=as.integer(GOref$gene_id%in%EGgene.vector)
-names(EGgene.vector)=GOref$gene_id
-head(EGgene.vector)
-EGID.vector <- GOref$gene_id #Make ID vector
-head(EGID.vector)
-EGLength.vector <- GOref$gene_length #Make length vector
-head(EGLength.vector)
+#Larvae6
+L6_gene.vector <- as.vector(genesL6.GO$gene_id)
+L6_gene.vector=as.integer(GOref$gene_id%in%L6_gene.vector)
+names(L6_gene.vector)=GOref$gene_id
+L6ID.vector <- GOref$gene_id #Make ID vector
+L6Length.vector <- GOref$gene_length #Make length vector
 
-#Second ZGA
-ZGA2gene.vector <- as.vector(genesZGA2.GO.sig$gene_id)
-ZGA2gene.vector=as.integer(GOref$gene_id%in%ZGA2gene.vector)
-names(ZGA2gene.vector)=GOref$gene_id
-head(ZGA2gene.vector)
-ZGA2ID.vector <- GOref$gene_id #Make ID vector
-head(ZGA2ID.vector)
-ZGA2Length.vector <- GOref$gene_length #Make length vector
-head(ZGA2Length.vector)
+#Metamorphosed
+M_gene.vector <- as.vector(genesM.GO$gene_id)
+M_gene.vector=as.integer(GOref$gene_id%in%M_gene.vector)
+names(M_gene.vector)=GOref$gene_id
+MID.vector <- GOref$gene_id #Make ID vector
+MLength.vector <- GOref$gene_length #Make length vector
 
-MGgene.vector <- as.vector(genesMG.GO.sig$gene_id)
-MGgene.vector=as.integer(GOref$gene_id%in%MGgene.vector)
-names(MGgene.vector)=GOref$gene_id
-head(MGgene.vector)
-MGID.vector <- GOref$gene_id #Make ID vector
-head(MGID.vector)
-MGLength.vector <- GOref$gene_length #Make length vector
-head(MGLength.vector)
+#Calcifying 1
+C1_gene.vector <- as.vector(genesC1.GO$gene_id)
+C1_gene.vector=as.integer(GOref$gene_id%in%C1_gene.vector)
+names(C1_gene.vector)=GOref$gene_id
+C1ID.vector <- GOref$gene_id #Make ID vector
+C1Length.vector <- GOref$gene_length #Make length vector
 
-LGgene.vector <- as.vector(genesLG.GO.sig$gene_id)
-LGgene.vector=as.integer(GOref$gene_id%in%LGgene.vector)
-names(LGgene.vector)=GOref$gene_id
-head(LGgene.vector)
-LGID.vector <- GOref$gene_id #Make ID vector
-head(LGID.vector)
-LGLength.vector <- GOref$gene_length #Make length vector
-head(LGLength.vector)
-
-Plngene.vector <- as.vector(genesPln.GO.sig$gene_id)
-Plngene.vector=as.integer(GOref$gene_id%in%Plngene.vector)
-names(Plngene.vector)=GOref$gene_id
-head(Plngene.vector)
-PlnID.vector <- GOref$gene_id #Make ID vector
-head(PlnID.vector)
-PlnLength.vector <- GOref$gene_length #Make length vector
-head(PlnLength.vector)
-
-#Adult
-Adultgene.vector <- as.vector(genesAdult.GO.sig$gene_id)
-Adultgene.vector=as.integer(GOref$gene_id%in%Adultgene.vector)
-names(Adultgene.vector)=GOref$gene_id
-head(Adultgene.vector)
-AdultID.vector <- GOref$gene_id #Make ID vector
-head(AdultID.vector)
-AdultLength.vector <- GOref$gene_length #Make length vector
-head(AdultLength.vector)
+#Calcifying 2
+C2_gene.vector <- as.vector(genesC2.GO$gene_id)
+C2_gene.vector=as.integer(GOref$gene_id%in%C2_gene.vector)
+names(C2_gene.vector)=GOref$gene_id
+C2ID.vector <- GOref$gene_id #Make ID vector
+C2Length.vector <- GOref$gene_length #Make length vector
 
 #Calculate Probability Weighting Function
-pwf.Mat<-nullp(Matgene.vector, MatID.vector, bias.data=MatLength.vector) #weight vector by length of gene
-pwf.UE<-nullp(UEgene.vector, UEID.vector, bias.data=UELength.vector) #weight vector by length of gene
-pwf.FE<-nullp(FEgene.vector, FEID.vector, bias.data=FELength.vector) #weight vector by length of gene
-pwf.ZGA1<-nullp(ZGA1gene.vector, ZGA1ID.vector, bias.data=ZGA1Length.vector) #weight vector by length of gene
-pwf.Clvg<-nullp(Clvggene.vector, ClvgID.vector, bias.data=ClvgLength.vector) #weight vector by length of gene
-pwf.PC<-nullp(PCgene.vector, PCID.vector, bias.data=PCLength.vector) #weight vector by length of gene
-pwf.EG<-nullp(EGgene.vector, EGID.vector, bias.data=EGLength.vector) #weight vector by length of gene
-pwf.ZGA2<-nullp(ZGA2gene.vector, ZGA2ID.vector, bias.data=ZGA2Length.vector) #weight vector by length of gene
-pwf.MG<-nullp(MGgene.vector, MGID.vector, bias.data=MGLength.vector) #weight vector by length of gene
-pwf.LG<-nullp(LGgene.vector, LGID.vector, bias.data=LGLength.vector) #weight vector by length of gene
-pwf.Pln<-nullp(Plngene.vector, PlnID.vector, bias.data=PlnLength.vector) #weight vector by length of gene
-pwf.Adult<-nullp(Adultgene.vector, AdultID.vector, bias.data=AdultLength.vector) #weight vector by length of gene
+pwf.Egg<-nullp(Egg_gene.vector, EggID.vector, bias.data=EggLength.vector) #weight vector by length of gene
+pwf.Emb<-nullp(Emb_gene.vector, EmbID.vector, bias.data=EmbLength.vector) #weight vector by length of gene
+pwf.L1<-nullp(L1_gene.vector, L1ID.vector, bias.data=L1Length.vector) #weight vector by length of gene
+pwf.L2<-nullp(L2_gene.vector, L2ID.vector, bias.data=L2Length.vector) #weight vector by length of gene
+pwf.L3<-nullp(L3_gene.vector, L3ID.vector, bias.data=L3Length.vector) #weight vector by length of gene
+pwf.L4<-nullp(L4_gene.vector, L4ID.vector, bias.data=L4Length.vector) #weight vector by length of gene
+pwf.L6<-nullp(L6_gene.vector, L6ID.vector, bias.data=L6Length.vector) #weight vector by length of gene
+pwf.M<-nullp(M_gene.vector, MID.vector, bias.data=MLength.vector) #weight vector by length of gene
+pwf.C1<-nullp(C1_gene.vector, C1ID.vector, bias.data=C1Length.vector) #weight vector by length of gene
+pwf.C2<-nullp(C2_gene.vector, C2ID.vector, bias.data=C2Length.vector) #weight vector by length of gene
 ```
+
+Need to learn what above plots mean 
+
 
 Prepare GO term dataframe
 ```{r}
@@ -1306,160 +1200,161 @@ tail(GO.terms, 10)
 
 Find enriched GO terms, "selection-unbiased testing for category enrichment amongst significantly expressed genes for RNA-seq data"
 ```{r, warning=FALSE, message=FALSE}
-GOwall.Mat <- goseq(pwf.Mat, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-dim(GOwall.Mat)
-head(GOwall.Mat)
-GOwall.UE <- goseq(pwf.UE, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.FE <- goseq(pwf.FE, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.ZGA1 <- goseq(pwf.ZGA1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.Clvg <- goseq(pwf.Clvg, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.PC <- goseq(pwf.PC, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.EG <- goseq(pwf.EG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.ZGA2 <- goseq(pwf.ZGA2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.MG <- goseq(pwf.MG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.LG <- goseq(pwf.LG, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.Pln <- goseq(pwf.Pln, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
-GOwall.Adult <- goseq(pwf.Adult, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GOwall.Egg <- goseq(pwf.Egg, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+dim(GOwall.Egg)
+head(GOwall.Egg)
+
+GOwall.Emb <- goseq(pwf.Emb, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L1 <- goseq(pwf.L1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L2 <- goseq(pwf.L2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L3 <- goseq(pwf.L3, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L4 <- goseq(pwf.L4, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L6 <- goseq(pwf.L6, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.M <- goseq(pwf.M, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.C1 <- goseq(pwf.C1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.C2 <- goseq(pwf.C2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
 ```
 
 Find only enriched GO terms that are statistically significant at cutoff
 ```{r}
-Mat.GO.05<-GOwall.Mat$category[GOwall.Mat$over_represented_pvalue<.05]
-Mat.GO.05<-data.frame(Mat.GO.05)
-colnames(Mat.GO.05) <- c("category")
-Mat.GO.05 <- merge(Mat.GO.05, GOwall.Mat, by="category")
-Mat.GO.05 <- Mat.GO.05[order(Mat.GO.05$ontology, Mat.GO.05$over_represented_pvalue, -Mat.GO.05$numDEInCat),]
-Mat.GO.05$term <- as.factor(Mat.GO.05$term)
-dim(Mat.GO.05) #Number of sig GO terms
-nrow(filter(Mat.GO.05, ontology=="BP")) #number sig BP terms
+Egg.GO.05<-GOwall.Egg$category[GOwall.Egg$over_represented_pvalue<.05]
+Egg.GO.05<-data.frame(Egg.GO.05)
+colnames(Egg.GO.05) <- c("category")
+Egg.GO.05 <- merge(Egg.GO.05, GOwall.Egg, by="category")
+Egg.GO.05 <- Egg.GO.05[order(Egg.GO.05$ontology, Egg.GO.05$over_represented_pvalue, -Egg.GO.05$numDEInCat),]
+Egg.GO.05$term <- as.factor(Egg.GO.05$term)
+dim(Egg.GO.05) #Number of sig GO terms
+nrow(filter(Egg.GO.05, ontology=="BP")) #number sig BP terms
 
-UE.GO.05<-GOwall.UE$category[GOwall.UE$over_represented_pvalue<.05]
-UE.GO.05<-data.frame(UE.GO.05)
-colnames(UE.GO.05) <- c("category")
-UE.GO.05 <- merge(UE.GO.05, GOwall.UE, by="category")
-UE.GO.05 <- UE.GO.05[order(UE.GO.05$ontology, UE.GO.05$over_represented_pvalue, -UE.GO.05$numDEInCat),]
-UE.GO.05$term <- as.factor(UE.GO.05$term)
-dim(UE.GO.05) #Number of sig GO terms
-nrow(filter(UE.GO.05, ontology=="BP")) #number sig BP terms
+Emb.GO.05<-GOwall.Emb$category[GOwall.Emb$over_represented_pvalue<.05]
+Emb.GO.05<-data.frame(Emb.GO.05)
+colnames(Emb.GO.05) <- c("category")
+Emb.GO.05 <- merge(Emb.GO.05, GOwall.Emb, by="category")
+Emb.GO.05 <- Emb.GO.05[order(Emb.GO.05$ontology, Emb.GO.05$over_represented_pvalue, -Emb.GO.05$numDEInCat),]
+Emb.GO.05$term <- as.factor(Emb.GO.05$term)
+dim(Emb.GO.05) #Number of sig GO terms
+nrow(filter(Emb.GO.05, ontology=="BP")) #number sig BP terms
 
-FE.GO.05<-GOwall.FE$category[GOwall.FE$over_represented_pvalue<.05]
-FE.GO.05<-data.frame(FE.GO.05)
-colnames(FE.GO.05) <- c("category")
-FE.GO.05 <- merge(FE.GO.05, GOwall.FE, by="category")
-FE.GO.05 <- FE.GO.05[order(FE.GO.05$ontology, FE.GO.05$over_represented_pvalue, -FE.GO.05$numDEInCat),]
-FE.GO.05$term <- as.factor(FE.GO.05$term)
-dim(FE.GO.05) #Number of sig GO terms
-nrow(filter(FE.GO.05, ontology=="BP")) #number sig BP terms
+L1.GO.05<-GOwall.L1$category[GOwall.L1$over_represented_pvalue<.05]
+L1.GO.05<-data.frame(L1.GO.05)
+colnames(L1.GO.05) <- c("category")
+L1.GO.05 <- merge(L1.GO.05, GOwall.L1, by="category")
+L1.GO.05 <- L1.GO.05[order(L1.GO.05$ontology, L1.GO.05$over_represented_pvalue, -L1.GO.05$numDEInCat),]
+L1.GO.05$term <- as.factor(L1.GO.05$term)
+dim(L1.GO.05) #Number of sig GO terms
+nrow(filter(L1.GO.05, ontology=="BP")) #number sig BP terms
 
-ZGA1.GO.05<-GOwall.ZGA1$category[GOwall.ZGA1$over_represented_pvalue<.05]
-ZGA1.GO.05<-data.frame(ZGA1.GO.05)
-colnames(ZGA1.GO.05) <- c("category")
-ZGA1.GO.05 <- merge(ZGA1.GO.05, GOwall.ZGA1, by="category")
-ZGA1.GO.05 <- ZGA1.GO.05[order(ZGA1.GO.05$ontology, ZGA1.GO.05$over_represented_pvalue, -ZGA1.GO.05$numDEInCat),]
-ZGA1.GO.05$term <- as.factor(ZGA1.GO.05$term)
-dim(ZGA1.GO.05) #Number of sig GO terms
-nrow(filter(ZGA1.GO.05, ontology=="BP")) #number sig BP terms
+L2.GO.05<-GOwall.L2$category[GOwall.L2$over_represented_pvalue<.05]
+L2.GO.05<-data.frame(L2.GO.05)
+colnames(L2.GO.05) <- c("category")
+L2.GO.05 <- merge(L2.GO.05, GOwall.L2, by="category")
+L2.GO.05 <- L2.GO.05[order(L2.GO.05$ontology, L2.GO.05$over_represented_pvalue, -L2.GO.05$numDEInCat),]
+L2.GO.05$term <- as.factor(L2.GO.05$term)
+dim(L2.GO.05) #Number of sig GO terms
+nrow(filter(L2.GO.05, ontology=="BP")) #number sig BP terms
 
-Clvg.GO.05<-GOwall.Clvg$category[GOwall.Clvg$over_represented_pvalue<.05]
-Clvg.GO.05<-data.frame(Clvg.GO.05)
-colnames(Clvg.GO.05) <- c("category")
-Clvg.GO.05 <- merge(Clvg.GO.05, GOwall.Clvg, by="category")
-Clvg.GO.05 <- Clvg.GO.05[order(Clvg.GO.05$ontology, Clvg.GO.05$over_represented_pvalue, -Clvg.GO.05$numDEInCat),]
-Clvg.GO.05$term <- as.factor(Clvg.GO.05$term)
-dim(Clvg.GO.05) #Number of sig GO terms
-nrow(filter(Clvg.GO.05, ontology=="BP")) #number sig BP terms
+L3.GO.05<-GOwall.L3$category[GOwall.L3$over_represented_pvalue<.05]
+L3.GO.05<-data.frame(L3.GO.05)
+colnames(L3.GO.05) <- c("category")
+L3.GO.05 <- merge(L3.GO.05, GOwall.L3, by="category")
+L3.GO.05 <- L3.GO.05[order(L3.GO.05$ontology, L3.GO.05$over_represented_pvalue, -L3.GO.05$numDEInCat),]
+L3.GO.05$term <- as.factor(L3.GO.05$term)
+dim(L3.GO.05) #Number of sig GO terms
+nrow(filter(L3.GO.05, ontology=="BP")) #number sig BP terms
 
-PC.GO.05<-GOwall.PC$category[GOwall.PC$over_represented_pvalue<.05]
-PC.GO.05<-data.frame(PC.GO.05)
-colnames(PC.GO.05) <- c("category")
-PC.GO.05 <- merge(PC.GO.05, GOwall.PC, by="category")
-PC.GO.05 <- PC.GO.05[order(PC.GO.05$ontology, PC.GO.05$over_represented_pvalue, -PC.GO.05$numDEInCat),]
-PC.GO.05$term <- as.factor(PC.GO.05$term)
-dim(PC.GO.05) #Number of sig GO terms
-nrow(filter(PC.GO.05, ontology=="BP")) #number sig BP terms
+L4.GO.05<-GOwall.L4$category[GOwall.L4$over_represented_pvalue<.05]
+L4.GO.05<-data.frame(L4.GO.05)
+colnames(L4.GO.05) <- c("category")
+L4.GO.05 <- merge(L4.GO.05, GOwall.L4, by="category")
+L4.GO.05 <- L4.GO.05[order(L4.GO.05$ontology, L4.GO.05$over_represented_pvalue, -L4.GO.05$numDEInCat),]
+L4.GO.05$term <- as.factor(L4.GO.05$term)
+dim(L4.GO.05) #Number of sig GO terms
+nrow(filter(L4.GO.05, ontology=="BP")) #number sig BP terms
 
-EG.GO.05<-GOwall.EG$category[GOwall.EG$over_represented_pvalue<.05]
-EG.GO.05<-data.frame(EG.GO.05)
-colnames(EG.GO.05) <- c("category")
-EG.GO.05 <- merge(EG.GO.05, GOwall.EG, by="category")
-EG.GO.05 <- EG.GO.05[order(EG.GO.05$ontology, EG.GO.05$over_represented_pvalue, -EG.GO.05$numDEInCat),]
-EG.GO.05$term <- as.factor(EG.GO.05$term)
-dim(EG.GO.05) #Number of sig GO terms
-nrow(filter(EG.GO.05, ontology=="BP")) #number sig BP terms
+L6.GO.05<-GOwall.L6$category[GOwall.L6$over_represented_pvalue<.05]
+L6.GO.05<-data.frame(L6.GO.05)
+colnames(L6.GO.05) <- c("category")
+L6.GO.05 <- merge(L6.GO.05, GOwall.L6, by="category")
+L6.GO.05 <- L6.GO.05[order(L6.GO.05$ontology, L6.GO.05$over_represented_pvalue, -L6.GO.05$numDEInCat),]
+L6.GO.05$term <- as.factor(L6.GO.05$term)
+dim(L6.GO.05) #Number of sig GO terms
+nrow(filter(L6.GO.05, ontology=="BP")) #number sig BP terms
 
-ZGA2.GO.05<-GOwall.ZGA2$category[GOwall.ZGA2$over_represented_pvalue<.05]
-ZGA2.GO.05<-data.frame(ZGA2.GO.05)
-colnames(ZGA2.GO.05) <- c("category")
-ZGA2.GO.05 <- merge(ZGA2.GO.05, GOwall.ZGA2, by="category")
-ZGA2.GO.05 <- ZGA2.GO.05[order(ZGA2.GO.05$ontology, ZGA2.GO.05$over_represented_pvalue, -ZGA2.GO.05$numDEInCat),]
-ZGA2.GO.05$term <- as.factor(ZGA2.GO.05$term)
-dim(ZGA2.GO.05) #Number of sig GO terms
-nrow(filter(ZGA2.GO.05, ontology=="BP")) #number sig BP terms
+M.GO.05<-GOwall.M$category[GOwall.M$over_represented_pvalue<.05]
+M.GO.05<-data.frame(M.GO.05)
+colnames(M.GO.05) <- c("category")
+M.GO.05 <- merge(M.GO.05, GOwall.M, by="category")
+M.GO.05 <- M.GO.05[order(M.GO.05$ontology, M.GO.05$over_represented_pvalue, -M.GO.05$numDEInCat),]
+M.GO.05$term <- as.factor(M.GO.05$term)
+dim(M.GO.05) #Number of sig GO terms
+nrow(filter(M.GO.05, ontology=="BP")) #number sig BP terms
 
-MG.GO.05<-GOwall.MG$category[GOwall.MG$over_represented_pvalue<.05]
-MG.GO.05<-data.frame(MG.GO.05)
-colnames(MG.GO.05) <- c("category")
-MG.GO.05 <- merge(MG.GO.05, GOwall.MG, by="category")
-MG.GO.05 <- MG.GO.05[order(MG.GO.05$ontology, MG.GO.05$over_represented_pvalue, -MG.GO.05$numDEInCat),]
-MG.GO.05$term <- as.factor(MG.GO.05$term)
-dim(MG.GO.05) #Number of sig GO terms
-nrow(filter(MG.GO.05, ontology=="BP")) #number sig BP terms
+C1.GO.05<-GOwall.C1$category[GOwall.C1$over_represented_pvalue<.05]
+C1.GO.05<-data.frame(C1.GO.05)
+colnames(C1.GO.05) <- c("category")
+C1.GO.05 <- merge(C1.GO.05, GOwall.C1, by="category")
+C1.GO.05 <- C1.GO.05[order(C1.GO.05$ontology, C1.GO.05$over_represented_pvalue, -C1.GO.05$numDEInCat),]
+C1.GO.05$term <- as.factor(C1.GO.05$term)
+dim(C1.GO.05) #Number of sig GO terms
+nrow(filter(C1.GO.05, ontology=="BP")) #number sig BP terms
 
-LG.GO.05<-GOwall.LG$category[GOwall.LG$over_represented_pvalue<.05]
-LG.GO.05<-data.frame(LG.GO.05)
-colnames(LG.GO.05) <- c("category")
-LG.GO.05 <- merge(LG.GO.05, GOwall.LG, by="category")
-LG.GO.05 <- LG.GO.05[order(LG.GO.05$ontology, LG.GO.05$over_represented_pvalue, -LG.GO.05$numDEInCat),]
-LG.GO.05$term <- as.factor(LG.GO.05$term)
-dim(LG.GO.05) #Number of sig GO terms
-nrow(filter(LG.GO.05, ontology=="BP")) #number sig BP terms
+C2.GO.05<-GOwall.C2$category[GOwall.C2$over_represented_pvalue<.05]
+C2.GO.05<-data.frame(C2.GO.05)
+colnames(C2.GO.05) <- c("category")
+C2.GO.05 <- merge(C2.GO.05, GOwall.C2, by="category")
+C2.GO.05 <- C2.GO.05[order(C2.GO.05$ontology, C2.GO.05$over_represented_pvalue, -C2.GO.05$numDEInCat),]
+C2.GO.05$term <- as.factor(C2.GO.05$term)
+dim(C2.GO.05) #Number of sig GO terms
+nrow(filter(C2.GO.05, ontology=="BP")) #number sig BP terms
 
-Pln.GO.05<-GOwall.Pln$category[GOwall.Pln$over_represented_pvalue<.05]
-Pln.GO.05<-data.frame(Pln.GO.05)
-colnames(Pln.GO.05) <- c("category")
-Pln.GO.05 <- merge(Pln.GO.05, GOwall.Pln, by="category")
-Pln.GO.05 <- Pln.GO.05[order(Pln.GO.05$ontology, Pln.GO.05$over_represented_pvalue, -Pln.GO.05$numDEInCat),]
-Pln.GO.05$term <- as.factor(Pln.GO.05$term)
-dim(Pln.GO.05) #Number of sig GO terms
-nrow(filter(Pln.GO.05, ontology=="BP")) #number sig BP terms
-
-Adult.GO.05<-GOwall.Adult$category[GOwall.Adult$over_represented_pvalue<.05]
-Adult.GO.05<-data.frame(Adult.GO.05)
-colnames(Adult.GO.05) <- c("category")
-Adult.GO.05 <- merge(Adult.GO.05, GOwall.Adult, by="category")
-Adult.GO.05 <- Adult.GO.05[order(Adult.GO.05$ontology, Adult.GO.05$over_represented_pvalue, -Adult.GO.05$numDEInCat),]
-Adult.GO.05$term <- as.factor(Adult.GO.05$term)
-dim(Adult.GO.05) #Number of sig GO terms
-nrow(filter(Adult.GO.05, ontology=="BP")) #number sig BP terms
 ```
 
 Correct any un-annotated terms/ontologies
 ```{r}
-NAs.ontology <- Mat.GO.05 %>% subset(is.na(term))
+NAs.ontology <- Egg.GO.05 %>% subset(is.na(term))
 print(NAs.ontology)
-NAs.ontology <- ZGA1.GO.05 %>% subset(is.na(term))
+NAs.ontology <- Emb.GO.05 %>% subset(is.na(term))
 print(NAs.ontology)
-NAs.ontology <- ZGA2.GO.05 %>% subset(is.na(term))
+NAs.ontology <- L1.GO.05 %>% subset(is.na(term))
 print(NAs.ontology)
-NAs.ontology <- Adult.GO.05 %>% subset(is.na(term))
+NAs.ontology <- L2.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L3.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L4.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L6.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <-M.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- C1.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- C2.GO.05 %>% subset(is.na(term))
 print(NAs.ontology)
 ```
 *There were no un-annotated functions except genes with unknown functions*
 
+
 Save significant terms
 ```{r, warning=FALSE}
-write.csv(Mat.GO.05, file = "2a-WGCNA/Output/GO.05.Mat.csv", row.names = FALSE)
-write.csv(UE.GO.05, file = "2a-WGCNA/Output/GO.05.UE.csv", row.names = FALSE)
-write.csv(FE.GO.05, file = "2a-WGCNA/Output/GO.05.FE.csv", row.names = FALSE)
-write.csv(ZGA1.GO.05, file = "2a-WGCNA/Output/GO.05.ZGA1.csv", row.names = FALSE)
-write.csv(Clvg.GO.05, file = "2a-WGCNA/Output/GO.05.Clvg.csv", row.names = FALSE)
-write.csv(PC.GO.05, file = "2a-WGCNA/Output/GO.05.PC.csv", row.names = FALSE)
-write.csv(EG.GO.05, file = "2a-WGCNA/Output/GO.05.EG.csv", row.names = FALSE)
-write.csv(ZGA2.GO.05, file = "2a-WGCNA/Output/GO.05.ZGA2.csv", row.names = FALSE)
-write.csv(MG.GO.05, file = "2a-WGCNA/Output/GO.05.MG.csv", row.names = FALSE)
-write.csv(LG.GO.05, file = "2a-WGCNA/Output/GO.05.LG.csv", row.names = FALSE)
-write.csv(Pln.GO.05, file = "2a-WGCNA/Output/GO.05.Pln.csv", row.names = FALSE)
-write.csv(Adult.GO.05, file = "2a-WGCNA/Output/GO.05.Adult.csv", row.names = FALSE)
+write.csv(Egg.GO.05, file = "Mcap2020/Output/TagSeq/Egg.GO.csv", row.names = FALSE)
+write.csv(Emb.GO.05, file = "Mcap2020/Output/TagSeq/Emb.GO.csv", row.names = FALSE)
+write.csv(L1.GO.05, file = "Mcap2020/Output/TagSeq/Larvae1.GO.csv", row.names = FALSE)
+write.csv(L2.GO.05, file = "Mcap2020/Output/TagSeq/Larvae2.GO.csv", row.names = FALSE)
+write.csv(L3.GO.05, file = "Mcap2020/Output/TagSeq/Larvae3.GO.csv", row.names = FALSE)
+write.csv(L4.GO.05, file = "Mcap2020/Output/TagSeq/Larvae4.GO.csv", row.names = FALSE)
+write.csv(L6.GO.05, file = "Mcap2020/Output/TagSeq/Larvae6.GO.csv", row.names = FALSE)
+write.csv(M.GO.05, file = "Mcap2020/Output/TagSeq/Metamorphosed.GO.csv", row.names = FALSE)
+write.csv(C1.GO.05, file = "Mcap2020/Output/TagSeq/Calcifying1.GO.csv", row.names = FALSE)
+write.csv(C2.GO.05, file = "Mcap2020/Output/TagSeq/Calcifying2.GO.csv", row.names = FALSE)
 ```
 
 ### KEGG enrichment of maternal modules
@@ -1502,8 +1397,8 @@ Make a list of all module colors
 moduleColor_list <- unique(geneColor$moduleColor)
 moduleColor_list
 ```
-
-Obtain module color of all expressed genes (poverA = 0.85,5).
+ 
+Obtain module color of all expressed genes (poverA = 0.1,10).
 ```{r}
 genes.GO$gene_id <- as.factor(genes.GO$gene_id) #Make factor for merge
 genes.GO <- merge(geneColor, genes.GO) #append module information
@@ -1514,41 +1409,26 @@ dim(genes.GO)
 
 Obtain list of significantly-expressed genes for each module
 ```{r}
-antiquewhite2.sig <- filter(genes.GO, moduleColor=="antiquewhite2")
-antiquewhite4.sig <- filter(genes.GO, moduleColor=="antiquewhite4")
 blue.sig <- filter(genes.GO, moduleColor=="blue")
-blue2.sig <- filter(genes.GO, moduleColor=="blue2")
-blue4.sig <- filter(genes.GO, moduleColor=="blue4")
-blueviolet.sig <- filter(genes.GO, moduleColor=="blueviolet")
-brown2.sig <- filter(genes.GO, moduleColor=="brown2")
-coral.sig <- filter(genes.GO, moduleColor=="coral")
-coral1.sig <- filter(genes.GO, moduleColor=="coral1")
-cyan.sig <- filter(genes.GO, moduleColor=="cyan")
-darkmagenta.sig <- filter(genes.GO, moduleColor=="darkmagenta")
-darkseagreen4.sig <- filter(genes.GO, moduleColor=="darkseagreen4")
-darkslateblue.sig <- filter(genes.GO, moduleColor=="darkslateblue")
-grey.sig <- filter(genes.GO, moduleColor=="grey")
-honeydew1.sig <- filter(genes.GO, moduleColor=="honeydew1")
-indianred3.sig <- filter(genes.GO, moduleColor=="indianred3")
-ivory.sig <- filter(genes.GO, moduleColor=="ivory")
-lavenderblush2.sig <- filter(genes.GO, moduleColor=="lavenderblush2")
-lightslateblue.sig <- filter(genes.GO, moduleColor=="lightslateblue")
-lightsteelblue.sig <- filter(genes.GO, moduleColor=="lightsteelblue")
-magenta4.sig <- filter(genes.GO, moduleColor=="magenta4")
-mediumpurple1.sig <- filter(genes.GO, moduleColor=="mediumpurple1")
-mediumpurple3.sig <- filter(genes.GO, moduleColor=="mediumpurple3")
-midnightblue.sig <- filter(genes.GO, moduleColor=="midnightblue")
-navajowhite1.sig <- filter(genes.GO, moduleColor=="navajowhite1")
-plum3.sig <- filter(genes.GO, moduleColor=="plum3")
-plum4.sig <- filter(genes.GO, moduleColor=="plum4")
-salmon.sig <- filter(genes.GO, moduleColor=="salmon")
-salmon4.sig <- filter(genes.GO, moduleColor=="salmon4")
-sienna3.sig <- filter(genes.GO, moduleColor=="sienna3")
-skyblue1.sig <- filter(genes.GO, moduleColor=="skyblue1")
-thistle.sig <- filter(genes.GO, moduleColor=="thistle")
-thistle4.sig <- filter(genes.GO, moduleColor=="thistle4")
-violet.sig <- filter(genes.GO, moduleColor=="violet")
+brown.sig <- filter(genes.GO, moduleColor=="brown")
+green.sig <- filter(genes.GO, moduleColor=="green")
+red.sig <- filter(genes.GO, moduleColor=="red")
+turquoise.sig <- filter(genes.GO, moduleColor=="turquoise")
+yellow.sig <- filter(genes.GO, moduleColor=="yellow")
 ```
+
+
+AH CURRENTLY HERE
+
+
+
+
+
+
+
+
+
+
 
 GOseq requires a vector of all genes and all differentially expressed genes. 
 ```{r, message=FALSE, warning=FALSE}
@@ -1556,137 +1436,6 @@ antiquewhite2.vector <- as.vector(antiquewhite2.sig$gene_id)
 antiquewhite2.vector=as.integer(GOref$gene_id%in%antiquewhite2.vector)
 names(antiquewhite2.vector)=GOref$gene_id
 
-antiquewhite4.vector <- as.vector(antiquewhite4.sig$gene_id)
-antiquewhite4.vector=as.integer(GOref$gene_id%in%antiquewhite4.vector)
-names(antiquewhite4.vector)=GOref$gene_id
-
-blue.vector <- as.vector(blue.sig$gene_id)
-blue.vector=as.integer(GOref$gene_id%in%blue.vector)
-names(blue.vector)=GOref$gene_id
-
-blue2.vector <- as.vector(blue2.sig$gene_id)
-blue2.vector=as.integer(GOref$gene_id%in%blue2.vector)
-names(blue2.vector)=GOref$gene_id
-
-blue4.vector <- as.vector(blue4.sig$gene_id)
-blue4.vector=as.integer(GOref$gene_id%in%blue4.vector)
-names(blue4.vector)=GOref$gene_id
-
-blueviolet.vector <- as.vector(blueviolet.sig$gene_id)
-blueviolet.vector=as.integer(GOref$gene_id%in%blueviolet.vector)
-names(blueviolet.vector)=GOref$gene_id
-
-brown2.vector <- as.vector(brown2.sig$gene_id)
-brown2.vector=as.integer(GOref$gene_id%in%brown2.vector)
-names(brown2.vector)=GOref$gene_id
-
-coral.vector <- as.vector(coral.sig$gene_id)
-coral.vector=as.integer(GOref$gene_id%in%coral.vector)
-names(coral.vector)=GOref$gene_id
-
-coral1.vector <- as.vector(coral1.sig$gene_id)
-coral1.vector=as.integer(GOref$gene_id%in%coral1.vector)
-names(coral1.vector)=GOref$gene_id
-
-cyan.vector <- as.vector(cyan.sig$gene_id)
-cyan.vector=as.integer(GOref$gene_id%in%cyan.vector)
-names(cyan.vector)=GOref$gene_id
-
-darkmagenta.vector <- as.vector(darkmagenta.sig$gene_id)
-darkmagenta.vector=as.integer(GOref$gene_id%in%darkmagenta.vector)
-names(darkmagenta.vector)=GOref$gene_id
-
-darkseagreen4.vector <- as.vector(darkseagreen4.sig$gene_id)
-darkseagreen4.vector=as.integer(GOref$gene_id%in%darkseagreen4.vector)
-names(darkseagreen4.vector)=GOref$gene_id
-
-darkslateblue.vector <- as.vector(darkslateblue.sig$gene_id)
-darkslateblue.vector=as.integer(GOref$gene_id%in%darkslateblue.vector)
-names(darkslateblue.vector)=GOref$gene_id
-
-grey.vector <- as.vector(grey.sig$gene_id)
-grey.vector=as.integer(GOref$gene_id%in%grey.vector)
-names(grey.vector)=GOref$gene_id
-
-honeydew1.vector <- as.vector(honeydew1.sig$gene_id)
-honeydew1.vector=as.integer(GOref$gene_id%in%honeydew1.vector)
-names(honeydew1.vector)=GOref$gene_id
-
-indianred3.vector <- as.vector(indianred3.sig$gene_id)
-indianred3.vector=as.integer(GOref$gene_id%in%indianred3.vector)
-names(indianred3.vector)=GOref$gene_id
-
-ivory.vector <- as.vector(ivory.sig$gene_id)
-ivory.vector=as.integer(GOref$gene_id%in%ivory.vector)
-names(ivory.vector)=GOref$gene_id
-
-lavenderblush2.vector <- as.vector(lavenderblush2.sig$gene_id)
-lavenderblush2.vector=as.integer(GOref$gene_id%in%lavenderblush2.vector)
-names(lavenderblush2.vector)=GOref$gene_id
-
-lightslateblue.vector <- as.vector(lightslateblue.sig$gene_id)
-lightslateblue.vector=as.integer(GOref$gene_id%in%lightslateblue.vector)
-names(lightslateblue.vector)=GOref$gene_id
-
-lightsteelblue.vector <- as.vector(lightsteelblue.sig$gene_id)
-lightsteelblue.vector=as.integer(GOref$gene_id%in%lightsteelblue.vector)
-names(lightsteelblue.vector)=GOref$gene_id
-
-magenta4.vector <- as.vector(magenta4.sig$gene_id)
-magenta4.vector=as.integer(GOref$gene_id%in%magenta4.vector)
-names(magenta4.vector)=GOref$gene_id
-
-mediumpurple1.vector <- as.vector(mediumpurple1.sig$gene_id)
-mediumpurple1.vector=as.integer(GOref$gene_id%in%mediumpurple1.vector)
-names(mediumpurple1.vector)=GOref$gene_id
-
-mediumpurple3.vector <- as.vector(mediumpurple3.sig$gene_id)
-mediumpurple3.vector=as.integer(GOref$gene_id%in%mediumpurple3.vector)
-names(mediumpurple3.vector)=GOref$gene_id
-
-midnightblue.vector <- as.vector(midnightblue.sig$gene_id)
-midnightblue.vector=as.integer(GOref$gene_id%in%midnightblue.vector)
-names(midnightblue.vector)=GOref$gene_id
-
-navajowhite1.vector <- as.vector(navajowhite1.sig$gene_id)
-navajowhite1.vector=as.integer(GOref$gene_id%in%navajowhite1.vector)
-names(navajowhite1.vector)=GOref$gene_id
-
-plum3.vector <- as.vector(plum3.sig$gene_id)
-plum3.vector=as.integer(GOref$gene_id%in%plum3.vector)
-names(plum3.vector)=GOref$gene_id
-
-plum4.vector <- as.vector(plum4.sig$gene_id)
-plum4.vector=as.integer(GOref$gene_id%in%plum4.vector)
-names(plum4.vector)=GOref$gene_id
-
-salmon.vector <- as.vector(salmon.sig$gene_id)
-salmon.vector=as.integer(GOref$gene_id%in%salmon.vector)
-names(salmon.vector)=GOref$gene_id
-
-salmon4.vector <- as.vector(salmon4.sig$gene_id)
-salmon4.vector=as.integer(GOref$gene_id%in%salmon4.vector)
-names(salmon4.vector)=GOref$gene_id
-
-sienna3.vector <- as.vector(sienna3.sig$gene_id)
-sienna3.vector=as.integer(GOref$gene_id%in%sienna3.vector)
-names(sienna3.vector)=GOref$gene_id
-
-skyblue1.vector <- as.vector(skyblue1.sig$gene_id)
-skyblue1.vector=as.integer(GOref$gene_id%in%skyblue1.vector)
-names(skyblue1.vector)=GOref$gene_id
-
-thistle.vector <- as.vector(thistle.sig$gene_id)
-thistle.vector=as.integer(GOref$gene_id%in%thistle.vector)
-names(thistle.vector)=GOref$gene_id
-
-thistle4.vector <- as.vector(thistle4.sig$gene_id)
-thistle4.vector=as.integer(GOref$gene_id%in%thistle4.vector)
-names(thistle4.vector)=GOref$gene_id
-
-violet.vector <- as.vector(violet.sig$gene_id)
-violet.vector=as.integer(GOref$gene_id%in%violet.vector)
-names(violet.vector)=GOref$gene_id
 
 vector.list <- list(antiquewhite2.vector, antiquewhite4.vector, blue.vector, blue2.vector, blue4.vector, blueviolet.vector, brown2.vector, coral.vector, coral1.vector, cyan.vector, darkmagenta.vector, darkseagreen4.vector, darkslateblue.vector, grey.vector, honeydew1.vector, indianred3.vector, ivory.vector, lavenderblush2.vector, lightslateblue.vector, lightsteelblue.vector, magenta4.vector, mediumpurple1.vector, mediumpurple3.vector, midnightblue.vector, navajowhite1.vector, plum3.vector, plum4.vector, salmon.vector, salmon4.vector, sienna3.vector, skyblue1.vector, thistle.vector, thistle4.vector, violet.vector)
 length(vector.list)

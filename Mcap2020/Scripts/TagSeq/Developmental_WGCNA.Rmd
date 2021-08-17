@@ -7,11 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-NEED TO TRY OUT DIFF POA SETTINGS - currently got different results, need to adjust module names, try making new script and using GOMWU package/scripts 
-
-
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 

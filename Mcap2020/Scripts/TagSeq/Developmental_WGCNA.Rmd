@@ -390,7 +390,7 @@ dev.off()
 
 **Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
 ```{r}
-MEDissThres= 0.1 #merge modules that are 85% similar
+MEDissThres= 0.15 #merge modules that are 85% similar
 
 pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering2.pdf", width = 20)
 plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
@@ -407,7 +407,7 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tre
 dev.off()
 ```
 
-There are 6 modules before merging with 85% similarity.  
+There are 9 modules before merging with 85% similarity.  
 
 Save new colors
 ```{r}
@@ -418,7 +418,7 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-We have 6 modules after merging (no merging necessary).  
+We have 8 modules after merging. 
 
 ### Plot new tree
 ```{r}
@@ -571,6 +571,9 @@ Calcifying recruits (48 hps - 72 hps)
 
 
 
+Things to look into: blockwiseModules, deepSplit, mergecutHeight  
+
+
 
 
 
@@ -582,12 +585,12 @@ Calcifying recruits (48 hps - 72 hps)
 #### Create dataframe that associates module colors with clusters based on the above heatmap and the MEtree dendrogram.
 
 ```{r}
-MEcluster1 <- data.frame(moduleColor = c("blue", "turquoise", "blue", "green", "red"), moduleCluster = c(1))
-MEcluster2 <- data.frame(moduleColor = c("brown", "turquoise", "blue", "red"), moduleCluster = c(2))
-MEcluster3 <- data.frame(moduleColor = c("brown"), moduleCluster = c(3))
-MEcluster4 <- data.frame(moduleColor = c("brown", "turquoise"), moduleCluster = c(4))
-MEcluster5 <- data.frame(moduleColor = c("red"), moduleCluster = c(5))
-MEcluster6 <- data.frame(moduleColor = c("yellow", "turquoise"), moduleCluster = c(6))
+MEcluster1 <- data.frame(moduleColor = c("blue", "brown", "turquoise", "pink"), moduleCluster = c(1))
+MEcluster2 <- data.frame(moduleColor = c("pink", "black", "turquoise", "brown", "blue"), moduleCluster = c(2))
+MEcluster3 <- data.frame(moduleColor = c("magenta", "brown"), moduleCluster = c(3))
+MEcluster4 <- data.frame(moduleColor = c("brown", "red"), moduleCluster = c(4))
+MEcluster5 <- data.frame(moduleColor = c("blue", "green"), moduleCluster = c(5))
+MEcluster6 <- data.frame(moduleColor = c("pink"), moduleCluster = c(6))
 
 moduleCluster = bind_rows(MEcluster1, MEcluster2, MEcluster3, MEcluster4, MEcluster5, MEcluster6)
 head(moduleCluster)
@@ -655,17 +658,17 @@ time_point_order = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3",
 
 Plot mean module eigengene for each cluster
 ```{r, warning=FALSE, message=FALSE}
-YellowPlot <- expressionProfile_data %>%
-        select(lifestage, MEyellow) %>% 
+BluePlot <- expressionProfile_data %>%
+        select(lifestage, MEblue) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEyellow, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEblue, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
   ylab("Mean Module Eigenegene") +
   theme_bw() + 
-  ggtitle("Yellow") +
+  ggtitle("Blue") +
   theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
@@ -681,15 +684,15 @@ YellowPlot <- expressionProfile_data %>%
   geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
 
 
-BrownPlot <- expressionProfile_data %>%
-        select(lifestage, MEbrown) %>% 
+GreenPlot <- expressionProfile_data %>%
+        select(lifestage, MEgreen) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEbrown, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEgreen, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("Brown") +
+  ggtitle("Green") +
   theme_bw() + 
   theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
@@ -706,15 +709,15 @@ BrownPlot <- expressionProfile_data %>%
   geom_hline(yintercept = 0, linetype="dashed", color = "grey") #
 
 
-TurquoisePlot <- expressionProfile_data %>%
-        select(lifestage, MEturquoise) %>% 
+MagentaPlot <- expressionProfile_data %>%
+        select(lifestage, MEmagenta) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEturquoise, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEmagenta, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("Turquoise") +
+  ggtitle("Magenta") +
   theme_bw() + 
  theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_blank(), #set x-axis title size
@@ -730,19 +733,19 @@ TurquoisePlot <- expressionProfile_data %>%
   #annotate("text", x = 1.2, y = 0.5, label = "n = 6", size = 6)  +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
 
-BluePlot <- expressionProfile_data %>%
-        select(lifestage, MEblue) %>% 
+BrownPlot <- expressionProfile_data %>%
+        select(lifestage, MEbrown) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEblue, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEbrown, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("Blue") +
+  ggtitle("Brown") +
   ylab("Mean Module Eigenegene") +
   theme_bw() + 
   xlab("Time Point") +
-  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+  theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_text(size = 14), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
         axis.title.y=element_text(size = 14), #No y-axis title
@@ -756,15 +759,15 @@ BluePlot <- expressionProfile_data %>%
   #annotate("text", x = 1.2, y = 0.5, label = "n = 5", size = 6) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
 
-GreenPlot <- expressionProfile_data %>%
-        select(lifestage, MEgreen) %>% 
+RedPlot <- expressionProfile_data %>%
+        select(lifestage, MEred) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEgreen, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEred, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
         scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("Green") +
+  ggtitle("Red") +
   theme_bw() + 
   xlab("Time Point") +
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
@@ -782,15 +785,66 @@ GreenPlot <- expressionProfile_data %>%
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")
 
 
-RedPlot <- expressionProfile_data %>%
-        select(lifestage, MEred) %>% 
+TurquoisePlot <- expressionProfile_data %>%
+        select(lifestage, MEturquoise) %>% 
   group_by(lifestage) %>% 
-  ggplot(aes(x=lifestage, y=MEred, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=MEturquoise, group=lifestage)) +
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
   scale_x_discrete(limits=time_point_order) +
   #ylim(-0.5,1) +
-  ggtitle("Red") +
+  ggtitle("Turquoise") +
+  xlab("Time Point") +
+  theme_bw() + #Set background color
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+
+
+BlackPlot <- expressionProfile_data %>%
+        select(lifestage, MEblack) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEblack, group=lifestage)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("Black") +
+  xlab("Time Point") +
+  theme_bw() + #Set background color
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, #No y-title
+        panel.border = element_blank(), # Set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)) + #Set the plot background
+  #annotate("text", x = 1.2, y = 0.5, label = "n = 3", size = 6) +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")
+
+PinkPlot <- expressionProfile_data %>%
+        select(lifestage, MEpink) %>% 
+  group_by(lifestage) %>% 
+  ggplot(aes(x=lifestage, y=MEpink, group=lifestage)) +
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ggtitle("Pink") +
   xlab("Time Point") +
   theme_bw() + #Set background color
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 14), #set x-axis label size
@@ -810,8 +864,8 @@ RedPlot <- expressionProfile_data %>%
 
 Compile plots into 1 graph, aligning by y-axis and save
 ```{r}
-expressionProfiles <- cowplot::plot_grid(YellowPlot, BrownPlot, TurquoisePlot, BluePlot, GreenPlot, RedPlot, align = "v", ncol = 3, nrow = 2, rel_heights = c(0.75,1))
-ggsave("Mcap2020/Figures/TagSeq/RNAseq-expressionProfiles.pdf", expressionProfiles, height = 12, width = 21, units = "in")
+expressionProfiles <- cowplot::plot_grid(BluePlot, GreenPlot, MagentaPlot, BrownPlot, RedPlot, TurquoisePlot, BlackPlot, PinkPlot, align = "v", ncol = 4, nrow = 2, rel_heights = c(0.75,1))
+ggsave("Mcap2020/Figures/TagSeq/ExpressionProfiles.pdf", expressionProfiles, height = 12, width = 21, units = "in")
 ```
 
 ###  Gene relationship to trait and important modules: Gene Significance and Module Membership
@@ -947,9 +1001,19 @@ write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for
 
 
 
+
+
+
+
+
+
+
+
+
+
 ### Gene Ontology Analysis of each developmental phase
 
-Obtain module color of all expressed genes (poverA = 0.1,10). Select all significantly-expressed genes (p<0.05)
+Obtain module color of all expressed genes (poverA = 0.07,10). Select all significantly-expressed genes (p<0.05)
 
 Need to make these long chunks into loops to clean script  
 ```{r}

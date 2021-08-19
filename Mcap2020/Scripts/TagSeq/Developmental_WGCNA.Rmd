@@ -156,6 +156,15 @@ head(assay(gvst_dev), 3) #view transformed gene count data
 ```
 
 
+
+
+
+
+
+
+
+
+
 ##### Plot a heatmap of sample-to-sample distances
 ```{r}
 gsampleDists_dev <- dist(t(assay(gvst_dev))) #calculate distance matix
@@ -739,7 +748,7 @@ BrownPlot <- expressionProfile_data %>%
   ggtitle("Brown") +
   ylab("Mean Module Eigenegene") +
   theme_bw() + 
-  xlab("Time Point") +
+  #xlab("Time Point") +
   theme(axis.text.x=element_blank(), #set x-axis label size
         axis.title.x=element_text(size = 14), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks

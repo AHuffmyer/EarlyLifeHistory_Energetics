@@ -14,33 +14,33 @@ Tryptamine,1.6631905018184507,Decrease
 Valine,1.646629550657545,Nonsig
 Mannose-6-phosphate,1.619120206067144,Increase
 Hypotaurine,1.611152628813035,Nonsig
-"NADPH",1.6042787366897826,Increase
+"NADPH",1.6042787366897826,Nonsig
 Glucose-6-phosphate,1.6008015479843452,Increase
 "NAD+",1.58352254157963,Nonsig
 GDP-Mannose,1.5695151706731565,Nonsig
 Adenosine,1.5686058471418134,Decrease
-Ribothymidine,1.5411901865725977,Decrease
-Tyrosine,1.5249797213674317,Decrease
+Ribothymidine,1.5411901865725977,Nonsig
+Tyrosine,1.5249797213674317,Nonsig
 N-Acetyl-Glucosamine,1.506089639489897,Nonsig
 Lysine-Glutamine,1.50401874029951,Nonsig
 Pyroglutamate,1.4795459613587507,Nonsig
 Acetyl CoA,1.4752979041662893,Nonsig
-UMP,1.4582650287027612,Decrease
-Cytosine,1.4552464706956454,Increase
-1-Methylhistidine,1.4476037662827093,Increase
+UMP,1.4582650287027612,Nonsig
+Cytosine,1.4552464706956454,Nonsig
+1-Methylhistidine,1.4476037662827093,Nonsig
 Arginine-Alanine,1.4408761137689603,Nonsig
 FAD,1.4327579901079717,Nonsig
 Sucrose,1.3990119130497514,Decrease
-Malate,1.3828269463350507,Increase
+Malate,1.3828269463350507,Nonsig
 Phenylalanine,1.3602039497067442,Decrease
 Aspartate,1.3595785356560528,Nonsig
-Cellobiose,1.3469786962397128,Decrease
+Cellobiose,1.3469786962397128,Nonsig
 N6-Acetyl-L-lysine,1.3267295397019117,Nonsig
 Acetyllysine,1.3197393443354302,Increase
 Serine,1.3152877093589304,Decrease
 Methylphenyllactate,1.3108930166442752,Nonsig
 Arginine,1.3096326694798417,Nonsig
-5-methylthioadenosine,1.3077623425785432,Increase
+5-methylthioadenosine,1.3077623425785432,Nonsig
 UDP-D-Glucose,1.303717159211389,Nonsig
 N-acetyl-glutamate,1.2901992341268709,Nonsig
 Glucose,1.290038092431184,Nonsig
@@ -53,7 +53,7 @@ Creatinine,1.2253380067718558,Nonsig
 Fructose,1.2192493527927744,Nonsig
 Threonine,1.2065339902636278,Nonsig
 O-Decanoyl-L-carnitine,1.2046489380875047,Increase
-Sorbitol,1.201577660430157,Increase
+Sorbitol,1.201577660430157,Nonsig
 3-Methylindole,1.199213161856319,Nonsig
 Lumichrome,1.1768986915654527,Nonsig
 L-Octanoylcarnitine,1.1735206905742983,Increase
@@ -73,7 +73,7 @@ Methionine sulfoxide,1.0682616135879857,Nonsig
 ADP-D-Glucose,1.0438788946527817,Nonsig
 Histidine,1.0425437740315322,Nonsig
 Fumarate,1.036221108094097,Nonsig
-Uric acid,1.0322706705239586,Decrease
+Uric acid,1.0322706705239586,Nonsig
 O-Phosphorylethanolamine,1.0251059215974871,Increase
 "NADP+",1.0213431892977207,Increase
 Creatine,1.0097919015538488,Nonsig

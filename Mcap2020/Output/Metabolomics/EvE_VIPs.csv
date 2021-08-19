@@ -16,7 +16,7 @@ ATP,1.4828782829122589,Nonsig
 ADP-D-Glucose,1.4818461776623313,Decrease
 NegIS_Glucose-2H7-13C6,1.4807439805205522,Decrease
 AMP,1.4747708147726788,Increase
-NegIS_Malate-2H3,1.470174259643275,Decrease
+NegIS_Malate-2H3,1.470174259643275,Nonsig
 S-adenosyl-L-methionine,1.4668246738177042,Nonsig
 Diethanolamine,1.4647611351533734,Decrease
 PosIS_Serine-13C3-15N1,1.458979271588293,Decrease
@@ -25,13 +25,13 @@ Hypoxanthine,1.452774200869243,Nonsig
 UDP,1.4519315599562153,Increase
 Thymidine,1.4497473289508473,Decrease
 1-Methylimidazole acetic acid,1.4453923105784496,Decrease
-NegIS_Thymine-2H4,1.444570314135757,Decrease
+NegIS_Thymine-2H4,1.444570314135757,Nonsig
 Glycyl-L-proline,1.4336158030767219,Decrease
 Phosphocholine,1.432644560739109,Increase
 Pyroglutamate,1.4310799599717707,Decrease
 NegIS_Glycine-13C2_15N1,1.4309524069779738,Decrease
 2-Hydroxyglutarate,1.429762969164358,Increase
-PosIS_Glutamine-2H5-15N2,1.4229555034566104,Decrease
+PosIS_Glutamine-2H5-15N2,1.4229555034566104,Nonsig
 Arginine-Alanine,1.4196432330655067,Increase
 PosIS_Alanine-2H4-15N,1.417008068016733,Nonsig
 N6-Acetyl-L-lysine,1.4073345006646178,Decrease
@@ -43,11 +43,11 @@ NegIS_Serine-13C3-15N1,1.3838915189326386,Decrease
 PosIS_Inosine-15N4,1.3735487830227397,Nonsig
 NegIS_Glutamine-2H5-15N2,1.3726601830426428,Nonsig
 Acetyl glycine,1.3629652995890635,Decrease
-Carbamoyl phosphate,1.362271813011597,Decrease
+Carbamoyl phosphate,1.362271813011597,Nonsig
 Arginine-Glutamine,1.3558642173500326,Increase
 UMP,1.3544155476413995,Increase
 PosIS_Lysine-2H8,1.3445842677880306,Nonsig
-CTP,1.337321331932558,Decrease
+CTP,1.337321331932558,Nonsig
 Succinate,1.3343178694702895,Increase
 Phosphoenolpyruvate,1.3321816285232888,Decrease
 Glutamine,1.3292378430072003,Decrease
@@ -61,12 +61,12 @@ Citrulline,1.27898897975406,Nonsig
 Alanine-Alanine,1.2733903099738042,Decrease
 Tryptamine,1.2703552623514507,Nonsig
 N-carbomoyl-L-aspartate,1.250599512550079,Increase
-NegIS_Lysine-2H8,1.2412747081611064,Decrease
+NegIS_Lysine-2H8,1.2412747081611064,Nonsig
 1-Methylhistidine,1.2397954159488678,Increase
 GMP,1.227858729091351,Nonsig
 NegIS_Alanine-2H4-15N,1.2257094096422079,Nonsig
 Sorbitol,1.216940422824233,Nonsig
-Galactitol,1.2010087441996709,Decrease
+Galactitol,1.2010087441996709,Nonsig
 Tryptophan,1.1957147242716923,Decrease
 Urocanate,1.1682850801243763,Decrease
 NG-dimethyl-L-arginine,1.168192445418568,Nonsig
@@ -79,8 +79,8 @@ Adipic acid,1.1217010558547444,Nonsig
 GTP,1.1065276391278034,Nonsig
 Ribothymidine,1.099788223030545,Decrease
 Glutaric acid,1.0975750885454698,Nonsig
-Pyruvate,1.0967054212982832,Increase
+Pyruvate,1.0967054212982832,Nonsig
 IMP,1.0875911645881764,Nonsig
-Dihydroorotate,1.038395721517252,Increase
+Dihydroorotate,1.038395721517252,Nonsig
 Inosine,1.0254354682188531,Nonsig
 Malonic acid,1.002322688309544,Nonsig

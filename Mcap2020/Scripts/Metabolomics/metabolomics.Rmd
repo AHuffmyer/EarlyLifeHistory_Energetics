@@ -1202,7 +1202,7 @@ levels(EvE_clean$Development) #check order of factor for comparisons
 # Select metabolites only present from the PLS-DA with VIPs >1
 EvE_VIP_Select <- subset(EvE_clean, EvE_clean$compound %in% EvE_VIP_1$Metabolite)
 
-#Looped t-test for all metabolites with VIPs >1, estimate 1 = Bleached_Hot, estimate 2 = Control
+#Looped t-test for all metabolites with VIPs >1
 EvE_t.test <-do(EvE_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  alternative = "two.sided",
                  mu = 0,
@@ -1211,8 +1211,13 @@ EvE_t.test <-do(EvE_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  conf.level = 0.95
                  )))
 
+#adjust p value for the number of comparisons 
+EvE_t.test$p.adj<-p.adjust(EvE_t.test$p.value, method=c("fdr"), n=length(EvE_VIP_1$Metabolite))
+
 # Filter for significantly different metabolites (p < 0.05)
-EvE_t.test.sig <- EvE_t.test %>% filter(p.value <= 0.05)
+EvE_t.test.sig <- EvE_t.test %>% filter(p.adj < 0.05)
+length(EvE_t.test.sig$compound)
+#went from 55 down to 46 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 EvE_t.test.sig.up <- EvE_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1242,8 +1247,8 @@ Group dataframe for use in plotting.
 EvE_pvalues<-rbind(EvE_t.test.sig.up, EvE_t.test.sig.down)
 
 EvE_pvalues<-EvE_pvalues%>%
-  select(compound, direction)%>%
-  rename(Metabolite=compound)
+  dplyr::select(compound, direction)%>%
+  dplyr::rename(Metabolite=compound)
 
 
 EvE_VIP_plot<-left_join(EvE_VIP_1, EvE_pvalues, by="Metabolite")
@@ -1305,7 +1310,7 @@ EvE_bar<-EvE_VIP_plot %>%
   xlab("") +
   scale_y_continuous(limits=c(-1.75, 1.75), breaks=c(-1,0,1))+
   annotate("text", x = 6, y = 1.4, label = "Embryo > Egg", fontface =2, color="#DFC27D", size=6) +
-  annotate("text", x = 50, y = -1.4, label = "Egg > Embryo", fontface =2, color="#8C510A", size=6) +
+  annotate("text", x = 40, y = -1.4, label = "Egg > Embryo", fontface =2, color="#8C510A", size=6) +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5)); EvE_bar
@@ -1364,8 +1369,13 @@ EvL_t.test <-do(EvL_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  conf.level = 0.95
                  )))
 
+#adjust p value for the number of comparisons 
+EvL_t.test$p.adj<-p.adjust(EvL_t.test$p.value, method=c("fdr"), n=length(EvL_VIP_1$Metabolite)) #length = number of metabolites tested, false discovery rate
+
 # Filter for significantly different metabolites (p < 0.05)
-EvL_t.test.sig <- EvL_t.test %>% filter(p.value <= 0.05)
+EvL_t.test.sig <- EvL_t.test %>% filter(p.adj < 0.05)
+length(EvL_t.test.sig$compound)
+#stays at 108 with adjustment
 
 # Filter for metabolites accumulated compared to egg
 EvL_t.test.sig.up <- EvL_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1515,8 +1525,13 @@ LvM_t.test <-do(LvM_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  conf.level = 0.95
                  )))
 
+#adjust p value for the number of comparisons 
+LvM_t.test$p.adj<-p.adjust(LvM_t.test$p.value, method=c("fdr"), n=length(LvM_VIP_1$Metabolite)) #length = number of metabolites tested, false discovery rate
+
 # Filter for significantly different metabolites (p < 0.05)
-LvM_t.test.sig <- LvM_t.test %>% filter(p.value <= 0.05)
+LvM_t.test.sig <- LvM_t.test %>% filter(p.adj <= 0.05)
+length(LvM_t.test.sig$compound)
+#went from 26 to 0 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 LvM_t.test.sig.up <- LvM_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1526,92 +1541,94 @@ LvM_t.test.sig.down <-LvM_t.test.sig %>% filter(estimate1 < estimate2)
 
 ```
 
+There are no significantly different metabolites between larvae and metamorphosed recruits.  
+
 Display metabolites that are higher in recruits compared to larvae  
 
 ```{r}
-EvL_t.test.sig.up
-EvL_t.test.sig.up$direction<-c("Increase")
+# LvM_t.test.sig.up
+# LvM_t.test.sig.up$direction<-c("Increase")
 ```
 
 Display metabolites that are lower in recruits compared to larvae  
 
 ```{r}
-LvM_t.test.sig.down
-LvM_t.test.sig.down$direction<-c("Decrease")
+# LvM_t.test.sig.down
+# LvM_t.test.sig.down$direction<-c("Decrease")
 ```
 
 Group dataframe for use in plotting.  
 
 ```{r}
-LvM_pvalues<-rbind(LvM_t.test.sig.up, LvM_t.test.sig.down)
-
-LvM_pvalues<-LvM_pvalues%>%
-  select(compound, direction)%>%
-  rename(Metabolite=compound)
+# LvM_pvalues<-rbind(LvM_t.test.sig.up, LvM_t.test.sig.down)
+# 
+# LvM_pvalues<-LvM_pvalues%>%
+#   select(compound, direction)%>%
+#   rename(Metabolite=compound)
 ```
 
 Plot VIP plot. Remove nonsignificant metabolites determined by t test validations.       
 
 ```{r}
-LvM_VIP_plot<-left_join(LvM_VIP_1, LvM_pvalues, by="Metabolite")
-
-LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
-LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
-
-write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
-
-#plot
-LvM_plota<-LvM_VIP_plot %>%
-  filter(!direction=="Nonsig")%>%
-  arrange(VIP) %>%
-  ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
-  geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
-  scale_colour_manual(values=c("white", "#003C30"))+
-  ylab("") +
-  xlab("VIP Score") +
-  ggtitle(expression(bold("Larvae < \nMetamorpohsed Recruit"))) +
-  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10)); LvM_plota
-
-LvM_plotb<-LvM_VIP_plot %>%
-  filter(!direction=="Nonsig")%>%
-  arrange(VIP) %>%
-  ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
-  geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
-  scale_colour_manual(values=c("#80CDC1", "white"))+
-  ylab("") +
-  xlab("VIP Score") +
-  ggtitle(expression(bold("Larvae > \nMetamorphosed Recruit"))) +
-  scale_x_reverse()+
-  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15)); LvM_plotb
-
-#arrange plots
-LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
+# LvM_VIP_plot<-left_join(LvM_VIP_1, LvM_pvalues, by="Metabolite")
+# 
+# LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
+# LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
+# 
+# write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
+# 
+# #plot
+# LvM_plota<-LvM_VIP_plot %>%
+#   filter(!direction=="Nonsig")%>%
+#   arrange(VIP) %>%
+#   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+#   geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
+#   scale_colour_manual(values=c("white", "#003C30"))+
+#   ylab("") +
+#   xlab("VIP Score") +
+#   ggtitle(expression(bold("Larvae < \nMetamorpohsed Recruit"))) +
+#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10)); LvM_plota
+# 
+# LvM_plotb<-LvM_VIP_plot %>%
+#   filter(!direction=="Nonsig")%>%
+#   arrange(VIP) %>%
+#   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+#   geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
+#   scale_colour_manual(values=c("#80CDC1", "white"))+
+#   ylab("") +
+#   xlab("VIP Score") +
+#   ggtitle(expression(bold("Larvae > \nMetamorphosed Recruit"))) +
+#   scale_x_reverse()+
+#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15)); LvM_plotb
+# 
+# #arrange plots
+# LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
+# ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
 ```
 
 Plot as differential bar plots.  
 
 ```{r}
-#plot
-LvM_bar<-LvM_VIP_plot %>%
-  filter(!direction=="Nonsig")%>%
-  mutate(score=if_else(direction=="Decrease", 0-VIP, VIP)) %>% #change metabolites that decrease to have VIP on the negative scale
-  arrange(score) %>%
-  ggplot(aes(y = score, x = reorder(Metabolite,score,sum))) +
-  geom_bar(aes(fill=direction), show.legend=FALSE, stat='identity') +
-  scale_fill_manual(values=c("#80CDC1", "#003C30"))+
-  ylab("VIP Score") +
-  scale_y_continuous(limits=c(-2.5, 1.75), breaks=c(-1,0,1))+
-  xlab("") +
-  #annotate("text", x = 2, y = 1.4, label = "Metamorpohsed Recruit > \nLarvae", fontface =2, color="#003C30") +
-  annotate("text", x = 6, y = -2.2, label = "Larvae > \nMetamorphosed Recruit", fontface =2, color="#80CDC1", size=6 ) +
-  #ggtitle(expression(bold("Eggs < Embryos"))) +
-  theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvM_bar
-
-ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
+# #plot
+# LvM_bar<-LvM_VIP_plot %>%
+#   filter(!direction=="Nonsig")%>%
+#   mutate(score=if_else(direction=="Decrease", 0-VIP, VIP)) %>% #change metabolites that decrease to have VIP on the negative scale
+#   arrange(score) %>%
+#   ggplot(aes(y = score, x = reorder(Metabolite,score,sum))) +
+#   geom_bar(aes(fill=direction), show.legend=FALSE, stat='identity') +
+#   scale_fill_manual(values=c("#80CDC1", "#003C30"))+
+#   ylab("VIP Score") +
+#   scale_y_continuous(limits=c(-2.5, 1.75), breaks=c(-1,0,1))+
+#   xlab("") +
+#   #annotate("text", x = 2, y = 1.4, label = "Metamorpohsed Recruit > \nLarvae", fontface =2, color="#003C30") +
+#   annotate("text", x = 6, y = -2.2, label = "Larvae > \nMetamorphosed Recruit", fontface =2, color="#80CDC1", size=6 ) +
+#   #ggtitle(expression(bold("Eggs < Embryos"))) +
+#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvM_bar
+# 
+# ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
 
 ```
 
@@ -1666,8 +1683,13 @@ LvC_t.test <-do(LvC_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  conf.level = 0.95
                  )))
 
+#adjust p value for the number of comparisons 
+LvC_t.test$p.adj<-p.adjust(LvC_t.test$p.value, method=c("fdr"), n=length(LvC_VIP_1$Metabolite)) #length = number of metabolites tested, false discovery rate
+
 # Filter for significantly different metabolites (p < 0.05)
-LvC_t.test.sig <-LvC_t.test %>% filter(p.value <= 0.05)
+LvC_t.test.sig <- LvC_t.test %>% filter(p.adj <= 0.05)
+length(LvC_t.test.sig$compound)
+#went from 38 to 27 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 LvC_t.test.sig.up <- LvC_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1758,7 +1780,7 @@ LvC_bar<-LvC_VIP_plot %>%
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
   annotate("text", x = 5, y = 1.6, label = "Calcifying Recruit > \nLarvae", fontface =2, color="#BA55D3", size=6) +
-  annotate("text", x = 30, y = -1.6, label = "Larvae > \nCalcifying Recruit", fontface =2, color="#80CDC1", size=6) +
+  annotate("text", x = 23, y = -1.6, label = "Larvae > \nCalcifying Recruit", fontface =2, color="#80CDC1", size=6) +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvC_bar
@@ -1816,8 +1838,13 @@ MvC_t.test <-do(MvC_VIP_Select, tidy(t.test(.$log_norm_counts ~ .$Development,
                  conf.level = 0.95
                  )))
 
+#adjust p value for the number of comparisons 
+MvC_t.test$p.adj<-p.adjust(MvC_t.test$p.value, method=c("fdr"), n=length(MvC_VIP_1$Metabolite)) #length = number of metabolites tested, false discovery rate
+
 # Filter for significantly different metabolites (p < 0.05)
-MvC_t.test.sig <-MvC_t.test %>% filter(p.value <= 0.05)
+MvC_t.test.sig <- MvC_t.test %>% filter(p.adj <= 0.05)
+length(MvC_t.test.sig$compound)
+#went from 29 to 25 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 MvC_t.test.sig.up <- MvC_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1908,7 +1935,7 @@ MvC_bar<-MvC_VIP_plot %>%
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
   annotate("text", x = 5, y = 1.6, label = "Calcifying Recruit > \nMetamorphosed Recruit", fontface =2, color="#BA55D3", size=6) +
-  annotate("text", x = 24, y = -1.6, label = "Metamorphosed Recruit > \nCalcifying Recruit", fontface =2, color="#003C30", size=6) +
+  annotate("text", x = 20, y = -1.6, label = "Metamorphosed Recruit > \nCalcifying Recruit", fontface =2, color="#003C30", size=6) +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); MvC_bar
@@ -1921,7 +1948,7 @@ ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", widt
 ### 6. Combine all VIP plots.  
 
 ```{r}
-VIP_plots<-plot_grid(EvE_plots, EvL_plots, LvM_plots, LvC_plots, MvC_plots, ncol=1, nrow=5, rel_widths=c(1,1,1,1,1), rel_heights=c(1.2,2,1.2,1.5,1.2))
+VIP_plots<-plot_grid(EvE_plots, EvL_plots, LvC_plots, MvC_plots, ncol=1, nrow=4, rel_widths=c(1,1,1,1), rel_heights=c(1.2,2,1.5,1.2))
 ggsave("Mcap2020/Figures/Metabolomics/VIP_panel.pdf", width=7, height=48, units="in")
 ```
 
@@ -1929,18 +1956,14 @@ Combine all differential bar plots.
 
 ```{r}
 VIP_bar_plots1<-plot_grid(EvE_bar, EvL_bar, ncol=2, nrow=1, rel_widths=c(1,1.5), rel_heights=c(1,1), align="vh")
-VIP_bar_plots2<-plot_grid(LvM_bar, LvC_bar, MvC_bar, ncol=3, nrow=1, rel_widths=c(0.5,1,1), rel_heights=c(1,1,1), align="vh")
+VIP_bar_plots2<-plot_grid(LvC_bar, MvC_bar, ncol=2, nrow=1, rel_widths=c(1,1), rel_heights=c(1,1), align="vh")
 VIP_bar_plots<-plot_grid(VIP_bar_plots1, VIP_bar_plots2, ncol=1, nrow=2, rel_widths=c(1,1), rel_heights=c(1,1), align="vh")
 
 ggsave(plot=VIP_bar_plots, "Mcap2020/Figures/Metabolomics/VIP_bars.pdf", width=30, height=10, units="in")
 ```
 
 
-
-
-
-
-## Plot venn diagram showing shared metabolites for each life stage comparison.  
+## Plot venn diagram showing shared VIP metabolites for each life stage comparison.  
 
 ```{r}
 ### Compare for Venn Diagram (https://github.com/gaospecial/ggVennDiagram)

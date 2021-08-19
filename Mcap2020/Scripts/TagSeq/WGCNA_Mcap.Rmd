@@ -1,0 +1,146 @@
+---
+title: "WGCNA - GOMWU"
+author: "Ariana S Huffmyer"
+date: "8/13/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+WGCNA analysis of TagSeq dataset for Montipora capitata developmental time series (2020). These scripts are based on scripts from Erin Chille's master's thesis at the University of Rhode Island (https://github.com/echille).  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+Load required libraries.  
+
+```{r}
+library(tidyverse)
+library(WGCNA)
+library(magrittr)  
+library(DESeq2)
+library(genefilter)
+```
+
+# **Data input and filtering**  
+
+Import the data files.  
+
+```{r}
+#load metadata sheet with sample name and developmental stage information
+metadata <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(metadata)
+
+#load gene count matrix generated from cluster computation
+gcount <- as.data.frame(read.csv("Mcap2020/Data/TagSeq/transcript_count_matrix.csv", row.names="gene_id"), colClasses = double)
+head(gcount)
+
+#remove metamorphosed recruit 1 because this was the timepoint that we only had one sample for: D36, AH23
+gcount<-gcount[ , !(names(gcount) %in% c("AH23"))]
+
+metadata <- metadata%>%
+  filter(!sample_id=="AH23")
+```
+
+Pivot longer the data frame for initial visualization. Plot sample vs counts to identify any obvious outliers in the data.  
+```{r}
+pdata<- gcount %>% 
+  tidyr::pivot_longer( 
+    .,                        
+    col = starts_with("AH")
+    )
+```
+
+```{r}
+#this may take some time to plot 
+ p <- pdata %>%
+    ggplot(., aes(x = name, y = value)) +             # x = treatment, y = gene count
+    geom_violin() +                                   # violin plot, show distribution
+    geom_point(alpha = 0.2) +                         # scatter plot
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 90)          # Rotate text
+    ) +
+    labs(x = "Sample ID", y = "Gene Counts"); p      
+```
+
+Check that there are no genes with 0 counts across all samples. Should return TRUE.  
+
+```{r}
+rowSums(count(gcount)) > 0
+```
+
+Conduct data filtering, this includes:  
+
+*pOverA*: Specifying the minimum count for a proportion of samples for each gene. Here, we are using a pOverA of 0.07. This is because we have 38 samples with a minimum of n=3 samples per lifestage. Therefore, we will accept genes that are present in 3/38 = 0.07 of the samples because we expect different expression by life stage. We are further setting the minimum count of genes to 10, such that 7% of the samples must have a gene count of >10 in order for the gene to remain in the data set.  
+
+Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
+
+```{r}
+filt <- filterfun(pOverA(0.07,10))
+
+#create filter for the counts data
+gfilt <- genefilter(gcount, filt)
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify gene lists
+gn.keep <- rownames(gkeep)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+gcount_filt <- as.data.frame(gcount[which(rownames(gcount) %in% gn.keep),])
+
+#How many rows do we have before and after filtering?
+nrow(gcount) #Before
+nrow(gcount_filt) #After
+```
+
+Before filtering, we had approximately 63,000 genes. After filtering for pOverA, we have approximately 12,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+
+In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
+```{r}
+#Checking that all row and column names match. Should return "TRUE"
+all(rownames(metadata$sample_id) %in% colnames(gcount_filt))
+all(rownames(metadata$sample_id) == colnames(gcount_filt)) 
+```
+
+
+# **Construct DESeq2 data set**  
+
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.
+```{r}
+#Set DESeq2 design
+gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
+                              colData = metadata,
+                              design = ~lifestage)
+```
+
+First we are going to log-transform the data using a variance stabilizing transforamtion (VST). This is only for visualization purposes. Essentially, this is roughly similar to putting the data on the log2 scale. It will deal with the sampling variability of low counts by calculating within-group variability (if blind=FALSE). Importantly, it does not use the design to remove variation in the data, and so can be used to examine if there may be any variability do to technical factors such as extraction batch effects.
+
+To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4.
+
+Chunk should return TRUE if <4.  
+```{r}
+SF.gdds <- estimateSizeFactors(gdds) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than 4 for us to use vst
+print(sizeFactors(SF.gdds)) #View size factors
+
+all(sizeFactors(SF.gdds)) < 4
+```
+
+All size factors are less than 4, so we can use VST transformation.  
+
+```{r}
+gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
+head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
+```
+
+
+

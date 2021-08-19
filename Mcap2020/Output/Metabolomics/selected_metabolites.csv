@@ -1644,53 +1644,53 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Methionine,4.4594308431408
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Methionine,3.5902877100696693,0.6618399071014719
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Methionine,4.721894390624788,0.7575398377418476
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Methionine,10.892038741726477,1.075256315374022
-Egg,rep1,1,Egg,NAD+,2.290874313344211,0.5173112958272167
-Egg,rep2,1,Egg,NAD+,2.711712902946915,0.569574376628744
-Egg,rep3,1,Egg,NAD+,3.6418086034559236,0.6666872291451841
-Egg,rep4,1,Egg,NAD+,3.6463286895565425,0.6671099293151466
-Embryo,rep1,5,Embryo,NAD+,3.434018498265529,0.6467975006138067
-Embryo,rep2,5,Embryo,NAD+,3.1422667072175754,0.6172380582812033
-Embryo,rep3,5,Embryo,NAD+,3.4509511869942826,0.6484528314572535
-Embryo,rep4,5,Embryo,NAD+,4.170581210866149,0.7135393636906012
-Larvae1,rep1,38,Embryo,NAD+,2.121609971060764,0.4943786392780673
-Larvae1,rep2,38,Embryo,NAD+,3.0291357251820163,0.6052118972480924
-Larvae1,rep3,38,Embryo,NAD+,3.4141708381479097,0.6448491373052874
-Larvae1,rep4,38,Embryo,NAD+,3.2799510119836013,0.6314387981377145
-Larvae2,rep3,65,Embryo,NAD+,3.663769774254815,0.6687371034493773
-Larvae2,rep4,65,Embryo,NAD+,2.4800273230250744,0.5415826537719934
-Larvae3,rep1,93,Larvae,NAD+,2.2600256653683997,0.5132210191734592
-Larvae3,rep2,93,Larvae,NAD+,2.7407529536168056,0.5729590275182361
-Larvae3,rep3,93,Larvae,NAD+,1.9432785988147938,0.46883137259956054
-Larvae3,rep4,93,Larvae,NAD+,1.6802467148766118,0.42817477237877566
-Larvae4,rep3,163,Larvae,NAD+,2.1620204540163113,0.49996467490602137
-Larvae4,rep4,163,Larvae,NAD+,2.846647002750335,0.5850823340084947
-Larvae5,rep1,183 larvae,Larvae,NAD+,2.375279462755676,0.5283097369027633
-Larvae5,rep2,183 larvae,Larvae,NAD+,2.285958717886965,0.5166621030106339
-Larvae5,rep3,183 larvae,Larvae,NAD+,2.333677900086515,0.5229236359920667
-Larvae5,rep4,183 larvae,Larvae,NAD+,1.1790553120792875,0.338268254305887
-Larvae6,rep3,231 larvae,Larvae,NAD+,1.4685879307928915,0.39244860134611537
-Larvae6,rep4,231 larvae,Larvae,NAD+,0.8332029404043042,0.2632105451690504
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,NAD+,1.8710160929743525,0.4580356268644512
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,NAD+,2.5419153856695837,0.549238181931491
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,NAD+,1.7971091189464263,0.4467094091072882
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,NAD+,1.957675739843202,0.4709505590739745
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,NAD+,1.4082025861094656,0.38169301843656567
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,NAD+,0.992520865675144,0.2994028780230449
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,NAD+,1.4688515187022457,0.39249497144373724
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,NAD+,1.2751638518730464,0.3570126789719737
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,NAD+,2.15970188614869,0.49964610941965765
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,NAD+,1.701092626896784,0.4315394774345429
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,NAD+,1.822914279696042,0.4506976906087618
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,NAD+,2.066411431203781,0.48663042524560113
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,NAD+,0.6796247384813454,0.22521226255248114
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,NAD+,1.0157668810949632,0.30444030549765505
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,NAD+,1.4742737593636905,0.39344774929614335
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,NAD+,0.7621054704204727,0.24603189945103335
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,NAD+,1.632241790687513,0.4203257799032862
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NAD+,1.4006296250343169,0.38032516121841986
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NAD+,0.5536500575614802,0.19135320546590248
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NAD+,0.8062798231881028,0.2567850307243466
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NAD+,1.3055267530433678,0.36277016608338014
+Egg,rep1,1,Egg,"NAD+",2.290874313344211,0.5173112958272167
+Egg,rep2,1,Egg,"NAD+",2.711712902946915,0.569574376628744
+Egg,rep3,1,Egg,"NAD+",3.6418086034559236,0.6666872291451841
+Egg,rep4,1,Egg,"NAD+",3.6463286895565425,0.6671099293151466
+Embryo,rep1,5,Embryo,"NAD+",3.434018498265529,0.6467975006138067
+Embryo,rep2,5,Embryo,"NAD+",3.1422667072175754,0.6172380582812033
+Embryo,rep3,5,Embryo,"NAD+",3.4509511869942826,0.6484528314572535
+Embryo,rep4,5,Embryo,"NAD+",4.170581210866149,0.7135393636906012
+Larvae1,rep1,38,Embryo,"NAD+",2.121609971060764,0.4943786392780673
+Larvae1,rep2,38,Embryo,"NAD+",3.0291357251820163,0.6052118972480924
+Larvae1,rep3,38,Embryo,"NAD+",3.4141708381479097,0.6448491373052874
+Larvae1,rep4,38,Embryo,"NAD+",3.2799510119836013,0.6314387981377145
+Larvae2,rep3,65,Embryo,"NAD+",3.663769774254815,0.6687371034493773
+Larvae2,rep4,65,Embryo,"NAD+",2.4800273230250744,0.5415826537719934
+Larvae3,rep1,93,Larvae,"NAD+",2.2600256653683997,0.5132210191734592
+Larvae3,rep2,93,Larvae,"NAD+",2.7407529536168056,0.5729590275182361
+Larvae3,rep3,93,Larvae,"NAD+",1.9432785988147938,0.46883137259956054
+Larvae3,rep4,93,Larvae,"NAD+",1.6802467148766118,0.42817477237877566
+Larvae4,rep3,163,Larvae,"NAD+",2.1620204540163113,0.49996467490602137
+Larvae4,rep4,163,Larvae,"NAD+",2.846647002750335,0.5850823340084947
+Larvae5,rep1,183 larvae,Larvae,"NAD+",2.375279462755676,0.5283097369027633
+Larvae5,rep2,183 larvae,Larvae,"NAD+",2.285958717886965,0.5166621030106339
+Larvae5,rep3,183 larvae,Larvae,"NAD+",2.333677900086515,0.5229236359920667
+Larvae5,rep4,183 larvae,Larvae,"NAD+",1.1790553120792875,0.338268254305887
+Larvae6,rep3,231 larvae,Larvae,"NAD+",1.4685879307928915,0.39244860134611537
+Larvae6,rep4,231 larvae,Larvae,"NAD+",0.8332029404043042,0.2632105451690504
+Recruit1,rep1,183 recruit,Metamorphosed Recruit,"NAD+",1.8710160929743525,0.4580356268644512
+Recruit1,rep2,183 recruit,Metamorphosed Recruit,"NAD+",2.5419153856695837,0.549238181931491
+Recruit1,rep3,183 recruit,Metamorphosed Recruit,"NAD+",1.7971091189464263,0.4467094091072882
+Recruit1,rep4,183 recruit,Metamorphosed Recruit,"NAD+",1.957675739843202,0.4709505590739745
+Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,"NAD+",1.4082025861094656,0.38169301843656567
+Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,"NAD+",0.992520865675144,0.2994028780230449
+Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,"NAD+",1.4688515187022457,0.39249497144373724
+Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,"NAD+",1.2751638518730464,0.3570126789719737
+Recruit2,rep1,231 recruit,Metamorphosed Recruit,"NAD+",2.15970188614869,0.49964610941965765
+Recruit2,rep2,231 recruit,Metamorphosed Recruit,"NAD+",1.701092626896784,0.4315394774345429
+Recruit2,rep3,231 recruit,Metamorphosed Recruit,"NAD+",1.822914279696042,0.4506976906087618
+Recruit2,rep4,231 recruit,Metamorphosed Recruit,"NAD+",2.066411431203781,0.48663042524560113
+Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,"NAD+",0.6796247384813454,0.22521226255248114
+Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,"NAD+",1.0157668810949632,0.30444030549765505
+Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,"NAD+",1.4742737593636905,0.39344774929614335
+Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,"NAD+",0.7621054704204727,0.24603189945103335
+Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,"NAD+",1.632241790687513,0.4203257799032862
+Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,"NAD+",1.4006296250343169,0.38032516121841986
+Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,"NAD+",0.5536500575614802,0.19135320546590248
+Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,"NAD+",0.8062798231881028,0.2567850307243466
+Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,"NAD+",1.3055267530433678,0.36277016608338014
 Egg,rep1,1,Egg,NG-dimethyl-L-arginine,4.178814115290864,0.7142303230371564
 Egg,rep2,1,Egg,NG-dimethyl-L-arginine,4.589273387531694,0.7473553527350064
 Egg,rep3,1,Egg,NG-dimethyl-L-arginine,5.088500329184675,0.784510333853805
@@ -4088,147 +4088,147 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,4.09809
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,4.124187880239674,0.7096250449320298
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,4.713324265044113,0.7568888735481889
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,N6-Acetyl-L-lysine,4.552466765960195,0.7444859677782254
-Egg,rep1,1,Egg,NADH,0.2692087622686664,0.10353306168853454
-Egg,rep2,1,Egg,NADH,0.5272454687431042,0.18390884527709653
-Egg,rep3,1,Egg,NADH,0.5165615877966947,0.18086005176975847
-Egg,rep4,1,Egg,NADH,0.5312855254550682,0.1850561773527762
-Embryo,rep1,5,Embryo,NADH,0,0
-Embryo,rep2,5,Embryo,NADH,0.026178172620228243,0.011222772732729995
-Embryo,rep3,5,Embryo,NADH,0,0
-Embryo,rep4,5,Embryo,NADH,0,0
-Larvae1,rep1,38,Embryo,NADH,0,0
-Larvae1,rep2,38,Embryo,NADH,0,0
-Larvae1,rep3,38,Embryo,NADH,0,0
-Larvae1,rep4,38,Embryo,NADH,0,0
-Larvae2,rep3,65,Embryo,NADH,0,0
-Larvae2,rep4,65,Embryo,NADH,0,0
-Larvae3,rep1,93,Larvae,NADH,0,0
-Larvae3,rep2,93,Larvae,NADH,0,0
-Larvae3,rep3,93,Larvae,NADH,0,0
-Larvae3,rep4,93,Larvae,NADH,0,0
-Larvae4,rep3,163,Larvae,NADH,0,0
-Larvae4,rep4,163,Larvae,NADH,0.06178889280810642,0.02603817794865001
-Larvae5,rep1,183 larvae,Larvae,NADH,0,0
-Larvae5,rep2,183 larvae,Larvae,NADH,0,0
-Larvae5,rep3,183 larvae,Larvae,NADH,0,0
-Larvae5,rep4,183 larvae,Larvae,NADH,0,0
-Larvae6,rep3,231 larvae,Larvae,NADH,0,0
-Larvae6,rep4,231 larvae,Larvae,NADH,0,0
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,NADH,0,0
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADH,0,0
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADH,0,0
-Egg,rep1,1,Egg,NADP+,0.054058656646767504,0.022864779329283477
-Egg,rep2,1,Egg,NADP+,0.031121365651840673,0.01330978587595678
-Egg,rep3,1,Egg,NADP+,0.1121907552124722,0.04617928079941748
-Egg,rep4,1,Egg,NADP+,0.16979358256160487,0.06810923451257632
-Embryo,rep1,5,Embryo,NADP+,0.18875559115451968,0.07509257259686461
-Embryo,rep2,5,Embryo,NADP+,0.1963338279776209,0.07785238317995255
-Embryo,rep3,5,Embryo,NADP+,0.22790101288982276,0.08916335761257375
-Embryo,rep4,5,Embryo,NADP+,0.2629184377945486,0.10137530371482972
-Larvae1,rep1,38,Embryo,NADP+,0.1420372179041724,0.057680257383586
-Larvae1,rep2,38,Embryo,NADP+,0.2457535655406946,0.09543213886330938
-Larvae1,rep3,38,Embryo,NADP+,0.12337198367351378,0.05052358859146897
-Larvae1,rep4,38,Embryo,NADP+,0.06665779381615845,0.02802511099457963
-Larvae2,rep3,65,Embryo,NADP+,0.10638856543152697,0.043907678674236374
-Larvae2,rep4,65,Embryo,NADP+,0.12571053602822457,0.05142673086429069
-Larvae3,rep1,93,Larvae,NADP+,0.05574314953426558,0.023558272072678813
-Larvae3,rep2,93,Larvae,NADP+,0.05079455212164667,0.021517812506076643
-Larvae3,rep3,93,Larvae,NADP+,0.1983439373525853,0.07858148304235826
-Larvae3,rep4,93,Larvae,NADP+,0.07010979487323785,0.029428339237840762
-Larvae4,rep3,163,Larvae,NADP+,0.04898680826101622,0.020770026672613268
-Larvae4,rep4,163,Larvae,NADP+,0.05961661364862828,0.02514875894886255
-Larvae5,rep1,183 larvae,Larvae,NADP+,0.09957807618113484,0.041226072124072394
-Larvae5,rep2,183 larvae,Larvae,NADP+,0.0550642645125401,0.02327891354192307
-Larvae5,rep3,183 larvae,Larvae,NADP+,0.13482731678099014,0.05492978128706891
-Larvae5,rep4,183 larvae,Larvae,NADP+,0.23151967383728075,0.09044135419438333
-Larvae6,rep3,231 larvae,Larvae,NADP+,0.08369942339163462,0.0349088422909761
-Larvae6,rep4,231 larvae,Larvae,NADP+,0.20473877658177986,0.08089288907882357
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,NADP+,0.0741267586247876,0.031055535854103294
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,NADP+,0.12112283242823585,0.049653197361573295
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,NADP+,0.08495730154821846,0.035412646878665334
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,NADP+,0.08220963851724913,0.03431139758419386
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,NADP+,0.04003450155196,0.017047746592143576
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,NADP+,0.06432353608423416,0.02707366609588178
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,NADP+,0.08271483894211437,0.03451408896030533
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,NADP+,0,0
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,NADP+,0.19330999288297107,0.07675327745946604
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,NADP+,0.06996142984808826,0.029368122445905184
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,NADP+,0.11164724202221137,0.04596699484660505
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,NADP+,0.05380738857312937,0.02276123922186169
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADP+,0,0
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADP+,0.029056451652102164,0.012439199804733151
-Egg,rep1,1,Egg,NADPH,0.029346838414756396,0.012561734946494435
-Egg,rep2,1,Egg,NADPH,0.08799856010125466,0.03662832060067822
-Egg,rep3,1,Egg,NADPH,0.12774012236159546,0.05220903189243486
-Egg,rep4,1,Egg,NADPH,0.1373541453911226,0.05589571485597333
-Embryo,rep1,5,Embryo,NADPH,0.20670595004771672,0.0816014541653714
-Embryo,rep2,5,Embryo,NADPH,0.16274759355386795,0.06548544935976772
-Embryo,rep3,5,Embryo,NADPH,0.08610503318445616,0.035871826290314546
-Embryo,rep4,5,Embryo,NADPH,0.16347980983587607,0.06575885126439196
-Larvae1,rep1,38,Embryo,NADPH,0.06924428032771075,0.02907693577826894
-Larvae1,rep2,38,Embryo,NADPH,0.12705361980561322,0.05194457818608253
-Larvae1,rep3,38,Embryo,NADPH,0.1810535878576689,0.07226960327218931
-Larvae1,rep4,38,Embryo,NADPH,0.1787585811632671,0.0714248673473276
-Larvae2,rep3,65,Embryo,NADPH,0.3000403313668971,0.11395682570559995
-Larvae2,rep4,65,Embryo,NADPH,0.14435565796073338,0.05856102120936586
-Larvae3,rep1,93,Larvae,NADPH,0.2496899116889431,0.096802263928896
-Larvae3,rep2,93,Larvae,NADPH,0.17503955574607652,0.07005248665294384
-Larvae3,rep3,93,Larvae,NADPH,0.18658672379098606,0.07429948489426266
-Larvae3,rep4,93,Larvae,NADPH,0.0693732519204255,0.029129316954670647
-Larvae4,rep3,163,Larvae,NADPH,0.18206413551678005,0.0726410407968319
-Larvae4,rep4,163,Larvae,NADPH,0.08478576351205477,0.035343976975857665
-Larvae5,rep1,183 larvae,Larvae,NADPH,0.2779518722156674,0.10651449856045996
-Larvae5,rep2,183 larvae,Larvae,NADPH,0.15365461888550527,0.062075809198390515
-Larvae5,rep3,183 larvae,Larvae,NADPH,0.13718242261010352,0.05583013819529916
-Larvae5,rep4,183 larvae,Larvae,NADPH,0,0
-Larvae6,rep3,231 larvae,Larvae,NADPH,0.0689911953321424,0.028974128188747363
-Larvae6,rep4,231 larvae,Larvae,NADPH,0,0
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,NADPH,0.07011215543748013,0.0294292972506529
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,NADPH,0.2098729531403417,0.0827397681288874
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,NADPH,0.08249353903746316,0.034425312906464216
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,NADPH,0.08365339683326804,0.03489039667369027
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,NADPH,0.11827004507659132,0.048546691676466885
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,NADPH,0.13269236863838293,0.05411197452011675
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,NADPH,0,0
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,NADPH,0.060957984744481865,0.025698185640337535
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NADPH,0,0
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NADPH,0,0
+Egg,rep1,1,Egg,"NADH",0.2692087622686664,0.10353306168853454
+Egg,rep2,1,Egg,"NADH",0.5272454687431042,0.18390884527709653
+Egg,rep3,1,Egg,"NADH",0.5165615877966947,0.18086005176975847
+Egg,rep4,1,Egg,"NADH",0.5312855254550682,0.1850561773527762
+Embryo,rep1,5,Embryo,"NADH",0,0
+Embryo,rep2,5,Embryo,"NADH",0.026178172620228243,0.011222772732729995
+Embryo,rep3,5,Embryo,"NADH",0,0
+Embryo,rep4,5,Embryo,"NADH",0,0
+Larvae1,rep1,38,Embryo,"NADH",0,0
+Larvae1,rep2,38,Embryo,"NADH",0,0
+Larvae1,rep3,38,Embryo,"NADH",0,0
+Larvae1,rep4,38,Embryo,"NADH",0,0
+Larvae2,rep3,65,Embryo,"NADH",0,0
+Larvae2,rep4,65,Embryo,"NADH",0,0
+Larvae3,rep1,93,Larvae,"NADH",0,0
+Larvae3,rep2,93,Larvae,"NADH",0,0
+Larvae3,rep3,93,Larvae,"NADH",0,0
+Larvae3,rep4,93,Larvae,"NADH",0,0
+Larvae4,rep3,163,Larvae,"NADH",0,0
+Larvae4,rep4,163,Larvae,"NADH",0.06178889280810642,0.02603817794865001
+Larvae5,rep1,183 larvae,Larvae,"NADH",0,0
+Larvae5,rep2,183 larvae,Larvae,"NADH",0,0
+Larvae5,rep3,183 larvae,Larvae,"NADH",0,0
+Larvae5,rep4,183 larvae,Larvae,"NADH",0,0
+Larvae6,rep3,231 larvae,Larvae,"NADH",0,0
+Larvae6,rep4,231 larvae,Larvae,"NADH",0,0
+Recruit1,rep1,183 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit1,rep2,183 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit1,rep3,183 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit1,rep4,183 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit2,rep1,231 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit2,rep2,231 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit2,rep3,231 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit2,rep4,231 recruit,Metamorphosed Recruit,"NADH",0,0
+Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,"NADH",0,0
+Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,"NADH",0,0
+Egg,rep1,1,Egg,"NADP+",0.054058656646767504,0.022864779329283477
+Egg,rep2,1,Egg,"NADP+",0.031121365651840673,0.01330978587595678
+Egg,rep3,1,Egg,"NADP+",0.1121907552124722,0.04617928079941748
+Egg,rep4,1,Egg,"NADP+",0.16979358256160487,0.06810923451257632
+Embryo,rep1,5,Embryo,"NADP+",0.18875559115451968,0.07509257259686461
+Embryo,rep2,5,Embryo,"NADP+",0.1963338279776209,0.07785238317995255
+Embryo,rep3,5,Embryo,"NADP+",0.22790101288982276,0.08916335761257375
+Embryo,rep4,5,Embryo,"NADP+",0.2629184377945486,0.10137530371482972
+Larvae1,rep1,38,Embryo,"NADP+",0.1420372179041724,0.057680257383586
+Larvae1,rep2,38,Embryo,"NADP+",0.2457535655406946,0.09543213886330938
+Larvae1,rep3,38,Embryo,"NADP+",0.12337198367351378,0.05052358859146897
+Larvae1,rep4,38,Embryo,"NADP+",0.06665779381615845,0.02802511099457963
+Larvae2,rep3,65,Embryo,"NADP+",0.10638856543152697,0.043907678674236374
+Larvae2,rep4,65,Embryo,"NADP+",0.12571053602822457,0.05142673086429069
+Larvae3,rep1,93,Larvae,"NADP+",0.05574314953426558,0.023558272072678813
+Larvae3,rep2,93,Larvae,"NADP+",0.05079455212164667,0.021517812506076643
+Larvae3,rep3,93,Larvae,"NADP+",0.1983439373525853,0.07858148304235826
+Larvae3,rep4,93,Larvae,"NADP+",0.07010979487323785,0.029428339237840762
+Larvae4,rep3,163,Larvae,"NADP+",0.04898680826101622,0.020770026672613268
+Larvae4,rep4,163,Larvae,"NADP+",0.05961661364862828,0.02514875894886255
+Larvae5,rep1,183 larvae,Larvae,"NADP+",0.09957807618113484,0.041226072124072394
+Larvae5,rep2,183 larvae,Larvae,"NADP+",0.0550642645125401,0.02327891354192307
+Larvae5,rep3,183 larvae,Larvae,"NADP+",0.13482731678099014,0.05492978128706891
+Larvae5,rep4,183 larvae,Larvae,"NADP+",0.23151967383728075,0.09044135419438333
+Larvae6,rep3,231 larvae,Larvae,"NADP+",0.08369942339163462,0.0349088422909761
+Larvae6,rep4,231 larvae,Larvae,"NADP+",0.20473877658177986,0.08089288907882357
+Recruit1,rep1,183 recruit,Metamorphosed Recruit,"NADP+",0.0741267586247876,0.031055535854103294
+Recruit1,rep2,183 recruit,Metamorphosed Recruit,"NADP+",0.12112283242823585,0.049653197361573295
+Recruit1,rep3,183 recruit,Metamorphosed Recruit,"NADP+",0.08495730154821846,0.035412646878665334
+Recruit1,rep4,183 recruit,Metamorphosed Recruit,"NADP+",0.08220963851724913,0.03431139758419386
+Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,"NADP+",0.04003450155196,0.017047746592143576
+Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,"NADP+",0.06432353608423416,0.02707366609588178
+Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit2,rep1,231 recruit,Metamorphosed Recruit,"NADP+",0.08271483894211437,0.03451408896030533
+Recruit2,rep2,231 recruit,Metamorphosed Recruit,"NADP+",0,0
+Recruit2,rep3,231 recruit,Metamorphosed Recruit,"NADP+",0.19330999288297107,0.07675327745946604
+Recruit2,rep4,231 recruit,Metamorphosed Recruit,"NADP+",0.06996142984808826,0.029368122445905184
+Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,"NADP+",0.11164724202221137,0.04596699484660505
+Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,"NADP+",0.05380738857312937,0.02276123922186169
+Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,"NADP+",0,0
+Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,"NADP+",0.029056451652102164,0.012439199804733151
+Egg,rep1,1,Egg,"NADPH",0.029346838414756396,0.012561734946494435
+Egg,rep2,1,Egg,"NADPH",0.08799856010125466,0.03662832060067822
+Egg,rep3,1,Egg,"NADPH",0.12774012236159546,0.05220903189243486
+Egg,rep4,1,Egg,"NADPH",0.1373541453911226,0.05589571485597333
+Embryo,rep1,5,Embryo,"NADPH",0.20670595004771672,0.0816014541653714
+Embryo,rep2,5,Embryo,"NADPH",0.16274759355386795,0.06548544935976772
+Embryo,rep3,5,Embryo,"NADPH",0.08610503318445616,0.035871826290314546
+Embryo,rep4,5,Embryo,"NADPH",0.16347980983587607,0.06575885126439196
+Larvae1,rep1,38,Embryo,"NADPH",0.06924428032771075,0.02907693577826894
+Larvae1,rep2,38,Embryo,"NADPH",0.12705361980561322,0.05194457818608253
+Larvae1,rep3,38,Embryo,"NADPH",0.1810535878576689,0.07226960327218931
+Larvae1,rep4,38,Embryo,"NADPH",0.1787585811632671,0.0714248673473276
+Larvae2,rep3,65,Embryo,"NADPH",0.3000403313668971,0.11395682570559995
+Larvae2,rep4,65,Embryo,"NADPH",0.14435565796073338,0.05856102120936586
+Larvae3,rep1,93,Larvae,"NADPH",0.2496899116889431,0.096802263928896
+Larvae3,rep2,93,Larvae,"NADPH",0.17503955574607652,0.07005248665294384
+Larvae3,rep3,93,Larvae,"NADPH",0.18658672379098606,0.07429948489426266
+Larvae3,rep4,93,Larvae,"NADPH",0.0693732519204255,0.029129316954670647
+Larvae4,rep3,163,Larvae,"NADPH",0.18206413551678005,0.0726410407968319
+Larvae4,rep4,163,Larvae,"NADPH",0.08478576351205477,0.035343976975857665
+Larvae5,rep1,183 larvae,Larvae,"NADPH",0.2779518722156674,0.10651449856045996
+Larvae5,rep2,183 larvae,Larvae,"NADPH",0.15365461888550527,0.062075809198390515
+Larvae5,rep3,183 larvae,Larvae,"NADPH",0.13718242261010352,0.05583013819529916
+Larvae5,rep4,183 larvae,Larvae,"NADPH",0,0
+Larvae6,rep3,231 larvae,Larvae,"NADPH",0.0689911953321424,0.028974128188747363
+Larvae6,rep4,231 larvae,Larvae,"NADPH",0,0
+Recruit1,rep1,183 recruit,Metamorphosed Recruit,"NADPH",0.07011215543748013,0.0294292972506529
+Recruit1,rep2,183 recruit,Metamorphosed Recruit,"NADPH",0.2098729531403417,0.0827397681288874
+Recruit1,rep3,183 recruit,Metamorphosed Recruit,"NADPH",0.08249353903746316,0.034425312906464216
+Recruit1,rep4,183 recruit,Metamorphosed Recruit,"NADPH",0.08365339683326804,0.03489039667369027
+Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit2,rep1,231 recruit,Metamorphosed Recruit,"NADPH",0.11827004507659132,0.048546691676466885
+Recruit2,rep2,231 recruit,Metamorphosed Recruit,"NADPH",0.13269236863838293,0.05411197452011675
+Recruit2,rep3,231 recruit,Metamorphosed Recruit,"NADPH",0,0
+Recruit2,rep4,231 recruit,Metamorphosed Recruit,"NADPH",0.060957984744481865,0.025698185640337535
+Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,"NADPH",0,0
+Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,"NADPH",0,0
 Egg,rep1,1,Egg,O-Acylcarnitine,0.1653178375835468,0.06644439427413688
 Egg,rep2,1,Egg,O-Acylcarnitine,0.10466145509626981,0.04322920045453867
 Egg,rep3,1,Egg,O-Acylcarnitine,0.09242810385299924,0.038392864290177214
@@ -8741,53 +8741,53 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,N-octanoylglycine,3.237679
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,N-octanoylglycine,0.879090224935195,0.2739476333473332
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,N-octanoylglycine,3.9182369345720045,0.6918094469115598
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,N-octanoylglycine,1.1419824600184045,0.3308159102174016
-Egg,rep1,1,Egg,NAADP,0,0
-Egg,rep2,1,Egg,NAADP,0,0
-Egg,rep3,1,Egg,NAADP,0.5272217108212827,0.1839020893136226
-Egg,rep4,1,Egg,NAADP,0,0
-Embryo,rep1,5,Embryo,NAADP,0,0
-Embryo,rep2,5,Embryo,NAADP,0,0
-Embryo,rep3,5,Embryo,NAADP,0,0
-Embryo,rep4,5,Embryo,NAADP,0,0
-Larvae1,rep1,38,Embryo,NAADP,0,0
-Larvae1,rep2,38,Embryo,NAADP,0,0
-Larvae1,rep3,38,Embryo,NAADP,0,0
-Larvae1,rep4,38,Embryo,NAADP,0,0
-Larvae2,rep3,65,Embryo,NAADP,0.07147410536483137,0.029981679780035967
-Larvae2,rep4,65,Embryo,NAADP,1.5578937943930353,0.40788250829486333
-Larvae3,rep1,93,Larvae,NAADP,0.9585556378348108,0.2919359133163233
-Larvae3,rep2,93,Larvae,NAADP,0,0
-Larvae3,rep3,93,Larvae,NAADP,2.4093501314862227,0.532671604445097
-Larvae3,rep4,93,Larvae,NAADP,0,0
-Larvae4,rep3,163,Larvae,NAADP,0,0
-Larvae4,rep4,163,Larvae,NAADP,0,0
-Larvae5,rep1,183 larvae,Larvae,NAADP,0,0
-Larvae5,rep2,183 larvae,Larvae,NAADP,0,0
-Larvae5,rep3,183 larvae,Larvae,NAADP,0.2960127163759387,0.11260926281914706
-Larvae5,rep4,183 larvae,Larvae,NAADP,0.33827899259103167,0.12654666075033968
-Larvae6,rep3,231 larvae,Larvae,NAADP,0,0
-Larvae6,rep4,231 larvae,Larvae,NAADP,2.1256376556548098,0.49493863034642693
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,NAADP,4.0185757478285185,0.7005804835551952
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,NAADP,2.8684352810745812,0.5875353355073584
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,NAADP,0,0
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,NAADP,0.6614197073816295,0.22047935766186103
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,NAADP,0.8467175289709911,0.26640047151449553
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,NAADP,0.17768446681582734,0.07102894692248765
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,NAADP,0,0
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,NAADP,0,0
+Egg,rep1,1,Egg,"NAADP",0,0
+Egg,rep2,1,Egg,"NAADP",0,0
+Egg,rep3,1,Egg,"NAADP",0.5272217108212827,0.1839020893136226
+Egg,rep4,1,Egg,"NAADP",0,0
+Embryo,rep1,5,Embryo,"NAADP",0,0
+Embryo,rep2,5,Embryo,"NAADP",0,0
+Embryo,rep3,5,Embryo,"NAADP",0,0
+Embryo,rep4,5,Embryo,"NAADP",0,0
+Larvae1,rep1,38,Embryo,"NAADP",0,0
+Larvae1,rep2,38,Embryo,"NAADP",0,0
+Larvae1,rep3,38,Embryo,"NAADP",0,0
+Larvae1,rep4,38,Embryo,"NAADP",0,0
+Larvae2,rep3,65,Embryo,"NAADP",0.07147410536483137,0.029981679780035967
+Larvae2,rep4,65,Embryo,"NAADP",1.5578937943930353,0.40788250829486333
+Larvae3,rep1,93,Larvae,"NAADP",0.9585556378348108,0.2919359133163233
+Larvae3,rep2,93,Larvae,"NAADP",0,0
+Larvae3,rep3,93,Larvae,"NAADP",2.4093501314862227,0.532671604445097
+Larvae3,rep4,93,Larvae,"NAADP",0,0
+Larvae4,rep3,163,Larvae,"NAADP",0,0
+Larvae4,rep4,163,Larvae,"NAADP",0,0
+Larvae5,rep1,183 larvae,Larvae,"NAADP",0,0
+Larvae5,rep2,183 larvae,Larvae,"NAADP",0,0
+Larvae5,rep3,183 larvae,Larvae,"NAADP",0.2960127163759387,0.11260926281914706
+Larvae5,rep4,183 larvae,Larvae,"NAADP",0.33827899259103167,0.12654666075033968
+Larvae6,rep3,231 larvae,Larvae,"NAADP",0,0
+Larvae6,rep4,231 larvae,Larvae,"NAADP",2.1256376556548098,0.49493863034642693
+Recruit1,rep1,183 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit1,rep2,183 recruit,Metamorphosed Recruit,"NAADP",4.0185757478285185,0.7005804835551952
+Recruit1,rep3,183 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit1,rep4,183 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit2,rep1,231 recruit,Metamorphosed Recruit,"NAADP",2.8684352810745812,0.5875353355073584
+Recruit2,rep2,231 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit2,rep3,231 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit2,rep4,231 recruit,Metamorphosed Recruit,"NAADP",0,0
+Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,"NAADP",0.6614197073816295,0.22047935766186103
+Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,"NAADP",0.8467175289709911,0.26640047151449553
+Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,"NAADP",0.17768446681582734,0.07102894692248765
+Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,"NAADP",0,0
+Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,"NAADP",0,0
 Egg,rep1,1,Egg,Norvaline,0.9641284659182383,0.2931698898739425
 Egg,rep2,1,Egg,Norvaline,1.086243112508815,0.3193649159164927
 Egg,rep3,1,Egg,Norvaline,0.9512666902044766,0.29031663083419257

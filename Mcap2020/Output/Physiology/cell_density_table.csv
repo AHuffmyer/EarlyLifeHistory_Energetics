@@ -1,11 +1,11 @@
-Lifestage,HPF,n,Mean,SE
-Egg,1,4,1472,125
-Embryo,5,4,1831,124
-Embryo,38,4,1371,242
-Embryo,65,4,2646,238
-Larvae,93,4,2692,347
-Larvae,163,4,2848,206
-Larvae,183,4,3474,134
-Larvae,231,4,5142,386
-Metamorphosed Recruit,183,4,4829,480
-Metamorphosed Recruit,231,4,6424,659
+group,HPF,lifestage,n,Mean,SE
+Egg,1,Egg Fertilized,4,1472,125
+Embryo,5,Embryo 1,4,1831,124
+Embryo,38,Larvae 1,4,1371,242
+Embryo,65,Larvae 2,4,2646,238
+Larvae,93,Larvae 3,4,2692,347
+Larvae,163,Larvae 4,4,2848,206
+Larvae,183,Larvae 5,4,3474,134
+Larvae,231,Larvae 6,4,5142,386
+Metamorphosed Recruit,183,Recruit 1,4,4829,480
+Metamorphosed Recruit,231,Recruit 2,4,6424,659

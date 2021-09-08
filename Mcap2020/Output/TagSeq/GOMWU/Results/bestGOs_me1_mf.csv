@@ -1,0 +1,9 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"8",0,4.19086241998805e-08,2,257,"GO:0003677","DNA binding",0
+"17",0,3.21194679688674e-06,3,217,"GO:0003723","RNA binding",0
+"23",0,1.31236749686565e-06,2,55,"GO:0003777","microtubule motor activity",0
+"55",0,4.95806973691529e-07,3,307,"GO:0004672;GO:0016773","phosphotransferase activity, alcohol group as acceptor",0
+"64",0,6.46785158322517e-06,2,43,"GO:0004843;GO:0008242;GO:0101005","omega peptidase activity",0
+"110",0,1.1095834103581e-05,2,104,"GO:0008270","zinc ion binding",0
+"201",0,2.43598435650592e-07,4,95,"GO:0042578","phosphoric ester hydrolase activity",0
+"220",0,2.4274497209889e-05,1,160,"GO:0098772","molecular function regulator",0

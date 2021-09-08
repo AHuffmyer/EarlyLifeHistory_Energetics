@@ -1,0 +1,9 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"33",0,1.16815340138269e-05,3,15,"GO:0004089","carbonate dehydratase activity",0
+"35",0,2.9225624738716e-06,6,10,"GO:0004129;GO:0015002;GO:0016676;GO:0016675","cytochrome-c oxidase activity",0
+"45",0,1.89379394466337e-06,3,53,"GO:0004252;GO:0008236;GO:0017171","serine hydrolase activity",0
+"47",0,4.31068618982972e-05,4,8,"GO:0004364","glutathione transferase activity",0.00625
+"65",0,1.63897950128714e-05,5,8,"GO:0004623","phospholipase A2 activity",0
+"82",0,2.1544294353815e-08,2,20,"GO:0005044;GO:0038024","scavenger receptor activity",0
+"88",0,9.02423761891599e-08,2,21,"GO:0005201","extracellular matrix structural constituent",0
+"114",0,1.94859429116599e-05,2,42,"GO:0008135;GO:0090079;GO:0045182","translation regulator activity, nucleic acid binding",0.00384615384615385

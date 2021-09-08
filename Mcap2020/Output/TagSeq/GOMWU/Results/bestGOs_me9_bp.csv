@@ -1,0 +1,5 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"13",0,0.000182397136077059,3,5,"GO:0006099","tricarboxylic acid cycle",0.00909090909090909
+"28",0,1.91404050847197e-14,3,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
+"35",0,1.40024235840818e-06,3,78,"GO:0006508","proteolysis",0
+"175",0,1.96241818198322e-07,2,27,"GO:0055114","oxidation-reduction process",0

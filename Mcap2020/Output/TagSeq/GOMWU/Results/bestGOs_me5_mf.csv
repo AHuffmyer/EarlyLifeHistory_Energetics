@@ -1,0 +1,8 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"16",0,2.87657351704508e-29,2,116,"GO:0003735","structural constituent of ribosome",0
+"35",0,3.38529586729019e-06,3,10,"GO:0004129;GO:0015002;GO:0016676;GO:0016675","oxidoreductase activity, acting on a heme group of donors, oxygen as acceptor",0
+"46",0,1.20832206848862e-05,4,12,"GO:0004298;GO:0070003","threonine-type peptidase activity",0
+"74",0,6.92912686474455e-05,2,9,"GO:0004806","triglyceride lipase activity",0.00263157894736842
+"103",0,2.59461902890779e-07,3,267,"GO:0005509","calcium ion binding",0
+"114",0,5.33098842918624e-05,4,42,"GO:0008135;GO:0090079;GO:0045182","translation regulator activity, nucleic acid binding",0.00277777777777778
+"116",0,2.15389204224883e-05,2,33,"GO:0008146;GO:0016782","transferase activity, transferring sulfur-containing groups",0

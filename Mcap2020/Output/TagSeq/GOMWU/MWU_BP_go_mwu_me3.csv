@@ -1,0 +1,214 @@
+"delta.rank" "pval" "level" "nseqs" "term" "name" "p.adj"
+0 0.755678944221162 4 9 "GO:0000075;GO:0045786" "cell cycle checkpoint" 1
+0 0.748852151309264 7 7 "GO:0000077;GO:0031570" "DNA damage checkpoint" 1
+0 0.0285449112076125 2 11 "GO:0000226" "microtubule cytoskeleton organization" 0.41530612244898
+0 0.024998436025378 3 7 "GO:0000278" "mitotic cell cycle" 0.424418604651163
+0 0.869055125708095 4 10 "GO:0000387" "spliceosomal snRNP assembly" 1
+0 0.906630251050257 9 30 "GO:0000398;GO:0000377;GO:0000375;GO:0008380" "RNA splicing" 1
+0 0.125189945116604 6 14 "GO:0000413;GO:0018208" "peptidyl-proline modification" 0.816071428571429
+0 0.523298522962625 3 6 "GO:0000723;GO:0032200;GO:0060249" "telomere maintenance" 1
+0 0.335051863315374 5 8 "GO:0000956;GO:0006402;GO:0006401" "RNA catabolic process" 1
+0 0.120352510166778 5 12 "GO:0001510" "RNA methylation" 0.819753086419753
+0 0.769395873849261 5 9 "GO:0001522" "pseudouridine synthesis" 1
+0 0.221839020125005 5 6 "GO:0001932;GO:0042325" "regulation of protein phosphorylation" 0.926576576576577
+0 4.34795271624413e-06 2 34 "GO:0005975" "carbohydrate metabolic process" 0
+0 0.0168873765838718 2 8 "GO:0005996" "monosaccharide metabolic process" 0.335135135135135
+0 0.00226642418398049 3 5 "GO:0006099" "tricarboxylic acid cycle" 0.110526315789474
+0 0.944249127276931 3 46 "GO:0006259" "DNA metabolic process" 1
+0 0.516974097635571 2 10 "GO:0006260" "DNA replication" 1
+0 0.927966811519969 4 24 "GO:0006281" "DNA repair" 1
+0 0.788183271030841 5 6 "GO:0006302" "double-strand break repair" 1
+0 0.333792257599277 2 10 "GO:0006310" "DNA recombination" 1
+0 0.943497517845553 4 9 "GO:0006325" "chromatin organization" 1
+0 0.184933384856798 2 16 "GO:0006351;GO:0097659" "transcription, DNA-templated" 0.897549019607843
+0 0.284625032667187 2 8 "GO:0006352" "DNA-templated transcription, initiation" 1
+0 0.150929292600751 5 49 "GO:0006355;GO:1903506;GO:2001141;GO:0051252;GO:0019219" "regulation of RNA metabolic process" 0.890555555555556
+0 0.416063571943524 2 14 "GO:0006357" "regulation of transcription by RNA polymerase II" 1
+0 0.324015551262983 2 15 "GO:0006364;GO:0016072" "rRNA processing" 1
+0 0.0433292601942583 4 5 "GO:0006366" "transcription by RNA polymerase II" 0.488793103448276
+0 0.925979752591873 3 78 "GO:0006396" "RNA processing" 1
+0 0.874938683284918 2 37 "GO:0006397" "mRNA processing" 1
+0 0.54321953052866 5 6 "GO:0006400" "tRNA modification" 1
+0 4.6539013438369e-19 5 37 "GO:0006412;GO:0043043;GO:0043604" "amide biosynthetic process" 0
+0 0.0862611711829966 3 7 "GO:0006417;GO:0010608;GO:0034248" "regulation of translation" 0.698611111111111
+0 0.337919658330127 2 18 "GO:0006457" "protein folding" 1
+0 0.354983677500111 2 101 "GO:0006464;GO:0036211" "cellular protein modification process" 1
+0 0.620285001508684 3 45 "GO:0006486;GO:0043413;GO:0070085" "macromolecule glycosylation" 1
+0 0.032866235291509 2 9 "GO:0006487" "protein N-linked glycosylation" 0.425
+0 0.169553029790641 5 6 "GO:0006506;GO:0006497;GO:0006505;GO:0006661;GO:0009247;GO:0006664;GO:0046467;GO:0006643;GO:1903509" "GPI anchor metabolic process" 0.895876288659794
+0 0.000175311168751912 3 78 "GO:0006508" "proteolysis" 0.035
+0 0.160592481147486 5 23 "GO:0006511;GO:0019941;GO:0043632;GO:0051603" "proteolysis involved in cellular protein catabolic process" 0.878125
+0 2.20814911268552e-15 4 44 "GO:0006518;GO:0043603" "cellular amide metabolic process" 0
+0 0.030384364834346 3 24 "GO:0006520" "cellular amino acid metabolic process" 0.417647058823529
+0 0.834124455386838 3 6 "GO:0006575" "cellular modified amino acid metabolic process" 1
+0 0.0215911020882078 4 7 "GO:0006605" "protein targeting" 0.380952380952381
+0 0.32061417593892 2 63 "GO:0006629" "lipid metabolic process" 1
+0 0.516996042583959 2 21 "GO:0006644" "phospholipid metabolic process" 1
+0 0.526867080459292 3 18 "GO:0006650;GO:0046486" "glycerolipid metabolic process" 1
+0 0.407628344733385 3 5 "GO:0006744;GO:0006743;GO:1901663;GO:1901661;GO:0042181" "quinone biosynthetic process" 1
+0 0.0490161023865365 3 19 "GO:0006753" "nucleoside phosphate metabolic process" 0.529661016949153
+0 0.930050585259838 3 9 "GO:0006790" "sulfur compound metabolic process" 1
+0 0.176514599227526 3 48 "GO:0006796;GO:0019637;GO:0006793" "phosphorus metabolic process" 0.910714285714286
+0 0.00545609461722645 4 114 "GO:0006811" "ion transport" 0.153703703703704
+0 1.30140673976511e-05 2 27 "GO:0006812" "cation transport" 0
+0 0.0887478804455892 4 5 "GO:0006813" "potassium ion transport" 0.703424657534247
+0 0.513801977258257 2 5 "GO:0006839" "mitochondrial transport" 1
+0 0.0118882239447434 3 10 "GO:0006869" "lipid transport" 0.28125
+0 0.00694718131457173 3 5 "GO:0006879;GO:0046916;GO:0006875" "cellular iron ion homeostasis" 0.179310344827586
+0 0.593029354836162 3 53 "GO:0006886" "intracellular protein transport" 1
+0 0.991894713163155 4 37 "GO:0006974;GO:0033554;GO:0006950;GO:0051716" "cellular response to stress" 1
+0 0.320953009481431 4 49 "GO:0006996" "organelle organization" 1
+0 0.131500418982947 5 6 "GO:0007005" "mitochondrion organization" 0.835882352941176
+0 0.0096882148677174 2 14 "GO:0007010" "cytoskeleton organization" 0.237096774193548
+0 0.160082410520304 2 34 "GO:0007017" "microtubule-based process" 0.886315789473684
+0 0.73487209539472 2 14 "GO:0007018;GO:0006928" "microtubule-based movement" 1
+0 0.632779304311843 2 14 "GO:0007034" "vacuolar transport" 1
+0 0.0322333373219061 2 10 "GO:0007049" "cell cycle" 0.422641509433962
+0 0.0795982216461581 2 9 "GO:0007051" "spindle organization" 0.662676056338028
+0 0.281087937308151 4 5 "GO:0007062" "sister chromatid cohesion" 1
+0 0.0176164035825072 2 9 "GO:0007154" "cell communication" 0.334615384615385
+0 0.853569575214825 2 14 "GO:0007155;GO:0022610" "cell adhesion" 1
+0 0.79750053482133 2 88 "GO:0007165" "signal transduction" 1
+0 0.132015943471585 2 7 "GO:0007166" "cell surface receptor signaling pathway" 0.827906976744186
+0 0.406563404465135 2 7 "GO:0007186" "G protein-coupled receptor signaling pathway" 1
+0 0.030435747098503 2 5 "GO:0007267" "cell-cell signaling" 0.410576923076923
+0 0.0141930343348291 2 10 "GO:0007275" "multicellular organism development" 0.294285714285714
+0 0.77938889515283 2 20 "GO:0008033;GO:0006399" "tRNA metabolic process" 1
+0 0.272451100146817 3 6 "GO:0008218" "bioluminescence" 1
+0 0.452337187170601 4 5 "GO:0008299;GO:0006720" "isoprenoid metabolic process" 1
+0 0.368463838461095 2 20 "GO:0008610" "lipid biosynthetic process" 1
+0 0.285973162125654 3 7 "GO:0008652;GO:1901607" "cellular amino acid biosynthetic process" 1
+0 0.190051024436102 4 11 "GO:0008654" "phospholipid biosynthetic process" 0.875471698113208
+0 1.79486785690563e-08 3 80 "GO:0009059" "macromolecule biosynthetic process" 0
+0 0.158472780987085 3 6 "GO:0009116;GO:1901657" "nucleoside metabolic process" 0.896236559139785
+0 0.0078176880413104 2 9 "GO:0009141" "nucleoside triphosphate metabolic process" 0.195
+0 0.00220637858930445 6 9 "GO:0009152;GO:0006164;GO:0009150;GO:0009260;GO:0006163;GO:0072522;GO:0009259;GO:0046390;GO:0072521;GO:0019693" "ribonucleotide biosynthetic process" 0.117647058823529
+0 0.0298045432412412 2 16 "GO:0009165;GO:0009117;GO:1901293" "nucleoside phosphate biosynthetic process" 0.42
+0 0.00040941298540991 5 6 "GO:0009206;GO:0009145;GO:0009201;GO:0009205;GO:0009142;GO:0009144;GO:0009199" "purine nucleoside triphosphate biosynthetic process" 0.05
+0 0.492512166752547 2 27 "GO:0009451" "RNA modification" 1
+0 0.122328984565773 2 7 "GO:0009653" "anatomical structure morphogenesis" 0.809638554216867
+0 0.0603898703166631 2 18 "GO:0009966;GO:0010646;GO:0023051;GO:0048583" "regulation of signaling" 0.55
+0 0.32917319859685 5 5 "GO:0009968;GO:0010648;GO:0023057;GO:0048585" "negative regulation of cell communication" 1
+0 0.0521636571215159 2 67 "GO:0010468" "regulation of gene expression" 0.530645161290323
+0 0.072560804071395 3 7 "GO:0010564" "regulation of cell cycle process" 0.628260869565217
+0 0.334182372523295 2 9 "GO:0010604;GO:0009893;GO:0031325;GO:0051173" "positive regulation of macromolecule metabolic process" 1
+0 0.446816063239502 2 22 "GO:0010605;GO:0009892" "negative regulation of metabolic process" 1
+0 0.396777770209583 3 5 "GO:0010628;GO:0010557;GO:0031328;GO:0009891" "positive regulation of gene expression" 1
+0 0.111795667263847 3 17 "GO:0010629" "negative regulation of gene expression" 0.77875
+0 0.320493018645596 6 5 "GO:0010639;GO:0051129" "negative regulation of organelle organization" 1
+0 0.575437625388763 4 66 "GO:0015031;GO:0015833;GO:0045184;GO:0042886;GO:0008104;GO:0033036" "peptide transport" 1
+0 0.05397148295764 2 8 "GO:0015074" "DNA integration" 0.513076923076923
+0 0.000526786505802204 3 12 "GO:0015672" "monovalent inorganic cation transport" 0.05
+0 0.493460441158096 2 119 "GO:0016043;GO:0071840" "cellular component organization or biogenesis" 1
+0 0.71332128872793 4 45 "GO:0016071" "mRNA metabolic process" 1
+0 0.475117657962293 2 28 "GO:0016192" "vesicle-mediated transport" 1
+0 0.498806633734984 3 7 "GO:0016311" "dephosphorylation" 1
+0 0.357962588255363 5 9 "GO:0016567;GO:0032446" "protein modification by small protein conjugation" 1
+0 0.684515173781407 7 5 "GO:0016579" "protein deubiquitination" 1
+0 0.52866211470365 2 64 "GO:0018130;GO:1901362" "heterocycle biosynthetic process" 1
+0 0.106308052371453 3 23 "GO:0018193" "peptidyl-amino acid modification" 0.776623376623377
+0 0.0262980929507704 2 5 "GO:0018205" "peptidyl-lysine modification" 0.435227272727273
+0 0.346126483424433 4 16 "GO:0019439;GO:0044270;GO:0046700;GO:1901361" "cellular nitrogen compound catabolic process" 1
+0 0.0351775017213146 2 10 "GO:0019725" "cellular homeostasis" 0.425892857142857
+0 0.00361608331344245 2 32 "GO:0019752;GO:0043436;GO:0006082" "carboxylic acid metabolic process" 0.140909090909091
+0 0.480178126943687 2 25 "GO:0022402" "cell cycle process" 1
+0 0.158032866659643 1 5 "GO:0022414" "reproductive process" 0.903260869565217
+0 0.482790371966644 4 58 "GO:0022607" "cellular component assembly" 1
+0 0.218680058018586 3 6 "GO:0022613;GO:0044085" "cellular component biogenesis" 0.925
+0 0.696872982482145 2 20 "GO:0022618;GO:0071826" "ribonucleoprotein complex assembly" 1
+0 0.0532282024526958 1 8 "GO:0023052" "signaling" 0.526984126984127
+0 0.00165991938697556 3 11 "GO:0030001" "metal ion transport" 0.103333333333333
+0 0.0133260835517323 6 6 "GO:0030003;GO:0006873;GO:0055082" "cellular cation homeostasis" 0.301515151515152
+0 0.0202426427539926 3 5 "GO:0030163" "protein catabolic process" 0.37
+0 0.649664351871543 4 9 "GO:0030258" "lipid modification" 1
+0 0.333368792180101 2 74 "GO:0031323;GO:0051171;GO:0080090" "regulation of cellular metabolic process" 1
+0 0.707798119897702 3 13 "GO:0031324" "negative regulation of cellular metabolic process" 1
+0 0.262479223983378 3 10 "GO:0031399;GO:0019220;GO:0051174" "regulation of protein modification process" 1
+0 0.107603824429938 2 17 "GO:0032268;GO:0051246" "regulation of cellular protein metabolic process" 0.772435897435897
+0 0.0342486758189684 1 14 "GO:0032501" "multicellular organismal process" 0.428181818181818
+0 0.057961642024197 1 24 "GO:0032502" "developmental process" 0.543939393939394
+0 0.806017072568526 2 31 "GO:0032774" "RNA biosynthetic process" 1
+0 0.139822405311074 2 5 "GO:0032787" "monocarboxylic acid metabolic process" 0.846022727272727
+0 0.621958980242704 3 9 "GO:0032879" "regulation of localization" 1
+0 0.695816603238543 3 13 "GO:0033043;GO:0051128" "regulation of cellular component organization" 1
+0 0.537534731608245 2 6 "GO:0033108;GO:0017004" "mitochondrial respiratory chain complex assembly" 1
+0 0.00533407474920063 2 15 "GO:0034220;GO:0055085" "transmembrane transport" 0.153846153846154
+0 0.184790043751045 2 7 "GO:0034404" "nucleobase-containing small molecule biosynthetic process" 0.915
+0 0.668866461332608 5 39 "GO:0034470;GO:0034660" "ncRNA metabolic process" 1
+0 0.152824742986411 2 13 "GO:0034613;GO:0070727" "cellular protein localization" 0.88956043956044
+0 0.777072366075422 3 44 "GO:0034622;GO:0065003;GO:0043933" "protein-containing complex subunit organization" 1
+0 4.22324104307192e-12 4 65 "GO:0034645" "cellular macromolecule biosynthetic process" 0
+0 0.425964787074613 3 56 "GO:0034654;GO:0019438" "aromatic compound biosynthetic process" 1
+0 0.465548720682077 2 13 "GO:0034655" "nucleobase-containing compound catabolic process" 1
+0 0.665070721559713 2 41 "GO:0035556" "intracellular signal transduction" 1
+0 0.134114759771487 2 6 "GO:0042180" "cellular ketone metabolic process" 0.829885057471264
+0 0.481728435047108 2 10 "GO:0042221" "response to chemical" 1
+0 0.0505744177246074 3 19 "GO:0042592" "homeostatic process" 0.533333333333333
+0 0.214273809725848 4 35 "GO:0042981;GO:0043067;GO:0010941" "regulation of cell death" 0.919266055045872
+0 0.105340142669607 3 6 "GO:0043066;GO:0043069;GO:0060548" "negative regulation of programmed cell death" 0.778947368421053
+0 0.143771044944947 3 16 "GO:0043414;GO:0032259" "methylation" 0.861797752808989
+0 0.418054697538132 2 8 "GO:0044087;GO:0030833;GO:0008064;GO:0032271;GO:1902903;GO:0030832;GO:0110053;GO:0032535;GO:0032956;GO:0090066;GO:0032970;GO:0043254" "regulation of cellular component biogenesis" 1
+0 0.5983912298988 2 33 "GO:0044255" "cellular lipid metabolic process" 1
+0 0.189641319557303 3 33 "GO:0044265;GO:0009057" "macromolecule catabolic process" 0.883809523809524
+0 1.88054739089114e-09 2 93 "GO:0044271" "cellular nitrogen compound biosynthetic process" 0
+0 7.88548320269751e-05 2 72 "GO:0044281" "small molecule metabolic process" 0.0166666666666667
+0 0.00397313657468644 2 10 "GO:0044282" "small molecule catabolic process" 0.132
+0 0.198183448820699 2 26 "GO:0044283" "small molecule biosynthetic process" 0.87962962962963
+0 0.00379933878802546 2 5 "GO:0046034" "ATP metabolic process" 0.141304347826087
+0 0.189073526261893 2 11 "GO:0046394;GO:0016053" "carboxylic acid biosynthetic process" 0.889903846153846
+0 0.0159783463247886 3 7 "GO:0046395;GO:0016054;GO:0009063" "carboxylic acid catabolic process" 0.318055555555556
+0 0.194286107178042 2 10 "GO:0046474;GO:0045017" "glycerolipid biosynthetic process" 0.878504672897196
+0 0.549541680654055 4 14 "GO:0046488" "phosphatidylinositol metabolic process" 1
+0 0.651727051078809 2 75 "GO:0046907;GO:0051641;GO:0051649" "cellular localization" 1
+0 0.319468223723332 3 7 "GO:0048193" "Golgi vesicle transport" 1
+0 0.536619576669774 3 44 "GO:0048519" "negative regulation of biological process" 1
+0 0.63849155110497 4 15 "GO:0048522;GO:0048518" "positive regulation of biological process" 1
+0 0.758788460691563 2 34 "GO:0048523" "negative regulation of cellular process" 1
+0 0.0281100097045191 2 15 "GO:0048856" "anatomical structure development" 0.423404255319149
+0 0.325091274943078 2 5 "GO:0048869" "cellular developmental process" 1
+0 0.00342994529557776 2 8 "GO:0048878;GO:0055080;GO:0098771;GO:0050801" "chemical homeostasis" 0.142857142857143
+0 0.2316803658472 2 10 "GO:0050790;GO:0065009" "regulation of molecular function" 0.958035714285714
+0 0.989241739962018 1 46 "GO:0050896" "response to stimulus" 1
+0 0.672542454062573 2 5 "GO:0051049" "regulation of transport" 1
+0 0.121151456833622 3 10 "GO:0051172" "negative regulation of nitrogen compound metabolic process" 0.814024390243902
+0 0.0536275957513839 3 6 "GO:0051225" "spindle assembly" 0.52109375
+0 0.0272508211596049 2 6 "GO:0051235" "maintenance of location" 0.426086956521739
+0 0.86308954949293 5 20 "GO:0051276" "chromosome organization" 1
+0 0.184902963863102 2 6 "GO:0051336" "regulation of hydrolase activity" 0.906435643564356
+0 0.574823008875668 2 10 "GO:0051493" "regulation of cytoskeleton organization" 1
+0 0.00301700361538502 2 8 "GO:0051604" "protein maturation" 0.135
+0 0.0617822483219343 2 7 "GO:0051640" "organelle localization" 0.548529411764706
+0 0.411069723960228 2 18 "GO:0051726" "regulation of cell cycle" 1
+0 0.000938160438650366 8 6 "GO:0055072;GO:0055076;GO:0055065" "transition metal ion homeostasis" 0.0692307692307692
+0 0.0890520951213712 2 23 "GO:0055086" "nucleobase-containing small molecule metabolic process" 0.694594594594595
+0 0.00160108328992125 2 27 "GO:0055114" "oxidation-reduction process" 0.103571428571429
+0 0.240891473372073 2 85 "GO:0060255;GO:0019222" "regulation of metabolic process" 0.973008849557522
+0 0.00221834578608992 4 7 "GO:0061024" "membrane organization" 0.111111111111111
+0 0.00380849356023968 2 36 "GO:0065008" "regulation of biological quality" 0.1375
+0 0.557015588703219 4 6 "GO:0070646" "protein modification by small protein removal" 1
+0 0.375537039970415 2 15 "GO:0070647" "protein modification by small protein conjugation or removal" 1
+0 0.1587261346315 5 13 "GO:0070925" "organelle assembly" 0.887234042553192
+0 0.1835079889617 2 79 "GO:0071702;GO:0071705;GO:0006820" "organic substance transport" 0.921212121212121
+0 0.0996289923364547 3 10 "GO:0072594;GO:0033365" "protein localization to organelle" 0.758666666666667
+0 0.051306416805588 3 8 "GO:0072657" "protein localization to membrane" 0.531147540983607
+0 0.0169545512559715 2 5 "GO:0090150" "establishment of protein localization to membrane" 0.327631578947368
+0 0.0766137700827659 4 31 "GO:0090407" "organophosphate biosynthetic process" 0.645
+0 0.0375015490562962 4 6 "GO:0097435" "supramolecular fiber organization" 0.435964912280702
+0 0.365054816692119 3 5 "GO:0098656" "anion transmembrane transport" 1
+0 0.0202440043319106 2 26 "GO:1901135" "carbohydrate derivative metabolic process" 0.360975609756098
+0 0.0282074265300162 2 20 "GO:1901137" "carbohydrate derivative biosynthetic process" 0.41875
+0 0.00609564788177053 2 18 "GO:1901565" "organonitrogen compound catabolic process" 0.164285714285714
+0 2.3516565961826e-14 2 66 "GO:1901566" "organonitrogen compound biosynthetic process" 0
+0 0.0271285504489785 2 54 "GO:1901575;GO:0009056;GO:0044248" "catabolic process" 0.434444444444444
+0 0.0137356028883671 2 10 "GO:1901605" "alpha-amino acid metabolic process" 0.295588235294118
+0 0.108270997321238 5 5 "GO:1902531" "regulation of intracellular signal transduction" 0.767721518987342
+0 0.00169151424255698 3 7 "GO:1902600;GO:0098662;GO:0098655;GO:0098660" "cation transmembrane transport" 0.096875
+0 0.710844707760421 3 15 "GO:1903047" "mitotic cell cycle process" 1
+0 0.185929655782762 3 59 "GO:2000112;GO:0010556;GO:0031326;GO:0009889" "regulation of cellular biosynthetic process" 0.89126213592233
+0 0.954213438330077 3 10 "GO:2000113;GO:0010558;GO:0031327;GO:0009890" "negative regulation of cellular biosynthetic process" 1
+0 1 3 5 "GO:0000902" "cell morphogenesis" 1
+0 1 3 5 "GO:0006368;GO:0006354" "transcription elongation from RNA polymerase II promoter" 1
+0 1 2 6 "GO:0007059" "chromosome segregation" 1
+0 1 2 5 "GO:0032886" "regulation of microtubule-based process" 1
+0 1 3 6 "GO:0045892;GO:1903507;GO:1902679;GO:0051253;GO:0045934" "negative regulation of RNA biosynthetic process" 1
+0 1 2 5 "GO:1901987" "regulation of cell cycle phase transition" 1

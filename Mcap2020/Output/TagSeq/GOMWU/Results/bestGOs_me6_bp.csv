@@ -1,0 +1,4 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"11",0,7.73477022675578e-05,2,34,"GO:0005975","carbohydrate metabolic process",0
+"28",0,3.78727833664221e-13,5,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
+"64",0,2.65317378365353e-05,2,9,"GO:0007154","cell communication",0

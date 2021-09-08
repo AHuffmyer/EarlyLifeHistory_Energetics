@@ -1,0 +1,6 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"83",0,2.78110293118875e-05,3,31,"GO:0004857","enzyme inhibitor activity",0
+"88",0,1.20527127572042e-06,2,20,"GO:0005044;GO:0038024","scavenger receptor activity",0
+"94",0,1.15728856922058e-11,2,21,"GO:0005201","extracellular matrix structural constituent",0
+"110",0,4.16621048932229e-05,5,267,"GO:0005509","calcium ion binding",0.00625
+"163",0,1.07410635894775e-08,2,307,"GO:0016491","oxidoreductase activity",0

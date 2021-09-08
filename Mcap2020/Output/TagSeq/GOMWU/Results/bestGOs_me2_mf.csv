@@ -1,0 +1,8 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"21",0,8.42396572977968e-07,5,8,"GO:0003746","translation elongation factor activity",0
+"39",0,2.88571378481304e-08,5,10,"GO:0004129;GO:0015002;GO:0016676;GO:0016675","cytochrome-c oxidase activity",0
+"50",0,1.51531383297586e-09,2,12,"GO:0004298;GO:0070003","threonine-type endopeptidase activity",0
+"94",0,1.08712748038501e-05,2,21,"GO:0005201","extracellular matrix structural constituent",0
+"110",0,3.25116475223235e-05,3,267,"GO:0005509","calcium ion binding",0
+"145",0,3.96345749957359e-07,2,17,"GO:0015078","proton transmembrane transporter activity",0
+"247",0,0.00016178985263377,4,24,"GO:0052689","carboxylic ester hydrolase activity",0.00588235294117647

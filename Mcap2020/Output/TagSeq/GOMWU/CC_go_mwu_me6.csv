@@ -1,0 +1,1082 @@
+name	term	lev	seq	value
+"peptidase complex"	GO:1905368	3	g481	-0.461389776353132
+"peptidase complex"	GO:1905368	3	g2725	0.42341475069631
+"peptidase complex"	GO:1905368	3	g65078	0.400384706847811
+"peptidase complex"	GO:1905368	3	g43586	0.380038960658894
+"peptidase complex"	GO:1905368	3	g70624	0.338755851151781
+"peptidase complex"	GO:1905368	3	g60063	0
+"peptidase complex"	GO:1905368	3	g14808	0.412118240372888
+"peptidase complex"	GO:1905368	3	g42305	0
+"peptidase complex"	GO:1905368	3	g6503	0
+"peptidase complex"	GO:1905368	3	g53518	0
+"peptidase complex"	GO:1905368	3	g21211	0
+"peptidase complex"	GO:1905368	3	g70331	0
+"peptidase complex"	GO:1905368	3	g21212	0
+"peptidase complex"	GO:1905368	3	g52103	0.627830892659489
+"transferase complex"	GO:1990234	3	g62140	-0.578232450656447
+"transferase complex"	GO:1990234	3	g36425	-0.568352144007971
+"transferase complex"	GO:1990234	3	g32810	-0.647043650723423
+"transferase complex"	GO:1990234	3	adi2mcaRNA11640_R1	-0.463405835043418
+"transferase complex"	GO:1990234	3	g481	-0.461389776353132
+"transferase complex"	GO:1990234	3	adi2mcaRNA11640_R0	-0.458838456687387
+"transferase complex"	GO:1990234	3	g47147	0
+"transferase complex"	GO:1990234	3	adi2mcaRNA21111_R0	-0.46871351965019
+"transferase complex"	GO:1990234	3	g20726	0
+"transferase complex"	GO:1990234	3	g58095	0.588599467585543
+"transferase complex"	GO:1990234	3	g68158	0.447728415661032
+"transferase complex"	GO:1990234	3	g49547	0
+"transferase complex"	GO:1990234	3	g5459	0
+"transferase complex"	GO:1990234	3	adi2mcaRNA1064_R1	0.386172696891014
+"transferase complex"	GO:1990234	3	g62603	0
+"transferase complex"	GO:1990234	3	adi2mcaRNA34363_R1	0.404158765464672
+"transferase complex"	GO:1990234	3	g17153	0.33440439804528
+"transferase complex"	GO:1990234	3	g28903	-0.681237450931863
+"transferase complex"	GO:1990234	3	g15179	0
+"transferase complex"	GO:1990234	3	g33971	0
+"transferase complex"	GO:1990234	3	g33339	0
+"transferase complex"	GO:1990234	3	g26557	0
+"transferase complex"	GO:1990234	3	g58748	0
+"transferase complex"	GO:1990234	3	g21211	0
+"transferase complex"	GO:1990234	3	g70331	0
+"transferase complex"	GO:1990234	3	g21212	0
+"transferase complex"	GO:1990234	3	g67187	0
+"transferase complex"	GO:1990234	3	g5046	0.641520929674467
+"transferase complex"	GO:1990234	3	g41497	0.78595916510219
+"transferase complex"	GO:1990234	3	g22252	0
+"transferase complex"	GO:1990234	3	g4655	0
+"transferase complex"	GO:1990234	3	g15478	0.728377558986826
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	g66866	0.397081142621215
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	g63100	0
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	g29885	0.41864087973736
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	g15083	0
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	g58972	0
+"intracellular vesicle"	GO:0031410;GO:0097708;GO:0031982	5	adi2mcaRNA24514_R0	0.872445644066456
+"SAGA-type complex"	GO:0070461	5	g36425	-0.568352144007971
+"SAGA-type complex"	GO:0070461	5	g481	-0.461389776353132
+"SAGA-type complex"	GO:0070461	5	g21211	0
+"SAGA-type complex"	GO:0070461	5	g70331	0
+"SAGA-type complex"	GO:0070461	5	g21212	0
+"endopeptidase complex"	GO:1905369	4	g2725	0.42341475069631
+"endopeptidase complex"	GO:1905369	4	g65078	0.400384706847811
+"endopeptidase complex"	GO:1905369	4	g43586	0.380038960658894
+"endopeptidase complex"	GO:1905369	4	g14808	0.412118240372888
+"endopeptidase complex"	GO:1905369	4	g53518	0
+"endopeptidase complex"	GO:1905369	4	g52103	0.627830892659489
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	g48481	0
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	adi2mcaRNA30550_R0	0.525192625802608
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	g58299	0
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	g71046	0
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	g48483	0
+"proton-transporting two-sector ATPase complex, catalytic domain"	GO:0033178	2	g48485	0
+"histone acetyltransferase complex"	GO:0000123	2	g36425	-0.568352144007971
+"histone acetyltransferase complex"	GO:0000123	2	g481	-0.461389776353132
+"histone acetyltransferase complex"	GO:0000123	2	g47147	0
+"histone acetyltransferase complex"	GO:0000123	2	g28903	-0.681237450931863
+"histone acetyltransferase complex"	GO:0000123	2	g21211	0
+"histone acetyltransferase complex"	GO:0000123	2	g70331	0
+"histone acetyltransferase complex"	GO:0000123	2	g21212	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g22334	0.608453992377076
+"mitochondrial protein-containing complex"	GO:0098798	2	g52817	0.567811179730251
+"mitochondrial protein-containing complex"	GO:0098798	2	g44175	0.486524015074208
+"mitochondrial protein-containing complex"	GO:0098798	2	g68202	0.436766946726074
+"mitochondrial protein-containing complex"	GO:0098798	2	adi2mcaRNA10809_R0	0.436794433556296
+"mitochondrial protein-containing complex"	GO:0098798	2	g46069	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g29854	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g47600	0
+"mitochondrial protein-containing complex"	GO:0098798	2	adi2mcaRNA32382_R0	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g70879	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g41979	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g30538	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g24042	0
+"mitochondrial protein-containing complex"	GO:0098798	2	g10904	0.532477850207515
+"mitochondrial protein-containing complex"	GO:0098798	2	g45278	0.365090941413738
+"mitochondrial protein-containing complex"	GO:0098798	2	g16777	0.478855192645063
+"mitochondrial protein-containing complex"	GO:0098798	2	g2263	0
+"mitochondrial protein-containing complex"	GO:0098798	2	adi2mcaRNA13039_R0	0
+"endoplasmic reticulum membrane"	GO:0005789	4	adi2mcaRNA5460_R0	-0.469969083846603
+"endoplasmic reticulum membrane"	GO:0005789	4	g65965	-0.558774967287106
+"endoplasmic reticulum membrane"	GO:0005789	4	g62389	0
+"endoplasmic reticulum membrane"	GO:0005789	4	g65925	0
+"endoplasmic reticulum membrane"	GO:0005789	4	g19693	0
+"endoplasmic reticulum membrane"	GO:0005789	4	g36524	0
+"endoplasmic reticulum membrane"	GO:0005789	4	g67842	0
+"endoplasmic reticulum membrane"	GO:0005789	4	adi2mcaRNA35800_R4	0.486202063484594
+"endoplasmic reticulum membrane"	GO:0005789	4	g16776	0.474087038058913
+"endoplasmic reticulum membrane"	GO:0005789	4	g14689	0.529961179119459
+"DNA-directed RNA polymerase complex"	GO:0055029;GO:0000428;GO:0030880	4	adi2mcaRNA11640_R1	-0.463405835043418
+"DNA-directed RNA polymerase complex"	GO:0055029;GO:0000428;GO:0030880	4	adi2mcaRNA11640_R0	-0.458838456687387
+"DNA-directed RNA polymerase complex"	GO:0055029;GO:0000428;GO:0030880	4	g15179	0
+"DNA-directed RNA polymerase complex"	GO:0055029;GO:0000428;GO:0030880	4	g33971	0
+"DNA-directed RNA polymerase complex"	GO:0055029;GO:0000428;GO:0030880	4	g4655	0
+"organelle membrane"	GO:0031090	3	g21540	-0.647779998874389
+"organelle membrane"	GO:0031090	3	adi2mcaRNA5460_R0	-0.469969083846603
+"organelle membrane"	GO:0031090	3	g65965	-0.558774967287106
+"organelle membrane"	GO:0031090	3	adi2mcaRNA27154_R0	0
+"organelle membrane"	GO:0031090	3	adi2mcaRNA8809_R0	0
+"organelle membrane"	GO:0031090	3	g63802	0
+"organelle membrane"	GO:0031090	3	g24450	-0.3920719315085
+"organelle membrane"	GO:0031090	3	adi2mcaRNA18764_R0	0
+"organelle membrane"	GO:0031090	3	g55713	0.492099334263963
+"organelle membrane"	GO:0031090	3	adi2mcaRNA28576_R1	0.491949549808071
+"organelle membrane"	GO:0031090	3	g66866	0.397081142621215
+"organelle membrane"	GO:0031090	3	adi2mcaRNA29427_R0	0.428602946375676
+"organelle membrane"	GO:0031090	3	adi2mcaRNA25459_R0	0.382570528983451
+"organelle membrane"	GO:0031090	3	g40150	0.370247375584071
+"organelle membrane"	GO:0031090	3	g38717	0
+"organelle membrane"	GO:0031090	3	g10446	0
+"organelle membrane"	GO:0031090	3	g52743	0
+"organelle membrane"	GO:0031090	3	g50740	0
+"organelle membrane"	GO:0031090	3	g62389	0
+"organelle membrane"	GO:0031090	3	adi2mcaRNA11090_R0	0
+"organelle membrane"	GO:0031090	3	g62860	0
+"organelle membrane"	GO:0031090	3	g65925	0
+"organelle membrane"	GO:0031090	3	g69074	0
+"organelle membrane"	GO:0031090	3	g19693	0
+"organelle membrane"	GO:0031090	3	g15083	0
+"organelle membrane"	GO:0031090	3	g36524	0
+"organelle membrane"	GO:0031090	3	g1135	0
+"organelle membrane"	GO:0031090	3	g67842	0
+"organelle membrane"	GO:0031090	3	adi2mcaRNA6692_R0	0
+"organelle membrane"	GO:0031090	3	g17410	0
+"organelle membrane"	GO:0031090	3	g67456	0.618183333655565
+"organelle membrane"	GO:0031090	3	g15393	0.575583405801554
+"organelle membrane"	GO:0031090	3	adi2mcaRNA35800_R4	0.486202063484594
+"organelle membrane"	GO:0031090	3	g16776	0.474087038058913
+"organelle membrane"	GO:0031090	3	g14689	0.529961179119459
+"organelle membrane"	GO:0031090	3	g13593	0.417325840587207
+"organelle membrane"	GO:0031090	3	g16586	0
+"organelle membrane"	GO:0031090	3	adi2mcaRNA13343_R0	0
+"organelle membrane"	GO:0031090	3	g10901	0
+"organelle membrane"	GO:0031090	3	g54200	0
+"mitochondrion"	GO:0005739	3	g10290	-0.636548736131624
+"mitochondrion"	GO:0005739	3	g2033	-0.732559839175531
+"mitochondrion"	GO:0005739	3	g10291	-0.49937372887647
+"mitochondrion"	GO:0005739	3	g15238	-0.393594404244
+"mitochondrion"	GO:0005739	3	g52537	-0.406308268147962
+"mitochondrion"	GO:0005739	3	g20224	0
+"mitochondrion"	GO:0005739	3	g21714	-0.335107950349728
+"mitochondrion"	GO:0005739	3	adi2mcaRNA3377_R0	0.555319651745459
+"mitochondrion"	GO:0005739	3	adi2mcaRNA28576_R1	0.491949549808071
+"mitochondrion"	GO:0005739	3	g15944	0.323397039371906
+"mitochondrion"	GO:0005739	3	g38786	0.342311054789679
+"mitochondrion"	GO:0005739	3	g32748	0
+"mitochondrion"	GO:0005739	3	g44543	0
+"mitochondrion"	GO:0005739	3	g26403	0
+"mitochondrion"	GO:0005739	3	g45999	0
+"mitochondrion"	GO:0005739	3	g287	0
+"mitochondrion"	GO:0005739	3	g66659	0
+"mitochondrion"	GO:0005739	3	g21657	0
+"mitochondrion"	GO:0005739	3	adi2mcaRNA28341_R1	0
+"mitochondrion"	GO:0005739	3	g52607	0.613516565618969
+"mitochondrion"	GO:0005739	3	g12593	0.581932786341325
+"mitochondrion"	GO:0005739	3	g15264	0.702139867709109
+"mitochondrion"	GO:0005739	3	g10250	0.461817631751365
+"mitochondrion"	GO:0005739	3	adi2mcaRNA13842_R0	0.544481075134596
+"mitochondrion"	GO:0005739	3	adi2mcaRNA24276_R0	0.336040773608072
+"mitochondrion"	GO:0005739	3	adi2mcaRNA28341_R0	0
+"mitochondrion"	GO:0005739	3	g51846	0
+"intrinsic component of organelle membrane"	GO:0031301;GO:0031300	3	g58633	0
+"intrinsic component of organelle membrane"	GO:0031301;GO:0031300	3	g12293	0.389668375020194
+"intrinsic component of organelle membrane"	GO:0031301;GO:0031300	3	g33942	0
+"intrinsic component of organelle membrane"	GO:0031301;GO:0031300	3	adi2mcaRNA20238_R0	0
+"intrinsic component of organelle membrane"	GO:0031301;GO:0031300	3	g23811	0
+"mitochondrial membrane"	GO:0031966	2	adi2mcaRNA8809_R0	0
+"mitochondrial membrane"	GO:0031966	2	g55713	0.492099334263963
+"mitochondrial membrane"	GO:0031966	2	adi2mcaRNA28576_R1	0.491949549808071
+"mitochondrial membrane"	GO:0031966	2	adi2mcaRNA29427_R0	0.428602946375676
+"mitochondrial membrane"	GO:0031966	2	g38717	0
+"mitochondrial membrane"	GO:0031966	2	g10446	0
+"mitochondrial membrane"	GO:0031966	2	g52743	0
+"mitochondrial membrane"	GO:0031966	2	g50740	0
+"mitochondrial membrane"	GO:0031966	2	g69074	0
+"mitochondrial membrane"	GO:0031966	2	adi2mcaRNA6692_R0	0
+"mitochondrial membrane"	GO:0031966	2	g17410	0
+"mitochondrial membrane"	GO:0031966	2	g13593	0.417325840587207
+"mitochondrial membrane"	GO:0031966	2	g16586	0
+"mitochondrial membrane"	GO:0031966	2	adi2mcaRNA13343_R0	0
+"ribonucleoprotein complex"	GO:1990904	2	g65827	-0.714539891276737
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA12403_R0	-0.588962379208562
+"ribonucleoprotein complex"	GO:1990904	2	g46458	-0.603142086966106
+"ribonucleoprotein complex"	GO:1990904	2	g14822	-0.366935018185932
+"ribonucleoprotein complex"	GO:1990904	2	g16841	-0.464182291410689
+"ribonucleoprotein complex"	GO:1990904	2	g44700	-0.564267532193454
+"ribonucleoprotein complex"	GO:1990904	2	g29675	-0.415805851193251
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA7627_R0	0
+"ribonucleoprotein complex"	GO:1990904	2	g38348	0
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA19752_R0	0.690117063892028
+"ribonucleoprotein complex"	GO:1990904	2	g10900	0.604334640837188
+"ribonucleoprotein complex"	GO:1990904	2	g50758	0.590166828219415
+"ribonucleoprotein complex"	GO:1990904	2	g9978	0.588143884270144
+"ribonucleoprotein complex"	GO:1990904	2	g56986	0.566441492394406
+"ribonucleoprotein complex"	GO:1990904	2	g32127	0.527023347562157
+"ribonucleoprotein complex"	GO:1990904	2	g17433	0.514136300294904
+"ribonucleoprotein complex"	GO:1990904	2	g67296	0.545496601877338
+"ribonucleoprotein complex"	GO:1990904	2	g43301	0.503879299818601
+"ribonucleoprotein complex"	GO:1990904	2	g70018	0.505012383263038
+"ribonucleoprotein complex"	GO:1990904	2	g3900	0.475616133718688
+"ribonucleoprotein complex"	GO:1990904	2	g58267	0
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA32382_R0	0
+"ribonucleoprotein complex"	GO:1990904	2	g4108	0
+"ribonucleoprotein complex"	GO:1990904	2	g45325	0
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA12572_R0	-0.424602960747922
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA31248_R1	0
+"ribonucleoprotein complex"	GO:1990904	2	g47501	0
+"ribonucleoprotein complex"	GO:1990904	2	adi2mcaRNA13039_R0	0
+"ribonucleoprotein complex"	GO:1990904	2	g31767	-0.348467637726855
+"proteasome complex"	GO:0000502	3	g2725	0.42341475069631
+"proteasome complex"	GO:0000502	3	g65078	0.400384706847811
+"proteasome complex"	GO:0000502	3	g43586	0.380038960658894
+"proteasome complex"	GO:0000502	3	g53518	0
+"proteasome complex"	GO:0000502	3	g52103	0.627830892659489
+"plasma membrane"	GO:0005886	3	adi2mcaRNA35036_R0	0
+"plasma membrane"	GO:0005886	3	g15750	0
+"plasma membrane"	GO:0005886	3	g15083	0
+"plasma membrane"	GO:0005886	3	g15614	0
+"plasma membrane"	GO:0005886	3	g10409	0
+"plasma membrane"	GO:0005886	3	adi2mcaRNA34095_R0	0
+"plasma membrane"	GO:0005886	3	adi2mcaRNA10073_R0	0.871510668776523
+"plasma membrane"	GO:0005886	3	adi2mcaRNA11890_R0	0.468773493703296
+"plasma membrane"	GO:0005886	3	adi2mcaRNA11890_R1	0.415015551594485
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g61122	-0.801970005338293
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g28800	-0.708119753578512
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g33661	-0.502432674286494
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g68158	0.447728415661032
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g67882	0
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g45969	0
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g21211	0
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g21212	0
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g40454	0.491149028730966
+"RNA polymerase II transcription regulator complex"	GO:0090575	3	g28003	0.643122895459375
+"endoplasmic reticulum"	GO:0005783	2	g65888	-0.513974807895041
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA14527_R0	0
+"endoplasmic reticulum"	GO:0005783	2	g1589	0.635212394836162
+"endoplasmic reticulum"	GO:0005783	2	g65832	0.389561466579522
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA21392_R0	0.327868824731056
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA1064_R1	0.386172696891014
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA20514_R0	0
+"endoplasmic reticulum"	GO:0005783	2	g13638	0.42595928101519
+"endoplasmic reticulum"	GO:0005783	2	g53875	-0.613697700154835
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA5468_R0	0
+"endoplasmic reticulum"	GO:0005783	2	adi2mcaRNA11895_R7	0
+"endoplasmic reticulum"	GO:0005783	2	g37083	0
+"endoplasmic reticulum"	GO:0005783	2	g38381	0.482206660289962
+"plasma membrane protein complex"	GO:0098797	2	adi2mcaRNA25351_R0	-0.629697826204283
+"plasma membrane protein complex"	GO:0098797	2	g34623	0
+"plasma membrane protein complex"	GO:0098797	2	g13127	0.667898857386836
+"plasma membrane protein complex"	GO:0098797	2	g22524	0
+"plasma membrane protein complex"	GO:0098797	2	adi2mcaRNA16675_R0	0
+"plasma membrane protein complex"	GO:0098797	2	g39446	0.656850782973051
+"plasma membrane protein complex"	GO:0098797	2	g22518	0.70624974547716
+"plasma membrane protein complex"	GO:0098797	2	g54942	0.612849677025805
+"plasma membrane protein complex"	GO:0098797	2	adi2mcaRNA15384_R0	0
+"plasma membrane protein complex"	GO:0098797	2	adi2mcaRNA7512_R0	0
+"plasma membrane protein complex"	GO:0098797	2	adi2mcaRNA363_R0	0
+"nuclear pore"	GO:0005643	2	g10624	-0.744637793847616
+"nuclear pore"	GO:0005643	2	g11631	-0.715867529733782
+"nuclear pore"	GO:0005643	2	g22586	-0.566471312130394
+"nuclear pore"	GO:0005643	2	g16448	-0.544798359141051
+"nuclear pore"	GO:0005643	2	g32451	0
+"nuclear pore"	GO:0005643	2	g41390	0
+"nuclear pore"	GO:0005643	2	g38365	0
+"nuclear pore"	GO:0005643	2	g42490	0.434567995980266
+"cytosol"	GO:0005829	2	g21714	-0.335107950349728
+"cytosol"	GO:0005829	2	g3329	0
+"cytosol"	GO:0005829	2	g10900	0.604334640837188
+"cytosol"	GO:0005829	2	g18520	0.530572884350403
+"cytosol"	GO:0005829	2	adi2mcaRNA29187_R0	0.32742943862198
+"cytosol"	GO:0005829	2	adi2mcaRNA31556_R0	0.32467889918118
+"cytosol"	GO:0005829	2	adi2mcaRNA30490_R0	0
+"cytosol"	GO:0005829	2	g11181	0
+"cytosol"	GO:0005829	2	adi2mcaRNA15695_R0	0.367960965413717
+"vacuole"	GO:0005773	4	g61692	0
+"vacuole"	GO:0005773	4	g32467	0
+"vacuole"	GO:0005773	4	g47558	0
+"vacuole"	GO:0005773	4	g61085	0
+"vacuole"	GO:0005773	4	g10901	0
+"cytoplasm"	GO:0005737	2	g10624	-0.744637793847616
+"cytoplasm"	GO:0005737	2	g11631	-0.715867529733782
+"cytoplasm"	GO:0005737	2	g54698	-0.610100346671596
+"cytoplasm"	GO:0005737	2	g10290	-0.636548736131624
+"cytoplasm"	GO:0005737	2	g32000	-0.548845429746049
+"cytoplasm"	GO:0005737	2	adi2mcaRNA9380_R0	-0.461586685466998
+"cytoplasm"	GO:0005737	2	g12286	-0.497053595198343
+"cytoplasm"	GO:0005737	2	g10291	-0.49937372887647
+"cytoplasm"	GO:0005737	2	adi2mcaRNA10132_R0	-0.503549396253065
+"cytoplasm"	GO:0005737	2	g20224	0
+"cytoplasm"	GO:0005737	2	g9918	0
+"cytoplasm"	GO:0005737	2	g45211	0
+"cytoplasm"	GO:0005737	2	g2299	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA3208_R1	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA9828_R0	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA19752_R0	0.690117063892028
+"cytoplasm"	GO:0005737	2	g41435	0.572761860375304
+"cytoplasm"	GO:0005737	2	g33768	0.446926936294532
+"cytoplasm"	GO:0005737	2	adi2mcaRNA32115_R1	0.489107642283854
+"cytoplasm"	GO:0005737	2	g36885	0.454707364416247
+"cytoplasm"	GO:0005737	2	g1749	0.49378248396944
+"cytoplasm"	GO:0005737	2	g57431	0.522932345225844
+"cytoplasm"	GO:0005737	2	g36060	0.402510280292295
+"cytoplasm"	GO:0005737	2	g25138	0.399621659314312
+"cytoplasm"	GO:0005737	2	g25164	0.445889865033377
+"cytoplasm"	GO:0005737	2	g25161	0.422494255208146
+"cytoplasm"	GO:0005737	2	g22343	0.360051267146757
+"cytoplasm"	GO:0005737	2	adi2mcaRNA32115_R0	0.404980561856208
+"cytoplasm"	GO:0005737	2	g59625	0.365408047754633
+"cytoplasm"	GO:0005737	2	adi2mcaRNA4923_R0	0.346601290648748
+"cytoplasm"	GO:0005737	2	g13568	0.399730301294749
+"cytoplasm"	GO:0005737	2	g67371	0.345070349416242
+"cytoplasm"	GO:0005737	2	g44825	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA25682_R1	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA32619_R0	0.412529035173234
+"cytoplasm"	GO:0005737	2	g55917	0
+"cytoplasm"	GO:0005737	2	g43801	0
+"cytoplasm"	GO:0005737	2	g4900	0.425417992390267
+"cytoplasm"	GO:0005737	2	g64701	0
+"cytoplasm"	GO:0005737	2	g5686	0.324270681636943
+"cytoplasm"	GO:0005737	2	g67116	0.382686178839359
+"cytoplasm"	GO:0005737	2	g15634	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA2223_R0	0
+"cytoplasm"	GO:0005737	2	g22393	0
+"cytoplasm"	GO:0005737	2	g15083	0
+"cytoplasm"	GO:0005737	2	g14152	0
+"cytoplasm"	GO:0005737	2	g55016	0
+"cytoplasm"	GO:0005737	2	g36024	0
+"cytoplasm"	GO:0005737	2	g55018	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA21649_R0	0
+"cytoplasm"	GO:0005737	2	g27501	0
+"cytoplasm"	GO:0005737	2	g1751	0
+"cytoplasm"	GO:0005737	2	g36422	-0.326550501713849
+"cytoplasm"	GO:0005737	2	g19241	0
+"cytoplasm"	GO:0005737	2	adi2mcaRNA1250_R1	0.790284176295836
+"cytoplasm"	GO:0005737	2	g64793	0.618503934996279
+"cytoplasm"	GO:0005737	2	g54998	0.653646772445132
+"cytoplasm"	GO:0005737	2	g10225	0.581214615339451
+"cytoplasm"	GO:0005737	2	adi2mcaRNA23140_R3	0.617834896088492
+"cytoplasm"	GO:0005737	2	g9232	0.448118639000016
+"cytoplasm"	GO:0005737	2	g33288	0.476228732422632
+"cytoplasm"	GO:0005737	2	g10246	0.405314054200791
+"cytoplasm"	GO:0005737	2	adi2mcaRNA13842_R0	0.544481075134596
+"cytoplasm"	GO:0005737	2	g30057	0
+"cytoplasm"	GO:0005737	2	g22740	0.514315731655225
+"cytoplasm"	GO:0005737	2	g17767	0.484138746075394
+"cytoplasm"	GO:0005737	2	g23728	0.352702464527015
+"cytoplasm"	GO:0005737	2	g29192	0.358524804110466
+"cytoplasm"	GO:0005737	2	g58390	0
+"cytoplasm"	GO:0005737	2	g41053	0
+"cytoplasm"	GO:0005737	2	g1924	0
+"cytoplasm"	GO:0005737	2	g23943	0
+"cytoplasm"	GO:0005737	2	g43856	-0.371294827670561
+"cytoplasm"	GO:0005737	2	g18563	-0.365675002780321
+"cytoplasm"	GO:0005737	2	adi2mcaRNA4923_R2	0
+"dynein complex"	GO:0030286	3	g11234	0
+"dynein complex"	GO:0030286	3	adi2mcaRNA25134_R0	0
+"dynein complex"	GO:0030286	3	g44798	0
+"dynein complex"	GO:0030286	3	adi2mcaRNA11167_R0	0
+"dynein complex"	GO:0030286	3	adi2mcaRNA11166_R0	0
+"cytoskeleton"	GO:0005856	2	g36962	-0.538501946658422
+"cytoskeleton"	GO:0005856	2	g54400	-0.491413112198919
+"cytoskeleton"	GO:0005856	2	g71334	-0.495254501041207
+"cytoskeleton"	GO:0005856	2	g32062	-0.360089722004689
+"cytoskeleton"	GO:0005856	2	g29750	-0.441491095671774
+"cytoskeleton"	GO:0005856	2	g4051	-0.332855621925664
+"cytoskeleton"	GO:0005856	2	g39845	0
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA37022_R0	0
+"cytoskeleton"	GO:0005856	2	g34966	0
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA3208_R1	0
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA25445_R0	0
+"cytoskeleton"	GO:0005856	2	g57431	0.522932345225844
+"cytoskeleton"	GO:0005856	2	g33836	-0.337988417498281
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA14033_R0	0.715378010963503
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA14033_R1	0.676841624349027
+"cytoskeleton"	GO:0005856	2	g64793	0.618503934996279
+"cytoskeleton"	GO:0005856	2	g54998	0.653646772445132
+"cytoskeleton"	GO:0005856	2	adi2mcaRNA23140_R3	0.617834896088492
+"cytoskeleton"	GO:0005856	2	g8621	0.689588515744942
+"cytoskeleton"	GO:0005856	2	g39928	0.659806797598399
+"cytoskeleton"	GO:0005856	2	g9814	0.33142505797304
+"cytoskeleton"	GO:0005856	2	g34845	0.338883336470504
+"cytoskeleton"	GO:0005856	2	g17767	0.484138746075394
+"cytoskeleton"	GO:0005856	2	g27608	0
+"supramolecular complex"	GO:0099080	2	g60687	-0.683098666821704
+"supramolecular complex"	GO:0099080	2	g63810	-0.651083615668611
+"supramolecular complex"	GO:0099080	2	g54698	-0.610100346671596
+"supramolecular complex"	GO:0099080	2	g47507	-0.531654562946383
+"supramolecular complex"	GO:0099080	2	g16466	-0.512397329776851
+"supramolecular complex"	GO:0099080	2	g33995	-0.336546816206216
+"supramolecular complex"	GO:0099080	2	g6558	0
+"supramolecular complex"	GO:0099080	2	adi2mcaRNA9828_R0	0
+"supramolecular complex"	GO:0099080	2	g41435	0.572761860375304
+"supramolecular complex"	GO:0099080	2	adi2mcaRNA32115_R1	0.489107642283854
+"supramolecular complex"	GO:0099080	2	g36885	0.454707364416247
+"supramolecular complex"	GO:0099080	2	g25164	0.445889865033377
+"supramolecular complex"	GO:0099080	2	g25161	0.422494255208146
+"supramolecular complex"	GO:0099080	2	adi2mcaRNA32115_R0	0.404980561856208
+"supramolecular complex"	GO:0099080	2	adi2mcaRNA11233_R0	0.764706132631451
+"supramolecular complex"	GO:0099080	2	g9232	0.448118639000016
+"supramolecular complex"	GO:0099080	2	g10246	0.405314054200791
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	adi2mcaRNA25351_R0	-0.629697826204283
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	g34623	0
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	g13127	0.667898857386836
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	g22524	0
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	g22518	0.70624974547716
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	adi2mcaRNA7512_R0	0
+"transmembrane transporter complex"	GO:0034703;GO:0034702;GO:1902495;GO:1990351	2	g39446	0.656850782973051
+"ubiquitin ligase complex"	GO:0000151	3	g62603	0
+"ubiquitin ligase complex"	GO:0000151	3	adi2mcaRNA34363_R1	0.404158765464672
+"ubiquitin ligase complex"	GO:0000151	3	g17153	0.33440439804528
+"ubiquitin ligase complex"	GO:0000151	3	g58748	0
+"ubiquitin ligase complex"	GO:0000151	3	g67187	0
+"ubiquitin ligase complex"	GO:0000151	3	g5046	0.641520929674467
+"ubiquitin ligase complex"	GO:0000151	3	g41497	0.78595916510219
+"ubiquitin ligase complex"	GO:0000151	3	g22252	0
+"transcription regulator complex"	GO:0005667	2	g61122	-0.801970005338293
+"transcription regulator complex"	GO:0005667	2	g28800	-0.708119753578512
+"transcription regulator complex"	GO:0005667	2	g33661	-0.502432674286494
+"transcription regulator complex"	GO:0005667	2	g68158	0.447728415661032
+"transcription regulator complex"	GO:0005667	2	g62436	0
+"transcription regulator complex"	GO:0005667	2	g67882	0
+"transcription regulator complex"	GO:0005667	2	g45969	0
+"transcription regulator complex"	GO:0005667	2	g63473	0
+"transcription regulator complex"	GO:0005667	2	g21211	0
+"transcription regulator complex"	GO:0005667	2	g21212	0
+"transcription regulator complex"	GO:0005667	2	adi2mcaRNA1250_R1	0.790284176295836
+"transcription regulator complex"	GO:0005667	2	g40454	0.491149028730966
+"transcription regulator complex"	GO:0005667	2	g28003	0.643122895459375
+"transcription regulator complex"	GO:0005667	2	g71505	0
+"Golgi membrane"	GO:0000139	5	adi2mcaRNA27154_R0	0
+"Golgi membrane"	GO:0000139	5	g63802	0
+"Golgi membrane"	GO:0000139	5	g24450	-0.3920719315085
+"Golgi membrane"	GO:0000139	5	adi2mcaRNA18764_R0	0
+"Golgi membrane"	GO:0000139	5	g66866	0.397081142621215
+"Golgi membrane"	GO:0000139	5	adi2mcaRNA25459_R0	0.382570528983451
+"Golgi membrane"	GO:0000139	5	g40150	0.370247375584071
+"Golgi membrane"	GO:0000139	5	adi2mcaRNA11090_R0	0
+"Golgi membrane"	GO:0000139	5	g62860	0
+"Golgi membrane"	GO:0000139	5	g19693	0
+"Golgi membrane"	GO:0000139	5	g15083	0
+"Golgi membrane"	GO:0000139	5	g1135	0
+"Golgi membrane"	GO:0000139	5	g67456	0.618183333655565
+"Golgi membrane"	GO:0000139	5	g15393	0.575583405801554
+"centrosome"	GO:0005813	3	g67629	-0.446765051405646
+"centrosome"	GO:0005813	3	g21258	-0.451426162688448
+"centrosome"	GO:0005813	3	adi2mcaRNA33384_R0	-0.490386464878341
+"centrosome"	GO:0005813	3	adi2mcaRNA34345_R0	0
+"centrosome"	GO:0005813	3	adi2mcaRNA9828_R0	0
+"centrosome"	GO:0005813	3	adi2mcaRNA32115_R1	0.489107642283854
+"centrosome"	GO:0005813	3	adi2mcaRNA32115_R0	0.404980561856208
+"centrosome"	GO:0005813	3	adi2mcaRNA5019_R0	0
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g52817	0.567811179730251
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g70879	0
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g30538	0
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g24042	0
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g45278	0.365090941413738
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g16777	0.478855192645063
+"oxidoreductase complex"	GO:0098803;GO:1990204	2	g67241	0
+"plasma membrane bounded cell projection"	GO:0120025;GO:0042995	2	adi2mcaRNA12375_R0	0
+"plasma membrane bounded cell projection"	GO:0120025;GO:0042995	2	g15083	0
+"plasma membrane bounded cell projection"	GO:0120025;GO:0042995	2	adi2mcaRNA2572_R2	0
+"plasma membrane bounded cell projection"	GO:0120025;GO:0042995	2	adi2mcaRNA23326_R0	0.575685552413071
+"plasma membrane bounded cell projection"	GO:0120025;GO:0042995	2	g71333	-0.523768611356337
+"spliceosomal complex"	GO:0005681	3	g14822	-0.366935018185932
+"spliceosomal complex"	GO:0005681	3	g16841	-0.464182291410689
+"spliceosomal complex"	GO:0005681	3	g44700	-0.564267532193454
+"spliceosomal complex"	GO:0005681	3	adi2mcaRNA7627_R0	0
+"spliceosomal complex"	GO:0005681	3	g58267	0
+"spliceosomal complex"	GO:0005681	3	g4108	0
+"spliceosomal complex"	GO:0005681	3	g45325	0
+"spliceosomal complex"	GO:0005681	3	adi2mcaRNA12572_R0	-0.424602960747922
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g36425	-0.568352144007971
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g481	-0.461389776353132
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g47147	0
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g49547	0
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g5459	0
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g28903	-0.681237450931863
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g21211	0
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g70331	0
+"protein acetyltransferase complex"	GO:0031248;GO:1902493	3	g21212	0
+"exocyst"	GO:0000145	2	g70001	0.449630193316453
+"exocyst"	GO:0000145	2	g14036	0
+"exocyst"	GO:0000145	2	g14038	0
+"exocyst"	GO:0000145	2	g11085	0.61516544271787
+"exocyst"	GO:0000145	2	g46275	0.584047423412846
+"exocyst"	GO:0000145	2	g16416	0.432098274362537
+"exocyst"	GO:0000145	2	g47565	0.514920869608782
+"exocyst"	GO:0000145	2	g14035	0
+"exocyst"	GO:0000145	2	g54326	0.419562350427699
+"methyltransferase complex"	GO:0034708	2	g62140	-0.578232450656447
+"methyltransferase complex"	GO:0034708	2	adi2mcaRNA21111_R0	-0.46871351965019
+"methyltransferase complex"	GO:0034708	2	g20726	0
+"methyltransferase complex"	GO:0034708	2	g26557	0
+"methyltransferase complex"	GO:0034708	2	g15478	0.728377558986826
+"organelle inner membrane"	GO:0005743;GO:0019866	4	adi2mcaRNA28576_R1	0.491949549808071
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g38717	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g10446	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g52743	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g50740	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g69074	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	adi2mcaRNA6692_R0	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g17410	0
+"organelle inner membrane"	GO:0005743;GO:0019866	4	g13593	0.417325840587207
+"organelle inner membrane"	GO:0005743;GO:0019866	4	adi2mcaRNA13343_R0	0
+"small ribosomal subunit"	GO:0015935	2	g10900	0.604334640837188
+"small ribosomal subunit"	GO:0015935	2	g50758	0.590166828219415
+"small ribosomal subunit"	GO:0015935	2	g9978	0.588143884270144
+"small ribosomal subunit"	GO:0015935	2	g32127	0.527023347562157
+"small ribosomal subunit"	GO:0015935	2	g43301	0.503879299818601
+"small ribosomal subunit"	GO:0015935	2	adi2mcaRNA32382_R0	0
+"small ribosomal subunit"	GO:0015935	2	adi2mcaRNA31248_R1	0
+"small ribosomal subunit"	GO:0015935	2	adi2mcaRNA13039_R0	0
+"nuclear protein-containing complex"	GO:0140513	2	g61122	-0.801970005338293
+"nuclear protein-containing complex"	GO:0140513	2	g12285	-0.71303659397609
+"nuclear protein-containing complex"	GO:0140513	2	g10624	-0.744637793847616
+"nuclear protein-containing complex"	GO:0140513	2	g11631	-0.715867529733782
+"nuclear protein-containing complex"	GO:0140513	2	g62140	-0.578232450656447
+"nuclear protein-containing complex"	GO:0140513	2	g22586	-0.566471312130394
+"nuclear protein-containing complex"	GO:0140513	2	g36425	-0.568352144007971
+"nuclear protein-containing complex"	GO:0140513	2	g28800	-0.708119753578512
+"nuclear protein-containing complex"	GO:0140513	2	g33661	-0.502432674286494
+"nuclear protein-containing complex"	GO:0140513	2	g44602	-0.688917546213197
+"nuclear protein-containing complex"	GO:0140513	2	g66332	-0.51920964870136
+"nuclear protein-containing complex"	GO:0140513	2	g16448	-0.544798359141051
+"nuclear protein-containing complex"	GO:0140513	2	g12778	-0.64415600794788
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA41_R0	-0.431905504586452
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA11640_R1	-0.463405835043418
+"nuclear protein-containing complex"	GO:0140513	2	g481	-0.461389776353132
+"nuclear protein-containing complex"	GO:0140513	2	g14822	-0.366935018185932
+"nuclear protein-containing complex"	GO:0140513	2	g16841	-0.464182291410689
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA5288_R0	-0.420990135548736
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA11640_R0	-0.458838456687387
+"nuclear protein-containing complex"	GO:0140513	2	g12050	-0.446230218015066
+"nuclear protein-containing complex"	GO:0140513	2	g47147	0
+"nuclear protein-containing complex"	GO:0140513	2	g44700	-0.564267532193454
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA21111_R0	-0.46871351965019
+"nuclear protein-containing complex"	GO:0140513	2	g29887	0
+"nuclear protein-containing complex"	GO:0140513	2	g7902	-0.36436274003554
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA28446_R0	0
+"nuclear protein-containing complex"	GO:0140513	2	g63378	0
+"nuclear protein-containing complex"	GO:0140513	2	g13507	0
+"nuclear protein-containing complex"	GO:0140513	2	g32451	0
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA24210_R0	0
+"nuclear protein-containing complex"	GO:0140513	2	g37954	0
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA7627_R0	0
+"nuclear protein-containing complex"	GO:0140513	2	g41390	0
+"nuclear protein-containing complex"	GO:0140513	2	g68158	0.447728415661032
+"nuclear protein-containing complex"	GO:0140513	2	g26855	0.342652799928015
+"nuclear protein-containing complex"	GO:0140513	2	g15439	0.325647248113094
+"nuclear protein-containing complex"	GO:0140513	2	g58267	0
+"nuclear protein-containing complex"	GO:0140513	2	g46752	0
+"nuclear protein-containing complex"	GO:0140513	2	g62603	0
+"nuclear protein-containing complex"	GO:0140513	2	g4108	0
+"nuclear protein-containing complex"	GO:0140513	2	g62576	0
+"nuclear protein-containing complex"	GO:0140513	2	g45325	0
+"nuclear protein-containing complex"	GO:0140513	2	g2234	0
+"nuclear protein-containing complex"	GO:0140513	2	g28903	-0.681237450931863
+"nuclear protein-containing complex"	GO:0140513	2	g15179	0
+"nuclear protein-containing complex"	GO:0140513	2	g33971	0
+"nuclear protein-containing complex"	GO:0140513	2	g38365	0
+"nuclear protein-containing complex"	GO:0140513	2	adi2mcaRNA12572_R0	-0.424602960747922
+"nuclear protein-containing complex"	GO:0140513	2	g45328	0
+"nuclear protein-containing complex"	GO:0140513	2	g26557	0
+"nuclear protein-containing complex"	GO:0140513	2	g67882	0
+"nuclear protein-containing complex"	GO:0140513	2	g45969	0
+"nuclear protein-containing complex"	GO:0140513	2	g63473	0
+"nuclear protein-containing complex"	GO:0140513	2	g58748	0
+"nuclear protein-containing complex"	GO:0140513	2	g21211	0
+"nuclear protein-containing complex"	GO:0140513	2	g70331	0
+"nuclear protein-containing complex"	GO:0140513	2	g21212	0
+"nuclear protein-containing complex"	GO:0140513	2	g67187	0
+"nuclear protein-containing complex"	GO:0140513	2	g5046	0.641520929674467
+"nuclear protein-containing complex"	GO:0140513	2	g40454	0.491149028730966
+"nuclear protein-containing complex"	GO:0140513	2	g17676	0.340878268770756
+"nuclear protein-containing complex"	GO:0140513	2	g11103	0.717207519085698
+"nuclear protein-containing complex"	GO:0140513	2	g28003	0.643122895459375
+"nuclear protein-containing complex"	GO:0140513	2	g42490	0.434567995980266
+"nuclear protein-containing complex"	GO:0140513	2	g4655	0
+"nuclear protein-containing complex"	GO:0140513	2	g4201	0
+"nuclear protein-containing complex"	GO:0140513	2	g64212	0
+"nuclear protein-containing complex"	GO:0140513	2	g15478	0.728377558986826
+"nuclear protein-containing complex"	GO:0140513	2	g71505	0
+"membrane protein complex"	GO:0098796	2	g31907	-0.521522654844903
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA25351_R0	-0.629697826204283
+"membrane protein complex"	GO:0098796	2	g61120	0
+"membrane protein complex"	GO:0098796	2	g14314	-0.399369966902745
+"membrane protein complex"	GO:0098796	2	g18728	0
+"membrane protein complex"	GO:0098796	2	g48481	0
+"membrane protein complex"	GO:0098796	2	g34623	0
+"membrane protein complex"	GO:0098796	2	g12336	0
+"membrane protein complex"	GO:0098796	2	g22334	0.608453992377076
+"membrane protein complex"	GO:0098796	2	g32074	0.580973297195338
+"membrane protein complex"	GO:0098796	2	g13127	0.667898857386836
+"membrane protein complex"	GO:0098796	2	g17887	0.545646268782783
+"membrane protein complex"	GO:0098796	2	g21096	0.568890533635242
+"membrane protein complex"	GO:0098796	2	g52817	0.567811179730251
+"membrane protein complex"	GO:0098796	2	g44175	0.486524015074208
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA30550_R0	0.525192625802608
+"membrane protein complex"	GO:0098796	2	g68202	0.436766946726074
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA10809_R0	0.436794433556296
+"membrane protein complex"	GO:0098796	2	g42331	0.369178216584664
+"membrane protein complex"	GO:0098796	2	g46069	0
+"membrane protein complex"	GO:0098796	2	g70624	0.338755851151781
+"membrane protein complex"	GO:0098796	2	g49156	0
+"membrane protein complex"	GO:0098796	2	g29854	0
+"membrane protein complex"	GO:0098796	2	g47600	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA1064_R1	0.386172696891014
+"membrane protein complex"	GO:0098796	2	g70879	0
+"membrane protein complex"	GO:0098796	2	g41979	0
+"membrane protein complex"	GO:0098796	2	g60063	0
+"membrane protein complex"	GO:0098796	2	g14808	0.412118240372888
+"membrane protein complex"	GO:0098796	2	g2686	0
+"membrane protein complex"	GO:0098796	2	g22524	0
+"membrane protein complex"	GO:0098796	2	g30538	0
+"membrane protein complex"	GO:0098796	2	g42305	0
+"membrane protein complex"	GO:0098796	2	g6503	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA11090_R0	0
+"membrane protein complex"	GO:0098796	2	g58299	0
+"membrane protein complex"	GO:0098796	2	g71046	0
+"membrane protein complex"	GO:0098796	2	g24042	0
+"membrane protein complex"	GO:0098796	2	g33339	0
+"membrane protein complex"	GO:0098796	2	g48483	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA16675_R0	0
+"membrane protein complex"	GO:0098796	2	g22254	0
+"membrane protein complex"	GO:0098796	2	g48485	0
+"membrane protein complex"	GO:0098796	2	g39446	0.656850782973051
+"membrane protein complex"	GO:0098796	2	g22518	0.70624974547716
+"membrane protein complex"	GO:0098796	2	g54942	0.612849677025805
+"membrane protein complex"	GO:0098796	2	g10904	0.532477850207515
+"membrane protein complex"	GO:0098796	2	g45278	0.365090941413738
+"membrane protein complex"	GO:0098796	2	g16777	0.478855192645063
+"membrane protein complex"	GO:0098796	2	g62252	0
+"membrane protein complex"	GO:0098796	2	g2263	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA15695_R0	0.367960965413717
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA15384_R0	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA7512_R0	0
+"membrane protein complex"	GO:0098796	2	adi2mcaRNA363_R0	0
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g22334	0.608453992377076
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g44175	0.486524015074208
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g68202	0.436766946726074
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	adi2mcaRNA10809_R0	0.436794433556296
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g46069	0
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g47600	0
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g41979	0
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g10904	0.532477850207515
+"proton-transporting two-sector ATPase complex, proton-transporting domain"	GO:0000276;GO:0045263;GO:0033177	2	g62252	0
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	adi2mcaRNA11640_R1	-0.463405835043418
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	adi2mcaRNA11640_R0	-0.458838456687387
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	g58095	0.588599467585543
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	g68158	0.447728415661032
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	g15179	0
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	g33971	0
+"transferase complex, transferring phosphorus-containing groups"	GO:0061695	2	g4655	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g3320	-0.599649174966769
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g2955	-0.623190964921564
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g40930	-0.665603600743916
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g14603	-0.543853630119509
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g49654	-0.497715642874558
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g46746	-0.525141307216335
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g66743	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g56707	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	adi2mcaRNA21955_R0	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g46302	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g46076	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g31910	-0.371674745622302
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g16182	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33813	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33804	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33809	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33802	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33815	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g16179	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g54171	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33801	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g16180	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g16183	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33805	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g4048	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g54166	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g17877	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g19731	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33812	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g17881	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g4046	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g17879	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g19733	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g19732	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33808	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g66453	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	adi2mcaRNA25316_R4	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g54176	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g16009	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	adi2mcaRNA25316_R5	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g33806	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	adi2mcaRNA25316_R8	0
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g14639	-0.568932238659232
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	g26855	0.342652799928015
+"protein-DNA complex"	GO:0000786;GO:0032993;GO:0044815	2	adi2mcaRNA29018_R0	-0.616183952522338
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g63810	-0.651083615668611
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA26831_R1	-0.532431767009243
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g41794	-0.666855587198423
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g36962	-0.538501946658422
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g47507	-0.531654562946383
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g54400	-0.491413112198919
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g71334	-0.495254501041207
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g29384	-0.458118658519682
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g32062	-0.360089722004689
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g6357	-0.388070235100274
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g29750	-0.441491095671774
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g4051	-0.332855621925664
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA34345_R0	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA26801_R0	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g33995	-0.336546816206216
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g39845	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g10682	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA37022_R0	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g6558	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g34966	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA3208_R1	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA25445_R0	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g59079	0.572926849662493
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g33208	0.574731895007026
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g42339	0.58664583677121
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g3316	0.574501908721652
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA9576_R0	0.556664788710388
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g12344	0.549777446636268
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g43595	0.572378063557736
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g35968	0.540061373585217
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g60207	0.528012055077028
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g2996	0.544274655339626
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g19907	0.537172367401036
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g16525	0.530985876631202
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g15366	0.529363233577004
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g32462	0.512123016175899
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g5391	0.537589737168877
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g16638	0.536803653793285
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g41056	0.50990021141967
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g45823	0.50965349163379
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g21440	0.495965817704541
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g42439	0.494717554923927
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g30581	0.50724662128848
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g45343	0.452873752271033
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA8815_R0	0.451364642861225
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g1401	0.442545251688859
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g57431	0.522932345225844
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g23921	0.423030178073781
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g3076	0.405574205811079
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g1548	0.329375231126328
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g70309	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA30021_R0	0.355153564860684
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g71012	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g47501	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA11654_R0	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g33836	-0.337988417498281
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA14033_R0	0.715378010963503
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA14033_R1	0.676841624349027
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g64793	0.618503934996279
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g54998	0.653646772445132
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	adi2mcaRNA23140_R3	0.617834896088492
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g8621	0.689588515744942
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g39928	0.659806797598399
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g9814	0.33142505797304
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g34845	0.338883336470504
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g17767	0.484138746075394
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g49145	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g24164	0
+"intracellular non-membrane-bounded organelle"	GO:0043232;GO:0043228	3	g27608	0
+"Arp2/3 protein complex"	GO:0005885	2	g25172	0.498775438573309
+"Arp2/3 protein complex"	GO:0005885	2	g50930	0.463007999653168
+"Arp2/3 protein complex"	GO:0005885	2	g50761	0
+"Arp2/3 protein complex"	GO:0005885	2	g9975	0
+"Arp2/3 protein complex"	GO:0005885	2	g15183	0
+"Arp2/3 protein complex"	GO:0005885	2	g45515	0
+"microbody"	GO:0005777;GO:0042579	3	adi2mcaRNA13580_R0	0.39368817050454
+"microbody"	GO:0005777;GO:0042579	3	adi2mcaRNA28149_R0	0
+"microbody"	GO:0005777;GO:0042579	3	adi2mcaRNA3868_R0	0
+"microbody"	GO:0005777;GO:0042579	3	adi2mcaRNA13842_R0	0.544481075134596
+"microbody"	GO:0005777;GO:0042579	3	g22447	0
+"microbody"	GO:0005777;GO:0042579	3	adi2mcaRNA27065_R0	0.403250141477391
+"bounding membrane of organelle"	GO:0098588	2	g21540	-0.647779998874389
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA27154_R0	0
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA8809_R0	0
+"bounding membrane of organelle"	GO:0098588	2	g63802	0
+"bounding membrane of organelle"	GO:0098588	2	g24450	-0.3920719315085
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA18764_R0	0
+"bounding membrane of organelle"	GO:0098588	2	g55713	0.492099334263963
+"bounding membrane of organelle"	GO:0098588	2	g66866	0.397081142621215
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA29427_R0	0.428602946375676
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA25459_R0	0.382570528983451
+"bounding membrane of organelle"	GO:0098588	2	g40150	0.370247375584071
+"bounding membrane of organelle"	GO:0098588	2	adi2mcaRNA11090_R0	0
+"bounding membrane of organelle"	GO:0098588	2	g62860	0
+"bounding membrane of organelle"	GO:0098588	2	g19693	0
+"bounding membrane of organelle"	GO:0098588	2	g15083	0
+"bounding membrane of organelle"	GO:0098588	2	g1135	0
+"bounding membrane of organelle"	GO:0098588	2	g67456	0.618183333655565
+"bounding membrane of organelle"	GO:0098588	2	g15393	0.575583405801554
+"bounding membrane of organelle"	GO:0098588	2	g16586	0
+"bounding membrane of organelle"	GO:0098588	2	g10901	0
+"bounding membrane of organelle"	GO:0098588	2	g54200	0
+"intracellular protein-containing complex"	GO:0140535	2	g36425	-0.568352144007971
+"intracellular protein-containing complex"	GO:0140535	2	g54783	-0.600125716363002
+"intracellular protein-containing complex"	GO:0140535	2	adi2mcaRNA11640_R1	-0.463405835043418
+"intracellular protein-containing complex"	GO:0140535	2	g481	-0.461389776353132
+"intracellular protein-containing complex"	GO:0140535	2	adi2mcaRNA11640_R0	-0.458838456687387
+"intracellular protein-containing complex"	GO:0140535	2	g47147	0
+"intracellular protein-containing complex"	GO:0140535	2	g60347	-0.553072652163084
+"intracellular protein-containing complex"	GO:0140535	2	adi2mcaRNA405_R0	0
+"intracellular protein-containing complex"	GO:0140535	2	g28774	-0.370479483760117
+"intracellular protein-containing complex"	GO:0140535	2	g2725	0.42341475069631
+"intracellular protein-containing complex"	GO:0140535	2	g65078	0.400384706847811
+"intracellular protein-containing complex"	GO:0140535	2	g43586	0.380038960658894
+"intracellular protein-containing complex"	GO:0140535	2	g49547	0
+"intracellular protein-containing complex"	GO:0140535	2	g5459	0
+"intracellular protein-containing complex"	GO:0140535	2	g62603	0
+"intracellular protein-containing complex"	GO:0140535	2	g26466	0
+"intracellular protein-containing complex"	GO:0140535	2	adi2mcaRNA34363_R1	0.404158765464672
+"intracellular protein-containing complex"	GO:0140535	2	g17153	0.33440439804528
+"intracellular protein-containing complex"	GO:0140535	2	g28903	-0.681237450931863
+"intracellular protein-containing complex"	GO:0140535	2	g15179	0
+"intracellular protein-containing complex"	GO:0140535	2	g33971	0
+"intracellular protein-containing complex"	GO:0140535	2	g50735	0
+"intracellular protein-containing complex"	GO:0140535	2	g53518	0
+"intracellular protein-containing complex"	GO:0140535	2	g58748	0
+"intracellular protein-containing complex"	GO:0140535	2	g21211	0
+"intracellular protein-containing complex"	GO:0140535	2	g70331	0
+"intracellular protein-containing complex"	GO:0140535	2	g21212	0
+"intracellular protein-containing complex"	GO:0140535	2	g67187	0
+"intracellular protein-containing complex"	GO:0140535	2	g5046	0.641520929674467
+"intracellular protein-containing complex"	GO:0140535	2	g41497	0.78595916510219
+"intracellular protein-containing complex"	GO:0140535	2	g52103	0.627830892659489
+"intracellular protein-containing complex"	GO:0140535	2	g23755	0.428236158274018
+"intracellular protein-containing complex"	GO:0140535	2	g22252	0
+"intracellular protein-containing complex"	GO:0140535	2	g4655	0
+"ribosomal subunit"	GO:0044391	3	g10900	0.604334640837188
+"ribosomal subunit"	GO:0044391	3	g50758	0.590166828219415
+"ribosomal subunit"	GO:0044391	3	g9978	0.588143884270144
+"ribosomal subunit"	GO:0044391	3	g56986	0.566441492394406
+"ribosomal subunit"	GO:0044391	3	g32127	0.527023347562157
+"ribosomal subunit"	GO:0044391	3	g17433	0.514136300294904
+"ribosomal subunit"	GO:0044391	3	g67296	0.545496601877338
+"ribosomal subunit"	GO:0044391	3	g43301	0.503879299818601
+"ribosomal subunit"	GO:0044391	3	g70018	0.505012383263038
+"ribosomal subunit"	GO:0044391	3	adi2mcaRNA32382_R0	0
+"ribosomal subunit"	GO:0044391	3	adi2mcaRNA31248_R1	0
+"ribosomal subunit"	GO:0044391	3	adi2mcaRNA13039_R0	0
+"mediator complex"	GO:0016592	2	g12050	-0.446230218015066
+"mediator complex"	GO:0016592	2	g15439	0.325647248113094
+"mediator complex"	GO:0016592	2	g62576	0
+"mediator complex"	GO:0016592	2	g4201	0
+"mediator complex"	GO:0016592	2	g64212	0
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g60687	-0.683098666821704
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g54698	-0.610100346671596
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g16466	-0.512397329776851
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	adi2mcaRNA9828_R0	0
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g41435	0.572761860375304
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	adi2mcaRNA32115_R1	0.489107642283854
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g36885	0.454707364416247
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g25164	0.445889865033377
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g25161	0.422494255208146
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	adi2mcaRNA32115_R0	0.404980561856208
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	adi2mcaRNA11233_R0	0.764706132631451
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g9232	0.448118639000016
+"microtubule"	GO:0005874;GO:0099513;GO:0099512;GO:0099081	4	g10246	0.405314054200791
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g21096	0.568890533635242
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g70624	0.338755851151781
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	adi2mcaRNA1064_R1	0.386172696891014
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g60063	0
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g14808	0.412118240372888
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g2686	0
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g42305	0
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g6503	0
+"endoplasmic reticulum protein-containing complex"	GO:0140534	2	g33339	0
+"extracellular region"	GO:0005576	2	g27773	-0.681464235978965
+"extracellular region"	GO:0005576	2	g43427	-0.612056970188223
+"extracellular region"	GO:0005576	2	adi2mcaRNA23039_R0	0.59964671220485
+"extracellular region"	GO:0005576	2	g34615	0.534391650255747
+"extracellular region"	GO:0005576	2	g48524	0.419681909512603
+"extracellular region"	GO:0005576	2	g66573	0
+"extracellular region"	GO:0005576	2	g29962	0
+"extracellular region"	GO:0005576	2	g27772	0.743586886475527
+"extracellular region"	GO:0005576	2	adi2mcaRNA29127_R3	0.7465793910949
+"extracellular region"	GO:0005576	2	g69363	0.793654933938716
+"extracellular region"	GO:0005576	2	g10585	0.662418554690598
+"extracellular region"	GO:0005576	2	g58857	0.796450759559695
+"extracellular region"	GO:0005576	2	adi2mcaRNA28334_R0	0.785677195230211
+"extracellular region"	GO:0005576	2	g16833	0.749971348022993
+"extracellular region"	GO:0005576	2	g29847	0.831561422224389
+"extracellular region"	GO:0005576	2	g53649	0.582966240971596
+"extracellular region"	GO:0005576	2	adi2mcaRNA29127_R4	0.738868644947271
+"extracellular region"	GO:0005576	2	g53640	0.507238922786367
+"extracellular region"	GO:0005576	2	g29845	0.486688363085606
+"extracellular region"	GO:0005576	2	adi2mcaRNA10569_R2	0.544745753769263
+"extracellular region"	GO:0005576	2	g58845	0.461734548162557
+"extracellular region"	GO:0005576	2	adi2mcaRNA21332_R4	0.356693671088953
+"extracellular region"	GO:0005576	2	g44824	0
+"extracellular region"	GO:0005576	2	g6851	0.584990999510706
+"extracellular region"	GO:0005576	2	g58856	0
+"extracellular region"	GO:0005576	2	adi2mcaRNA33119_R0	0
+"extracellular region"	GO:0005576	2	adi2mcaRNA29127_R2	0
+"extracellular region"	GO:0005576	2	g53651	0
+"extracellular region"	GO:0005576	2	g50407	0
+"extracellular region"	GO:0005576	2	g55442	0.920927057933836
+"extracellular region"	GO:0005576	2	g52052	0.843354727639609
+"extracellular region"	GO:0005576	2	g55430	0.804632459741238
+"extracellular region"	GO:0005576	2	g66179	0
+"catalytic complex"	GO:1902494	2	g62140	-0.578232450656447
+"catalytic complex"	GO:1902494	2	g36425	-0.568352144007971
+"catalytic complex"	GO:1902494	2	g32810	-0.647043650723423
+"catalytic complex"	GO:1902494	2	g12778	-0.64415600794788
+"catalytic complex"	GO:1902494	2	adi2mcaRNA11640_R1	-0.463405835043418
+"catalytic complex"	GO:1902494	2	g481	-0.461389776353132
+"catalytic complex"	GO:1902494	2	g14822	-0.366935018185932
+"catalytic complex"	GO:1902494	2	g16841	-0.464182291410689
+"catalytic complex"	GO:1902494	2	adi2mcaRNA5288_R0	-0.420990135548736
+"catalytic complex"	GO:1902494	2	adi2mcaRNA11640_R0	-0.458838456687387
+"catalytic complex"	GO:1902494	2	g47147	0
+"catalytic complex"	GO:1902494	2	g60347	-0.553072652163084
+"catalytic complex"	GO:1902494	2	adi2mcaRNA21111_R0	-0.46871351965019
+"catalytic complex"	GO:1902494	2	g20726	0
+"catalytic complex"	GO:1902494	2	g29887	0
+"catalytic complex"	GO:1902494	2	g13507	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA405_R0	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA24210_R0	0
+"catalytic complex"	GO:1902494	2	g66655	0
+"catalytic complex"	GO:1902494	2	g290	0
+"catalytic complex"	GO:1902494	2	g52817	0.567811179730251
+"catalytic complex"	GO:1902494	2	adi2mcaRNA13157_R0	0.527603866077633
+"catalytic complex"	GO:1902494	2	g58095	0.588599467585543
+"catalytic complex"	GO:1902494	2	g47575	0.516500363759519
+"catalytic complex"	GO:1902494	2	g2725	0.42341475069631
+"catalytic complex"	GO:1902494	2	g65078	0.400384706847811
+"catalytic complex"	GO:1902494	2	g68158	0.447728415661032
+"catalytic complex"	GO:1902494	2	g43586	0.380038960658894
+"catalytic complex"	GO:1902494	2	g70624	0.338755851151781
+"catalytic complex"	GO:1902494	2	g49547	0
+"catalytic complex"	GO:1902494	2	g5459	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA1064_R1	0.386172696891014
+"catalytic complex"	GO:1902494	2	g70879	0
+"catalytic complex"	GO:1902494	2	g46752	0
+"catalytic complex"	GO:1902494	2	g62603	0
+"catalytic complex"	GO:1902494	2	g60063	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA34363_R1	0.404158765464672
+"catalytic complex"	GO:1902494	2	g14808	0.412118240372888
+"catalytic complex"	GO:1902494	2	g17153	0.33440439804528
+"catalytic complex"	GO:1902494	2	g11234	0
+"catalytic complex"	GO:1902494	2	g30538	0
+"catalytic complex"	GO:1902494	2	g42305	0
+"catalytic complex"	GO:1902494	2	g6503	0
+"catalytic complex"	GO:1902494	2	g28903	-0.681237450931863
+"catalytic complex"	GO:1902494	2	adi2mcaRNA25134_R0	0
+"catalytic complex"	GO:1902494	2	g15179	0
+"catalytic complex"	GO:1902494	2	g44798	0
+"catalytic complex"	GO:1902494	2	g33971	0
+"catalytic complex"	GO:1902494	2	g24042	0
+"catalytic complex"	GO:1902494	2	g53518	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA11167_R0	0
+"catalytic complex"	GO:1902494	2	g33339	0
+"catalytic complex"	GO:1902494	2	g26557	0
+"catalytic complex"	GO:1902494	2	g58748	0
+"catalytic complex"	GO:1902494	2	g21211	0
+"catalytic complex"	GO:1902494	2	g70331	0
+"catalytic complex"	GO:1902494	2	g21212	0
+"catalytic complex"	GO:1902494	2	g67187	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA16675_R0	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA11166_R0	0
+"catalytic complex"	GO:1902494	2	g67241	0
+"catalytic complex"	GO:1902494	2	g5046	0.641520929674467
+"catalytic complex"	GO:1902494	2	g41497	0.78595916510219
+"catalytic complex"	GO:1902494	2	g54942	0.612849677025805
+"catalytic complex"	GO:1902494	2	g52103	0.627830892659489
+"catalytic complex"	GO:1902494	2	g45278	0.365090941413738
+"catalytic complex"	GO:1902494	2	g16777	0.478855192645063
+"catalytic complex"	GO:1902494	2	g23755	0.428236158274018
+"catalytic complex"	GO:1902494	2	g17676	0.340878268770756
+"catalytic complex"	GO:1902494	2	g22252	0
+"catalytic complex"	GO:1902494	2	g4655	0
+"catalytic complex"	GO:1902494	2	adi2mcaRNA363_R0	0
+"catalytic complex"	GO:1902494	2	g15478	0.728377558986826
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g22334	0.608453992377076
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g52817	0.567811179730251
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g44175	0.486524015074208
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g68202	0.436766946726074
+"inner mitochondrial membrane protein complex"	GO:0098800	3	adi2mcaRNA10809_R0	0.436794433556296
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g46069	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g47600	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g70879	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g41979	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g30538	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g24042	0
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g10904	0.532477850207515
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g45278	0.365090941413738
+"inner mitochondrial membrane protein complex"	GO:0098800	3	g16777	0.478855192645063
+"nucleolus"	GO:0005730	2	g29384	-0.458118658519682
+"nucleolus"	GO:0005730	2	g6357	-0.388070235100274
+"nucleolus"	GO:0005730	2	g10682	0
+"nucleolus"	GO:0005730	2	adi2mcaRNA30021_R0	0.355153564860684
+"nucleolus"	GO:0005730	2	g47501	0
+"nucleolus"	GO:0005730	2	adi2mcaRNA11654_R0	0
+"nucleolus"	GO:0005730	2	g24164	0
+"microtubule organizing center"	GO:0005815	2	g67629	-0.446765051405646
+"microtubule organizing center"	GO:0005815	2	g21258	-0.451426162688448
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA33384_R0	-0.490386464878341
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA34345_R0	0
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA9828_R0	0
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA32115_R1	0.489107642283854
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA32115_R0	0.404980561856208
+"microtubule organizing center"	GO:0005815	2	adi2mcaRNA5019_R0	0
+"microtubule organizing center"	GO:0005815	2	g42281	0
+"microtubule organizing center"	GO:0005815	2	g41647	0.664209653176112
+"ribosome"	GO:0005840	2	g41794	-0.666855587198423
+"ribosome"	GO:0005840	2	g59079	0.572926849662493
+"ribosome"	GO:0005840	2	g33208	0.574731895007026
+"ribosome"	GO:0005840	2	g42339	0.58664583677121
+"ribosome"	GO:0005840	2	g3316	0.574501908721652
+"ribosome"	GO:0005840	2	adi2mcaRNA9576_R0	0.556664788710388
+"ribosome"	GO:0005840	2	g12344	0.549777446636268
+"ribosome"	GO:0005840	2	g43595	0.572378063557736
+"ribosome"	GO:0005840	2	g35968	0.540061373585217
+"ribosome"	GO:0005840	2	g60207	0.528012055077028
+"ribosome"	GO:0005840	2	g2996	0.544274655339626
+"ribosome"	GO:0005840	2	g19907	0.537172367401036
+"ribosome"	GO:0005840	2	g16525	0.530985876631202
+"ribosome"	GO:0005840	2	g15366	0.529363233577004
+"ribosome"	GO:0005840	2	g32462	0.512123016175899
+"ribosome"	GO:0005840	2	g5391	0.537589737168877
+"ribosome"	GO:0005840	2	g16638	0.536803653793285
+"ribosome"	GO:0005840	2	g41056	0.50990021141967
+"ribosome"	GO:0005840	2	g45823	0.50965349163379
+"ribosome"	GO:0005840	2	g21440	0.495965817704541
+"ribosome"	GO:0005840	2	g42439	0.494717554923927
+"ribosome"	GO:0005840	2	g30581	0.50724662128848
+"ribosome"	GO:0005840	2	g45343	0.452873752271033
+"ribosome"	GO:0005840	2	adi2mcaRNA8815_R0	0.451364642861225
+"ribosome"	GO:0005840	2	g1401	0.442545251688859
+"ribosome"	GO:0005840	2	g23921	0.423030178073781
+"ribosome"	GO:0005840	2	g3076	0.405574205811079
+"ribosome"	GO:0005840	2	g1548	0.329375231126328
+"ribosome"	GO:0005840	2	g70309	0
+"vesicle tethering complex"	GO:0099023	2	g51446	-0.398294629612327
+"vesicle tethering complex"	GO:0099023	2	g28774	-0.370479483760117
+"vesicle tethering complex"	GO:0099023	2	g70001	0.449630193316453
+"vesicle tethering complex"	GO:0099023	2	g14036	0
+"vesicle tethering complex"	GO:0099023	2	g26466	0
+"vesicle tethering complex"	GO:0099023	2	g14038	0
+"vesicle tethering complex"	GO:0099023	2	g11085	0.61516544271787
+"vesicle tethering complex"	GO:0099023	2	g46275	0.584047423412846
+"vesicle tethering complex"	GO:0099023	2	g16416	0.432098274362537
+"vesicle tethering complex"	GO:0099023	2	g47565	0.514920869608782
+"vesicle tethering complex"	GO:0099023	2	g14035	0
+"vesicle tethering complex"	GO:0099023	2	g54326	0.419562350427699
+"microtubule associated complex"	GO:0005875	2	g17429	0
+"microtubule associated complex"	GO:0005875	2	g22336	-0.462102661045492
+"microtubule associated complex"	GO:0005875	2	adi2mcaRNA10310_R0	0
+"microtubule associated complex"	GO:0005875	2	g11234	0
+"microtubule associated complex"	GO:0005875	2	adi2mcaRNA25134_R0	0
+"microtubule associated complex"	GO:0005875	2	g44798	0
+"microtubule associated complex"	GO:0005875	2	adi2mcaRNA11167_R0	0
+"microtubule associated complex"	GO:0005875	2	g70476	0
+"microtubule associated complex"	GO:0005875	2	adi2mcaRNA11166_R0	0
+"transcription factor TFIID complex"	GO:0005669	2	g28800	-0.708119753578512
+"transcription factor TFIID complex"	GO:0005669	2	g33661	-0.502432674286494
+"transcription factor TFIID complex"	GO:0005669	2	g67882	0
+"transcription factor TFIID complex"	GO:0005669	2	g45969	0
+"transcription factor TFIID complex"	GO:0005669	2	g21211	0
+"transcription factor TFIID complex"	GO:0005669	2	g21212	0

@@ -1,0 +1,64 @@
+"delta.rank" "pval" "level" "nseqs" "term" "name" "p.adj"
+0 0.333836941754931 5 14 "GO:0000139" "Golgi membrane" 1
+0 0.0213981815562 2 9 "GO:0000145" "exocyst" 0.364285714285714
+0 0.0990162217580828 2 8 "GO:0000151" "ubiquitin ligase complex" 0.69375
+0 0.000339779456792555 3 9 "GO:0000276;GO:0045263;GO:0033177" "proton-transporting two-sector ATPase complex, proton-transporting domain" 0.0214285714285714
+0 0.0123202680557308 2 5 "GO:0000502" "proteasome complex" 0.230769230769231
+0 0.859312354431608 2 45 "GO:0000786;GO:0032993;GO:0044815" "protein-DNA complex" 1
+0 5.32013710416595e-07 2 33 "GO:0005576" "extracellular region" 0
+0 0.920790388989105 3 8 "GO:0005643" "nuclear pore" 1
+0 0.525304402507414 2 14 "GO:0005667" "transcription regulator complex" 1
+0 0.851031988907401 3 8 "GO:0005681" "spliceosomal complex" 1
+0 0.758940717141514 3 7 "GO:0005730" "nucleolus" 1
+0 0.225130618628179 2 75 "GO:0005737" "cytoplasm" 0.928125
+0 0.109614330945969 5 27 "GO:0005739" "mitochondrion" 0.678846153846154
+0 0.319550332335089 2 10 "GO:0005743;GO:0019866" "mitochondrial inner membrane" 1
+0 0.202317017230373 3 5 "GO:0005773" "vacuole" 0.937931034482759
+0 0.630866595157592 3 6 "GO:0005777;GO:0042579" "peroxisome" 1
+0 0.162244493913411 3 13 "GO:0005783" "endoplasmic reticulum" 0.8375
+0 0.213191343205459 2 10 "GO:0005789" "endoplasmic reticulum membrane" 0.914516129032258
+0 0.160304984944358 2 8 "GO:0005813" "centrosome" 0.859259259259259
+0 0.4977412509858 2 10 "GO:0005815" "microtubule organizing center" 1
+0 0.207471812395102 2 9 "GO:0005829" "cytosol" 0.926666666666667
+0 3.37842602958105e-13 3 29 "GO:0005840" "ribosome" 0
+0 0.0302507631027249 3 24 "GO:0005856" "cytoskeleton" 0.397058823529412
+0 0.00971967199732527 3 13 "GO:0005874;GO:0099513;GO:0099512;GO:0099081" "polymeric cytoskeletal fiber" 0.255
+0 0.931389623660893 2 9 "GO:0005875" "microtubule associated complex" 1
+0 0.0122150014184658 2 6 "GO:0005885" "Arp2/3 protein complex" 0.25
+0 0.852399436156082 3 9 "GO:0005886" "plasma membrane" 1
+0 0.00192520655701392 3 8 "GO:0015935" "small ribosomal subunit" 0.05625
+0 0.689240752355999 2 5 "GO:0016592" "mediator complex" 1
+0 0.790292778157088 3 5 "GO:0030286" "dynein complex" 1
+0 0.286712773954829 3 40 "GO:0031090" "organelle membrane" 1
+0 0.639637103246771 4 9 "GO:0031248;GO:1902493" "acetyltransferase complex" 1
+0 0.760457544325434 2 5 "GO:0031301;GO:0031300" "integral component of organelle membrane" 1
+0 0.107668850036893 4 6 "GO:0031410;GO:0097708;GO:0031982" "vesicle" 0.704
+0 0.241517902083664 2 14 "GO:0031966" "mitochondrial membrane" 0.946969696969697
+0 0.627532923634298 3 6 "GO:0033178" "proton-transporting two-sector ATPase complex, catalytic domain" 1
+0 0.098407351776758 4 7 "GO:0034703;GO:0034702;GO:1902495;GO:1990351" "transmembrane transporter complex" 0.719565217391304
+0 0.874017495601716 4 5 "GO:0034708" "methyltransferase complex" 1
+0 2.878884290746e-07 3 69 "GO:0043232;GO:0043228" "non-membrane-bounded organelle" 0
+0 3.22528596033564e-05 2 12 "GO:0044391" "ribosomal subunit" 0
+0 0.807806562417429 4 5 "GO:0055029;GO:0000428;GO:0030880" "DNA-directed RNA polymerase complex" 1
+0 0.486134411026451 4 7 "GO:0061695" "transferase complex, transferring phosphorus-containing groups" 1
+0 0.656832578757776 2 10 "GO:0090575" "RNA polymerase II transcription regulator complex" 1
+0 0.401954992084858 2 21 "GO:0098588" "bounding membrane of organelle" 1
+0 0.00271986834188793 2 55 "GO:0098796" "membrane protein complex" 0.0777777777777778
+0 0.0463909684850514 3 11 "GO:0098797" "plasma membrane protein complex" 0.4625
+0 2.42603221548225e-05 2 18 "GO:0098798" "mitochondrial protein-containing complex" 0
+0 9.74258008967081e-06 3 14 "GO:0098800" "inner mitochondrial membrane protein complex" 0
+0 0.0353503723916965 2 7 "GO:0098803;GO:1990204" "oxidoreductase complex" 0.4
+0 0.0816470035113159 2 12 "GO:0099023" "vesicle tethering complex" 0.692857142857143
+0 0.0337480760200772 2 17 "GO:0099080" "supramolecular complex" 0.413888888888889
+0 0.713159815990447 3 5 "GO:0120025;GO:0042995" "plasma membrane bounded cell projection" 1
+0 0.996211930338912 2 70 "GO:0140513" "nuclear protein-containing complex" 1
+0 0.0238527440321886 2 9 "GO:0140534" "endoplasmic reticulum protein-containing complex" 0.340625
+0 0.434272071229522 2 34 "GO:0140535" "intracellular protein-containing complex" 1
+0 0.464078425745811 2 73 "GO:1902494" "catalytic complex" 1
+0 0.0957785749486067 3 14 "GO:1905368" "peptidase complex" 0.738636363636364
+0 0.0108386701733247 2 6 "GO:1905369" "endopeptidase complex" 0.245454545454545
+0 0.823720644591049 2 32 "GO:1990234" "transferase complex" 1
+0 0.0226796334267316 2 29 "GO:1990904" "ribonucleoprotein complex" 0.353333333333333
+0 1 3 7 "GO:0000123" "histone acetyltransferase complex" 1
+0 1 3 6 "GO:0005669" "transcription factor TFIID complex" 1
+0 1 5 5 "GO:0070461" "SAGA-type complex" 1

@@ -1,0 +1,4 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"15",0,9.07893297926338e-05,2,46,"GO:0006259","DNA metabolic process",0.00909090909090909
+"26",0,0.000109152414146747,6,78,"GO:0006396","RNA processing",0.00769230769230769
+"178",0,5.21171190530327e-06,2,5,"GO:1901987","regulation of cell cycle phase transition",0

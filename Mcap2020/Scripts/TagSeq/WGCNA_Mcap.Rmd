@@ -19,15 +19,38 @@ options(stringsAsFactors = FALSE) #Set Strings to character
 Load required libraries.  
 
 ```{r}
-library(tidyverse)
-library(WGCNA)
-library(magrittr)  
-library(DESeq2)
-library(genefilter)
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+
+library("tidyverse")
+library("genefilter")
+library("DESeq2")
+library("RColorBrewer")
+library("WGCNA")
+library("flashClust")
+library("gridExtra")
+library("ComplexHeatmap")
+library("goseq")
+library("dplyr")
+library("clusterProfiler")
+library("pheatmap")
+library("magrittr")
+
 ```
 
 # **Data input and filtering**  
-
+ 
 Import the data files.  
 
 ```{r}
@@ -71,7 +94,7 @@ pdata<- gcount %>%
 Check that there are no genes with 0 counts across all samples. Should return TRUE.  
 
 ```{r}
-rowSums(count(gcount)) > 0
+rowSums(dplyr::count(gcount)) > 0
 ```
 
 Conduct data filtering, this includes:  
@@ -141,6 +164,1418 @@ All size factors are less than 4, so we can use VST transformation.
 gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
 head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
 ```
+
+
+
+
+# **Examine PCA and sample distances**  
+
+Plot a heatmap to sample to sample distances  
+
+```{r}
+gsampleDists <- dist(t(assay(gvst))) #calculate distance matix
+gsampleDistMatrix <- as.matrix(gsampleDists) #distance matrix
+rownames(gsampleDistMatrix) <- colnames(gvst) #assign row names
+colnames(gsampleDistMatrix) <- NULL #assign col names
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
+
+pdf("Mcap2020/Figures/TagSeq/pheatmap.pdf")
+pht=pheatmap(gsampleDistMatrix, #plot matrix
+         clustering_distance_rows=gsampleDists, #cluster rows
+         clustering_distance_cols=gsampleDists, #cluster columns
+         col=colors) #set colors
+draw(pht)
+dev.off()
+```
+
+Plot a PCA of samples by lifestages  
+
+```{r}
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE)
+percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
+
+allgenesfilt_PCA <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage)) + 
+  geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=1, "2_Embryo"=10, "3_Larvae1"=5, "4_Larvae2"=14, "5_Larvae3"=11, "6_Larvae4"=6, "7_Larvae6"=2, "8_MetamorposedRecruit2"=8, "9_CalcifyingRecruit1"=3)) +
+  #xlim(-40,40)+ 
+  #ylim(-40,40)+
+  coord_fixed()+
+  theme_bw() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) # + #Set the plot background
+  #theme(legend.position = ("none")) #set title attributes
+allgenesfilt_PCA
+ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA, width=11, height=8)
+```
+
+# **WGCNA analysis**  
+
+Data are analyzed using dynamic tree cut approach, our data set is not large enough to have to use blockwiseModules to break data into "blocks". This code uses step by step network analysis and module detection based on scripts from https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/index.html. 
+
+Transpose the filtered gene count matrix so that the gene IDs are rows and the sample IDs are columns.
+```{r}
+datExpr <- as.data.frame(t(assay(gvst))) #transpose to output to a new data frame with the column names as row names. And make all data numeric
+```
+
+Check for genes and samples with too many missing values with goodSamplesGenes. There shouldn't be any because we performed pre-filtering
+```{r}
+gsg = goodSamplesGenes(datExpr, verbose = 3)
+gsg$allOK #Should return TRUE if not, the R chunk below will take care of flagged data
+```
+
+Remove flagged samples if the allOK is FALSE, not used here.  
+```{r}
+#ncol(datExpr) #number genes before
+#if (!gsg$allOK) #If the allOK is FALSE...
+#{
+# Optionally, print the gene and sample names that are flagged:
+#if (sum(!gsg$goodGenes)>0)
+#printFlush(paste("Removing genes:", paste(names(datExpr)[!gsg$goodGenes], collapse = ", ")));
+#if (sum(!gsg$goodSamples)>0)
+#printFlush(paste("Removing samples:", paste(rownames(datExpr)[!gsg$goodSamples], collapse = ", ")));
+# Remove the offending genes and samples from the data:
+#datExpr = datExpr[gsg$goodSamples, gsg$goodGenes]
+#}
+#ncol(datExpr) #number genes after
+```
+
+Look for outliers by examining tree of samples  
+```{r}
+sampleTree = hclust(dist(datExpr), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/TagSeq/outliers.pdf")
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+```
+There don't look to be any outliers, so we will move on with business as usual.  
+
+## Network construction and consensus module detection  
+
+### Choosing a soft-thresholding power: Analysis of network topology β  
+
+The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.  
+```{r, message=FALSE, warning=FALSE}
+# # Choose a set of soft-thresholding powers
+powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+# 
+# # Call the network topology analysis function
+sft <-pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+```
+
+Plot the results.  
+```{r}
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# # # Scale-free topology fit index as a function of the soft-thresholding power
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+     main = paste("Scale independence"));
+ text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+     labels=powers,cex=cex1,col="red");
+# # # this line corresponds to using an R^2 cut-off
+ abline(h=0.9,col="red")
+# # # Mean connectivity as a function of the soft-thresholding power
+ plot(sft$fitIndices[,1], sft$fitIndices[,5],
+     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+     main = paste("Mean connectivity"))
+ text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+```
+I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the loweest power before the R^2=0.9 threshold that maximizes with model fit.  
+
+### Co-expression adjacency and topological overlap matrix similarity  
+
+Adjacency and TOMsimilarity will be executed in supercomputer, Bluewaves, as our dataset is too large for most standard laptops to handle.
+
+Save Rdata necessary for analysis
+```{r}
+save(datExpr, file = "Mcap2020/Output/TagSeq/datExpr.RData")
+```
+
+Co-expression similarity and adjacency, using the soft thresholding power 5 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**: https://peterlangfelder.com/2018/11/25/__trashed/
+```{r, }
+# #Set up workspace
+#getwd() #Display the current working directory
+# #If necessary, change the path below to the directory where the data files are stored. "." means current directory. On Windows use a forward slash / instead of the usual \.
+#workingDir = ".";
+# setwd(WGCNA_dev);
+# library(WGCNA) #Load the WGCNA package
+options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
+enableWGCNAThreads() #Allow multi-threading within WGCNA. 
+# 
+# #Load the data saved in the first part
+adjTOM <- load(file="Mcap2020/Output/TagSeq/datExpr.RData")
+adjTOM
+# 
+# #Run analysis
+softPower=5 #Set softPower to 5
+adjacency=adjacency(datExpr, power=softPower,type="signed") #Calculate adjacency
+
+TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topological overlap matrix
+#this step can take awhile 
+
+dissTOM= 1-TOM #Calculate dissimilarity in TOM
+
+save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
+
+save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
+```
+
+Load in dissTOM file obtained from previous R chunk.    
+```{r}
+dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
+dissTOM_in
+```
+
+### Clustering using TOM
+
+Form distance matrix
+```{r}
+geneTree= flashClust(as.dist(dissTOM), method="average")
+```
+
+We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.
+```{r}
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMClustering.pdf", width=20, height=20)
+plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
+dev.off()
+```
+
+### Module identification using dynamicTreeCut  
+
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. I chose 30 as it is the default value chosen by most studies using WGCNA. 
+
+```{r}
+minModuleSize = 30
+dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+deepSplit = 2, pamRespectsDendro = FALSE,
+minClusterSize = minModuleSize)
+table(dynamicMods) #list modules and respective sizes
+save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData") #Save to load into RStudio
+```
+Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest.
+
+Load modules calculated from the adjacency matrix.  
+```{r}
+dyMod_geneTree <- load(file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData")
+dyMod_geneTree
+```
+
+Plot the module assignment under the gene dendrogram
+```{r}
+#dynamicColors = labels2colors(dynamicMods) # Convert numeric labels into colors
+dynamicColors=dynamicMods
+table(dynamicColors)
+
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMColorClustering.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = "Gene dendrogram and module colors")
+dev.off()
+```
+
+### Merge modules with similar expression profiles  
+
+Plot module similarity based on eigengene value 
+```{r}
+#Calculate eigengenes
+MEList = moduleEigengenes(datExpr, colors = dynamicColors, softPower = 5)
+MEs = MEList$eigengenes
+
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+
+#Cluster again and plot the results
+METree = flashClust(as.dist(MEDiss), method = "average")
+
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering1.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+dev.off()
+```
+
+**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
+```{r}
+MEDissThres= 0.15 #merge modules that are 85% similar
+
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering2.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+abline(h=MEDissThres, col="red")
+dev.off()
+
+merge= mergeCloseModules(datExpr, dynamicColors, cutHeight= MEDissThres, verbose =3)
+
+mergedColors= merge$colors
+mergedMEs= merge$newMEs
+
+pdf(file="Mcap2020/Figures/TagSeq/mergedClusters.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
+dev.off()
+```
+
+There are 9 modules before merging with 85% similarity.  
+
+Save new colors
+```{r}
+moduleLabels=mergedColors
+moduleColors = mergedColors # Rename to moduleColors
+#colorOrder = c("grey", standardColors(50)); # Construct numerical labels corresponding to the colors
+#moduleLabels = match(moduleColors, colorOrder)-1;
+MEs = mergedMEs;
+ncol(MEs) #How many modules do we have now?
+```
+
+We have 8 modules after merging with 85% similarity.   
+
+Plot new tree with 8 modules.  
+```{r}
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+#Cluster again and plot the results
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering3.pdf")
+METree = flashClust(as.dist(MEDiss), method = "average")
+MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+dev.off()
+```
+
+##  Relating modules to developmental stage
+
+### Quantifying module–trait associations
+
+Prepare trait data. Data has to be numeric, so I will substitute time_points and type for numeric values. The "trait" we are considering here is ontogeny.  
+
+Make a dataframe that has a column for each lifestage name and a row for samples. Populate a 1 for samples that match each lifestage and a 0 for samples not matching respective lifestages. 
+
+This process changes lifestages from a categorical variable into a binary variable. This will allow for correlations between mean eigengenes and lifestage.  
+ 
+```{r}
+metadata$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(metadata, names_from = lifestage, values_from = num, id_cols = sample_id))
+allTraits[is.na(allTraits)] <- c("0")
+rownames(allTraits) <- allTraits$sample_id
+datTraits <- allTraits[,c(-1)]
+datTraits
+```
+
+Define numbers of genes and samples and print.  
+```{r}
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
+
+nGenes
+nSamples
+```
+
+We have 12,237 genes and 38 samples.  
+
+Generate labels for module eigengenes as numbers.  
+```{r}
+MEs0 = moduleEigengenes(datExpr, moduleLabels,softPower=5)$eigengenes
+MEs = orderMEs(MEs0)
+names(MEs)
+```
+
+Correlations of traits with eigengenes
+```{r}
+moduleTraitCor = cor(MEs, datTraits, use = "p");
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
+Colors=sub("ME","", names(MEs))
+
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average")
+
+pdf(file="Mcap2020/Figures/TagSeq/ModuleTraitClusterTree.pdf")
+plot(moduleTraitTree)
+dev.off()
+```
+
+Correlations of genes with eigengenes. Calculate correlations between ME's and lifestages. 
+```{r}
+
+moduleGeneCor=cor(MEs,datExpr)
+moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
+```
+
+Calculate kME values (module membership). 
+
+```{r}
+datKME = signedKME(datExpr, MEs, outputColumnName = "kME")
+head(datKME)
+```
+
+Save module colors and labels for use in subsequent analyses.  
+
+```{r}
+save(MEs, moduleLabels, moduleColors, geneTree, file = "Mcap2020/Output/TagSeq/NetworkConstruction-stepByStep.RData") 
+
+```
+
+### Plot module-trait associations
+
+Represent module trait correlations as a heatmap 
+```{r}
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+head(textMatrix)
+
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+
+pdf(file="Mcap2020/Figures/TagSeq/Module-trait-relationships.pdf")
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+dev.off()
+```
+
+Generate a complex heatmap of module-trait relationships.  
+
+```{r}
+#bold sig p-values
+#dendrogram with WGCNA MEtree cut-off
+#colored y-axis
+
+#Create list of pvalues for eigengene correlation with specific life stages
+heatmappval <- signif(moduleTraitPvalue, 1)
+
+#Make list of heatmap row colors
+htmap.colors <- names(MEs)
+htmap.colors <- gsub("ME", "", htmap.colors)
+
+lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+
+library(dendsort)
+row_dend = dendsort(hclust(dist(moduleTraitCor)))
+col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
+
+pdf(file = "Mcap2020/Figures/TagSeq/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
+ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Lifestage Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(5, "in"), 
+        height = unit(4.5, "in"), 
+        column_dend_reorder = TRUE, 
+        #cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"),
+        cluster_columns = col_dend,
+        row_dend_reorder = TRUE,
+        column_split = 6, 
+        column_dend_height = unit(.5, "in"),
+        #cluster_rows = METree, 
+        cluster_rows = row_dend, 
+        row_gap = unit(2.5, "mm"), 
+        border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] < 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+draw(ht)
+dev.off()
+
+```
+
+# **Plot mean eigengene over developmental stages**  
+
+View module eigengene data and make dataframe for Strader plots.  
+```{r}
+head(MEs)
+names(MEs)
+Strader_MEs <- MEs
+Strader_MEs$lifestage <- metadata$lifestage
+Strader_MEs$sample_id <- rownames(Strader_MEs)
+head(Strader_MEs)
+
+Strader_MEs<-Strader_MEs%>%
+  droplevels() #drop unused level
+
+dim(Strader_MEs)
+head(Strader_MEs)
+
+time_point_order = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2") #Set time_point order
+```
+
+Plot mean module eigengene for each module.  
+
+```{r}
+#convert wide format to long format for plotting  
+plot_MEs<-Strader_MEs%>%
+  gather(., key="Module", value="Mean", 1:8)
+
+dev.off() 
+
+expression_plots<-plot_MEs%>%
+  group_by(Module, lifestage) %>%
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  facet_grid(~Module)+
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ylab("Mean Module Eigenegene") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 12), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, 
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)); expression_plots
+
+ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/expression_eigengene.pdf", height=6, width=20)
+```
+
+# **Calculating gene significance and module membership**  
+
+We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the gene and the lifestage timepoint. For each module, we also define a quantitative measure of module membership (MM) as the correlation of the module eigengene and the gene expression profile.  
+
+Define lifestage as a numeric value (ranging from 1 (egg, first timepoint)-10 (recruit, last time point)).  
+
+```{r}
+expressionProfile_data <- Strader_MEs
+
+expressionProfile_data<-expressionProfile_data%>%
+  droplevels() #drop unused level
+
+cols.num <- c(1:8)
+
+expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
+sapply(expressionProfile_data, class)
+
+dim(expressionProfile_data)
+head(expressionProfile_data)
+
+lifestage <- as.data.frame(expressionProfile_data$lifestage)
+names(lifestage) = "lifestage_num"
+
+lifestage$lifestage_num <- sub("_[^_]+$", "", lifestage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+
+lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
+dim(lifestage)
+```
+
+Generate data frame for module membership for each gene (absolute value of correlation between module eigengene and gene).  
+- geneModuleMembership = correlation of the module eigengene and the gene 
+- MMPvalue = p-value of correlation between module eigengene and the gene 
+```{r}
+names(datExpr) = gsub(pattern = "*.t1", replacement = "", x = names(datExpr))
+#remove ".ti" from names in datExpr file and assign gene id as probe names
+
+modNames = substring(names(MEs), 3) #pull out module names
+
+geneModuleMembership = as.data.frame(cor(datExpr, MEs, use = "p"));
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples));
+
+names(geneModuleMembership) = paste("MM", modNames, sep="");
+names(MMPvalue) = paste("p.MM", modNames, sep="");
+```
+
+
+Generate dataframe with Gene Significance GS as the absolute value of the correlation between the gene and the lifestage timepoint 
+- geneTraitSignificance = correlation of the gene and lifestage time point 
+- GSPvalue = p-value of correlation between gene and lifestage time point  
+```{r}
+
+geneTraitSignificance = as.data.frame(cor(datExpr, lifestage, use = "p"));
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
+
+names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
+names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
+```
+
+View correlation between module membership score and gene significance for each module (1,2,3,5,6,7,8).  
+```{r}
+module = "1"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "2"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "3"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "5"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "6"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "7"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "8"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+```
+
+Generate a list of genes associated with each module. Change the module number in this code to look at respective module.   
+
+```{r}
+names(datExpr)[moduleColors=="8"]
+```
+
+# **Summary output of network analysis**  
+
+## Make a data frame that connects genes, traits, and modules  
+
+Import annotation file from Erin Chille repository.  
+```{r}
+Mcap.annot <- read_tsv( "Mcap2020/Data/TagSeq/200824_Mcap_Blast_GO_KO.tsv", col_names = TRUE) #biological annotation information
+head(Mcap.annot)
+tail(Mcap.annot)
+dim(Mcap.annot)
+```
+
+Match up genes in datExpr file to annotation file
+```{r}
+names(Mcap.annot)
+
+probes = names(datExpr)
+
+probes2annot = match(probes, Mcap.annot$gene_id) #match genes in datExpr to genes in annotation file
+
+# The following is the number of probes without annotation... Should return 0.
+sum(is.na(probes2annot))
+
+row_nas<-which(is.na(probes2annot))
+
+#view the genes that do not have a match in the annotation file
+missing<-as.data.frame(probes[row_nas])
+print(missing)
+```
+
+
+CHECK THIS TO SEE IF FORMATTING IS DIFFERENT????? 
+
+
+There are 517 gene_id in the datExpr that are not matched in the annotation file. Manually searching for these genes shows that they are not in the annotation file, which confirms that we do not have a gene_id formatting error. Unknown why some genes are not matched in the annotation file, look into this.    
+
+Create the starting data frame
+```{r}
+geneInfo0 = data.frame(gene_id = probes,
+Accession = Mcap.annot$description[probes2annot],
+Bitscore = Mcap.annot$bitscore[probes2annot],
+eValue = Mcap.annot$eValue[probes2annot],
+Description = Mcap.annot$protein_names[probes2annot],
+KEGG = Mcap.annot$ko[probes2annot],
+Annotation.GO.ID = Mcap.annot$GO_IDs[probes2annot],
+Annotation.GO.Term = Mcap.annot$GO_terms[probes2annot],
+moduleColor = moduleColors,
+geneTraitSignificance,
+GSPvalue)
+```
+
+
+Order modules by their significance for time_point
+```{r}
+modOrder = order(-abs(cor(MEs, lifestage, use = "p")))
+```
+
+Add module membership information in the chosen order
+```{r}
+for (mod in 1:ncol(geneModuleMembership))
+{
+oldNames = names(geneInfo0)
+geneInfo0 = data.frame(geneInfo0, geneModuleMembership[, modOrder[mod]],
+MMPvalue[, modOrder[mod]]);
+names(geneInfo0) = c(oldNames, paste("MM.", modNames[modOrder[mod]], sep=""),
+paste("p.MM.", modNames[modOrder[mod]], sep=""))
+}
+```
+
+Order the genes in the geneInfo variable first by module color, then by geneTraitSignificance
+```{r}
+geneOrder = order(geneInfo0$moduleColor, -abs(geneInfo0$GS.lifestage_num));
+geneInfo = geneInfo0[geneOrder, ]
+head(geneInfo)
+```
+
+Save geneInfo as a CSV
+```{r}
+head(geneInfo)
+geneInfo$Annotation.GO.ID <- gsub(";NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
+geneInfo$Annotation.GO.ID <- gsub("NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
+
+write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for reference/supplement
+
+```
+
+
+# **Other approaches for network visualization**  
+
+Use TOM to visualize network. This can take a very long time to run, remove # if plot is desired.  
+```{r}
+
+# Transform dissTOM with a power to make moderately strong connections more visible in the heatmap
+#plotTOM = dissTOM^7;
+# Set diagonal to NA for a nicer plot
+#diag(plotTOM) = NA;
+# Call the plot function
+#dev.off()
+#sizeGrWindow(9,9)
+#TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
+
+```
+
+
+Plot with a reduced set of genes.  
+
+```{r}
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
+
+nSelect = 400
+# For reproducibility, we set the random seed
+set.seed(10);
+select = sample(nGenes, size = nSelect);
+selectTOM = dissTOM[select, select];
+# There's no simple way of restricting a clustering tree to a subset of genes, so we must re-cluster.
+selectTree = hclust(as.dist(selectTOM), method = "average")
+selectColors = moduleColors[select];
+# Open a graphical window
+sizeGrWindow(9,9)
+# Taking the dissimilarity to a power, say 10, makes the plot more informative by effectively changing 
+# the color palette; setting the diagonal to NA also improves the clarity of the plot
+plotDiss = selectTOM^7;
+diag(plotDiss) = NA;
+TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
+```
+
+Other plots from tutorial that are not used, but here for reference.  
+```{r}
+# Recalculate module eigengenes
+MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
+# Isolate weight from the clinical traits
+lifestage = as.data.frame(lifestage$lifestage_num);
+names(lifestage) = "lifestage"
+# Add the weight to existing module eigengenes
+MET = orderMEs(cbind(MEs, lifestage))
+# Plot the relationships among the eigengenes and the trait
+sizeGrWindow(5,7.5);
+par(cex = 0.9)
+plotEigengeneNetworks(MET, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle
+= 90)
+```
+
+
+```{r}
+# Plot the dendrogram
+sizeGrWindow(6,6);
+par(cex = 1.0)
+plotEigengeneNetworks(MET, "Eigengene dendrogram", marDendro = c(0,4,2,0),
+                      plotHeatmaps = FALSE)
+# Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
+par(cex = 1.0)
+plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2),
+                      plotDendrograms = FALSE, xLabelsAngle = 90)
+```
+
+
+# **DONT USE: GO term generation using Erin's method**  
+
+Obtain module color of all expressed genes (poverA = 0.07,10). Select all significantly-expressed genes (p<0.05)
+
+```{r}
+#Prepare dataframe
+genes.GO <- as.data.frame(t(datExpr))
+genes.GO <- cbind(gene_id = rownames(genes.GO), genes.GO)
+rownames(genes.GO) <- NULL
+
+#subset columns by developmental phase (need to match by sample number)
+
+#Egg
+genesEgg.GO <- genes.GO[,c("gene_id", "AH1", "AH12", "AH19", "AH26")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesEgg.GO$gene_id <- as.factor(genesEgg.GO$gene_id) #Make factor for merge
+genesEgg.GO <- merge(geneColor, genesEgg.GO) #append module information
+head(genesEgg.GO)
+dim(genesEgg.GO)
+
+EggColors <- c("1", "8", "2", "3") #subset colors significantly related to the egg lifestage based on module map
+genesEgg.GO <- filter(genesEgg.GO, moduleColor%in%EggColors)
+head(genesEgg.GO)
+dim(genesEgg.GO)
+
+#Embryo
+genesEmb.GO <- genes.GO[,c("gene_id", "AH28", "AH29", "AH30", "AH31")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesEmb.GO$gene_id <- as.factor(genesEmb.GO$gene_id) #Make factor for merge
+genesEmb.GO <- merge(geneColor, genesEmb.GO) #append module information
+head(genesEmb.GO)
+
+EmbColors <- c("1", "8", "2", "3")
+genesEmb.GO <- filter(genesEmb.GO, moduleColor%in%EmbColors)
+head(genesEmb.GO)
+dim(genesEmb.GO)
+
+#Larvae1
+genesL1.GO <- genes.GO[,c("gene_id", "AH2", "AH3", "AH4", "AH32")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL1.GO$gene_id <- as.factor(genesL1.GO$gene_id) #Make factor for merge
+genesL1.GO <- merge(geneColor, genesL1.GO) #append module information
+head(genesL1.GO)
+
+L1Colors <- c("1", "7", "8", "2", "3")
+genesL1.GO <- filter(genesL1.GO, moduleColor%in%L1Colors)
+head(genesL1.GO)
+dim(genesL1.GO)
+
+#Larvae2
+genesL2.GO <- genes.GO[,c("gene_id", "AH5", "AH6", "AH7", "AH8")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL2.GO$gene_id <- as.factor(genesL2.GO$gene_id) #Make factor for merge
+genesL2.GO <- merge(geneColor, genesL2.GO) #append module information
+head(genesL2.GO)
+
+L2Colors <- c("8")
+genesL2.GO <- filter(genesL2.GO, moduleColor%in%L2Colors)
+head(genesL2.GO)
+dim(genesL2.GO)
+
+#Larvae3
+genesL3.GO <- genes.GO[,c("gene_id", "AH9", "AH10", "AH11", "AH13")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL3.GO$gene_id <- as.factor(genesL3.GO$gene_id) #Make factor for merge
+genesL3.GO <- merge(geneColor, genesL3.GO) #append module information
+head(genesL3.GO)
+
+L3Colors <- c("5")
+genesL3.GO <- filter(genesL3.GO, moduleColor%in%L3Colors)
+head(genesL3.GO)
+dim(genesL3.GO)
+
+#Larvae4
+genesL4.GO <- genes.GO[,c("gene_id", "AH14", "AH15", "AH16", "AH17")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL4.GO$gene_id <- as.factor(genesL4.GO$gene_id) #Make factor for merge
+genesL4.GO <- merge(geneColor, genesL4.GO) #append module information
+head(genesL4.GO)
+
+L4Colors <- c("5", "2")
+genesL4.GO <- filter(genesL4.GO, moduleColor%in%L4Colors)
+head(genesL4.GO)
+dim(genesL4.GO)
+
+#Larvae6
+genesL6.GO <- genes.GO[,c("gene_id", "AH18", "AH20", "AH21", "AH22")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesL6.GO$gene_id <- as.factor(genesL6.GO$gene_id) #Make factor for merge
+genesL6.GO <- merge(geneColor, genesL6.GO) #append module information
+head(genesL6.GO)
+
+L6Colors <- c("3", "9")
+genesL6.GO <- filter(genesL6.GO, moduleColor%in%L6Colors)
+head(genesL6.GO)
+dim(genesL6.GO) 
+
+#Metamorphosed
+genesM.GO <- genes.GO[,c("gene_id", "AH24", "AH25", "AH27")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesM.GO$gene_id <- as.factor(genesM.GO$gene_id) #Make factor for merge
+genesM.GO <- merge(geneColor, genesM.GO) #append module information
+head(genesM.GO)
+
+MColors <- c("3", "9")
+genesM.GO <- filter(genesM.GO, moduleColor%in%MColors)
+head(genesM.GO)
+dim(genesM.GO) 
+
+#Calcifying1
+genesC1.GO <- genes.GO[,c("gene_id", "AH33", "AH36", "AH37", "AH39")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesC1.GO$gene_id <- as.factor(genesC1.GO$gene_id) #Make factor for merge
+genesC1.GO <- merge(geneColor, genesC1.GO) #append module information
+head(genesC1.GO)
+
+C1Colors <- c("6", "3")
+genesC1.GO <- filter(genesC1.GO, moduleColor%in%C1Colors)
+head(genesC1.GO)
+dim(genesC1.GO) 
+
+#Calcifying2
+genesC2.GO <- genes.GO[,c("gene_id", "AH34", "AH35", "AH38")]
+geneColor <- geneInfo %>% select(gene_id, moduleColor) #Make a dataframe containing just gene_id and moduleColor
+geneColor$gene_id <- as.factor(geneColor$gene_id) #Make factor for merge
+genesC2.GO$gene_id <- as.factor(genesC2.GO$gene_id) #Make factor for merge
+genesC2.GO <- merge(geneColor, genesC2.GO) #append module information
+head(genesC2.GO)
+
+C2Colors <- c("6")
+genesC2.GO <- filter(genesC2.GO, moduleColor%in%C2Colors)
+head(genesC2.GO)
+dim(genesC2.GO) 
+
+```
+
+Find the length of each gene using the Mcapitata_merged.gtf as a map
+```{r}
+map <- read.csv(file="Mcap2020/Output/TagSeq/Mcapitata_merged.gtf", header=FALSE, sep="\t", skip=2) #load gtf file from stringtie and DE on cluster
+map <- subset(map, V3=="transcript") #subset transcripts
+map <- map[,c(1,4,5,9)]
+map <- separate(map, V9, into = c("gene_id", "transcript_id", "gene_name"), sep=";")
+map$gene_id <- gsub("gene_id ","",map$gene_id) #remove extra characters
+map$gene_id <- gsub(" ","",map$gene_id) #remove extra characters
+map$transcript_id <- gsub("transcript_id ","",map$transcript_id) #remove extra characters
+map$transcript_id <- gsub(" ","",map$transcript_id) #remove extra characters
+map$transcript_id = gsub(pattern = "*.t1", replacement = "", map$transcript_id) #remove extra characters
+map$gene_name <- gsub("ref_gene_id ","",map$gene_name) #remove extra characters
+# map$gene_name <- gsub("gene_name ","",map$gene_name) #remove extra characters
+map$gene_name <- gsub(" ","",map$gene_name) #remove extra characters
+# map$gene_name <- gsub("xlocXLOC_[0-9][0-9][0-9][0-9][0-9][0-9]", "unknown", map$gene_name)
+colnames(map) <- c("scaffold", "start", "stop", "gene_name", "transcript_id", "gene_id")
+dim(map)
+head(map)
+
+map <- filter(map, gene_id %in% genes.GO$gene_id) #Filter for those genes in our set of interest
+dim(map) #Should be 32772
+
+#Calculate gene length
+map <- map %>% mutate(gene_length=(map$stop-map$start))
+map <- select(map, gene_id, gene_length)
+```
+
+Build a data frame that links the gene IDs, modules, and counts of genes and the gene lengths.
+```{r}
+GOref <- merge(genes.GO, map, by.x="gene_id")
+```
+
+GOseq requires a vector of all genes and all differentially expressed genes. 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#Egg
+Egg_gene.vector <- as.vector(genesEgg.GO$gene_id)
+Egg_gene.vector=as.integer(GOref$gene_id%in%Egg_gene.vector)
+names(Egg_gene.vector)=GOref$gene_id
+EggID.vector <- GOref$gene_id #Make ID vector
+EggLength.vector <- GOref$gene_length #Make length vector
+
+#Embryo
+Emb_gene.vector <- as.vector(genesEmb.GO$gene_id)
+Emb_gene.vector=as.integer(GOref$gene_id%in%Emb_gene.vector)
+names(Emb_gene.vector)=GOref$gene_id
+EmbID.vector <- GOref$gene_id #Make ID vector
+EmbLength.vector <- GOref$gene_length #Make length vector
+
+#Larvae1
+L1_gene.vector <- as.vector(genesL1.GO$gene_id)
+L1_gene.vector=as.integer(GOref$gene_id%in%L1_gene.vector)
+names(L1_gene.vector)=GOref$gene_id
+L1ID.vector <- GOref$gene_id #Make ID vector
+L1Length.vector <- GOref$gene_length #Make length vector
+
+#Larvae2
+L2_gene.vector <- as.vector(genesL2.GO$gene_id)
+L2_gene.vector=as.integer(GOref$gene_id%in%L2_gene.vector)
+names(L2_gene.vector)=GOref$gene_id
+L2ID.vector <- GOref$gene_id #Make ID vector
+L2Length.vector <- GOref$gene_length #Make length vector
+
+#Larvae3
+L3_gene.vector <- as.vector(genesL3.GO$gene_id)
+L3_gene.vector=as.integer(GOref$gene_id%in%L3_gene.vector)
+names(L3_gene.vector)=GOref$gene_id
+L3ID.vector <- GOref$gene_id #Make ID vector
+L3Length.vector <- GOref$gene_length #Make length vector
+
+#Larvae4
+L4_gene.vector <- as.vector(genesL4.GO$gene_id)
+L4_gene.vector=as.integer(GOref$gene_id%in%L4_gene.vector)
+names(L4_gene.vector)=GOref$gene_id
+L4ID.vector <- GOref$gene_id #Make ID vector
+L4Length.vector <- GOref$gene_length #Make length vector
+
+#Larvae6
+L6_gene.vector <- as.vector(genesL6.GO$gene_id)
+L6_gene.vector=as.integer(GOref$gene_id%in%L6_gene.vector)
+names(L6_gene.vector)=GOref$gene_id
+L6ID.vector <- GOref$gene_id #Make ID vector
+L6Length.vector <- GOref$gene_length #Make length vector
+
+#Metamorphosed
+M_gene.vector <- as.vector(genesM.GO$gene_id)
+M_gene.vector=as.integer(GOref$gene_id%in%M_gene.vector)
+names(M_gene.vector)=GOref$gene_id
+MID.vector <- GOref$gene_id #Make ID vector
+MLength.vector <- GOref$gene_length #Make length vector
+
+#Calcifying 1
+C1_gene.vector <- as.vector(genesC1.GO$gene_id)
+C1_gene.vector=as.integer(GOref$gene_id%in%C1_gene.vector)
+names(C1_gene.vector)=GOref$gene_id
+C1ID.vector <- GOref$gene_id #Make ID vector
+C1Length.vector <- GOref$gene_length #Make length vector
+
+#Calcifying 2
+C2_gene.vector <- as.vector(genesC2.GO$gene_id)
+C2_gene.vector=as.integer(GOref$gene_id%in%C2_gene.vector)
+names(C2_gene.vector)=GOref$gene_id
+C2ID.vector <- GOref$gene_id #Make ID vector
+C2Length.vector <- GOref$gene_length #Make length vector
+
+#Calculate Probability Weighting Function
+pwf.Egg<-nullp(Egg_gene.vector, EggID.vector, bias.data=EggLength.vector) #weight vector by length of gene
+pwf.Emb<-nullp(Emb_gene.vector, EmbID.vector, bias.data=EmbLength.vector) #weight vector by length of gene
+pwf.L1<-nullp(L1_gene.vector, L1ID.vector, bias.data=L1Length.vector) #weight vector by length of gene
+pwf.L2<-nullp(L2_gene.vector, L2ID.vector, bias.data=L2Length.vector) #weight vector by length of gene
+pwf.L3<-nullp(L3_gene.vector, L3ID.vector, bias.data=L3Length.vector) #weight vector by length of gene
+pwf.L4<-nullp(L4_gene.vector, L4ID.vector, bias.data=L4Length.vector) #weight vector by length of gene
+pwf.L6<-nullp(L6_gene.vector, L6ID.vector, bias.data=L6Length.vector) #weight vector by length of gene
+pwf.M<-nullp(M_gene.vector, MID.vector, bias.data=MLength.vector) #weight vector by length of gene
+pwf.C1<-nullp(C1_gene.vector, C1ID.vector, bias.data=C1Length.vector) #weight vector by length of gene
+pwf.C2<-nullp(C2_gene.vector, C2ID.vector, bias.data=C2Length.vector) #weight vector by length of gene
+```
+
+Prepare GO term dataframe  
+```{r}
+GO.annot <- select(geneInfo, gene_id, Annotation.GO.ID)
+splitted <- strsplit(as.character(GO.annot$Annotation.GO.ID), ";") #split into multiple GO ids
+GO.terms <- data.frame(v1 = rep.int(GO.annot$gene_id, sapply(splitted, length)), v2 = unlist(splitted)) #list all genes with each of their GO terms in a single row
+colnames(GO.terms) <- c("gene_id", "GO.ID")
+head(GO.terms)
+tail(GO.terms)
+
+GO.terms$GO.ID<- as.character(GO.terms$GO.ID)
+GO.terms$GO.ID <- replace_na(GO.terms$GO.ID, "unknown")
+GO.terms$GO.ID <- as.factor(GO.terms$GO.ID)
+GO.terms$gene_id <- as.factor(GO.terms$gene_id)
+GO.terms$GO.ID <- gsub(" ", "", GO.terms$GO.ID)
+GO.terms <- unique(GO.terms)
+
+dim(GO.terms)
+head(GO.terms, 10)
+tail(GO.terms, 10)
+```
+
+Find enriched GO terms, "selection-unbiased testing for category enrichment amongst significantly expressed genes for RNA-seq data"
+```{r, warning=FALSE, message=FALSE}
+GOwall.Egg <- goseq(pwf.Egg, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+dim(GOwall.Egg)
+head(GOwall.Egg)
+
+GOwall.Emb <- goseq(pwf.Emb, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L1 <- goseq(pwf.L1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L2 <- goseq(pwf.L2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L3 <- goseq(pwf.L3, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L4 <- goseq(pwf.L4, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.L6 <- goseq(pwf.L6, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.M <- goseq(pwf.M, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.C1 <- goseq(pwf.C1, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+
+GOwall.C2 <- goseq(pwf.C2, GOref$gene_id, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+```
+
+Find only enriched GO terms that are statistically significant at cutoff
+```{r}
+Egg.GO.05<-GOwall.Egg$category[GOwall.Egg$over_represented_pvalue<.05]
+Egg.GO.05<-data.frame(Egg.GO.05)
+colnames(Egg.GO.05) <- c("category")
+Egg.GO.05 <- merge(Egg.GO.05, GOwall.Egg, by="category")
+Egg.GO.05 <- Egg.GO.05[order(Egg.GO.05$ontology, Egg.GO.05$over_represented_pvalue, -Egg.GO.05$numDEInCat),]
+Egg.GO.05$term <- as.factor(Egg.GO.05$term)
+dim(Egg.GO.05) #Number of sig GO terms
+nrow(filter(Egg.GO.05, ontology=="BP")) #number sig BP terms
+
+Emb.GO.05<-GOwall.Emb$category[GOwall.Emb$over_represented_pvalue<.05]
+Emb.GO.05<-data.frame(Emb.GO.05)
+colnames(Emb.GO.05) <- c("category")
+Emb.GO.05 <- merge(Emb.GO.05, GOwall.Emb, by="category")
+Emb.GO.05 <- Emb.GO.05[order(Emb.GO.05$ontology, Emb.GO.05$over_represented_pvalue, -Emb.GO.05$numDEInCat),]
+Emb.GO.05$term <- as.factor(Emb.GO.05$term)
+dim(Emb.GO.05) #Number of sig GO terms
+nrow(filter(Emb.GO.05, ontology=="BP")) #number sig BP terms
+
+L1.GO.05<-GOwall.L1$category[GOwall.L1$over_represented_pvalue<.05]
+L1.GO.05<-data.frame(L1.GO.05)
+colnames(L1.GO.05) <- c("category")
+L1.GO.05 <- merge(L1.GO.05, GOwall.L1, by="category")
+L1.GO.05 <- L1.GO.05[order(L1.GO.05$ontology, L1.GO.05$over_represented_pvalue, -L1.GO.05$numDEInCat),]
+L1.GO.05$term <- as.factor(L1.GO.05$term)
+dim(L1.GO.05) #Number of sig GO terms
+nrow(filter(L1.GO.05, ontology=="BP")) #number sig BP terms
+
+L2.GO.05<-GOwall.L2$category[GOwall.L2$over_represented_pvalue<.05]
+L2.GO.05<-data.frame(L2.GO.05)
+colnames(L2.GO.05) <- c("category")
+L2.GO.05 <- merge(L2.GO.05, GOwall.L2, by="category")
+L2.GO.05 <- L2.GO.05[order(L2.GO.05$ontology, L2.GO.05$over_represented_pvalue, -L2.GO.05$numDEInCat),]
+L2.GO.05$term <- as.factor(L2.GO.05$term)
+dim(L2.GO.05) #Number of sig GO terms
+nrow(filter(L2.GO.05, ontology=="BP")) #number sig BP terms
+
+L3.GO.05<-GOwall.L3$category[GOwall.L3$over_represented_pvalue<.05]
+L3.GO.05<-data.frame(L3.GO.05)
+colnames(L3.GO.05) <- c("category")
+L3.GO.05 <- merge(L3.GO.05, GOwall.L3, by="category")
+L3.GO.05 <- L3.GO.05[order(L3.GO.05$ontology, L3.GO.05$over_represented_pvalue, -L3.GO.05$numDEInCat),]
+L3.GO.05$term <- as.factor(L3.GO.05$term)
+dim(L3.GO.05) #Number of sig GO terms
+nrow(filter(L3.GO.05, ontology=="BP")) #number sig BP terms
+
+L4.GO.05<-GOwall.L4$category[GOwall.L4$over_represented_pvalue<.05]
+L4.GO.05<-data.frame(L4.GO.05)
+colnames(L4.GO.05) <- c("category")
+L4.GO.05 <- merge(L4.GO.05, GOwall.L4, by="category")
+L4.GO.05 <- L4.GO.05[order(L4.GO.05$ontology, L4.GO.05$over_represented_pvalue, -L4.GO.05$numDEInCat),]
+L4.GO.05$term <- as.factor(L4.GO.05$term)
+dim(L4.GO.05) #Number of sig GO terms
+nrow(filter(L4.GO.05, ontology=="BP")) #number sig BP terms
+
+L6.GO.05<-GOwall.L6$category[GOwall.L6$over_represented_pvalue<.05]
+L6.GO.05<-data.frame(L6.GO.05)
+colnames(L6.GO.05) <- c("category")
+L6.GO.05 <- merge(L6.GO.05, GOwall.L6, by="category")
+L6.GO.05 <- L6.GO.05[order(L6.GO.05$ontology, L6.GO.05$over_represented_pvalue, -L6.GO.05$numDEInCat),]
+L6.GO.05$term <- as.factor(L6.GO.05$term)
+dim(L6.GO.05) #Number of sig GO terms
+nrow(filter(L6.GO.05, ontology=="BP")) #number sig BP terms
+
+M.GO.05<-GOwall.M$category[GOwall.M$over_represented_pvalue<.05]
+M.GO.05<-data.frame(M.GO.05)
+colnames(M.GO.05) <- c("category")
+M.GO.05 <- merge(M.GO.05, GOwall.M, by="category")
+M.GO.05 <- M.GO.05[order(M.GO.05$ontology, M.GO.05$over_represented_pvalue, -M.GO.05$numDEInCat),]
+M.GO.05$term <- as.factor(M.GO.05$term)
+dim(M.GO.05) #Number of sig GO terms
+nrow(filter(M.GO.05, ontology=="BP")) #number sig BP terms
+
+C1.GO.05<-GOwall.C1$category[GOwall.C1$over_represented_pvalue<.05]
+C1.GO.05<-data.frame(C1.GO.05)
+colnames(C1.GO.05) <- c("category")
+C1.GO.05 <- merge(C1.GO.05, GOwall.C1, by="category")
+C1.GO.05 <- C1.GO.05[order(C1.GO.05$ontology, C1.GO.05$over_represented_pvalue, -C1.GO.05$numDEInCat),]
+C1.GO.05$term <- as.factor(C1.GO.05$term)
+dim(C1.GO.05) #Number of sig GO terms
+nrow(filter(C1.GO.05, ontology=="BP")) #number sig BP terms
+
+C2.GO.05<-GOwall.C2$category[GOwall.C2$over_represented_pvalue<.05]
+C2.GO.05<-data.frame(C2.GO.05)
+colnames(C2.GO.05) <- c("category")
+C2.GO.05 <- merge(C2.GO.05, GOwall.C2, by="category")
+C2.GO.05 <- C2.GO.05[order(C2.GO.05$ontology, C2.GO.05$over_represented_pvalue, -C2.GO.05$numDEInCat),]
+C2.GO.05$term <- as.factor(C2.GO.05$term)
+dim(C2.GO.05) #Number of sig GO terms
+nrow(filter(C2.GO.05, ontology=="BP")) #number sig BP terms
+
+```
+
+Correct any un-annotated terms/ontologies
+```{r}
+NAs.ontology <- Egg.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- Emb.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L1.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L2.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L3.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L4.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- L6.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <-M.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- C1.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+NAs.ontology <- C2.GO.05 %>% subset(is.na(term))
+print(NAs.ontology)
+```
+*There were no un-annotated functions except genes with unknown functions*
+
+Save significant terms
+```{r, warning=FALSE}
+write.csv(Egg.GO.05, file = "Mcap2020/Output/TagSeq/Egg.GO.csv", row.names = FALSE)
+write.csv(Emb.GO.05, file = "Mcap2020/Output/TagSeq/Emb.GO.csv", row.names = FALSE)
+write.csv(L1.GO.05, file = "Mcap2020/Output/TagSeq/Larvae1.GO.csv", row.names = FALSE)
+write.csv(L2.GO.05, file = "Mcap2020/Output/TagSeq/Larvae2.GO.csv", row.names = FALSE)
+write.csv(L3.GO.05, file = "Mcap2020/Output/TagSeq/Larvae3.GO.csv", row.names = FALSE)
+write.csv(L4.GO.05, file = "Mcap2020/Output/TagSeq/Larvae4.GO.csv", row.names = FALSE)
+write.csv(L6.GO.05, file = "Mcap2020/Output/TagSeq/Larvae6.GO.csv", row.names = FALSE)
+write.csv(M.GO.05, file = "Mcap2020/Output/TagSeq/Metamorphosed.GO.csv", row.names = FALSE)
+write.csv(C1.GO.05, file = "Mcap2020/Output/TagSeq/Calcifying1.GO.csv", row.names = FALSE)
+write.csv(C2.GO.05, file = "Mcap2020/Output/TagSeq/Calcifying2.GO.csv", row.names = FALSE)
+```
+
+Obtain signicant GO terms for each module
+
+Make a list of all module colors
+```{r}
+moduleColor_list <- unique(geneColor$moduleColor)
+moduleColor_list
+```
+ 
+Obtain module color of all expressed genes 
+```{r}
+genes.GO$gene_id <- as.factor(genes.GO$gene_id) #Make factor for merge
+genes.GO <- merge(geneColor, genes.GO) #append module information
+genes.GO$moduleColor <- as.factor(genes.GO$moduleColor) #Make factor for filter
+head(genes.GO)
+dim(genes.GO)
+```
+
+Obtain list of significantly-expressed genes for each module
+```{r}
+one.sig <- filter(genes.GO, moduleColor=="1")
+two.sig <- filter(genes.GO, moduleColor=="2")
+three.sig <- filter(genes.GO, moduleColor=="3")
+five.sig <- filter(genes.GO, moduleColor=="5")
+six.sig <- filter(genes.GO, moduleColor=="6")
+seven.sig <- filter(genes.GO, moduleColor=="7")
+eight.sig <- filter(genes.GO, moduleColor=="8")
+nine.sig <- filter(genes.GO, moduleColor=="9")
+```
+
+GOseq requires a vector of all genes and all differentially expressed genes. 
+```{r, message=FALSE, warning=FALSE}
+one.vector <- as.vector(one.sig$gene_id)
+one.vector=as.integer(GOref$gene_id%in%one.vector)
+names(one.vector)=GOref$gene_id
+
+two.vector <- as.vector(two.sig$gene_id)
+two.vector=as.integer(GOref$gene_id%in%two.vector)
+names(two.vector)=GOref$gene_id
+
+three.vector <- as.vector(three.sig$gene_id)
+three.vector=as.integer(GOref$gene_id%in%three.vector)
+names(three.vector)=GOref$gene_id
+
+five.vector <- as.vector(five.sig$gene_id)
+five.vector=as.integer(GOref$gene_id%in%five.vector)
+names(five.vector)=GOref$gene_id
+
+six.vector <- as.vector(six.sig$gene_id)
+six.vector=as.integer(GOref$gene_id%in%six.vector)
+names(six.vector)=GOref$gene_id
+
+seven.vector <- as.vector(seven.sig$gene_id)
+seven.vector=as.integer(GOref$gene_id%in%seven.vector)
+names(seven.vector)=GOref$gene_id
+
+eight.vector <- as.vector(eight.sig$gene_id)
+eight.vector=as.integer(GOref$gene_id%in%eight.vector)
+names(eight.vector)=GOref$gene_id
+
+nine.vector <- as.vector(nine.sig$gene_id)
+nine.vector=as.integer(GOref$gene_id%in%nine.vector)
+names(nine.vector)=GOref$gene_id
+
+vector.list <- list(one.vector, two.vector, three.vector, five.vector, six.vector, seven.vector, eight.vector, nine.vector)
+length(vector.list)
+```
+
+Calculate Probability Weighting Function using vector with high number of genes
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+pwf <- lapply(vector.list, nullp, EggID.vector, bias.data=EggLength.vector)#weight vector by length of gene
+```
+
+Perform goseq
+```{r, message=FALSE, warning=FALSE}
+GOwall <- lapply(pwf, goseq, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+```
+
+Find only enriched GO terms that are statistically significant at cutoff. Order by p-value and select top 10 most significant terms for each module.
+```{r}
+GO.05<-lapply(GOwall, filter, over_represented_pvalue<.05)
+GO.05 <- lapply(GO.05, function(GO.05){GO.05[order(GO.05$over_represented_pvalue, -GO.05$numDEInCat),]})
+names(GO.05) = moduleColor_list #name the dataframes according to their color
+GO.05.all <- bind_rows(GO.05, .id = "column_label") #merge the dataframes using the name as an identifier
+GO.05.all <- rename(GO.05.all,"column_label"="moduleColor") #rename the identifying column
+#GO.05.all <- merge(moduleCluster, GO.05.all, by = "moduleColor") #Add cluster information
+#GO.05.all <- GO.05.all[order(factor(GO.05.all$moduleColor, levels = moduleCluster$moduleColor)),] #Match order to heatmap
+#GO.05.all <- subset(GO.05.all, select = c(2,1, 3:9)) #make cluster first, then module second
+
+GO.05.top10 <- lapply(GO.05, "[",c(1:10),,drop=FALSE)
+```
+
+Merge list into 1 dataframe to obtain top 10
+```{r}
+names(GO.05.top10) = moduleColor_list #name the dataframes according to their color
+GO.05.top10.all <- bind_rows(GO.05.top10, .id = "column_label") #merge the dataframes using the name as an identifier
+GO.05.top10.all <- rename(GO.05.top10.all, "column_label"="moduleColor") #rename the identifying column
+#GO.05.top10.all <- merge(moduleCluster, GO.05.top10.all, by = "moduleColor") #Add cluster information
+#GO.05.top10.all <- GO.05.top10.all[order(factor(GO.05.top10.all$moduleColor, levels = moduleCluster$moduleColor)),] #Match order to heatmap
+#GO.05.top10.all <- subset(GO.05.top10.all, select = c(2,1, 3:9)) #make cluster first, then module second
+head(GO.05.top10.all)
+tail(GO.05.top10.all)
+str(GO.05.top10.all)
+```
+
+
+Save as CSV
+```{r}
+write.csv(GO.05.top10.all, file = "Mcap2020/Output/TagSeq/WGCNA.GO.05.top10.csv")
+write.csv(GO.05.all, file = "Mcap2020/Output/TagSeq/GO.allMods.csv")
+```
+
+
+
+
+
+# **Output files for GOMWU** 
+
+GOMWU: https://github.com/z0on/GO_MWU  
+
+Make output tables for each module with the following:  
+
+1. "table of GO annotations for your sequences: two-column (gene id - GO terms), tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl to merge them."
+
+```{r}
+#generate a table of GO annotations for all sequences   
+go_mwu_terms<-geneInfo%>%
+  select(gene_id, Annotation.GO.ID, Annotation.GO.Term)%>%
+  write.table(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_terms.tab", row.names=FALSE, quote=FALSE, sep = "\t", col.names=FALSE)
+```
+
+2. "table of measure of interest for your sequences: two columns of comma-separated values: gene id, continuous measure of change such as log(fold-change). To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module."
+
+```{r}
+go_mwu_me1<-geneInfo%>%
+  select(gene_id, MM.1, p.MM.1)%>%
+  mutate(MM.1 = if_else(p.MM.1>0.05, 0, MM.1))%>% #if a gene is associated with a module (p<0.05), keep the module membership score. If not, replace MM with a 0 per GOMWU instructions. 
+  select(gene_id, MM.1)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me1.csv", row.names=FALSE, quote = FALSE)
+  
+go_mwu_me2<-geneInfo%>%
+  select(gene_id, MM.2, p.MM.2)%>%
+  mutate(MM.2 = if_else(p.MM.2>0.05, 0, MM.2))%>%
+  select(gene_id, MM.2)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me2.csv", row.names=FALSE, quote = FALSE)
+  
+go_mwu_me3<-geneInfo%>%
+  select(gene_id, MM.3, p.MM.3)%>%
+  mutate(MM.3 = if_else(p.MM.3>0.05, 0, MM.3))%>%
+  select(gene_id, MM.3)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me3.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me5<-geneInfo%>%
+  select(gene_id, MM.5, p.MM.5)%>%
+  mutate(MM.5 = if_else(p.MM.5>0.05, 0, MM.5))%>%
+  select(gene_id, MM.5)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me5.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me6<-geneInfo%>%
+  select(gene_id, MM.6, p.MM.6)%>%
+  mutate(MM.6 = if_else(p.MM.6>0.05, 0, MM.6))%>%
+  select(gene_id, MM.6)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me6.csv", row.names=FALSE, quote = FALSE)
+  
+go_mwu_me7<-geneInfo%>%
+  select(gene_id, MM.7, p.MM.7)%>%
+  mutate(MM.7 = if_else(p.MM.7>0.05, 0, MM.7))%>%
+  select(gene_id, MM.7)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me7.csv", row.names=FALSE, quote = FALSE)
+  
+go_mwu_me8<-geneInfo%>%
+  select(gene_id, MM.8, p.MM.8)%>%
+  mutate(MM.8 = if_else(p.MM.8>0.05, 0, MM.8))%>%
+  select(gene_id, MM.8)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me8.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me9<-geneInfo%>%
+  select(gene_id, MM.9, p.MM.9)%>%
+  mutate(MM.9 = if_else(p.MM.9>0.05, 0, MM.9))%>%
+  select(gene_id, MM.9)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me9.csv", row.names=FALSE, quote = FALSE)
+
+```
+
+
+
+# **Output files for GOslim** 
 
 
 

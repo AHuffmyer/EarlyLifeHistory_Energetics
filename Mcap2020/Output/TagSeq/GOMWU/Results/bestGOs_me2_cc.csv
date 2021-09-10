@@ -1,5 +1,2 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"24",0,2.75794131270472e-19,2,29,"GO:0005840","ribosome",0
-"42",0,1.43843322823591e-05,2,12,"GO:0044391","ribosomal subunit",0
-"51",0,5.14630583430677e-06,3,14,"GO:0098800","inner mitochondrial membrane protein complex",0
-"57",0,0.000210591692043087,2,9,"GO:0140534","endoplasmic reticulum protein-containing complex",0
+"7",0,1.68281937588894e-11,2,33,"GO:0005576","extracellular region",0

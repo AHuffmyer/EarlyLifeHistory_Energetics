@@ -1,3 +1,5 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"7",0,1.43333419240125e-09,2,33,"GO:0005576","extracellular region",0
-"20",0,1.53595611447768e-11,2,29,"GO:0005840","ribosome",0
+"7",0,1.12068890044639e-05,2,33,"GO:0005576","extracellular region",0
+"23",0,1.7131067366165e-11,2,29,"GO:0005840","ribosome",0
+"39",0,1.14304412487312e-06,3,69,"GO:0043232;GO:0043228","intracellular non-membrane-bounded organelle",0
+"40",0,0.000152105181597087,2,12,"GO:0044391","ribosomal subunit",0

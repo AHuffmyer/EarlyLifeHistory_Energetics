@@ -1,2 +1,10 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"7",0,5.55444843942883e-06,2,257,"GO:0003677","DNA binding",0
+"7",0,1.24215173226084e-06,2,65,"GO:0000981","DNA-binding transcription factor activity, RNA polymerase II-specific",0
+"19",0,1.20022320649576e-21,2,116,"GO:0003735","structural constituent of ribosome",0
+"20",0,1.02412832941633e-05,3,29,"GO:0003743","translation initiation factor activity",0
+"39",0,3.54180609043466e-05,4,10,"GO:0004129;GO:0015002;GO:0016676;GO:0016675","cytochrome-c oxidase activity",0
+"50",0,5.21133634854524e-06,4,12,"GO:0004298;GO:0070003","threonine-type peptidase activity",0
+"120",0,9.89143021440269e-06,2,42,"GO:0008135;GO:0090079;GO:0045182","translation regulator activity, nucleic acid binding",0
+"138",0,4.61944925123589e-09,3,30,"GO:0009055","electron transfer activity",0
+"143",0,2.40156838845588e-05,2,17,"GO:0015078","proton transmembrane transporter activity",0
+"217",0,1.89605924679396e-05,4,98,"GO:0022890;GO:0008324","inorganic cation transmembrane transporter activity",0

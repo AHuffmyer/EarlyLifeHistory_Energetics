@@ -1,5 +1,4 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"5",0,5.14215238714109e-05,3,9,"GO:0000276;GO:0045263;GO:0033177","proton-transporting two-sector ATPase complex, proton-transporting domain",0
-"8",0,8.47545419625837e-06,2,33,"GO:0005576","extracellular region",0
-"22",0,7.20442324015498e-10,4,29,"GO:0005840","ribosome",0
-"48",0,2.55642221074615e-07,2,14,"GO:0098800","inner mitochondrial membrane protein complex",0
+"24",0,1.29145777001204e-06,5,29,"GO:0005840","ribosome",0
+"50",0,2.05232532797385e-07,2,18,"GO:0098798","mitochondrial protein-containing complex",0
+"51",0,6.65793304051573e-07,2,14,"GO:0098800","inner mitochondrial membrane protein complex",0

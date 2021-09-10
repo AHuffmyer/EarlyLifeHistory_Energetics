@@ -1,2 +1,6 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"3",0,1.64094087675701e-07,8,30,"GO:0000398;GO:0000377;GO:0000375;GO:0008380","RNA splicing",0
+"30",0,1.97272256778052e-08,3,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
+"34",0,3.29481567772342e-07,4,45,"GO:0006486;GO:0043413;GO:0070085","protein glycosylation",0
+"39",0,3.16574576028771e-07,3,44,"GO:0006518;GO:0043603","cellular amide metabolic process",0
+"101",0,0.000172152432745103,6,45,"GO:0016071","mRNA metabolic process",0.00555555555555556
+"201",0,6.28192326283267e-07,2,66,"GO:1901566","organonitrogen compound biosynthetic process",0

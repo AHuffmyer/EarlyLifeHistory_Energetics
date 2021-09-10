@@ -1,5 +1,12 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"13",0,0.000182397136077059,3,5,"GO:0006099","tricarboxylic acid cycle",0.00909090909090909
-"28",0,1.91404050847197e-14,3,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
-"35",0,1.40024235840818e-06,3,78,"GO:0006508","proteolysis",0
-"175",0,1.96241818198322e-07,2,27,"GO:0055114","oxidation-reduction process",0
+"12",0,1.55101212796262e-05,2,34,"GO:0005975","carbohydrate metabolic process",0
+"30",0,1.05591600292686e-12,3,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
+"37",0,3.64557100954004e-06,3,78,"GO:0006508","proteolysis",0
+"39",0,1.69333889984865e-09,2,44,"GO:0006518;GO:0043603","cellular amide metabolic process",0
+"51",0,9.79398550226827e-06,2,27,"GO:0006812","cation transport",0
+"80",0,5.70281482666725e-06,3,80,"GO:0009059","macromolecule biosynthetic process",0
+"138",0,4.85211024823466e-07,3,65,"GO:0034645","cellular macromolecule biosynthetic process",0
+"151",0,6.65958453088056e-07,2,93,"GO:0044271","cellular nitrogen compound biosynthetic process",0
+"152",0,3.42760200868304e-05,2,72,"GO:0044281","small molecule metabolic process",0
+"184",0,7.53390617268777e-08,2,27,"GO:0055114","oxidation-reduction process",0
+"201",0,7.05432727563661e-09,2,66,"GO:1901566","organonitrogen compound biosynthetic process",0

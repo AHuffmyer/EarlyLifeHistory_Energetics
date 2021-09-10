@@ -1522,52 +1522,54 @@ go_mwu_terms<-geneInfo%>%
 
 2. "table of measure of interest for your sequences: two columns of comma-separated values: gene id, continuous measure of change such as log(fold-change). To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module."
 
+Subset genes that are included in each module, substitue 0 for module membership socres for genes included in module. 
+
 ```{r}
 go_mwu_me1<-geneInfo%>%
-  select(gene_id, MM.1, p.MM.1)%>%
-  mutate(MM.1 = if_else(p.MM.1>0.05, 0, MM.1))%>% #if a gene is associated with a module (p<0.05), keep the module membership score. If not, replace MM with a 0 per GOMWU instructions. 
+  select(gene_id, MM.1, moduleColor)%>%
+  mutate(MM.1 = if_else(moduleColor==1, 0, MM.1))%>% #if a gene is associated with a module (p<0.05), keep the module membership score. If not, replace MM with a 0 per GOMWU instructions. 
   select(gene_id, MM.1)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me1.csv", row.names=FALSE, quote = FALSE)
-  
+
 go_mwu_me2<-geneInfo%>%
-  select(gene_id, MM.2, p.MM.2)%>%
-  mutate(MM.2 = if_else(p.MM.2>0.05, 0, MM.2))%>%
+  select(gene_id, MM.2, moduleColor)%>%
+  mutate(MM.2 = if_else(moduleColor==2, 0, MM.2))%>%
   select(gene_id, MM.2)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me2.csv", row.names=FALSE, quote = FALSE)
   
 go_mwu_me3<-geneInfo%>%
-  select(gene_id, MM.3, p.MM.3)%>%
-  mutate(MM.3 = if_else(p.MM.3>0.05, 0, MM.3))%>%
+  select(gene_id, MM.3, moduleColor)%>%
+  mutate(MM.3 = if_else(moduleColor==3, 0, MM.3))%>%
   select(gene_id, MM.3)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me3.csv", row.names=FALSE, quote = FALSE)
 
 go_mwu_me5<-geneInfo%>%
-  select(gene_id, MM.5, p.MM.5)%>%
-  mutate(MM.5 = if_else(p.MM.5>0.05, 0, MM.5))%>%
+  select(gene_id, MM.5, moduleColor)%>%
+  mutate(MM.5 = if_else(moduleColor==5, 0, MM.5))%>%
   select(gene_id, MM.5)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me5.csv", row.names=FALSE, quote = FALSE)
 
 go_mwu_me6<-geneInfo%>%
-  select(gene_id, MM.6, p.MM.6)%>%
-  mutate(MM.6 = if_else(p.MM.6>0.05, 0, MM.6))%>%
+  select(gene_id, MM.6, moduleColor)%>%
+  mutate(MM.6 = if_else(moduleColor==6, 0, MM.6))%>%
   select(gene_id, MM.6)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me6.csv", row.names=FALSE, quote = FALSE)
   
 go_mwu_me7<-geneInfo%>%
-  select(gene_id, MM.7, p.MM.7)%>%
-  mutate(MM.7 = if_else(p.MM.7>0.05, 0, MM.7))%>%
+  select(gene_id, MM.7, moduleColor)%>%
+  mutate(MM.7 = if_else(moduleColor==7, 0, MM.7))%>%
   select(gene_id, MM.7)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me7.csv", row.names=FALSE, quote = FALSE)
   
 go_mwu_me8<-geneInfo%>%
-  select(gene_id, MM.8, p.MM.8)%>%
-  mutate(MM.8 = if_else(p.MM.8>0.05, 0, MM.8))%>%
+  select(gene_id, MM.8, moduleColor)%>%
+  mutate(MM.8 = if_else(moduleColor==8, 0, MM.8))%>%
   select(gene_id, MM.8)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me8.csv", row.names=FALSE, quote = FALSE)
 
 go_mwu_me9<-geneInfo%>%
-  select(gene_id, MM.9, p.MM.9)%>%
-  mutate(MM.9 = if_else(p.MM.9>0.05, 0, MM.9))%>%
+  select(gene_id, MM.9, moduleColor)%>%
+  mutate(MM.9 = if_else(moduleColor==9, 0, MM.9))%>%
   select(gene_id, MM.9)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me9.csv", row.names=FALSE, quote = FALSE)
 
@@ -1576,6 +1578,40 @@ go_mwu_me9<-geneInfo%>%
 
 
 # **Output files for GOslim** 
+
+
+
+# **Output files for MAGI**  
+
+For this first example, generate files of genes in modules that are significantly positively associated with the metamorphosed recruit life stage (ME9) and a list of metabolites that are enriched in this same lifestage (located in metabolomics.Rmd).   
+
+First generate gene list in metamorphosed recruits (modules 3 and 9). 
+```{r}
+#load in gene info file if not already loaded
+geneInfo<-read.csv("Mcap2020/Output/TagSeq/geneInfo.csv")
+
+magi_genes<-geneInfo%>%
+  filter(moduleColor %in% c("9", "3"))%>%
+  select(gene_id)
+```
+
+Then obtain fasta sequences for each gene listed in the magi_genes dataframe.  
+```{r}
+library(phylotools)
+
+ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.mRNA.fa", clean_name = FALSE)
+```
+
+Extract sequences.  
+
+```{r}
+#Prep ref
+ref$seq.name <- gsub(" ", "", ref$seq.name)
+
+
+dat2fasta(ref[which(ref$seq.name%in%magi_genes$gene_id),], "Mcap2020/Data/MAGI/magi_genes_metamorphosed.fasta")
+```
+
 
 
 

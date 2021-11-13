@@ -51,16 +51,6 @@ library("broom")
 ```
 
 
-# Generalized Work Flow
-
-1. Data processing and exploration    
-2. Preliminary PCA and PERMANOVA statistics  
-3. Preliminary PLS-DA  
-4. Validation of preliminary PLS-DA  
-5. sPLS-DA from PLS-DA validation  
-6. sPLS-DA model validation   
-7. Extraction of significant loadings  
-
 # Data processing and exploration  
 ## Positive Polarity  
  
@@ -766,6 +756,8 @@ write_csv(normalized_counts_pos_neg, file="Mcap2020/Output/Metabolomics/normaliz
 
 # Selecting metabolite polarity and generating final dataframe   
 
+## Select polarity for each metabolite  
+
 Use metabolite selection file to select polarity by averaging peaks across life stages for pos and neg peaks and choosing the strongest peaks.
  
 ```{r}
@@ -856,10 +848,37 @@ peaks_selected$log_norm_counts<-log10(1+peaks_selected$value)
 hist(log(peaks_selected$log_norm_counts))
 ```
 
+## Clean metabolite names and remove standards  
+
+Remove PosIS and NegIS metabolites - these are internal standards that are not relevant for our samples. Clean any names that have (+HAc) and (+), rename to just include the metabolite name.  
+
+```{r, echo=FALSE, results=FALSE}
+grep("PosIS", levels(peaks_selected$compound)) #5 metabolites with PosIS, need to remove
+grep("NegIS", levels(peaks_selected$compound)) #9 metabolites with NegIS, need to remove
+grep("(HAc+)", levels(peaks_selected$compound)) #3 metabolites with HAc+, need to rename
+grep("(SIM)", levels(peaks_selected$compound)) #4 metabolites with HAc+, need to rename
+
+peaks_selected<- droplevels(peaks_selected)
+
+length(levels(peaks_selected$compound)) #199 metabolites in data set before cleaning
+
+peaks_selected_clean<-peaks_selected[!grepl("PosIS", peaks_selected$compound),]
+peaks_selected_clean<-peaks_selected_clean[!grepl("NegIS", peaks_selected_clean$compound),]
+peaks_selected_clean<-droplevels(peaks_selected_clean)
+
+length(levels(peaks_selected_clean$compound)) #185 metabolites in data set after cleaning (199-5-9=185), correct value
+
+peaks_selected_clean<-peaks_selected_clean%>%
+  mutate(compound = str_remove(compound, pattern=fixed('(+HAc)')))%>%
+  mutate(compound = as.factor(compound))
+
+length(levels(peaks_selected_clean$compound))
+```
+
 Output file to .csv.   
 
 ```{r}
-peaks_selected%>%
+peaks_selected_clean%>%
   rename(norm_counts=value)%>%
   write_csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
 ```
@@ -871,7 +890,7 @@ Run PCA to view differences in life stages.
 Convert data to wide format. 
 
 ```{r}
-data_pca_full<-peaks_selected%>%
+data_pca_full<-peaks_selected_clean%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, value)%>%
   spread(compound, value)
 
@@ -945,7 +964,7 @@ ggsave(filename="Mcap2020/Figures/Metabolomics/All_PCAs.pdf", plot=pcaplots, dpi
 
 Script modified from K Wong  
 
-Load data if starting from this point.   
+Load data if starting from this point.    
 
 ```{r}
 metabolites <- read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
@@ -971,7 +990,7 @@ X <- metabolites%>%
 Y <- as.factor(X$HPF) #select treatment names
 Y
 
-X<-X[5:201] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 
 # PLSDA without variable selection
@@ -1030,7 +1049,7 @@ levels(X$Development) <- list(A_Egg  = "Egg", B_Embryo = "Embryo", C_Larvae = "L
 Y <- X$Development #select treatment names
 Y
 
-X<-X[5:201] #pull only data columns
+X<-X[4:188] #pull only data columns
 
 dim(X) ## display number of samples and metabolite features
 
@@ -1071,7 +1090,7 @@ MyResult.plsda_develop <- plsda(X,Y, ncomp=4) #number of components is classes-1
 
 # Extract VIP scores from PLS-DA's   
 
-Extractions from groups as a whole - will do stage specific extractions later for comparisons.  
+Extractions from groups as a whole - will do stage specific extractions later for comparisons.   
 
 ## Life stage time point 
 
@@ -1163,17 +1182,17 @@ dev.off()
 Conduct t-tests to validate differences in VIP metabolites.    
 
 ```{r}
-
+list<-c("Egg", "Embryo")
 #assigning datasets 
 X <- metabolites%>%
-  filter(Development==c("Egg","Embryo"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 MyResult.plsda_EvE <- plsda(X,Y, ncomp=4)
 
@@ -1192,7 +1211,7 @@ EvE_VIP_1 <- EvE_VIP_table %>%
 
 ```{r}
 EvE_clean <- metabolites%>%
-  filter(Development==c("Egg","Embryo"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   group_by(compound)
@@ -1217,7 +1236,7 @@ EvE_t.test$p.adj<-p.adjust(EvE_t.test$p.value, method=c("fdr"), n=length(EvE_VIP
 # Filter for significantly different metabolites (p < 0.05)
 EvE_t.test.sig <- EvE_t.test %>% filter(p.adj < 0.05)
 length(EvE_t.test.sig$compound)
-#went from 55 down to 46 with p value adjustment
+#went from 73 down to 66 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 EvE_t.test.sig.up <- EvE_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1232,6 +1251,7 @@ Display metabolites that are higher in embryos compared to eggs
 ```{r}
 EvE_t.test.sig.up
 EvE_t.test.sig.up$direction<-c("Increase")
+EvE_t.test.sig.up$lifestage<-c("Embryo")
 ```
 
 Display metabolites that are lower in embryos compared to eggs  
@@ -1239,6 +1259,7 @@ Display metabolites that are lower in embryos compared to eggs
 ```{r}
 EvE_t.test.sig.down
 EvE_t.test.sig.down$direction<-c("Decrease")
+EvE_t.test.sig.down$lifestage<-c("Egg")
 ```
 
 Group dataframe for use in plotting.  
@@ -1247,7 +1268,7 @@ Group dataframe for use in plotting.
 EvE_pvalues<-rbind(EvE_t.test.sig.up, EvE_t.test.sig.down)
 
 EvE_pvalues<-EvE_pvalues%>%
-  dplyr::select(compound, direction)%>%
+  dplyr::select(compound, direction, lifestage)%>%
   dplyr::rename(Metabolite=compound)
 
 
@@ -1308,9 +1329,9 @@ EvE_bar<-EvE_VIP_plot %>%
   scale_fill_manual(values=c("#8C510A", "#DFC27D"))+
   ylab("VIP Score") +
   xlab("") +
-  scale_y_continuous(limits=c(-1.75, 1.75), breaks=c(-1,0,1))+
-  annotate("text", x = 6, y = 1.4, label = "Embryo > Egg", fontface =2, color="#DFC27D", size=6) +
-  annotate("text", x = 40, y = -1.4, label = "Egg > Embryo", fontface =2, color="#8C510A", size=6) +
+  scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
+  annotate("text", x = 7, y = 1.4, label = "Embryo > Egg", fontface =2, color="#DFC27D", size=6) +
+  annotate("text", x = 47, y = -1.4, label = "Egg > Embryo", fontface =2, color="#8C510A", size=6) +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5)); EvE_bar
@@ -1324,17 +1345,17 @@ ggsave("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP_bar.pdf", width=10, height=
 Conduct t-tests to validate differences in VIP metabolites.   
  
 ```{r}
-
+list<-c("Embryo", "Larvae")
 #assigning datasets 
 X <- metabolites%>%
-  filter(Development==c("Embryo","Larvae"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 MyResult.plsda_EvL <- plsda(X,Y, ncomp=4)
 
@@ -1350,7 +1371,7 @@ EvL_VIP_1 <- EvL_VIP_table %>%
   filter(VIP >= 1)
 
 EvL_clean <- metabolites%>%
-  filter(Development==c("Embryo","Larvae"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   group_by(compound)
@@ -1375,7 +1396,7 @@ EvL_t.test$p.adj<-p.adjust(EvL_t.test$p.value, method=c("fdr"), n=length(EvL_VIP
 # Filter for significantly different metabolites (p < 0.05)
 EvL_t.test.sig <- EvL_t.test %>% filter(p.adj < 0.05)
 length(EvL_t.test.sig$compound)
-#stays at 108 with adjustment
+#drops from 100 to 99 with adjustment
 
 # Filter for metabolites accumulated compared to egg
 EvL_t.test.sig.up <- EvL_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1390,6 +1411,7 @@ Display metabolites that are higher in larvae compared to embryos
 ```{r}
 EvL_t.test.sig.up
 EvL_t.test.sig.up$direction<-c("Increase")
+EvL_t.test.sig.up$lifestage<-c("Larvae")
 ```
 
 Display metabolites that are lower in larvae compared to embryos  
@@ -1397,6 +1419,7 @@ Display metabolites that are lower in larvae compared to embryos
 ```{r}
 EvL_t.test.sig.down
 EvL_t.test.sig.down$direction<-c("Decrease")
+EvL_t.test.sig.down$lifestage<-c("Embryo")
 ```
 
 Group dataframe for use in plotting.  
@@ -1405,7 +1428,7 @@ Group dataframe for use in plotting.
 EvL_pvalues<-rbind(EvL_t.test.sig.up, EvL_t.test.sig.down)
 
 EvL_pvalues<-EvL_pvalues%>%
-  select(compound, direction)%>%
+  select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1463,7 +1486,7 @@ EvL_bar<-EvL_VIP_plot %>%
   geom_bar(aes(fill=direction), show.legend=FALSE, stat='identity') +
   scale_fill_manual(values=c("#DFC27D", "#80CDC1"))+
   ylab("VIP Score") +
-  scale_y_continuous(limits=c(-1.75, 1.75), breaks=c(-1,0,1))+
+  scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
   annotate("text", x = 10, y = 1.4, label = "Larvae > Embryo", fontface =2, color="#80CDC1", size=6) +
   annotate("text", x = 90, y = -1.4, label = "Embryo > Larvae", fontface =2, color="#DFC27D", size=6) +
@@ -1480,17 +1503,17 @@ ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP_bar.pdf", width=18, heigh
 Conduct t-tests to validate differences in VIP metabolites.    
 
 ```{r}
-
+list<-c("Larvae", "Metamorphosed Recruit")
 #assigning datasets 
 X <- metabolites%>%
-  filter(Development==c("Larvae", "Metamorphosed Recruit"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 MyResult.plsda_LvM <- plsda(X,Y, ncomp=4)
 
@@ -1506,7 +1529,7 @@ LvM_VIP_1 <-LvM_VIP_table %>%
   filter(VIP >= 1)
 
 LvM_clean <- metabolites%>%
-  filter(Development==c("Larvae", "Metamorphosed Recruit"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   group_by(compound)
@@ -1531,104 +1554,96 @@ LvM_t.test$p.adj<-p.adjust(LvM_t.test$p.value, method=c("fdr"), n=length(LvM_VIP
 # Filter for significantly different metabolites (p < 0.05)
 LvM_t.test.sig <- LvM_t.test %>% filter(p.adj <= 0.05)
 length(LvM_t.test.sig$compound)
-#went from 26 to 0 with p value adjustment
+#went from 67 to 38 with p value adjustment
 
-# Filter for metabolites accumulated compared to egg
+# Filter for metabolites accumulated compared to larvae
 LvM_t.test.sig.up <- LvM_t.test.sig %>% filter(estimate1 > estimate2)
 
-# Filter for metabolites depleted compared to egg
+# Filter for metabolites depleted compared to larvae
 LvM_t.test.sig.down <-LvM_t.test.sig %>% filter(estimate1 < estimate2)
 
 ```
 
-There are no significantly different metabolites between larvae and metamorphosed recruits.  
-
-Display metabolites that are higher in recruits compared to larvae  
 
 ```{r}
-# LvM_t.test.sig.up
-# LvM_t.test.sig.up$direction<-c("Increase")
+LvM_t.test.sig.up
+LvM_t.test.sig.up$direction<-c("Increase")
+LvM_t.test.sig.up$lifestage<-c("Metamorphosed Recruit")
 ```
 
-Display metabolites that are lower in recruits compared to larvae  
 
 ```{r}
-# LvM_t.test.sig.down
-# LvM_t.test.sig.down$direction<-c("Decrease")
+LvM_t.test.sig.down
+LvM_t.test.sig.down$direction<-c("Decrease")
+LvM_t.test.sig.down$lifestage<-c("Larvae")
 ```
 
-Group dataframe for use in plotting.  
-
 ```{r}
-# LvM_pvalues<-rbind(LvM_t.test.sig.up, LvM_t.test.sig.down)
-# 
-# LvM_pvalues<-LvM_pvalues%>%
-#   select(compound, direction)%>%
-#   rename(Metabolite=compound)
+LvM_pvalues<-rbind(LvM_t.test.sig.up, LvM_t.test.sig.down)
+ 
+LvM_pvalues<-LvM_pvalues%>%
+   select(compound, direction, lifestage)%>%
+   rename(Metabolite=compound)
 ```
 
-Plot VIP plot. Remove nonsignificant metabolites determined by t test validations.       
-
 ```{r}
-# LvM_VIP_plot<-left_join(LvM_VIP_1, LvM_pvalues, by="Metabolite")
-# 
-# LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
-# LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
-# 
-# write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
-# 
-# #plot
-# LvM_plota<-LvM_VIP_plot %>%
-#   filter(!direction=="Nonsig")%>%
-#   arrange(VIP) %>%
-#   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
-#   geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
-#   scale_colour_manual(values=c("white", "#003C30"))+
-#   ylab("") +
-#   xlab("VIP Score") +
-#   ggtitle(expression(bold("Larvae < \nMetamorpohsed Recruit"))) +
-#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10)); LvM_plota
-# 
-# LvM_plotb<-LvM_VIP_plot %>%
-#   filter(!direction=="Nonsig")%>%
-#   arrange(VIP) %>%
-#   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
-#   geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
-#   scale_colour_manual(values=c("#80CDC1", "white"))+
-#   ylab("") +
-#   xlab("VIP Score") +
-#   ggtitle(expression(bold("Larvae > \nMetamorphosed Recruit"))) +
-#   scale_x_reverse()+
-#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15)); LvM_plotb
-# 
-# #arrange plots
-# LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-# ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
+ LvM_VIP_plot<-left_join(LvM_VIP_1, LvM_pvalues, by="Metabolite")
+ 
+ LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
+ LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
+ 
+ write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
+ 
+ #plot
+ LvM_plota<-LvM_VIP_plot %>%
+   filter(!direction=="Nonsig")%>%
+   arrange(VIP) %>%
+   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+  geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
+   scale_colour_manual(values=c("white", "#003C30"))+
+   ylab("") +
+   xlab("VIP Score") +
+   ggtitle(expression(bold("Larvae < \nMetamorpohsed Recruit"))) +
+   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10)); LvM_plota
+ 
+ LvM_plotb<-LvM_VIP_plot %>%
+   filter(!direction=="Nonsig")%>%
+   arrange(VIP) %>%
+   ggplot(aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
+   geom_point(aes(colour=direction), size=3, show.legend=FALSE) +
+   scale_colour_manual(values=c("#80CDC1", "white"))+
+   ylab("") +
+   xlab("VIP Score") +
+   ggtitle(expression(bold("Larvae > \nMetamorphosed Recruit"))) +
+   scale_x_reverse()+
+   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15)); LvM_plotb
+ 
+ #arrange plots
+ LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
+ ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
 ```
 
-Plot as differential bar plots.  
-
 ```{r}
-# #plot
-# LvM_bar<-LvM_VIP_plot %>%
-#   filter(!direction=="Nonsig")%>%
-#   mutate(score=if_else(direction=="Decrease", 0-VIP, VIP)) %>% #change metabolites that decrease to have VIP on the negative scale
-#   arrange(score) %>%
-#   ggplot(aes(y = score, x = reorder(Metabolite,score,sum))) +
-#   geom_bar(aes(fill=direction), show.legend=FALSE, stat='identity') +
-#   scale_fill_manual(values=c("#80CDC1", "#003C30"))+
-#   ylab("VIP Score") +
-#   scale_y_continuous(limits=c(-2.5, 1.75), breaks=c(-1,0,1))+
-#   xlab("") +
-#   #annotate("text", x = 2, y = 1.4, label = "Metamorpohsed Recruit > \nLarvae", fontface =2, color="#003C30") +
-#   annotate("text", x = 6, y = -2.2, label = "Larvae > \nMetamorphosed Recruit", fontface =2, color="#80CDC1", size=6 ) +
-#   #ggtitle(expression(bold("Eggs < Embryos"))) +
-#   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-#                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvM_bar
-# 
-# ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
+ #plot
+ LvM_bar<-LvM_VIP_plot %>%
+   filter(!direction=="Nonsig")%>%
+   mutate(score=if_else(direction=="Decrease", 0-VIP, VIP)) %>% #change metabolites that decrease to have VIP on the negative scale
+   arrange(score) %>%
+   ggplot(aes(y = score, x = reorder(Metabolite,score,sum))) +
+   geom_bar(aes(fill=direction), show.legend=FALSE, stat='identity') +
+   scale_fill_manual(values=c("#80CDC1", "#003C30"))+
+   ylab("VIP Score") +
+   scale_y_continuous(limits=c(-2.5, 2.5), breaks=c(-1,0,1))+
+   xlab("") +
+   annotate("text", x = 6, y = 1.4, label = "Metamorpohsed Recruit > \nLarvae", fontface =2, color="#003C30") +
+   annotate("text", x = 30, y = -1.8, label = "Larvae > \nMetamorphosed Recruit", fontface =2, color="#80CDC1") +
+   #ggtitle(expression(bold("Eggs < Embryos"))) +
+   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
+                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvM_bar
+ 
+ ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
 
 ```
 
@@ -1636,19 +1651,20 @@ Plot as differential bar plots.
 ### 4. Larvae vs calcifying recruits  
  
 Conduct t-tests to validate differences in VIP metabolites.   
-
+ 
 ```{r}
+list<-c("Calcifying Recruit", "Larvae")
 
 #assigning datasets 
 X <- metabolites%>%
-  filter(Development==c("Calcifying Recruit","Larvae"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 MyResult.plsda_LvC <- plsda(X,Y, ncomp=4)
 
@@ -1664,7 +1680,7 @@ LvC_VIP_1 <- LvC_VIP_table %>%
   filter(VIP >= 1)
 
 LvC_clean <- metabolites%>%
-  filter(Development==c("Larvae","Calcifying Recruit"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   group_by(compound)
@@ -1689,7 +1705,7 @@ LvC_t.test$p.adj<-p.adjust(LvC_t.test$p.value, method=c("fdr"), n=length(LvC_VIP
 # Filter for significantly different metabolites (p < 0.05)
 LvC_t.test.sig <- LvC_t.test %>% filter(p.adj <= 0.05)
 length(LvC_t.test.sig$compound)
-#went from 38 to 27 with p value adjustment
+#went from 75 to 75 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 LvC_t.test.sig.up <- LvC_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1704,6 +1720,7 @@ Display metabolites that are higher in larvae compared to calcifying recruits, n
 ```{r}
 LvC_t.test.sig.up
 LvC_t.test.sig.up$direction<-c("Decrease")
+LvC_t.test.sig.up$lifestage<-c("Larvae")
 ```
 
 Display metabolites that are lower in larvae compared to calcifying recruits, note that directions are opposite due to order of factors
@@ -1711,6 +1728,7 @@ Display metabolites that are lower in larvae compared to calcifying recruits, no
 ```{r}
 LvC_t.test.sig.down
 LvC_t.test.sig.down$direction<-c("Increase")
+LvC_t.test.sig.down$lifestage<-c("CalcifyingRecruit")
 ```
 
 Group dataframe for use in plotting.  
@@ -1719,7 +1737,7 @@ Group dataframe for use in plotting.
 LvC_pvalues<-rbind(LvC_t.test.sig.up, LvC_t.test.sig.down)
 
 LvC_pvalues<-LvC_pvalues%>%
-  select(compound, direction)%>%
+  select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1779,31 +1797,32 @@ LvC_bar<-LvC_VIP_plot %>%
   ylab("VIP Score") +
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
-  annotate("text", x = 5, y = 1.6, label = "Calcifying Recruit > \nLarvae", fontface =2, color="#BA55D3", size=6) +
-  annotate("text", x = 23, y = -1.6, label = "Larvae > \nCalcifying Recruit", fontface =2, color="#80CDC1", size=6) +
+  annotate("text", x = 10, y = 1.6, label = "Calcifying Recruit > \nLarvae", fontface =2, color="#BA55D3") +
+  annotate("text", x = 60, y = -1.6, label = "Larvae > \nCalcifying Recruit", fontface =2, color="#80CDC1") +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvC_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP_bar.pdf", width=9, height=4, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP_bar.pdf", width=12, height=4, units="in")
 
 ```
 
 ### 5. Metamorphosed vs calcifying recruits  
 
 Conduct t-tests to validate differences in VIP metabolites.   
- 
+  
 ```{r}
+list<-c("Calcifying Recruit", "Metamorphosed Recruit")
 #assigning datasets 
 X <- metabolites%>%
-  filter(Development==c("Calcifying Recruit","Metamorphosed Recruit"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 MyResult.plsda_MvC <- plsda(X,Y, ncomp=4)
 
@@ -1819,7 +1838,7 @@ MvC_VIP_1 <- MvC_VIP_table %>%
   filter(VIP >= 1)
 
 MvC_clean <- metabolites%>%
-  filter(Development==c("Metamorphosed Recruit","Calcifying Recruit"))%>%
+  filter(Development %in% list)%>%
   droplevels()%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   group_by(compound)
@@ -1844,7 +1863,7 @@ MvC_t.test$p.adj<-p.adjust(MvC_t.test$p.value, method=c("fdr"), n=length(MvC_VIP
 # Filter for significantly different metabolites (p < 0.05)
 MvC_t.test.sig <- MvC_t.test %>% filter(p.adj <= 0.05)
 length(MvC_t.test.sig$compound)
-#went from 29 to 25 with p value adjustment
+#went from 71 to 68 with p value adjustment
 
 # Filter for metabolites accumulated compared to egg
 MvC_t.test.sig.up <- MvC_t.test.sig %>% filter(estimate1 > estimate2)
@@ -1854,18 +1873,20 @@ MvC_t.test.sig.down <- MvC_t.test.sig %>% filter(estimate1 < estimate2)
 
 ```
 
-Display metabolites that are higher in larvae compared to calcifying recruits, note that directions are opposite due to order of factors  
+Display metabolites that are higher in metamorphosed recruits compared to calcifying recruits, note that directions are opposite due to order of factors  
  
 ```{r}
 MvC_t.test.sig.up
 MvC_t.test.sig.up$direction<-c("Decrease")
+MvC_t.test.sig.up$lifestage<-c("MetamorphosedRecruit")
 ```
 
-Display metabolites that are lower in larvae compared to calcifying recruits, note that directions are opposite due to order of factors
+Display metabolites that are lower in metamorphosed recruits compared to calcifying recruits, note that directions are opposite due to order of factors
 
 ```{r}
 MvC_t.test.sig.down
 MvC_t.test.sig.down$direction<-c("Increase")
+MvC_t.test.sig.down$lifestage<-c("CalcifyingRecruit")
 ```
 
 Group dataframe for use in plotting.  
@@ -1874,7 +1895,7 @@ Group dataframe for use in plotting.
 MvC_pvalues<-rbind(MvC_t.test.sig.up, MvC_t.test.sig.down)
 
 MvC_pvalues<-MvC_pvalues%>%
-  select(compound, direction)%>%
+  select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1934,77 +1955,69 @@ MvC_bar<-MvC_VIP_plot %>%
   ylab("VIP Score") +
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
-  annotate("text", x = 5, y = 1.6, label = "Calcifying Recruit > \nMetamorphosed Recruit", fontface =2, color="#BA55D3", size=6) +
-  annotate("text", x = 20, y = -1.6, label = "Metamorphosed Recruit > \nCalcifying Recruit", fontface =2, color="#003C30", size=6) +
+  annotate("text", x = 10, y = 1.6, label = "Calcifying Recruit > \nMetamorphosed Recruit", fontface =2, color="#BA55D3") +
+  annotate("text", x = 50, y = -1.6, label = "Metamorphosed Recruit > \nCalcifying Recruit", fontface =2, color="#003C30") +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); MvC_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", width=9, height=4, units="in")
+ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", width=11, height=4, units="in")
 
 ```
 
 
-### 6. Combine all VIP plots.  
+### 6. Combine all VIP plots.   
 
 ```{r}
 VIP_plots<-plot_grid(EvE_plots, EvL_plots, LvC_plots, MvC_plots, ncol=1, nrow=4, rel_widths=c(1,1,1,1), rel_heights=c(1.2,2,1.5,1.2))
 ggsave("Mcap2020/Figures/Metabolomics/VIP_panel.pdf", width=7, height=48, units="in")
 ```
-
+ 
 Combine all differential bar plots.  
 
 ```{r}
 VIP_bar_plots1<-plot_grid(EvE_bar, EvL_bar, ncol=2, nrow=1, rel_widths=c(1,1.5), rel_heights=c(1,1), align="vh")
-VIP_bar_plots2<-plot_grid(LvC_bar, MvC_bar, ncol=2, nrow=1, rel_widths=c(1,1), rel_heights=c(1,1), align="vh")
+VIP_bar_plots2<-plot_grid(LvC_bar, LvM_bar, MvC_bar, ncol=3, nrow=1, rel_widths=c(1,1,1), rel_heights=c(1,1,1), align="vh")
 VIP_bar_plots<-plot_grid(VIP_bar_plots1, VIP_bar_plots2, ncol=1, nrow=2, rel_widths=c(1,1), rel_heights=c(1,1), align="vh")
 
 ggsave(plot=VIP_bar_plots, "Mcap2020/Figures/Metabolomics/VIP_bars.pdf", width=30, height=10, units="in")
 ```
 
+### 7. Generate combined file for pathway analysis  
 
-## Plot venn diagram showing shared VIP metabolites for each life stage comparison.  
+Generate a combined file of all enriched metabolites (based on VIP calculations) for all lifestages and remove non significant metabolites. Export file for each lifestage for separate analysis.    
 
 ```{r}
-### Compare for Venn Diagram (https://github.com/gaospecial/ggVennDiagram)
+kegg_file<-rbind(EvE_VIP_plot, EvL_VIP_plot, LvC_VIP_plot, LvM_VIP_plot, MvC_VIP_plot)
 
-venn.x <- list(
-   EGGvEMBRYO = sample(EvE_VIP_1$Metabolite),
-   EMBRYOvLARVAE = sample(EvL_VIP_1$Metabolite),
-   LARVAEvMETAMORPHOSED = sample(LvM_VIP_1$Metabolite),
-   LARVAEvCALCIFYING = sample(LvC_VIP_1$Metabolite),
-   METAMORPHOSEDvCALCIFYING = sample(MvC_VIP_1$Metabolite) 
- )
- 
- #myCol <- c("#8B0046", "#468B00")
- 
- venn.diagram(venn.x,
-              filename = 'Mcap2020/Figures/Metabolomics/Developmental_venn.png',
-              output = TRUE,
-              height = 500, 
-              width = 500,
-              resolution = 300,
-              category.names = c("Egg vs \nEmbryo", "Embryo vs \nLarvae", "Larvae vs \nMetamorphosed Recruit", "Larvae vs \nCalcifying Recruit", "Metamorphosed vs \nCalcifying Recruit"),
-              lwd = 1,
-              col = c("blue", "orange", "green", "yellow", "purple"),
-              fill = c(alpha("blue",0.3), alpha("orange", 0.3), alpha("green", 0.3), alpha("yellow", 0.3), alpha("purple", 0.3)),
-              cex = 0.2,
-              fontfamily = "sans",
-              fontface = "bold",
-              cat.cex = 0.2,
-              cat.default.pos = "text",
-              #cat.pos = c(12, -12),
-              cat.dist = c(0.3, 0.3, 0.3, 0.3, 0.4),
-              cat.fontfamily = "sans",
-              cat.fontface = "bold", 
-              margin=c(0.4,0.4,0.4,0.4)
-              )
+kegg_file<-kegg_file%>%
+  filter(!direction=="Nonsig")%>%
+  select(Metabolite, lifestage)
+
+kegg_egg<-kegg_file%>%
+  filter(lifestage=="Egg")%>%
+  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_egg.csv")
+
+kegg_embryo<-kegg_file%>%
+  filter(lifestage=="Embryo")%>%
+  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_embryo.csv")
+
+kegg_larvae<-kegg_file%>%
+  filter(lifestage=="Larvae")%>%
+  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_larvae.csv")
+
+kegg_metamorphosed<-kegg_file%>%
+  filter(lifestage=="MetamorphosedRecruit")%>%
+  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_metamorphosed.csv")
+
+kegg_calcifying<-kegg_file%>%
+  filter(lifestage=="CalcifyingRecruit")%>%
+  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_calcifying.csv")
 ```
-
 
 # Validation of PLS-DA and generation of sPLS-DA  
 
-## Timepoint  
+## Timepoint   
 
 Validate PLS-DA.   
 
@@ -2033,7 +2046,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$HPF) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
 tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 10, 
@@ -2051,6 +2064,7 @@ select.keepX
 plot(tune.splsda.srbct)
 
 ```
+Optimal number of components is 10, indicating that each lifestage adds information to the model.   
 
 sPLS-DA from PLS-DA validation using desired number of components (groups) and optimized number of variables to "keep"  
 
@@ -2099,9 +2113,11 @@ plot(perf.splsda$features$stable[[2]], type = 'h', ylab = 'Stability',
 
 ```
 
+Error rates decrease with addition of each component (lifestage).  
+
 Extraction of significant loadings 
 
-Select the stable features in each component. These are the values with the highest value from the comp plots above.    
+Select the stable features (metabolites) in each component (lifestage). These are the values with the highest value from the comp plots above.    
 ```{r}
 # here we match the selected variables to the stable features
 ind.match1 = match(selectVar(myResult.splsda.final_T, comp = 1)$name, 
@@ -2112,6 +2128,18 @@ ind.match3 = match(selectVar(myResult.splsda.final_T, comp = 3)$name,
                   names(perf.splsda$features$stable[[3]]))
 ind.match4 = match(selectVar(myResult.splsda.final_T, comp = 4)$name, 
                   names(perf.splsda$features$stable[[4]]))
+ind.match5 = match(selectVar(myResult.splsda.final_T, comp = 5)$name, 
+                  names(perf.splsda$features$stable[[5]]))
+ind.match6 = match(selectVar(myResult.splsda.final_T, comp = 6)$name, 
+                  names(perf.splsda$features$stable[[6]]))
+ind.match7 = match(selectVar(myResult.splsda.final_T, comp = 7)$name, 
+                  names(perf.splsda$features$stable[[7]]))
+ind.match8 = match(selectVar(myResult.splsda.final_T, comp = 8)$name, 
+                  names(perf.splsda$features$stable[[8]]))
+ind.match9 = match(selectVar(myResult.splsda.final_T, comp = 9)$name, 
+                  names(perf.splsda$features$stable[[9]]))
+ind.match10 = match(selectVar(myResult.splsda.final_T, comp = 10)$name, 
+                  names(perf.splsda$features$stable[[10]]))
 
 
 #extract the frequency of selection of those selected variables
@@ -2119,20 +2147,35 @@ Freq1 = as.numeric(perf.splsda$features$stable[[1]][ind.match1])
 Freq2 = as.numeric(perf.splsda$features$stable[[2]][ind.match2])
 Freq3 = as.numeric(perf.splsda$features$stable[[3]][ind.match3])
 Freq4 = as.numeric(perf.splsda$features$stable[[4]][ind.match4])
-
+Freq5 = as.numeric(perf.splsda$features$stable[[5]][ind.match5])
+Freq6 = as.numeric(perf.splsda$features$stable[[6]][ind.match6])
+Freq7 = as.numeric(perf.splsda$features$stable[[7]][ind.match7])
+Freq8 = as.numeric(perf.splsda$features$stable[[8]][ind.match8])
+Freq9 = as.numeric(perf.splsda$features$stable[[9]][ind.match9])
+Freq10 = as.numeric(perf.splsda$features$stable[[10]][ind.match10])
 
 #Extracting the selected metabolites for each component 
 comp1.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 1)$value, Freq1)
 comp2.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 2)$value, Freq2)
 comp3.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 3)$value, Freq3)
 comp4.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 4)$value, Freq4)
-
+comp5.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 5)$value, Freq5)
+comp6.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 6)$value, Freq6)
+comp7.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 7)$value, Freq7)
+comp8.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 8)$value, Freq8)
+comp9.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 9)$value, Freq9)
+comp10.select.metabolites <- data.frame(selectVar(myResult.splsda.final_T, comp = 10)$value, Freq10)
 
 head(comp1.select.metabolites)
 head(comp2.select.metabolites)
 head(comp3.select.metabolites)
 head(comp4.select.metabolites)
-
+head(comp5.select.metabolites)
+head(comp6.select.metabolites)
+head(comp7.select.metabolites)
+head(comp8.select.metabolites)
+head(comp9.select.metabolites)
+head(comp10.select.metabolites)
 
 ```
 
@@ -2166,7 +2209,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:203] #pull only data columns
+X<-X[5:189] #pull only data columns
 
 set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
 tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 5, 
@@ -2183,6 +2226,8 @@ select.keepX
 plot(tune.splsda.srbct)
 
 ```
+
+For development, we get the most information from 4 of the 5 components (larvae and metamorphosed recruits overlap).   
 
 sPLS-DA from PLS-DA validation using desired number of components (groups) and optimized number of variables to "keep"  
 
@@ -2228,7 +2273,6 @@ plot(perf.splsda$features$stable[[1]], type = 'h', ylab = 'Stability',
 plot(perf.splsda$features$stable[[2]], type = 'h', ylab = 'Stability', 
      xlab = 'Features', main = 'Comp 2', las =2)
 dev.off()
-#add more comps later on with more groups
 
 ```
 
@@ -2245,6 +2289,8 @@ ind.match3 = match(selectVar(myResult.splsda.final_D, comp = 3)$name,
                   names(perf.splsda$features$stable[[3]]))
 ind.match4 = match(selectVar(myResult.splsda.final_D, comp = 4)$name, 
                   names(perf.splsda$features$stable[[4]]))
+ind.match5 = match(selectVar(myResult.splsda.final_D, comp = 5)$name, 
+                  names(perf.splsda$features$stable[[5]]))
 
 
 #extract the frequency of selection of those selected variables
@@ -2252,20 +2298,20 @@ Freq1 = as.numeric(perf.splsda$features$stable[[1]][ind.match1])
 Freq2 = as.numeric(perf.splsda$features$stable[[2]][ind.match2])
 Freq3 = as.numeric(perf.splsda$features$stable[[3]][ind.match3])
 Freq4 = as.numeric(perf.splsda$features$stable[[4]][ind.match4])
-
+Freq5 = as.numeric(perf.splsda$features$stable[[5]][ind.match4])
 
 #Extracting the selected metabolites for each component 
 comp1.select.metabolites <- data.frame(selectVar(myResult.splsda.final_D, comp = 1)$value, Freq1)
 comp2.select.metabolites <- data.frame(selectVar(myResult.splsda.final_D, comp = 2)$value, Freq2)
 comp3.select.metabolites <- data.frame(selectVar(myResult.splsda.final_D, comp = 3)$value, Freq3)
 comp4.select.metabolites <- data.frame(selectVar(myResult.splsda.final_D, comp = 4)$value, Freq4)
-
+comp5.select.metabolites <- data.frame(selectVar(myResult.splsda.final_D, comp = 5)$value, Freq5)
 
 head(comp1.select.metabolites)
 head(comp2.select.metabolites)
 head(comp3.select.metabolites)
 head(comp4.select.metabolites)
-
+head(comp5.select.metabolites)
 
 ```
 

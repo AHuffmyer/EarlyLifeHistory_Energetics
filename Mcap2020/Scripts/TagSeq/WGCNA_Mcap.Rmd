@@ -1592,14 +1592,17 @@ geneInfo<-read.csv("Mcap2020/Output/TagSeq/geneInfo.csv")
 
 magi_genes<-geneInfo%>%
   filter(moduleColor %in% c("9", "3"))%>%
-  select(gene_id)
+  select(gene_id)%>%
+  write.csv(., "Mcap2020/Data/MAGI/test_genes.csv", row.names=FALSE)
 ```
 
 Then obtain fasta sequences for each gene listed in the magi_genes dataframe.  
 ```{r}
 library(phylotools)
 
-ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.mRNA.fa", clean_name = FALSE)
+#ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.mRNA.fa", clean_name = FALSE)
+Mcap.protein.fa
+ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.protein.fa", clean_name = FALSE)
 ```
 
 Extract sequences.  
@@ -1607,9 +1610,10 @@ Extract sequences.
 ```{r}
 #Prep ref
 ref$seq.name <- gsub(" ", "", ref$seq.name)
+#might need to take out quotes from ref names for protein sequences??
 
 
-dat2fasta(ref[which(ref$seq.name%in%magi_genes$gene_id),], "Mcap2020/Data/MAGI/magi_genes_metamorphosed.fasta")
+dat2fasta(ref[which(ref$seq.name%in%magi_genes$gene_id),], "Mcap2020/Data/MAGI")
 ```
 
 

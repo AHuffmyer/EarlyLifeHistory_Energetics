@@ -68,29 +68,46 @@ df <- sym_counts %>%
 df$lifestage<-sym_counts$lifestage[match(df$tube.ID, sym_counts$tube.ID)]
 df$total.volume.ul<-sym_counts$total.volume.ul[match(df$tube.ID, sym_counts$tube.ID)]
 df$num.individuals<-sym_counts$num.individuals[match(df$tube.ID, sym_counts$tube.ID)]
+df$surface.area<-sym_counts$surface.area[match(df$tube.ID, sym_counts$tube.ID)]
 df$hpf<-sym_counts$hpf[match(df$tube.ID, sym_counts$tube.ID)]
 df$group<-sym_counts$group[match(df$tube.ID, sym_counts$tube.ID)]
 df$lifestage<-as.factor(df$lifestage)
+df$group<-as.factor(df$group)
 
 # Normalize counts by homogenat volume and surface area
 df <- df %>%
   mutate(cells.mL = mean_count * 10000 / num.squares,
          cells = cells.mL * (total.volume.ul/1000),
-         cells.ind = cells / num.individuals)
+         cells.ind = cells / num.individuals, 
+         cells.mm = cells / surface.area)
 ```
 
 # Plotting  
 
-## Plot data with mean and standard error
+Plot data with mean and standard error for larvae through metamorphosis (these counts have cells/individual). Plot attached recruits separately, these values are in cells per mm2. We will plot cells per unit surface area for all stages in later analyses. 
 ```{r}
 df %>%
   #filter(!is.na(site)) %>%
+  filter(!group=="Attached Recruit")%>%
   ggplot(aes(x = lifestage, y = cells.ind, color = lifestage)) +
   labs(x = "",y = "Cell Density per larva") +
 geom_jitter(width = 0.1) +                                            # Plot all points
   stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
                geom = "errorbar", color = "black", width = 0.5) +
   stat_summary(fun.y = mean, geom = "point", color = "black") + # Plot mean
+  theme_classic()
+```
+
+```{r}
+df %>%
+  #filter(!is.na(site)) %>%
+  filter(group=="Attached Recruit")%>%
+  ggplot(aes(x = lifestage, y = cells.mm, color = lifestage)) +
+  labs(x = "",y = "Cell Density per mm2") +
+geom_jitter(width = 0.1) +                                            # Plot all points
+  #stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
+               #geom = "errorbar", color = "black", width = 0.5) +
+  #stat_summary(fun.y = mean, geom = "point", color = "black") + # Plot mean
   theme_classic()
 ```
 
@@ -103,7 +120,17 @@ df%>%
             Mean=format(round(mean(cells.ind), 0), 0), 
             SE=format(round(sd(cells.ind)/sqrt(length(cells.ind)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
-  kbl(caption="Descriptive statistics of Symbiodiniaceae cell densities across ontogeny")%>%
+  kbl(caption="Descriptive statistics of Symbiodiniaceae cell densities per larva across ontogeny")%>%
+  kable_classic(full_width=FALSE, html_font="Arial")%>%
+  row_spec(0, bold = TRUE) 
+
+df%>%
+  group_by(group, hpf, lifestage)%>%
+  summarize(n=length(cells.mm),
+            Mean=format(round(mean(cells.mm), 0), 0), 
+            SE=format(round(sd(cells.mm)/sqrt(length(cells.mm)),0),0))%>%
+  rename(Lifestage=group, HPF=hpf)%>%
+  kbl(caption="Descriptive statistics of Symbiodiniaceae cell densities per mm2 across ontogeny")%>%
   kable_classic(full_width=FALSE, html_font="Arial")%>%
   row_spec(0, bold = TRUE) 
 
@@ -119,10 +146,10 @@ df%>%
 
 
 
-## Plot data as a scatterplot   
+Plot data as a scatterplot   
 ```{r}
 df$code<-paste(df$lifestage, "\n (", df$hpf, ")")
-df$code <- factor(df$code,levels = c("Egg Fertilized \n ( 1 )", "Embryo 1 \n ( 5 )", "Larvae 1 \n ( 38 )", "Larvae 2 \n ( 65 )", "Larvae 3 \n ( 93 )", "Larvae 4 \n ( 163 )", "Larvae 5 \n ( 183 )", "Recruit 1 \n ( 183 )", "Larvae 6 \n ( 231 )", "Recruit 2 \n ( 231 )"))
+df$code <- factor(df$code,levels = c("Egg Fertilized \n ( 1 )", "Embryo 1 \n ( 5 )", "Larvae 1 \n ( 38 )", "Larvae 2 \n ( 65 )", "Larvae 3 \n ( 93 )", "Larvae 4 \n ( 163 )", "Larvae 5 \n ( 183 )", "Recruit 1 \n ( 183 )", "Larvae 6 \n ( 231 )", "Recruit 2 \n ( 231 )", "Plug 1 \n ( 183 )", "Plug 2 \n ( 231 )", "Plug 3 \n ( 255 )"))
 df$hpf<-as.numeric(as.character(df$hpf))
 
 symb_plot<-df %>%
@@ -131,7 +158,7 @@ symb_plot<-df %>%
     geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(5)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#BA55D3", "#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
     ylim(0,9000)+
     theme_classic() + 
@@ -147,13 +174,14 @@ symb_plot<-df %>%
 #EMBRYO: #DFC27D
 #LARVAE: #80CDC1
 #RECRUIT: #003C30
+#ATTACHED: 
 
 #COLORS TO TRY FROM BRBG: "#543005" "#8C510A" "#BF812D" "#DFC27D" "#F6E8C3" "#F5F5F5" "#C7EAE5" "#80CDC1" "#35978F" "#01665E" "#003C30"
 
 #ggsave("Mcap2020/Figures/Physiology/SymbiontCounts.png", symb_plot, dpi=300, w=8.5, h=5, units="in")
 ```
 
-## Plot data as box plot  
+Plot data as box plot  
 ```{r}
 
 symb_plot2<-df %>%
@@ -162,21 +190,11 @@ symb_plot2<-df %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.2)) + 
     xlab("Hours Post-Fertilization)") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#BA55D3", "#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"), guide=FALSE)+
     ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
     ylim(0,9000)+
     theme_classic() + 
-    #geom_text(label="A", x=1, y=2500, size=4, color="black")+ #egg
-    #geom_text(label="A", x=2, y=2500, size=4, color="black")+ #embryo 1
-    #geom_text(label="A", x=3, y=2500, size=4, color="black")+ #larvae 1
-    #geom_text(label="AB", x=4, y=4100, size=4, color="black")+ #larvae 2
-    #geom_text(label="AB", x=5, y=4100, size=4, color="black")+ #larvae 3
-    #geom_text(label="AB", x=6, y=4100, size=4, color="black")+ #larvae 4
-    #geom_text(label="BC", x=6.8, y=4500, size=4, color="black")+ #larvae 5
-    #geom_text(label="CD", x=7.2, y=6500, size=4, color="black")+ #recruit 1
-    #geom_text(label="D", x=7.8, y=6500, size=4, color="black")+ #larvae6
-    #geom_text(label="D", x=8.2, y=8700, size=4, color="black")+ #recruit2
     theme(
       legend.position="right",
       axis.title=element_text(face="bold", size=14),

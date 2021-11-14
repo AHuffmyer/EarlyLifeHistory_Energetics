@@ -82,7 +82,7 @@ This script uses WGCNA analysis on metabolomics data set to explore whether we c
 
 # Load data  
 
-Read in data file and create metadata with sample information as well as a count matrix with metabolite counts. Data will be read in from "selected metabolites" dataset that has already undergone polarity selection and median-centered with log normalization.  
+Read in data file and create metadata with sample information as well as a count matrix with metabolite counts. Data will be read in from "selected metabolites" dataset that has already undergone polarity selection, cleaning metabolite names, and median-centered normalized ion counts.  
 
 ```{r}
 data<-read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
@@ -91,9 +91,28 @@ metadata<-data%>%
   select(Lifestage, Rep, HPF, Development)%>%
   mutate(Sample=paste(Lifestage, Rep, sep="-"))
 
+metadata<-metadata[1:47,] #reduce to just one set of metadata 
+
 data<-data%>%
   mutate(Sample=paste(Lifestage, Rep, sep="-"))%>%
   select(Sample, compound, norm_counts)
+```
+
+Convert the data table to a wide format with samples in columns and metabolites in rows.  
+
+```{r}
+data<-data%>%
+  spread(Sample, norm_counts)
+
+head(data)
+
+data<-data%>%
+  filter(!compound=="Betaine")
+
+rownames(data)<-data$compound
+
+data<-data%>%
+  select(-compound)
 ```
 
 Check that there are no metabolites with 0 counts for all samples. Should return TRUE.  
@@ -102,3 +121,639 @@ Check that there are no metabolites with 0 counts for all samples. Should return
 rowSums(dplyr::count(data)) > 0
 ```
 
+Conduct data filtering, this includes:  
+
+*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (metabolomics.Rmd). We are further setting the minimum value of metabolites to 1 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
+
+Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
+
+```{r}
+filt <- filterfun(pOverA(0.04,0.01))
+
+#create filter for the counts data
+gfilt <- genefilter(data, filt)
+
+#identify genes to keep by count filter
+keep <- data[gfilt,]
+
+#identify genes to keep by count filter
+keep <- data[gfilt,]
+
+#identify gene lists
+n.keep <- rownames(keep)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+data_filt <- as.data.frame(data[which(rownames(data) %in% n.keep),])
+
+#How many rows do we have before and after filtering?
+nrow(data) #Before
+nrow(data_filt) #After
+```
+
+Filtering does not remove any metablites, all 185 metabolites are used in analysis.  
+
+```{r}
+#Checking that all row and column names match. Should return "TRUE"
+all(rownames(metadata$sample_id) %in% colnames(data_filt))
+all(rownames(metadata$sample_id) == colnames(data_filt)) 
+```
+
+Transpose such that samples are in rows and metabolites are in columns.  
+
+```{r}
+data_filt <- t(data_filt) 
+```
+
+Look for outliers by examining tree of samples  
+```{r}
+sampleTree = hclust(dist(data_filt), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/Metabolomics/WGCNA/outliers.pdf")
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+```
+
+# Network construction and consensus module detection  
+
+## Choosing a soft-thresholding power: Analysis of network topology β  
+
+The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.  
+```{r, message=FALSE, warning=FALSE}
+# # Choose a set of soft-thresholding powers
+powers <- c(seq(from = 1, to=200, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+# 
+# # Call the network topology analysis function
+sft <-pickSoftThreshold(data_filt, powerVector = powers, verbose = 5)
+```
+
+Plot the results.  
+```{r}
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# # # Scale-free topology fit index as a function of the soft-thresholding power
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+     main = paste("Scale independence"));
+ text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+     labels=powers,cex=cex1,col="red");
+# # # this line corresponds to using an R^2 cut-off
+ abline(h=0.8,col="red")
+# # # Mean connectivity as a function of the soft-thresholding power
+ plot(sft$fitIndices[,1], sft$fitIndices[,5],
+     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+     main = paste("Mean connectivity"))
+ text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+```
+NEED TO LEARN ABOUT POWERS FOR METABOLOMICS AS COMPARED TO GENE EXPRESSION. 
+
+From this data, tt appears that our **soft thresholding power is 7**.  
+
+## Co-expression adjacency and topological overlap matrix similarity  
+
+Co-expression similarity and adjacency, using the soft thresholding power 7 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**: https://peterlangfelder.com/2018/11/25/__trashed/
+```{r, }
+# #Set up workspace
+#getwd() #Display the current working directory
+# #If necessary, change the path below to the directory where the data files are stored. "." means current directory. On Windows use a forward slash / instead of the usual \.
+#workingDir = ".";
+# setwd(WGCNA_dev);
+# library(WGCNA) #Load the WGCNA package
+options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
+enableWGCNAThreads() #Allow multi-threading within WGCNA. 
+# 
+# #Load the data saved in the first part
+adjTOM <- data_filt
+adjTOM
+# 
+# #Run analysis
+softPower=7 #Set softPower
+adjacency=adjacency(data_filt, power=softPower, type="unsigned") #Calculate adjacency
+
+TOM= TOMsimilarity(adjacency,TOMType = "unsigned") #Translate adjacency into topological overlap matrix
+#this step can take awhile 
+
+dissTOM= 1-TOM #Calculate dissimilarity in TOM
+
+save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/Metabolomics/adjTOM.RData") #Save 
+
+save(dissTOM, file = "Mcap2020/Output/Metabolomics/dissTOM.RData") #Save 
+```
+
+Load in dissTOM file obtained from previous R chunk.    
+```{r}
+dissTOM_in <- load(file="Mcap2020/Output/Metabolomics/dissTOM.RData") 
+dissTOM_in
+```
+
+## Clustering using TOM
+
+Form distance matrix
+```{r}
+geneTree=flashClust(as.dist(dissTOM), method="average")
+```
+
+We will now plot a dendrogram of metabolites Each leaf corresponds to a metabolite, branches grouping together densely are interconnected, highly co-expressed metabolites.  
+```{r}
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/dissTOMClustering.pdf", width=10, height=10)
+plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
+dev.off()
+```
+
+## Module identification using dynamicTreeCut  
+
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 3. 3 chosen for now to try out, but return to this for metabolomics specific numbers.  
+
+```{r}
+minModuleSize = 5
+dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+deepSplit = 2, pamRespectsDendro = FALSE,
+minClusterSize = minModuleSize)
+table(dynamicMods) #list modules and respective sizes
+save(dynamicMods, geneTree, file = "Mcap2020/Output/Metabolomics/dyMod_geneTree.RData") #Save to load into RStudio
+```
+Module 0 is reserved for unassigned metabolites. The are other modules will be listed largest to smallest.
+
+Load modules calculated from the adjacency matrix.  
+```{r}
+dyMod_geneTree <- load(file = "Mcap2020/Output/Metabolomics/dyMod_geneTree.RData")
+dyMod_geneTree
+```
+
+Plot the module assignment under the gene dendrogram
+```{r}
+#dynamicColors = labels2colors(dynamicMods) # Convert numeric labels into colors
+dynamicColors=dynamicMods
+table(dynamicColors)
+
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/dissTOMColorClustering.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = "Gene dendrogram and module colors")
+dev.off()
+```
+
+**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 90% similarity as my merging threshold.
+```{r}
+MEDissThres= 0.15 #merge modules that are 85% similar
+
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/eigengeneClustering2.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+abline(h=MEDissThres, col="red")
+dev.off()
+
+merge= mergeCloseModules(data_filt, dynamicColors, cutHeight= MEDissThres, verbose =3)
+
+mergedColors= merge$colors
+mergedMEs= merge$newMEs
+
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/mergedClusters.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
+dev.off()
+```
+
+Save new colors
+```{r}
+moduleLabels=mergedColors
+moduleColors = mergedColors # Rename to moduleColors
+#colorOrder = c("grey", standardColors(50)); # Construct numerical labels corresponding to the colors
+#moduleLabels = match(moduleColors, colorOrder)-1;
+MEs = mergedMEs;
+ncol(MEs) #How many modules do we have now?
+```
+
+We have 13 modules after merging with 85% similarity.   
+
+Plot new tree with 13 modules.  
+```{r}
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+#Cluster again and plot the results
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/eigengeneClustering3.pdf")
+METree = flashClust(as.dist(MEDiss), method = "average")
+MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+dev.off()
+```
+
+
+# Correlate to developmental stages  
+
+Prepare trait data. Data has to be numeric, so I will substitute time points/developmental stages for numeric values. The "trait" we are considering here is lifestage  
+
+Make a dataframe that has a column for each lifestage name and a row for samples. Populate a 1 for samples that match each lifestage and a 0 for samples not matching respective lifestages. 
+
+This process changes lifestages from a categorical variable into a binary variable. This will allow for correlations between mean eigengenes and lifestage.  
+ 
+```{r}
+metadata$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(metadata, names_from = Lifestage, values_from = num, id_cols = Sample))
+allTraits[is.na(allTraits)] <- c("0")
+rownames(allTraits) <- allTraits$Sample
+datTraits <- allTraits[,c(-1)]
+head(datTraits)
+```
+
+Define numbers of genes and samples and print.  
+```{r}
+nMetabolites = ncol(data_filt)
+nSamples = nrow(data_filt)
+
+nMetabolites
+nSamples
+```
+
+We have 184 metabolites and 47 samples.  
+
+Generate labels for module eigengenes as numbers.  
+```{r}
+MEs0 = moduleEigengenes(data_filt, moduleLabels,softPower=7)$eigengenes
+MEs = orderMEs(MEs0)
+names(MEs)
+```
+
+Correlations of traits with eigengenes
+```{r}
+moduleTraitCor = cor(MEs, datTraits, use = "p");
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
+Colors=sub("ME","", names(MEs))
+
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average")
+
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/ModuleTraitClusterTree.pdf", height=8, width=22)
+plot(moduleTraitTree)
+dev.off()
+```
+
+Correlations of metabolites with eigengenes. Calculate correlations between ME's and lifestages. 
+```{r}
+moduleGeneCor=cor(MEs,data_filt)
+moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
+head(moduleGenePvalue)
+```
+
+Calculate kME values (module membership). 
+
+```{r}
+datKME = signedKME(data_filt, MEs, outputColumnName = "kME")
+head(datKME)
+```
+
+Save module colors and labels for use in subsequent analyses.  
+
+```{r}
+save(MEs, moduleLabels, moduleColors, geneTree, file = "Mcap2020/Output/Metabolomics/NetworkConstructionWGCNA.RData") 
+```
+
+## Plot module-trait associations
+
+Represent module trait correlations as a heatmap 
+```{r}
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+head(textMatrix)
+
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/Module-trait-relationships.pdf")
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+dev.off()
+```
+
+Generate a complex heatmap of module-trait relationships.  
+
+```{r}
+#bold sig p-values
+#dendrogram with WGCNA MEtree cut-off
+#colored y-axis
+
+#Create list of pvalues for eigengene correlation with specific life stages
+heatmappval <- signif(moduleTraitPvalue, 1)
+
+#Make list of heatmap row colors
+htmap.colors <- names(MEs)
+htmap.colors <- gsub("ME", "", htmap.colors)
+
+#lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+
+library(dendsort)
+row_dend = dendsort(hclust(dist(moduleTraitCor)))
+col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
+
+pdf(file = "Mcap2020/Figures/Metabolomics/WGCNA/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
+ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Lifestage Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(5, "in"), 
+        height = unit(4.5, "in"), 
+        column_dend_reorder = TRUE, 
+        #cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"),
+        cluster_columns = col_dend,
+        row_dend_reorder = FALSE,
+        column_split = 6, 
+        column_dend_height = unit(.5, "in"),
+        #cluster_rows = METree, 
+        cluster_rows = row_dend, 
+        row_gap = unit(2.5, "mm"), 
+        border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] < 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+draw(ht)
+dev.off()
+
+```
+
+# **Plot mean eigengene over developmental stages**  
+
+View module eigengene data and make dataframe for Strader plots.  
+```{r}
+head(MEs)
+names(MEs)
+Strader_MEs <- MEs
+Strader_MEs$lifestage <- metadata$lifestage
+Strader_MEs$sample_id <- rownames(Strader_MEs)
+head(Strader_MEs)
+
+Strader_MEs<-Strader_MEs%>%
+  droplevels() #drop unused level
+
+dim(Strader_MEs)
+head(Strader_MEs)
+
+time_point_order = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2") #Set time_point order
+```
+
+Plot mean module eigengene for each module.  
+
+```{r}
+#convert wide format to long format for plotting  
+plot_MEs<-Strader_MEs%>%
+  gather(., key="Module", value="Mean", 1:8)
+
+dev.off() 
+
+expression_plots<-plot_MEs%>%
+  group_by(Module, lifestage) %>%
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  facet_grid(~Module)+
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ylab("Mean Module Eigenegene") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 12), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, 
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)); expression_plots
+
+ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/expression_eigengene.pdf", height=6, width=20)
+```
+
+# Plot mean eigengene over developmental stages    
+
+View module eigengene data and make dataframe for Strader plots.  
+```{r}
+head(MEs)
+names(MEs)
+Strader_MEs <- MEs
+Strader_MEs$Lifestage <- metadata$Lifestage
+Strader_MEs$sample_id <- rownames(Strader_MEs)
+head(Strader_MEs)
+
+Strader_MEs<-Strader_MEs%>%
+  droplevels() #drop unused level
+
+dim(Strader_MEs)
+head(Strader_MEs)
+
+time_point_order = c("Egg", "Embryo", "Larvae1", "Larvae2", "Larvae3", "Larvae4", "Larvae5", "Larvae6", "Recruit1", "Recruit2", "Recruit1plug", "Recruit2plug", "Recruit3plug") #Set time_point order
+```
+
+Plot mean module eigengene for each module.  
+
+```{r}
+#convert wide format to long format for plotting  
+plot_MEs<-Strader_MEs%>%
+  gather(., key="Module", value="Mean", 1:10)
+
+dev.off() 
+
+expression_plots<-plot_MEs%>%
+  group_by(Module, Lifestage) %>%
+  ggplot(aes(x=Lifestage, y=Mean, group=Lifestage)) +
+  facet_grid(~Module)+
+  geom_jitter(alpha = 0.5) +
+  geom_boxplot(alpha=0) +
+  scale_x_discrete(limits=time_point_order) +
+  #ylim(-0.5,1) +
+  ylab("Mean Module Eigenegene") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 12), #set x-axis label size
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14), #set y-axis label size, 
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)); expression_plots
+
+ggsave(expression_plots, file="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene.pdf", height=6, width=20)
+```
+
+# Calculating gene significance and module membership    
+
+We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the metabolite and the lifestage timepoint. For each module, we also define a quantitative measure of module membership (MM) as the correlation of the module eigengene and the gene expression profile.  
+
+Define lifestage as a numeric value (ranging from 1 (egg, first timepoint)-10 (recruit, last time point)).  
+
+```{r}
+expressionProfile_data <- Strader_MEs
+
+expressionProfile_data<-expressionProfile_data%>%
+  droplevels() #drop unused level
+
+cols.num <- c(1:10)
+
+expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
+sapply(expressionProfile_data, class)
+
+dim(expressionProfile_data)
+head(expressionProfile_data)
+
+lifestage <- as.data.frame(expressionProfile_data$Lifestage)
+names(lifestage) = "lifestage_num"
+
+#lifestage$lifestage_num <- sub("_[^_]+$", "", lifestage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+
+#lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
+dim(lifestage)
+```
+
+Generate data frame for module membership for each gene (absolute value of correlation between module eigengene and gene).  
+- geneModuleMembership = correlation of the module eigengene and the gene 
+- MMPvalue = p-value of correlation between module eigengene and the gene 
+```{r}
+#names(data_filt) = gsub(pattern = "*.t1", replacement = "", x = names(datExpr))
+#remove ".ti" from names in datExpr file and assign gene id as probe names
+
+modNames = substring(names(MEs), 3) #pull out module names
+
+geneModuleMembership = as.data.frame(cor(data_filt, MEs, use = "p"));
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples));
+
+names(geneModuleMembership) = paste("MM", modNames, sep="");
+names(MMPvalue) = paste("p.MM", modNames, sep="");
+```
+
+
+Could export here to get list of metabolites? 
+
+
+AH WORKING HERE TO PULL OUT LIST OF METABOLITES WITH MODULE MEMBERSHIP - do we even need anything below? 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Generate dataframe with Gene Significance GS as the absolute value of the correlation between the metabolite and the lifestage timepoint 
+- geneTraitSignificance = correlation of the gene and lifestage time point 
+- GSPvalue = p-value of correlation between gene and lifestage time point  
+```{r}
+geneTraitSignificance = as.data.frame(cor(data_filt, lifestage, use = "p"));
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
+
+names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
+names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
+```
+
+View correlation between module membership score and gene significance for each module (1,2,3,5,6,7,8).  
+```{r}
+module = "1"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "2"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "3"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "5"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "6"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "7"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "8"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+```
+
+Generate a list of genes associated with each module. Change the module number in this code to look at respective module.   
+
+```{r}
+names(datExpr)[moduleColors=="8"]
+```

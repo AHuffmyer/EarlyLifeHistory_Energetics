@@ -166,8 +166,6 @@ head(assay(gvst), 3) #view transformed gene count data for the first three genes
 ```
 
 
-
-
 # **Examine PCA and sample distances**  
 
 Plot a heatmap to sample to sample distances  

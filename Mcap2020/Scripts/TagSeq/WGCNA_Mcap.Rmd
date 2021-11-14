@@ -675,7 +675,7 @@ MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamp
 names(geneModuleMembership) = paste("MM", modNames, sep="");
 names(MMPvalue) = paste("p.MM", modNames, sep="");
 ```
-
+ 
 
 Generate dataframe with Gene Significance GS as the absolute value of the correlation between the gene and the lifestage timepoint 
 - geneTraitSignificance = correlation of the gene and lifestage time point 
@@ -819,7 +819,7 @@ row_nas<-which(is.na(probes2annot))
 missing<-as.data.frame(probes[row_nas])
 print(missing)
 ```
-
+ 
 
 CHECK THIS TO SEE IF FORMATTING IS DIFFERENT????? 
 
@@ -1586,32 +1586,32 @@ For this first example, generate files of genes in modules that are significantl
 First generate gene list in metamorphosed recruits (modules 3 and 9). 
 ```{r}
 #load in gene info file if not already loaded
-geneInfo<-read.csv("Mcap2020/Output/TagSeq/geneInfo.csv")
+#geneInfo<-read.csv("Mcap2020/Output/TagSeq/geneInfo.csv")
 
-magi_genes<-geneInfo%>%
-  filter(moduleColor %in% c("9", "3"))%>%
-  select(gene_id)%>%
-  write.csv(., "Mcap2020/Data/MAGI/test_genes.csv", row.names=FALSE)
+#magi_genes<-geneInfo%>%
+ # filter(moduleColor %in% c("9", "3"))%>%
+ # select(gene_id)%>%
+ # write.csv(., "Mcap2020/Data/MAGI/test_genes.csv", row.names=FALSE)
 ```
 
 Then obtain fasta sequences for each gene listed in the magi_genes dataframe.  
 ```{r}
-library(phylotools)
+#library(phylotools)
 
 #ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.mRNA.fa", clean_name = FALSE)
-Mcap.protein.fa
-ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.protein.fa", clean_name = FALSE)
+#Mcap.protein.fa
+#ref <- read.fasta(file="Mcap2020/Data/TagSeq/Mcap.protein.fa", clean_name = FALSE)
 ```
 
 Extract sequences.  
 
 ```{r}
 #Prep ref
-ref$seq.name <- gsub(" ", "", ref$seq.name)
+#ref$seq.name <- gsub(" ", "", ref$seq.name)
 #might need to take out quotes from ref names for protein sequences??
 
 
-dat2fasta(ref[which(ref$seq.name%in%magi_genes$gene_id),], "Mcap2020/Data/MAGI")
+#dat2fasta(ref[which(ref$seq.name%in%magi_genes$gene_id),], "Mcap2020/Data/MAGI")
 ```
 
 

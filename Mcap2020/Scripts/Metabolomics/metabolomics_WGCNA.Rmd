@@ -106,8 +106,8 @@ data<-data%>%
 
 head(data)
 
-data<-data%>%
-  filter(!compound=="Betaine")
+#data<-data%>%
+  #filter(!compound=="Betaine")
 
 rownames(data)<-data$compound
 
@@ -158,6 +158,16 @@ all(rownames(metadata$sample_id) %in% colnames(data_filt))
 all(rownames(metadata$sample_id) == colnames(data_filt)) 
 ```
 
+Look for outliers by examining tree of metabolites  
+```{r}
+sampleTree = hclust(dist(data_filt), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/Metabolomics/WGCNA/outliers_metabolites.pdf")
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+```
+
 Transpose such that samples are in rows and metabolites are in columns.  
 
 ```{r}
@@ -169,7 +179,7 @@ Look for outliers by examining tree of samples
 sampleTree = hclust(dist(data_filt), method = "average");
 # Plot the sample tree: Open a graphic output window of size 12 by 9 inches
 # The user should change the dimensions if the window is too large or too small.
-pdf("Mcap2020/Figures/Metabolomics/WGCNA/outliers.pdf")
+pdf("Mcap2020/Figures/Metabolomics/WGCNA/outliers_samples.pdf")
 plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
 dev.off()
 ```
@@ -206,9 +216,8 @@ plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
      main = paste("Mean connectivity"))
  text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 ```
-NEED TO LEARN ABOUT POWERS FOR METABOLOMICS AS COMPARED TO GENE EXPRESSION. 
 
-From this data, tt appears that our **soft thresholding power is 7**.  
+From this data, it appears that our **soft thresholding power is 7**.  
 
 ## Co-expression adjacency and topological overlap matrix similarity  
 
@@ -544,6 +553,10 @@ head(Strader_MEs)
 time_point_order = c("Egg", "Embryo", "Larvae1", "Larvae2", "Larvae3", "Larvae4", "Larvae5", "Larvae6", "Recruit1", "Recruit2", "Recruit1plug", "Recruit2plug", "Recruit3plug") #Set time_point order
 ```
 
+
+
+
+
 Plot mean module eigengene for each module.  
 
 ```{r}
@@ -579,6 +592,19 @@ expression_plots<-plot_MEs%>%
 ggsave(expression_plots, file="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene.pdf", height=6, width=20)
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Calculating gene significance and module membership    
 
 We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the metabolite and the lifestage timepoint. For each module, we also define a quantitative measure of module membership (MM) as the correlation of the module eigengene and the gene expression profile.  
@@ -600,11 +626,27 @@ dim(expressionProfile_data)
 head(expressionProfile_data)
 
 lifestage <- as.data.frame(expressionProfile_data$Lifestage)
-names(lifestage) = "lifestage_num"
+names(lifestage) = "lifestage"
 
-#lifestage$lifestage_num <- sub("_[^_]+$", "", lifestage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+lifestage<-lifestage%>%
+  mutate(lifestage_num=if_else(lifestage == "Egg", "1", 
+                               if_else(lifestage =="Embryo", "2",
+                                       if_else(lifestage == "Larvae1", "3", 
+                                               if_else(lifestage=="Larvae2", "4", 
+                                                       if_else(lifestage=="Larvae3", "5",
+                                                               if_else(lifestage=="Larvae4", "6",
+                                                                      if_else(lifestage=="Larvae5", "7",
+                                                                              if_else(lifestage=="Larvae6", "8",
+                                                                                   if_else(lifestage=="Recruit1", "9",
+                                                                                              if_else(lifestage=="Recruit2", "10",
+                                                                                                        if_else(lifestage=="Recruit1plug", "11",
+                                                                                                              if_else(lifestage=="Recruit2plug", "12",
+                                                                                                                  if_else(lifestage=="Recruit3plug", "13","NA"))))))))))))))
 
-#lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
+lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
+lifestage<-lifestage%>%
+  select(lifestage_num)
+
 dim(lifestage)
 ```
 
@@ -612,9 +654,6 @@ Generate data frame for module membership for each gene (absolute value of corre
 - geneModuleMembership = correlation of the module eigengene and the gene 
 - MMPvalue = p-value of correlation between module eigengene and the gene 
 ```{r}
-#names(data_filt) = gsub(pattern = "*.t1", replacement = "", x = names(datExpr))
-#remove ".ti" from names in datExpr file and assign gene id as probe names
-
 modNames = substring(names(MEs), 3) #pull out module names
 
 geneModuleMembership = as.data.frame(cor(data_filt, MEs, use = "p"));
@@ -623,28 +662,6 @@ MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamp
 names(geneModuleMembership) = paste("MM", modNames, sep="");
 names(MMPvalue) = paste("p.MM", modNames, sep="");
 ```
-
-
-Could export here to get list of metabolites? 
-
-
-AH WORKING HERE TO PULL OUT LIST OF METABOLITES WITH MODULE MEMBERSHIP - do we even need anything below? 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Generate dataframe with Gene Significance GS as the absolute value of the correlation between the metabolite and the lifestage timepoint 
 - geneTraitSignificance = correlation of the gene and lifestage time point 
@@ -657,103 +674,8 @@ names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
 names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
 ```
 
-View correlation between module membership score and gene significance for each module (1,2,3,5,6,7,8).  
-```{r}
-module = "1"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
+AH WORKING HERE 
 
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+Data frame for significance with module: moduleGenePvalue; datKME
 
-module = "2"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
 
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "3"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "5"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "6"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "7"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "8"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-```
-
-Generate a list of genes associated with each module. Change the module number in this code to look at respective module.   
-
-```{r}
-names(datExpr)[moduleColors=="8"]
-```

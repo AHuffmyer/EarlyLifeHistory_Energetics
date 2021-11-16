@@ -862,14 +862,14 @@ peaks_selected<- droplevels(peaks_selected)
 
 length(levels(peaks_selected$compound)) #199 metabolites in data set before cleaning
 
-peaks_selected_clean<-peaks_selected[!grepl("PosIS", peaks_selected$compound),]
-peaks_selected_clean<-peaks_selected_clean[!grepl("NegIS", peaks_selected_clean$compound),]
+peaks_selected_clean<-peaks_selected[!grepl("PosIS", peaks_selected$compound),] #remove POS
+peaks_selected_clean<-peaks_selected_clean[!grepl("NegIS", peaks_selected_clean$compound),] #remove NEG
 peaks_selected_clean<-droplevels(peaks_selected_clean)
 
 length(levels(peaks_selected_clean$compound)) #185 metabolites in data set after cleaning (199-5-9=185), correct value
 
 peaks_selected_clean<-peaks_selected_clean%>%
-  mutate(compound = str_remove(compound, pattern=fixed('(+HAc)')))%>%
+  mutate(compound = str_remove(compound, pattern=fixed('(+HAc)')))%>% #rename any with +HAc (would do the same here if you have SIM compounds)
   mutate(compound = as.factor(compound))
 
 length(levels(peaks_selected_clean$compound))

@@ -1,68 +1,68 @@
 Metabolite,VIP,direction,lifestage
-Tryptamine,2.229830894192597,Decrease,Larvae
-Arginine,2.0005317875558903,Increase,Metamorphosed Recruit
-ATP,1.9691588588477187,Increase,Metamorphosed Recruit
-Dopamine,1.9669513787601622,Increase,Metamorphosed Recruit
-Lysine,1.9645630604923454,Increase,Metamorphosed Recruit
-Arginine-Glutamine,1.8827293695775436,Increase,Metamorphosed Recruit
-Thymidine,1.867020203352968,Decrease,Larvae
-N-carbomoyl-L-aspartate,1.8516852463254998,Decrease,Larvae
-S-adenosyl-L-methionine,1.8012027556948378,Increase,Metamorphosed Recruit
-Phenylalanine,1.7554503306511726,Decrease,Larvae
-UMP,1.748779194386763,Decrease,Larvae
-Phenethylamine,1.7349014999294579,Decrease,Larvae
-Adenosine,1.7167254961825578,Decrease,Larvae
-Citrulline,1.712112603585258,Decrease,Larvae
-Nicotinamide riboside,1.7076710253869007,Decrease,Larvae
-AMP,1.6019016986495798,Decrease,Larvae
-Itaconic acid,1.5986337586640798,Decrease,Larvae
-N N N-Trimethyllysine,1.5900521737530287,Increase,Metamorphosed Recruit
-ADP,1.5886855166545502,Increase,Metamorphosed Recruit
-GMP,1.5884482286897763,Decrease,Larvae
-Nicotinamide ribotide,1.582861955243757,Decrease,Larvae
-Montiporic Acid C,1.575484969972755,Decrease,Larvae
-Montiporic Acid A,1.5239288784852008,Decrease,Larvae
-Guanine,1.5147728921117658,Increase,Metamorphosed Recruit
-5-methylthioadenosine,1.5030365925556495,Increase,Metamorphosed Recruit
-Arginine-Valine,1.4897689923027595,Increase,Metamorphosed Recruit
-Ophthalmate,1.4801660418795768,Increase,Metamorphosed Recruit
-Serine,1.4717645576951215,Increase,Metamorphosed Recruit
-Montiporic Acid B,1.461853140356527,Nonsig,NA
-O-Phosphorylethanolamine,1.4492645600366665,Increase,Metamorphosed Recruit
-Acetyl CoA,1.448597966782186,Increase,Metamorphosed Recruit
-Montiporic Acid D,1.44838623108794,Nonsig,NA
-Uridine,1.4375475495712549,Nonsig,NA
-L-Octanoylcarnitine,1.424693923778763,Increase,Metamorphosed Recruit
-Cresol,1.407964287325586,Nonsig,NA
-Hypotaurine,1.4021322972582988,Nonsig,NA
-Tyrosine,1.3987664805308193,Decrease,Larvae
-Glucose-6-phosphate,1.3883084574815157,Increase,Metamorphosed Recruit
-Glutaryl-carnitine,1.315548989577161,Decrease,Larvae
-Pantothenate,1.309256729090117,Increase,Metamorphosed Recruit
-CDP-Choline ,1.3034383866319297,Increase,Metamorphosed Recruit
-GTP,1.2752773687145873,Increase,Metamorphosed Recruit
-Mannose-6-phosphate,1.2725990023268408,Increase,Metamorphosed Recruit
-Deoxyadenosine,1.2540635043843513,Nonsig,NA
-Hypoxanthine,1.2530859297041286,Nonsig,NA
-Methionine,1.2527042125569405,Nonsig,NA
-Raffinose,1.2098913879979367,Nonsig,NA
-CMP,1.1906124399041347,Nonsig,NA
-N-Acetylaspartate,1.1898977704413838,Nonsig,NA
-N6-Acetyl-L-lysine,1.1898860856716296,Nonsig,NA
-a-ketoglutarate,1.1805583035871403,Nonsig,NA
-Norvaline,1.1707737335930024,Nonsig,NA
-Acetyl-arginine,1.1560463432561858,Nonsig,NA
-Lysine-Glutamine,1.14624252919437,Nonsig,NA
-2-Furoyl glycine,1.1425844796567792,Nonsig,NA
-Guanosine,1.1338019951708314,Nonsig,NA
-Hippuric acid,1.123923393608076,Nonsig,NA
-Glucose,1.1129890521920691,Nonsig,NA
-O-Butanoylcarnitine,1.1112635767493322,Nonsig,NA
-Pirbuterol,1.0979197074645266,Nonsig,NA
-Cellobiose,1.0872382783544432,Nonsig,NA
-Homoarginine,1.0819955501676024,Nonsig,NA
-Homocitrulline,1.0578588038850316,Nonsig,NA
-Phosphocholine ,1.04133318141676,Nonsig,NA
-Inositol,1.0377769125409495,Nonsig,NA
-Pipecolic acid,1.017178185250315,Nonsig,NA
-Glutamine,1.008382968890693,Nonsig,NA
+Tryptamine,2.220468478375358,Decrease,Larvae
+Arginine,1.9920088628963868,Increase,Metamorphosed Recruit
+Dopamine,1.961173875523529,Increase,Metamorphosed Recruit
+ATP,1.960783534439633,Increase,Metamorphosed Recruit
+Lysine,1.9550512327260394,Increase,Metamorphosed Recruit
+Arginine-Glutamine,1.8654296707460982,Increase,Metamorphosed Recruit
+Thymidine,1.8528338237657735,Decrease,Larvae
+N-carbomoyl-L-aspartate,1.833032510473773,Decrease,Larvae
+S-adenosyl-L-methionine,1.7943575972202088,Increase,Metamorphosed Recruit
+Phenylalanine,1.746131292489839,Decrease,Larvae
+UMP,1.7410057969259345,Decrease,Larvae
+Phenethylamine,1.7276175387377466,Decrease,Larvae
+Nicotinamide riboside,1.71002006369406,Decrease,Larvae
+Adenosine,1.7092290587926253,Decrease,Larvae
+Citrulline,1.7007270282279656,Decrease,Larvae
+Itaconic acid,1.5946695972385863,Decrease,Larvae
+AMP,1.594566280867028,Decrease,Larvae
+N N N-Trimethyllysine,1.5823356269667026,Increase,Metamorphosed Recruit
+GMP,1.5796479628566955,Decrease,Larvae
+ADP,1.5792137647932354,Increase,Metamorphosed Recruit
+Nicotinamide ribotide,1.5705488785752946,Decrease,Larvae
+Montiporic Acid C,1.5696449175936682,Decrease,Larvae
+Montiporic Acid A,1.5183469487663501,Decrease,Larvae
+Guanine,1.5090074509524594,Increase,Metamorphosed Recruit
+5-methylthioadenosine,1.4912224211456897,Increase,Metamorphosed Recruit
+Arginine-Valine,1.4796636949682795,Increase,Metamorphosed Recruit
+Ophthalmate,1.4717696607191182,Increase,Metamorphosed Recruit
+Serine,1.4590540341212601,Increase,Metamorphosed Recruit
+Montiporic Acid B,1.4555307412727487,Nonsig,NA
+Acetyl CoA,1.4475452928942913,Increase,Metamorphosed Recruit
+Montiporic Acid D,1.4426524470015807,Nonsig,NA
+O-Phosphorylethanolamine,1.434170812061929,Increase,Metamorphosed Recruit
+Uridine,1.427166742843518,Nonsig,NA
+L-Octanoylcarnitine,1.419064767146811,Increase,Metamorphosed Recruit
+Cresol,1.4077807963414615,Nonsig,NA
+Hypotaurine,1.3957601699187576,Nonsig,NA
+Tyrosine,1.3904079499783175,Decrease,Larvae
+Glucose-6-phosphate,1.3897636887582294,Increase,Metamorphosed Recruit
+Pantothenate,1.3122976132170787,Increase,Metamorphosed Recruit
+Glutaryl-carnitine,1.308751134924195,Decrease,Larvae
+CDP-Choline ,1.2995333617568932,Increase,Metamorphosed Recruit
+GTP,1.2727638382911413,Increase,Metamorphosed Recruit
+Mannose-6-phosphate,1.2595770490976108,Increase,Metamorphosed Recruit
+Deoxyadenosine,1.2537309017290137,Nonsig,NA
+Hypoxanthine,1.2431599438387324,Nonsig,NA
+Methionine,1.2314952139094755,Nonsig,NA
+Raffinose,1.2054139892687432,Nonsig,NA
+N6-Acetyl-L-lysine,1.1835241995075014,Nonsig,NA
+CMP,1.1788754071698926,Nonsig,NA
+Norvaline,1.1621446540919014,Nonsig,NA
+N-Acetylaspartate,1.1594581358775042,Nonsig,NA
+a-ketoglutarate,1.1493893698675703,Nonsig,NA
+Acetyl-arginine,1.1460181115372994,Nonsig,NA
+2-Furoyl glycine,1.133931121057769,Nonsig,NA
+Lysine-Glutamine,1.1315292873009553,Nonsig,NA
+Hippuric acid,1.1274098031271849,Nonsig,NA
+Guanosine,1.1221986442371379,Nonsig,NA
+O-Butanoylcarnitine,1.1062246706850556,Nonsig,NA
+Glucose,1.1052080527106627,Nonsig,NA
+Pirbuterol,1.0958638625424268,Nonsig,NA
+Homoarginine,1.0855003921478248,Nonsig,NA
+Homocitrulline,1.0720342663697682,Nonsig,NA
+Cellobiose,1.0619629890772004,Nonsig,NA
+Inositol,1.0329328701678815,Nonsig,NA
+Phosphocholine ,1.028567715715103,Nonsig,NA
+Pipecolic acid,1.0270873681467423,Nonsig,NA
+Glutamine,1.0023366897464563,Nonsig,NA

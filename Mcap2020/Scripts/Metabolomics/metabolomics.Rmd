@@ -351,7 +351,7 @@ pcaPlot1a<-ggplot2::autoplot(scaled.pca, data=data_pca, frame.colour="Developmen
 
 #pcaPlot1$layers[[2]]$aes_params$size <- 1
 
-ggsave("Mcap2020/Figures/Metabolomics/PCA_pos.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Metabolomics/PCA_pos.pdf", plot=pcaPlot1, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ```{r}
@@ -692,7 +692,7 @@ pcaPlot1a_neg<-ggplot2::autoplot(scaled.pca.neg, data=data_pca_neg, frame.colour
 
 #pcaPlot1$layers[[2]]$aes_params$size <- 1
 
-ggsave("Mcap2020/Figures/Metabolomics/PCA_neg.pdf", plot=pcaPlot1_neg, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Metabolomics/PCA_neg.pdf", plot=pcaPlot1_neg, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 ```{r}
@@ -852,21 +852,40 @@ hist(log(peaks_selected$log_norm_counts))
 
 Remove PosIS and NegIS metabolites - these are internal standards that are not relevant for our samples. Clean any names that have (+HAc) and (+), rename to just include the metabolite name.  
 
+
+
+NEED TO DO REMOVE NON HAC or SIM COMPOUNDS BEFORE THE HAC ONES ARE RENAMED TO KEEP THE "GOOD ONES"
+
+
 ```{r, echo=FALSE, results=FALSE}
 grep("PosIS", levels(peaks_selected$compound)) #5 metabolites with PosIS, need to remove
 grep("NegIS", levels(peaks_selected$compound)) #9 metabolites with NegIS, need to remove
 grep("(HAc+)", levels(peaks_selected$compound)) #3 metabolites with HAc+, need to rename
-grep("(SIM)", levels(peaks_selected$compound)) #4 metabolites with HAc+, need to rename
+grep("SIM", levels(peaks_selected$compound)) #0 metabolites with SIM, need to rename
+
+#HAC compounds are ones we want to keep, so we need to remove the compounds that dont use the HAc standards.  
+#Glycerophosphocholine
+#Phosphocholine
+#CDP-Choline
+
+peaks_selected<-peaks_selected%>%
+  filter(!compound=="Glycerophosphocholine")
+peaks_selected<-peaks_selected%>%
+  filter(!compound=="Phosphocholine")
+peaks_selected<-peaks_selected%>%
+  filter(!compound=="CDP-Choline")
+
+levels(peaks_selected$compound)
 
 peaks_selected<- droplevels(peaks_selected)
 
-length(levels(peaks_selected$compound)) #199 metabolites in data set before cleaning
+length(levels(peaks_selected$compound)) #196 metabolites in data set before cleaning (removed the three from above)
 
 peaks_selected_clean<-peaks_selected[!grepl("PosIS", peaks_selected$compound),] #remove POS
 peaks_selected_clean<-peaks_selected_clean[!grepl("NegIS", peaks_selected_clean$compound),] #remove NEG
 peaks_selected_clean<-droplevels(peaks_selected_clean)
 
-length(levels(peaks_selected_clean$compound)) #185 metabolites in data set after cleaning (199-5-9=185), correct value
+length(levels(peaks_selected_clean$compound)) #182 metabolites in data set after cleaning (199-5-9=185), correct value
 
 peaks_selected_clean<-peaks_selected_clean%>%
   mutate(compound = str_remove(compound, pattern=fixed('(+HAc)')))%>% #rename any with +HAc (would do the same here if you have SIM compounds)
@@ -894,7 +913,6 @@ data_pca_full<-peaks_selected_clean%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, value)%>%
   spread(compound, value)
 
-
 #remove columns with na's
 data_pca_full<-data_pca_full%>%
     select_if(~ !any(is.na(.)))
@@ -903,7 +921,7 @@ data_pca_full<-data_pca_full%>%
 Plot PCA and view scree plot with lifestage in colors.   
 
 ```{r}
-scaled.pca<-prcomp(data_pca_full[c(5:203)],scale=TRUE, center=TRUE) 
+scaled.pca<-prcomp(data_pca_full[c(5:186)],scale=TRUE, center=TRUE) 
 
 fviz_eig(scaled.pca)
 
@@ -946,7 +964,7 @@ pcaPlot_full2<-ggplot2::autoplot(scaled.pca, data=data_pca_full, frame.colour="D
         axis.text = element_text(size=18), 
         axis.title = element_text(size=18,  face="bold"));pcaPlot_full2
 
-ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
+#ggsave("Mcap2020/Figures/Metabolomics/PCA_full.pdf", plot=pcaPlot_full, height=8, width=10, units = c("in"), dpi=300) #output figure
 ```
 
 Show a panel of PCA by positive, negative, and combined datasets.   
@@ -990,7 +1008,7 @@ X <- metabolites%>%
 Y <- as.factor(X$HPF) #select treatment names
 Y
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 
 # PLSDA without variable selection
@@ -1049,7 +1067,7 @@ levels(X$Development) <- list(A_Egg  = "Egg", B_Embryo = "Embryo", C_Larvae = "L
 Y <- X$Development #select treatment names
 Y
 
-X<-X[4:188] #pull only data columns
+X<-X[4:185] #pull only data columns
 
 dim(X) ## display number of samples and metabolite features
 
@@ -1192,7 +1210,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 MyResult.plsda_EvE <- plsda(X,Y, ncomp=4)
 
@@ -1312,7 +1330,7 @@ EvE_plotb<-EvE_VIP_plot %>%
 
 #arrange plots
 EvE_plots<-plot_grid(EvE_plotb, EvE_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-ggsave("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP.pdf", width=7, height=9, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP.pdf", width=7, height=9, units="in")
 
 ```
 
@@ -1355,7 +1373,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 MyResult.plsda_EvL <- plsda(X,Y, ncomp=4)
 
@@ -1471,7 +1489,7 @@ EvL_plotb<-EvL_VIP_plot %>%
 
 #arrange plots
 EvL_plots<-plot_grid(EvL_plotb, EvL_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP.pdf", width=7, height=11, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP.pdf", width=7, height=11, units="in")
 ```
 
 Plot as differential bar plots.  
@@ -1513,7 +1531,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 MyResult.plsda_LvM <- plsda(X,Y, ncomp=4)
 
@@ -1622,7 +1640,7 @@ LvM_pvalues<-LvM_pvalues%>%
  
  #arrange plots
  LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
- ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
+ #ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP.pdf", width=5, height=7, units="in")
 ```
 
 ```{r}
@@ -1664,7 +1682,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 MyResult.plsda_LvC <- plsda(X,Y, ncomp=4)
 
@@ -1780,7 +1798,7 @@ LvC_plotb<-LvC_VIP_plot %>%
 
 #arrange plots
 LvC_plots<-plot_grid(LvC_plotb, LvC_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-ggsave("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP.pdf", width=7, height=11, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP.pdf", width=7, height=11, units="in")
 ```
 
 Plot as differential bar plots.  
@@ -1822,7 +1840,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 MyResult.plsda_MvC <- plsda(X,Y, ncomp=4)
 
@@ -1938,7 +1956,7 @@ MvC_plotb<-MvC_VIP_plot %>%
 
 #arrange plots
 MvC_plots<-plot_grid(MvC_plotb, MvC_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
-ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP.pdf", width=7, height=11, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP.pdf", width=7, height=11, units="in")
 ```
 
 Plot as differential bar plots.  
@@ -1970,7 +1988,7 @@ ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", widt
 
 ```{r}
 VIP_plots<-plot_grid(EvE_plots, EvL_plots, LvC_plots, MvC_plots, ncol=1, nrow=4, rel_widths=c(1,1,1,1), rel_heights=c(1.2,2,1.5,1.2))
-ggsave("Mcap2020/Figures/Metabolomics/VIP_panel.pdf", width=7, height=48, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/VIP_panel.pdf", width=7, height=48, units="in")
 ```
  
 Combine all differential bar plots.  
@@ -2046,7 +2064,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$HPF) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
 tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 10, 
@@ -2209,7 +2227,7 @@ X <- metabolites%>%
 
 Y <- as.factor(X$Development) #select treatment names
 
-X<-X[5:189] #pull only data columns
+X<-X[5:186] #pull only data columns
 
 set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
 tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 5, 

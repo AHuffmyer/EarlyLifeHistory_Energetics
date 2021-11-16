@@ -1,72 +1,71 @@
 Metabolite,VIP,direction,lifestage
-Montiporic Acid D,1.9657162265327803,Decrease,MetamorphosedRecruit
-Cresol,1.9633593743692797,Decrease,MetamorphosedRecruit
-Montiporic Acid C,1.939684487380474,Decrease,MetamorphosedRecruit
-Montiporic Acid B,1.9377751421295555,Decrease,MetamorphosedRecruit
-Montiporic Acid A,1.9314310790513916,Decrease,MetamorphosedRecruit
-Phenethylamine,1.9136812433595154,Decrease,MetamorphosedRecruit
-Indole,1.8804756126214426,Increase,CalcifyingRecruit
-Glutaryl-carnitine,1.8400685076778625,Increase,CalcifyingRecruit
-Nicotinamide ribotide,1.7887815913306404,Increase,CalcifyingRecruit
-Serine,1.7159147680882345,Decrease,MetamorphosedRecruit
-Adenosine,1.6759033353155863,Decrease,MetamorphosedRecruit
-"NADPH",1.6631214567081922,Increase,CalcifyingRecruit
-Arginine-Glutamine,1.6601997050369885,Decrease,MetamorphosedRecruit
-Glutamine,1.6172663530017932,Decrease,MetamorphosedRecruit
-"NAD+",1.6005639116566857,Increase,CalcifyingRecruit
-Itaconic acid,1.5776926560677398,Increase,CalcifyingRecruit
-Guanosine,1.5759849956620344,Decrease,MetamorphosedRecruit
-Nicotinamide riboside,1.5690170235402223,Increase,CalcifyingRecruit
-AMP,1.5684513803983753,Increase,CalcifyingRecruit
-Glutamate,1.5674299176876598,Increase,CalcifyingRecruit
-Glucose-6-phosphate,1.553483475571413,Increase,CalcifyingRecruit
-Ribothymidine,1.5520293592170242,Decrease,MetamorphosedRecruit
-ADP,1.5271278948881681,Increase,CalcifyingRecruit
-GDP-Mannose,1.5111166874609487,Increase,CalcifyingRecruit
-Glucose,1.4727416197099377,Decrease,MetamorphosedRecruit
-N-Acetyl-Glucosamine,1.4549605907071712,Decrease,MetamorphosedRecruit
-Valine,1.4285433278534587,Decrease,MetamorphosedRecruit
-Pyruvate,1.4211953472173624,Decrease,MetamorphosedRecruit
-S-adenosyl-L-methionine,1.4086854469632886,Increase,CalcifyingRecruit
-CDP-Choline,1.3934509704489073,Increase,CalcifyingRecruit
-Asparagine,1.387837391970548,Decrease,MetamorphosedRecruit
-Ophthalmate,1.3758382145408714,Decrease,MetamorphosedRecruit
-Cytosine,1.363556390731407,Increase,CalcifyingRecruit
-N-carbomoyl-L-aspartate,1.3554669452012873,Increase,CalcifyingRecruit
-Glycyl-L-proline,1.3376361930535068,Increase,CalcifyingRecruit
-Tyrosine,1.321129073638347,Decrease,MetamorphosedRecruit
-Acetyllysine,1.3197311101550047,Increase,CalcifyingRecruit
-Glutathione,1.2819717549696734,Increase,CalcifyingRecruit
-"NADP+",1.27698027463319,Increase,CalcifyingRecruit
-Taurine,1.27087431368553,Increase,CalcifyingRecruit
-Pipecolic acid,1.2638604513743261,Increase,CalcifyingRecruit
-Mannose-6-phosphate,1.229889569315489,Increase,CalcifyingRecruit
-Uridine,1.2260739484523817,Decrease,MetamorphosedRecruit
-Acetyl-arginine,1.2174614944142623,Decrease,MetamorphosedRecruit
-S-Adenosyl-homocysteine,1.2020084473937656,Increase,CalcifyingRecruit
-Methionine,1.201528630268817,Decrease,MetamorphosedRecruit
-O-Decanoyl-L-carnitine,1.1928197892898271,Increase,CalcifyingRecruit
-Creatine,1.184211679015266,Decrease,MetamorphosedRecruit
-Inositol,1.1839134403077913,Increase,CalcifyingRecruit
-Tryptamine,1.1813960128333054,Decrease,MetamorphosedRecruit
-Arginine,1.1701753060418685,Decrease,MetamorphosedRecruit
-NG-dimethyl-L-arginine,1.1599911487921406,Decrease,MetamorphosedRecruit
-Malate,1.1406629213839061,Increase,CalcifyingRecruit
-Adipic acid,1.13348223996647,Increase,CalcifyingRecruit
-Pirbuterol,1.1322722960399525,Decrease,MetamorphosedRecruit
-CDP-ethanolamine,1.1286291296631068,Increase,CalcifyingRecruit
-5-methylthioadenosine,1.1157585967745058,Nonsig,NA
-UDP-D-Glucose,1.1038723536744752,Increase,CalcifyingRecruit
-Fructose,1.1012345223678324,Decrease,MetamorphosedRecruit
-Lysine-Glutamine,1.1004481116229572,Decrease,MetamorphosedRecruit
-GMP,1.0872955814113132,Increase,CalcifyingRecruit
-Pyroglutamate,1.0867378703949735,Decrease,MetamorphosedRecruit
-ATP,1.0862916123879338,Increase,CalcifyingRecruit
-Norvaline,1.0805990343340452,Decrease,MetamorphosedRecruit
-O-Butanoylcarnitine,1.073171481300367,Decrease,MetamorphosedRecruit
-Coenzyme A,1.0701323130739722,Nonsig,NA
-Proline,1.061545352753814,Decrease,MetamorphosedRecruit
-1-Methylhistidine,1.050019997115734,Nonsig,NA
-Carbamoyl phosphate,1.0460361430664584,Increase,CalcifyingRecruit
-Cellobiose,1.0427748761525393,Decrease,MetamorphosedRecruit
-Sucrose,1.024744019988117,Decrease,MetamorphosedRecruit
+Montiporic Acid D,1.9647158244366612,Decrease,MetamorphosedRecruit
+Cresol,1.962193171930586,Decrease,MetamorphosedRecruit
+Montiporic Acid C,1.9386600075497755,Decrease,MetamorphosedRecruit
+Montiporic Acid B,1.9367456070479696,Decrease,MetamorphosedRecruit
+Montiporic Acid A,1.9303769824350039,Decrease,MetamorphosedRecruit
+Phenethylamine,1.9110474282648702,Decrease,MetamorphosedRecruit
+Indole,1.8799529369347296,Increase,CalcifyingRecruit
+Glutaryl-carnitine,1.8392374633307988,Increase,CalcifyingRecruit
+Nicotinamide ribotide,1.7875480859005597,Increase,CalcifyingRecruit
+Serine,1.7153737797191133,Decrease,MetamorphosedRecruit
+Adenosine,1.6751814432731862,Decrease,MetamorphosedRecruit
+"NADPH",1.6628109023578728,Increase,CalcifyingRecruit
+Arginine-Glutamine,1.6592668159112542,Decrease,MetamorphosedRecruit
+Glutamine,1.6155068272026645,Decrease,MetamorphosedRecruit
+"NAD+",1.5997203913675293,Increase,CalcifyingRecruit
+Itaconic acid,1.5769969873431657,Increase,CalcifyingRecruit
+Guanosine,1.5754110813863134,Decrease,MetamorphosedRecruit
+AMP,1.567953743183996,Increase,CalcifyingRecruit
+Nicotinamide riboside,1.567406658012847,Increase,CalcifyingRecruit
+Glutamate,1.5671307445540217,Increase,CalcifyingRecruit
+Glucose-6-phosphate,1.553222446245371,Increase,CalcifyingRecruit
+Ribothymidine,1.5513686458447635,Decrease,MetamorphosedRecruit
+ADP,1.5270740620493068,Increase,CalcifyingRecruit
+GDP-Mannose,1.5098244354595647,Increase,CalcifyingRecruit
+Glucose,1.47133629203247,Decrease,MetamorphosedRecruit
+N-Acetyl-Glucosamine,1.4541223931734295,Decrease,MetamorphosedRecruit
+Valine,1.4274997961196818,Decrease,MetamorphosedRecruit
+Pyruvate,1.420168473744974,Decrease,MetamorphosedRecruit
+S-adenosyl-L-methionine,1.4081197733208866,Increase,CalcifyingRecruit
+Asparagine,1.3865383735809858,Decrease,MetamorphosedRecruit
+Ophthalmate,1.3754033080610653,Decrease,MetamorphosedRecruit
+Cytosine,1.3627705175822264,Increase,CalcifyingRecruit
+N-carbomoyl-L-aspartate,1.352982470344071,Increase,CalcifyingRecruit
+Glycyl-L-proline,1.336757904561559,Increase,CalcifyingRecruit
+Tyrosine,1.3199768540963153,Decrease,MetamorphosedRecruit
+Acetyllysine,1.3188169053411918,Increase,CalcifyingRecruit
+Glutathione,1.2803269860352897,Increase,CalcifyingRecruit
+"NADP+",1.2764110540514406,Increase,CalcifyingRecruit
+Taurine,1.2699795152711146,Increase,CalcifyingRecruit
+Pipecolic acid,1.2632186809025443,Increase,CalcifyingRecruit
+Mannose-6-phosphate,1.230427099370791,Increase,CalcifyingRecruit
+Uridine,1.2253470220636997,Decrease,MetamorphosedRecruit
+Acetyl-arginine,1.214557259908507,Decrease,MetamorphosedRecruit
+S-Adenosyl-homocysteine,1.2010781302923028,Increase,CalcifyingRecruit
+Methionine,1.2001976610183778,Decrease,MetamorphosedRecruit
+O-Decanoyl-L-carnitine,1.1909435940330397,Increase,CalcifyingRecruit
+Creatine,1.1833233969876,Decrease,MetamorphosedRecruit
+Tryptamine,1.181251823182047,Decrease,MetamorphosedRecruit
+Inositol,1.1808366567004693,Increase,CalcifyingRecruit
+Arginine,1.1662236070769962,Decrease,MetamorphosedRecruit
+NG-dimethyl-L-arginine,1.1537001575411339,Decrease,MetamorphosedRecruit
+Malate,1.1394351071171878,Increase,CalcifyingRecruit
+Pirbuterol,1.1326772165736598,Decrease,MetamorphosedRecruit
+Adipic acid,1.1285513141050654,Increase,CalcifyingRecruit
+CDP-ethanolamine,1.127387343264585,Increase,CalcifyingRecruit
+5-methylthioadenosine,1.1090025954788831,Nonsig,NA
+UDP-D-Glucose,1.1026019074337865,Increase,CalcifyingRecruit
+Lysine-Glutamine,1.0973878637368801,Decrease,MetamorphosedRecruit
+Fructose,1.0963278486760144,Decrease,MetamorphosedRecruit
+ATP,1.0857403054765713,Increase,CalcifyingRecruit
+GMP,1.0857083178223916,Increase,CalcifyingRecruit
+Pyroglutamate,1.0845594903071385,Decrease,MetamorphosedRecruit
+Norvaline,1.079983220418416,Decrease,MetamorphosedRecruit
+O-Butanoylcarnitine,1.073271351230264,Decrease,MetamorphosedRecruit
+Coenzyme A,1.070754621472935,Nonsig,NA
+Proline,1.0593243508033232,Decrease,MetamorphosedRecruit
+1-Methylhistidine,1.0485243220896041,Nonsig,NA
+Carbamoyl phosphate,1.0445260068596054,Increase,CalcifyingRecruit
+Cellobiose,1.041736170595805,Decrease,MetamorphosedRecruit
+Sucrose,1.022611602368852,Decrease,MetamorphosedRecruit

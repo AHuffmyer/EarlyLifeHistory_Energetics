@@ -657,53 +657,6 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Carnitine,1697.88271385490
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Carnitine,1472.101688884665,3.1682327274245403
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Carnitine,1875.36064217702,3.2733163147757574
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Carnitine,1956.5002744709964,3.291701831624607
-Egg,rep1,1,Egg,CDP-Choline,14.514339694849916,1.1907332963245993
-Egg,rep2,1,Egg,CDP-Choline,16.526219311131342,1.2436882418555524
-Egg,rep3,1,Egg,CDP-Choline,20.732949911797817,1.33711867908008
-Egg,rep4,1,Egg,CDP-Choline,19.109055288028937,1.3033916681684323
-Embryo,rep1,5,Embryo,CDP-Choline,30.589267454241906,1.499539554861488
-Embryo,rep2,5,Embryo,CDP-Choline,28.04866300325976,1.4631261483040108
-Embryo,rep3,5,Embryo,CDP-Choline,35.36124372876826,1.5606387297562876
-Embryo,rep4,5,Embryo,CDP-Choline,40.58775306372263,1.6189654565902885
-Larvae1,rep1,38,Embryo,CDP-Choline,5.682243805863541,0.8249223170982146
-Larvae1,rep2,38,Embryo,CDP-Choline,7.889744459082382,0.9488892771000789
-Larvae1,rep3,38,Embryo,CDP-Choline,8.284424368192337,0.9677549827696832
-Larvae1,rep4,38,Embryo,CDP-Choline,6.91815845325835,0.8986241883339923
-Larvae2,rep3,65,Embryo,CDP-Choline,0.6867118496894402,0.22704089599838206
-Larvae2,rep4,65,Embryo,CDP-Choline,0.43161756423771447,0.1558270180252624
-Larvae3,rep1,93,Larvae,CDP-Choline,0.3820099584141488,0.14051117246562625
-Larvae3,rep2,93,Larvae,CDP-Choline,0.37483924801885976,0.13825192159925556
-Larvae3,rep3,93,Larvae,CDP-Choline,0.37233831612561336,0.13746118915073816
-Larvae3,rep4,93,Larvae,CDP-Choline,0.3943777821548154,0.14438045416186449
-Larvae4,rep3,163,Larvae,CDP-Choline,0.4042867010579561,0.14745578299052606
-Larvae4,rep4,163,Larvae,CDP-Choline,0.502573622652749,0.17683576062718648
-Larvae5,rep1,183 larvae,Larvae,CDP-Choline,0.5488912514482621,0.19002092676251134
-Larvae5,rep2,183 larvae,Larvae,CDP-Choline,0.35504826457631233,0.13195476433652098
-Larvae5,rep3,183 larvae,Larvae,CDP-Choline,0.35897376648613766,0.13321107322971576
-Larvae5,rep4,183 larvae,Larvae,CDP-Choline,0,0
-Larvae6,rep3,231 larvae,Larvae,CDP-Choline,0.2575235362493046,0.09951612221109894
-Larvae6,rep4,231 larvae,Larvae,CDP-Choline,0,0
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,CDP-Choline,0.18891312243478642,0.07515012053485626
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,CDP-Choline,0.6280604338790365,0.2116705219371196
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,CDP-Choline,0.4626321055749422,0.1651351021943434
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,CDP-Choline,0.44470243942082005,0.1597784061063505
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,CDP-Choline,0.2726907084407172,0.10472287345887456
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,CDP-Choline,0.12036808245659601,0.04936072795372421
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,CDP-Choline,0.32291396242477793,0.12153160015183004
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,CDP-Choline,0.15546845067233142,0.06275809184371263
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,CDP-Choline,0.5120671763719437,0.17957108592681353
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,CDP-Choline,0.3680207004420095,0.1360926690359394
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,CDP-Choline,0.1368665285814134,0.05570948025226163
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,CDP-Choline,0.36972734684845104,0.13663412661354152
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,CDP-Choline,0,0
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,CDP-Choline,0.08899700219098555,0.03702668422436565
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,CDP-Choline,0.3705062596814525,0.13688102348653866
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,CDP-Choline,0,0
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,CDP-Choline,0.2679936240999245,0.10311706977191128
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,CDP-Choline,0.05755405395849254,0.024302574378947138
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,CDP-Choline,0,0
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,CDP-Choline,0,0
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,CDP-Choline,0.05008590056357118,0.021224827274534036
 Egg,rep1,1,Egg,Creatinine,4.611166590655198,0.7490531627202605
 Egg,rep2,1,Egg,Creatinine,5.021684431514532,0.7797179924183701
 Egg,rep3,1,Egg,Creatinine,3.175706392947076,0.62072995445644
@@ -986,53 +939,6 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glutaryl-carnitine,3.16839
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glutaryl-carnitine,2.554254601809201,0.5507485343866766
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glutaryl-carnitine,2.416418078404506,0.5335710113243497
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glutaryl-carnitine,5.042127103983678,0.7811898569813079
-Egg,rep1,1,Egg,Glycerophosphocholine,3.301059093050903,0.6335754094477504
-Egg,rep2,1,Egg,Glycerophosphocholine,2.54055621027884,0.5490714936867481
-Egg,rep3,1,Egg,Glycerophosphocholine,7.172818525278048,0.9123718556610791
-Egg,rep4,1,Egg,Glycerophosphocholine,2.9233309945304384,0.5936549492292538
-Embryo,rep1,5,Embryo,Glycerophosphocholine,2.884013568381083,0.5892807383993915
-Embryo,rep2,5,Embryo,Glycerophosphocholine,3.7732713570809517,0.6788161244003957
-Embryo,rep3,5,Embryo,Glycerophosphocholine,3.1356879428470754,0.6165477617559989
-Embryo,rep4,5,Embryo,Glycerophosphocholine,4.374143298946916,0.7303092425050733
-Larvae1,rep1,38,Embryo,Glycerophosphocholine,2.798956266914073,0.5796642940424231
-Larvae1,rep2,38,Embryo,Glycerophosphocholine,3.487047855345772,0.6519607014033146
-Larvae1,rep3,38,Embryo,Glycerophosphocholine,2.592663433614789,0.5554165337172169
-Larvae1,rep4,38,Embryo,Glycerophosphocholine,3.3183116180095857,0.6353139786880967
-Larvae2,rep3,65,Embryo,Glycerophosphocholine,2.9803621673286225,0.5999225896908889
-Larvae2,rep4,65,Embryo,Glycerophosphocholine,12.436724396052515,1.1282934093351396
-Larvae3,rep1,93,Larvae,Glycerophosphocholine,2.0099332930698326,0.478556870752415
-Larvae3,rep2,93,Larvae,Glycerophosphocholine,5.706837010205975,0.8265177522287891
-Larvae3,rep3,93,Larvae,Glycerophosphocholine,15.210785621019133,1.20980406251081
-Larvae3,rep4,93,Larvae,Glycerophosphocholine,1.3051203466614152,0.36269360414067126
-Larvae4,rep3,163,Larvae,Glycerophosphocholine,1.3287092390065862,0.36711526621693746
-Larvae4,rep4,163,Larvae,Glycerophosphocholine,1.3159344084183184,0.36472625519988516
-Larvae5,rep1,183 larvae,Larvae,Glycerophosphocholine,1.5470846960640479,0.40604338643267307
-Larvae5,rep2,183 larvae,Larvae,Glycerophosphocholine,3.766522781119172,0.6782016730301987
-Larvae5,rep3,183 larvae,Larvae,Glycerophosphocholine,16.29399359663127,1.2378952938353815
-Larvae5,rep4,183 larvae,Larvae,Glycerophosphocholine,222.28808971384316,2.3488655582281464
-Larvae6,rep3,231 larvae,Larvae,Glycerophosphocholine,29.912304944132483,1.4901313889907306
-Larvae6,rep4,231 larvae,Larvae,Glycerophosphocholine,3.5863586243108316,0.6614680108103689
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,Glycerophosphocholine,5.46876995250508,0.8108217066924889
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,Glycerophosphocholine,2.270938406062339,0.514672366149102
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,Glycerophosphocholine,4.095821751339193,0.7072142282433658
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,Glycerophosphocholine,1.96518643431086,0.47205200456267693
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,Glycerophosphocholine,1.7234691281792216,0.43512245670208277
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.8763331857382695,0.5884210992633018
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.0546145768285364,0.4849564199087354
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,Glycerophosphocholine,1.2828349392321918,0.35847451088919596
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,11.93240992028495,1.111679462046562
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,37.66605996242945,1.5873299201011473
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,9.906651390054675,1.037691431977092
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,Glycerophosphocholine,1.22055044424281,0.3464606434891841
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,66.83770791324685,1.8314711656424425
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.3678018678417283,0.5273465334706866
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.239500530504517,0.5104780554019398
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,179.41539322973526,2.25627358924545
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.1554067365415452,0.499055348382148
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Glycerophosphocholine,2.2501059125223684,0.5118975137402761
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Glycerophosphocholine,38.87614575464484,1.600713174755423
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Glycerophosphocholine,4.38384232232438,0.7310923321321159
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Glycerophosphocholine,5.000299950311399,0.7781729609684878
 Egg,rep1,1,Egg,GTP,0,0
 Egg,rep2,1,Egg,GTP,0,0
 Egg,rep3,1,Egg,GTP,0.010166040550365251,0.004392764444113661
@@ -2020,53 +1926,6 @@ Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Pantothenate,0.99101206084
 Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Pantothenate,2.1137895028840243,0.49328925022765474
 Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Pantothenate,1.8913730166407758,0.4611041237075069
 Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Pantothenate,1.9801970076154134,0.4742449743085475
-Egg,rep1,1,Egg,Phosphocholine,11.291517952697438,1.0896055198085022
-Egg,rep2,1,Egg,Phosphocholine,11.935521727840896,1.111783949786455
-Egg,rep3,1,Egg,Phosphocholine,13.216652949578673,1.1527973617504563
-Egg,rep4,1,Egg,Phosphocholine,13.929817939429162,1.1740545117850805
-Embryo,rep1,5,Embryo,Phosphocholine,4.142836806158615,0.7112027433937557
-Embryo,rep2,5,Embryo,Phosphocholine,3.9667750876514347,0.6960744941197533
-Embryo,rep3,5,Embryo,Phosphocholine,4.241195386621472,0.7194303500765414
-Embryo,rep4,5,Embryo,Phosphocholine,5.0928892360885785,0.7848232830657511
-Larvae1,rep1,38,Embryo,Phosphocholine,6.115664763082907,0.8522154791852485
-Larvae1,rep2,38,Embryo,Phosphocholine,8.93038034775328,0.9969658829130088
-Larvae1,rep3,38,Embryo,Phosphocholine,7.777153567688193,0.9433536969684321
-Larvae1,rep4,38,Embryo,Phosphocholine,8.081141373844579,0.9581404367601102
-Larvae2,rep3,65,Embryo,Phosphocholine,4.44624215005053,0.7360969469732443
-Larvae2,rep4,65,Embryo,Phosphocholine,3.309330375360937,0.6344097906063784
-Larvae3,rep1,93,Larvae,Phosphocholine,2.356745480561,0.5259184128660034
-Larvae3,rep2,93,Larvae,Phosphocholine,2.4456584250246087,0.5372722227697143
-Larvae3,rep3,93,Larvae,Phosphocholine,2.7011324711578695,0.5683346296677344
-Larvae3,rep4,93,Larvae,Phosphocholine,3.6840829511241227,0.6706245774542291
-Larvae4,rep3,163,Larvae,Phosphocholine,1.5703970622746417,0.41000021618544674
-Larvae4,rep4,163,Larvae,Phosphocholine,1.830315640667165,0.45183487133913114
-Larvae5,rep1,183 larvae,Larvae,Phosphocholine,1.7485090743821796,0.4390971751557067
-Larvae5,rep2,183 larvae,Larvae,Phosphocholine,1.404674828342322,0.3810563572984532
-Larvae5,rep3,183 larvae,Larvae,Phosphocholine,1.4429508687680939,0.3879147327788122
-Larvae5,rep4,183 larvae,Larvae,Phosphocholine,11.50658102030879,1.0971386009041038
-Larvae6,rep3,231 larvae,Larvae,Phosphocholine,2.281151877215817,0.5160263333760431
-Larvae6,rep4,231 larvae,Larvae,Phosphocholine,3.6393777894460495,0.6664597390182824
-Recruit1,rep1,183 recruit,Metamorphosed Recruit,Phosphocholine,1.8844229637000103,0.4600589444427969
-Recruit1,rep2,183 recruit,Metamorphosed Recruit,Phosphocholine,1.629513868751342,0.41987546573943435
-Recruit1,rep3,183 recruit,Metamorphosed Recruit,Phosphocholine,2.5208104453727445,0.5466426440009848
-Recruit1,rep4,183 recruit,Metamorphosed Recruit,Phosphocholine,1.0175610269840176,0.30482668008881014
-Recruit1plug,rep1,183 recruit plug,Calcifying Recruit,Phosphocholine,2.5538887619159705,0.5507038300978349
-Recruit1plug,rep2,183 recruit plug,Calcifying Recruit,Phosphocholine,1.6303697451166879,0.42001680057238067
-Recruit1plug,rep3,183 recruit plug,Calcifying Recruit,Phosphocholine,2.376727206602909,0.528495976995372
-Recruit1plug,rep4,183 recruit plug,Calcifying Recruit,Phosphocholine,1.426576834074944,0.3849940471808655
-Recruit2,rep1,231 recruit,Metamorphosed Recruit,Phosphocholine,3.2648206801981696,0.6299007754243767
-Recruit2,rep2,231 recruit,Metamorphosed Recruit,Phosphocholine,2.898929371051325,0.5909453680321772
-Recruit2,rep3,231 recruit,Metamorphosed Recruit,Phosphocholine,2.6039376637634715,0.556777270509668
-Recruit2,rep4,231 recruit,Metamorphosed Recruit,Phosphocholine,1.5259768590043614,0.4024293675761027
-Recruit2plug,rep1,231 recruit plug,Calcifying Recruit,Phosphocholine,1.6703037876421185,0.4265606717734325
-Recruit2plug,rep2,231 recruit plug,Calcifying Recruit,Phosphocholine,0.8465609743724797,0.2663636528460798
-Recruit2plug,rep3,231 recruit plug,Calcifying Recruit,Phosphocholine,2.5997406271304286,0.5562712095828147
-Recruit2plug,rep4,231 recruit plug,Calcifying Recruit,Phosphocholine,3.257594319450887,0.6291642777651913
-Recruit2plug,rep5,231 recruit plug,Calcifying Recruit,Phosphocholine,1.8531393802800218,0.4553229881337439
-Recruit3plug,rep1,255 recruit plug,Calcifying Recruit,Phosphocholine,1.4948715195923743,0.3970481853226209
-Recruit3plug,rep2,255 recruit plug,Calcifying Recruit,Phosphocholine,1.1459044290166078,0.33161037612249167
-Recruit3plug,rep3,255 recruit plug,Calcifying Recruit,Phosphocholine,1.3513356642390195,0.37131463113306257
-Recruit3plug,rep4,255 recruit plug,Calcifying Recruit,Phosphocholine,1.3956818130859563,0.3794291359220543
 Egg,rep1,1,Egg,Pipecolic acid,38.66605554963108,1.5984190157451164
 Egg,rep2,1,Egg,Pipecolic acid,45.66412227025608,1.6689831013704406
 Egg,rep3,1,Egg,Pipecolic acid,43.03620230477602,1.6438098582289484

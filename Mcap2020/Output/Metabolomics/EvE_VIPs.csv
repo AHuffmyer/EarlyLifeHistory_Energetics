@@ -1,74 +1,73 @@
 Metabolite,VIP,direction,lifestage
-Uridine,1.7827302426633742,Increase,Embryo
-Glycerol-3-phosphate,1.7446377202611365,Increase,Embryo
-"NADH",1.7370377018377174,Increase,Embryo
-Orotate,1.732858359526116,Increase,Embryo
-Betaine,1.7021008593885891,Decrease,Egg
-Dihydroxyacetone phosphate,1.6834550659872978,Increase,Embryo
-Trigonelline,1.6810800960406274,Decrease,Egg
-Nicotinamide riboside,1.6711124571317086,Decrease,Egg
-AMP,1.660864486951148,Increase,Embryo
-3-Phenylbutyric acid,1.6579039588470386,Decrease,Egg
-Arginine-Alanine,1.6518690193064285,Increase,Embryo
-2-Hydroxyglutarate,1.6405171955554445,Increase,Embryo
-Carnitine,1.6278123622943454,Decrease,Egg
-S-adenosyl-L-methionine,1.6244597592141918,Increase,Embryo
-Pyroglutamate,1.6197059050542368,Decrease,Egg
-N6-Acetyl-L-lysine,1.5880386467534668,Decrease,Egg
-Citrate,1.5734557926712511,Increase,Embryo
-Glycyl-L-proline,1.5532249414020267,Decrease,Egg
-Valine,1.5417532664205742,Increase,Embryo
-Arginine-Glutamine,1.5198745332489358,Increase,Embryo
-ADP-D-Glucose,1.513358522147453,Decrease,Egg
-Glutamine,1.5029117515024617,Decrease,Egg
-UMP,1.4998904407286935,Increase,Embryo
-Phosphocholine,1.4894363400913793,Increase,Embryo
-Adenosine,1.4870039250412024,Increase,Embryo
-Taurine,1.485092336554547,Decrease,Egg
-Hypoxanthine,1.484262199421954,Decrease,Egg
-Thymidine,1.4805190566709068,Decrease,Egg
-Diethanolamine,1.4722231002856059,Decrease,Egg
-Isoleucine,1.4687930969964094,Decrease,Egg
-Malate,1.461318056376667,Increase,Embryo
-1-Methylimidazole acetic acid,1.4581644068986244,Decrease,Egg
-Homoarginine,1.4577292742998174,Increase,Embryo
-Ornithine,1.4514529515665662,Increase,Embryo
-Acetyl glycine,1.4362087256657539,Decrease,Egg
-Alanine-Alanine,1.4323453984763257,Decrease,Egg
-Alanine,1.4245613317077865,Increase,Embryo
-Carbamoyl phosphate,1.402337452176606,Decrease,Egg
-NG-dimethyl-L-arginine,1.3744805693380624,Increase,Embryo
-Succinate,1.3560190311842373,Increase,Embryo
-Norvaline,1.3529771503021273,Decrease,Egg
-Guanosine,1.3486446970226114,Nonsig,NA
-1-Methylhistidine,1.3178079026211782,Increase,Embryo
-Citrulline,1.3075140182459695,Increase,Embryo
-Sorbitol,1.2673763707320989,Decrease,Egg
-UDP,1.2564850836717996,Increase,Embryo
-Tryptophan,1.2525654466934464,Decrease,Egg
-Adipic acid,1.249631446766866,Decrease,Egg
-N-carbomoyl-L-aspartate,1.2056470038605243,Nonsig,NA
-Indole,1.1970601661565428,Decrease,Egg
-Threonine,1.193418395039157,Decrease,Egg
-N-acetyl-L-ornithine,1.1859563051101427,Nonsig,NA
-ATP,1.1848024840609166,Decrease,Egg
-4-Guanidinobutanoic acid,1.1772873980921543,Decrease,Egg
-Inosine,1.1730745087032208,Nonsig,NA
-ADP,1.1728774538108888,Increase,Embryo
-Tryptamine,1.1726670994618593,Decrease,Egg
-Pyruvate,1.171548586250882,Increase,Embryo
-Dihydroorotate,1.140413590965334,Increase,Embryo
-Hydroxyoctanoic acid,1.1391789263597054,Nonsig,NA
-Galactitol,1.1353962503802943,Decrease,Egg
-5-Methylcytosine,1.127645404793145,Decrease,Egg
-Malonic acid,1.1266901745770952,Decrease,Egg
-Glycine,1.113965915438027,Decrease,Egg
-Isocitrate,1.0996221525490384,Nonsig,NA
-Methylphenyllactate,1.0891061565558084,Decrease,Egg
-GMP,1.0803846470083274,Increase,Embryo
-Creatine,1.0769706902150447,Decrease,Egg
-Deoxycarnitine,1.0733981049837493,Decrease,Egg
-Aspartate,1.027359027063906,Decrease,Egg
-Glutaric acid,1.027249412749359,Decrease,Egg
-Histidine,1.0263030810319664,Nonsig,NA
-UDP-N-acetyl-glucosamine,1.0049378708281773,Increase,Embryo
+Uridine,1.779363667370781,Increase,Embryo
+Glycerol-3-phosphate,1.7411295826012112,Increase,Embryo
+"NADH",1.7338097007490385,Increase,Embryo
+Orotate,1.7295910376934787,Increase,Embryo
+Betaine,1.6985896347694407,Decrease,Egg
+Dihydroxyacetone phosphate,1.6801808355182797,Increase,Embryo
+Trigonelline,1.677641599016034,Decrease,Egg
+Nicotinamide riboside,1.6677306996630314,Decrease,Egg
+AMP,1.657414135830089,Increase,Embryo
+3-Phenylbutyric acid,1.6544263142891809,Decrease,Egg
+Arginine-Alanine,1.6484394680117176,Increase,Embryo
+2-Hydroxyglutarate,1.6376733810634099,Increase,Embryo
+Carnitine,1.6245099588304177,Decrease,Egg
+S-adenosyl-L-methionine,1.6227468161742835,Increase,Embryo
+Pyroglutamate,1.6163407654593565,Decrease,Egg
+N6-Acetyl-L-lysine,1.5849983292579857,Decrease,Egg
+Citrate,1.5702222365798346,Increase,Embryo
+Glycyl-L-proline,1.5500696261222209,Decrease,Egg
+Valine,1.540686352723907,Increase,Embryo
+Arginine-Glutamine,1.5169719660452126,Increase,Embryo
+ADP-D-Glucose,1.5101792299454808,Decrease,Egg
+Glutamine,1.5003140657206675,Decrease,Egg
+UMP,1.4967460549328544,Increase,Embryo
+Adenosine,1.48391229552146,Increase,Embryo
+Taurine,1.482100852377218,Decrease,Egg
+Hypoxanthine,1.4815379235474304,Decrease,Egg
+Thymidine,1.4784957836389816,Decrease,Egg
+Diethanolamine,1.4691584597825986,Decrease,Egg
+Isoleucine,1.465778531582989,Decrease,Egg
+Malate,1.4581649126558927,Increase,Embryo
+1-Methylimidazole acetic acid,1.4553566984799065,Decrease,Egg
+Homoarginine,1.4546106620287245,Increase,Embryo
+Ornithine,1.448490393826836,Increase,Embryo
+Acetyl glycine,1.4333989401387706,Decrease,Egg
+Alanine-Alanine,1.429464473190853,Decrease,Egg
+Alanine,1.4214548941063196,Increase,Embryo
+Carbamoyl phosphate,1.4021398464281711,Decrease,Egg
+NG-dimethyl-L-arginine,1.3730866846915293,Increase,Embryo
+Succinate,1.3541074298007474,Increase,Embryo
+Norvaline,1.3511013080916794,Decrease,Egg
+Guanosine,1.345876992097127,Nonsig,NA
+1-Methylhistidine,1.3152401171468389,Increase,Embryo
+Citrulline,1.3051864272040927,Increase,Embryo
+Sorbitol,1.2648964599121932,Decrease,Egg
+UDP,1.255397044614362,Increase,Embryo
+Tryptophan,1.2519359238301586,Decrease,Egg
+Adipic acid,1.2475483594956394,Decrease,Egg
+N-carbomoyl-L-aspartate,1.203282687024412,Nonsig,NA
+Indole,1.1963200407168375,Decrease,Egg
+Threonine,1.1912381137602952,Decrease,Egg
+N-acetyl-L-ornithine,1.1841328842118621,Nonsig,NA
+ATP,1.1825773784811648,Decrease,Egg
+4-Guanidinobutanoic acid,1.1753084294907632,Decrease,Egg
+ADP,1.1711526947363868,Increase,Embryo
+Tryptamine,1.170617566033813,Decrease,Egg
+Inosine,1.1706157629391178,Nonsig,NA
+Pyruvate,1.1696960909684848,Increase,Embryo
+Dihydroorotate,1.1384268379470062,Increase,Embryo
+Hydroxyoctanoic acid,1.137269985020157,Nonsig,NA
+Galactitol,1.133823310372142,Decrease,Egg
+5-Methylcytosine,1.1275685802712179,Decrease,Egg
+Malonic acid,1.124601366917871,Decrease,Egg
+Glycine,1.112146562615551,Decrease,Egg
+Isocitrate,1.0972470233113683,Nonsig,NA
+Methylphenyllactate,1.0873139807899046,Decrease,Egg
+GMP,1.0774358074417503,Increase,Embryo
+Creatine,1.0739539419864312,Decrease,Egg
+Deoxycarnitine,1.0707132741693892,Decrease,Egg
+Aspartate,1.02566388918482,Decrease,Egg
+Glutaric acid,1.0255947240546899,Decrease,Egg
+Histidine,1.0238542155657413,Nonsig,NA
+UDP-N-acetyl-glucosamine,1.003036081788889,Increase,Embryo

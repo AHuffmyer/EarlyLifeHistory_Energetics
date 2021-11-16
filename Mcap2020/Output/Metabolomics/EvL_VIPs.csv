@@ -1,101 +1,99 @@
 Metabolite,VIP,direction,lifestage
-N N N-Trimethyllysine,1.4938911236569188,Increase,Larvae
-Thymidine,1.4904963945516045,Increase,Larvae
-Lysine,1.4568581709724708,Increase,Larvae
-Aspartate,1.4265887238031443,Increase,Larvae
-a-ketoglutarate,1.3897427428154112,Increase,Larvae
-Tyrosine,1.382031128811623,Decrease,Embryo
-O-Phosphorylethanolamine,1.3755185877865184,Increase,Larvae
-N-acetyl-glutamate,1.3709606079038659,Decrease,Embryo
-AMP,1.3708168934872076,Decrease,Embryo
-Glycyl-L-proline,1.3592381970510932,Decrease,Embryo
-5-Hydroxytryptophan,1.3510762690954934,Increase,Larvae
-Phosphocholine ,1.3474989254820484,Increase,Larvae
-3-Phenylbutyric acid,1.341776545231476,Decrease,Embryo
-Threonine,1.3302608707001702,Decrease,Embryo
-Homoarginine,1.3256748868451418,Increase,Larvae
-Sedoheptulose,1.3198992922074082,Increase,Larvae
-S-adenosyl-L-methionine,1.3185089119083315,Increase,Larvae
-1-Methylhistidine,1.3080672387742835,Increase,Larvae
-FAD,1.2950920822908696,Increase,Larvae
-Betaine,1.293871071720152,Decrease,Embryo
-Proline,1.2912390312522533,Decrease,Embryo
-Hypoxanthine,1.2862645372351138,Decrease,Embryo
-CDP-ethanolamine,1.284224631476476,Increase,Larvae
-Acetyllysine,1.2834635695672596,Increase,Larvae
-Adenosine,1.2819270893609243,Decrease,Embryo
-4-Guanidinobutanoic acid,1.27950543089841,Decrease,Embryo
-5-Hydroxylysine,1.2751363358616579,Increase,Larvae
-Ribitol,1.275129845693485,Increase,Larvae
-Malonic acid,1.2567908240349641,Decrease,Embryo
-CMP,1.2534779699400262,Increase,Larvae
-GMP,1.2390375444935544,Decrease,Embryo
-Diethanolamine,1.2363393815896457,Decrease,Embryo
-Trigonelline,1.235114628152616,Decrease,Embryo
-CDP-Choline,1.2314425491485739,Increase,Larvae
-CDP-Choline ,1.2260564225014812,Increase,Larvae
-Carnosine,1.2225028562850817,Increase,Larvae
-Adipic acid,1.1995325657558924,Decrease,Embryo
-Arginine,1.1991201685641462,Increase,Larvae
-N-Acetylaspartate,1.1978909333087628,Decrease,Embryo
-Alanine,1.1939674991033573,Decrease,Embryo
-Phosphocholine,1.1900681309817582,Increase,Larvae
-Glutaric acid,1.18668959096005,Decrease,Embryo
-Inositol,1.183061200401489,Increase,Larvae
-Guanine,1.1744174429671481,Decrease,Embryo
-O-Decanoyl-L-carnitine,1.1742732129005016,Decrease,Embryo
-Alanine-Alanine,1.172237199446337,Increase,Larvae
-Fumarate,1.1657950065958667,Decrease,Embryo
-Pipecolic acid,1.164016847063024,Increase,Larvae
-Homocitrulline,1.1634792881197171,Increase,Larvae
-Deoxyadenosine,1.156529219207858,Increase,Larvae
-Succinate,1.1546668285636819,Decrease,Embryo
-Pantothenate,1.1541933825416193,Increase,Larvae
-Phenylalanine,1.1462993853923724,Decrease,Embryo
-GDP,1.1425371858789377,Increase,Larvae
-Tryptamine,1.1410561067916045,Decrease,Embryo
-Lumichrome,1.1401969408981842,Decrease,Embryo
-Acetyl CoA,1.139795183641246,Increase,Larvae
-Citrulline,1.1391170082270745,Decrease,Embryo
-UDP-N-acetyl-glucosamine,1.1255608765937724,Increase,Larvae
-Itaconic acid,1.123409253941679,Increase,Larvae
-Methionine,1.1216852119236678,Decrease,Embryo
-Riboflavin,1.1203519100447374,Increase,Larvae
-Valine,1.1153938128244247,Decrease,Embryo
-Methionine sulfoxide,1.110514723887417,Decrease,Embryo
-Cytosine,1.109911849489757,Increase,Larvae
-Lactate,1.1085555198249561,Decrease,Embryo
-Dopamine,1.1083780603133722,Increase,Larvae
-"NAD+",1.1073741201351162,Increase,Larvae
-ADP-ribose,1.1056081851667945,Increase,Larvae
-Pyruvate,1.1054125640206034,Decrease,Embryo
-Acetyl-arginine,1.102288063368395,Decrease,Embryo
-S-Adenosyl-homocysteine,1.1011947234969846,Increase,Larvae
-Uric acid,1.089152624399325,Increase,Larvae
-Glutamate,1.085913112994583,Increase,Larvae
-Acetyl glycine,1.0854995836954167,Decrease,Embryo
-UDP-D-Glucose,1.0835663308605534,Increase,Larvae
-GDP-Mannose,1.0730363293705552,Increase,Larvae
-Carbamoyl phosphate,1.0647942914154975,Decrease,Embryo
-Hydroxyoctanoic acid,1.0568846083150365,Decrease,Embryo
-Phosphoenolpyruvate,1.0558088481269807,Decrease,Embryo
-Montiporic Acid B,1.0519401924880214,Increase,Larvae
-Sorbitol,1.04775268663966,Increase,Larvae
-Methylphenyllactate,1.0434531419447333,Decrease,Embryo
-2-Hydroxybutyric acid,1.0415536018883518,Decrease,Embryo
-S-Carboxymethyl-L-cysteine,1.0412391819795206,Increase,Larvae
-Guanidinoacetate,1.041100065831232,Increase,Larvae
-Creatine,1.040679157023873,Decrease,Embryo
-Montiporic Acid A,1.0364681216230598,Increase,Larvae
-O-Butanoylcarnitine,1.0341731523813165,Nonsig,NA
-Urocanate,1.0330324833431346,Decrease,Embryo
-L-Octanoylcarnitine,1.0309133191645332,Decrease,Embryo
-Montiporic Acid C,1.0304642962138795,Increase,Larvae
-5- Methylthioadenosine,1.0238071469428032,Decrease,Embryo
-Pirbuterol,1.0188744580640414,Increase,Larvae
-2-Hydroxyglutarate,1.0177095996964924,Decrease,Embryo
-4-Aminobutyrate,1.0154752890209091,Decrease,Embryo
-Galactitol,1.0079661024507534,Increase,Larvae
-Montiporic Acid D,1.0054372104970533,Increase,Larvae
-NG-dimethyl-L-arginine,1.003644417099962,Increase,Larvae
-2-Furoyl glycine,1.00286107409395,Increase,Larvae
+N N N-Trimethyllysine,1.494777081408229,Increase,Larvae
+Thymidine,1.4907441149813399,Increase,Larvae
+Lysine,1.457475526083915,Increase,Larvae
+Aspartate,1.4272365432836458,Increase,Larvae
+a-ketoglutarate,1.3918579905496933,Increase,Larvae
+Tyrosine,1.3824438059874142,Decrease,Embryo
+O-Phosphorylethanolamine,1.375083111321384,Increase,Larvae
+AMP,1.3738726704450228,Decrease,Embryo
+N-acetyl-glutamate,1.3713633929238365,Decrease,Embryo
+Glycyl-L-proline,1.3583365165040135,Decrease,Embryo
+Phosphocholine ,1.3565723455547518,Increase,Larvae
+5-Hydroxytryptophan,1.3492012326602598,Increase,Larvae
+3-Phenylbutyric acid,1.3397114509194126,Decrease,Embryo
+Threonine,1.3275179482931292,Decrease,Embryo
+Homoarginine,1.3234660674375867,Increase,Larvae
+S-adenosyl-L-methionine,1.3217696883415642,Increase,Larvae
+Sedoheptulose,1.3202665477811593,Increase,Larvae
+1-Methylhistidine,1.3108905220089395,Increase,Larvae
+FAD,1.2927797833404853,Increase,Larvae
+Betaine,1.2905629927695774,Decrease,Embryo
+Proline,1.28867852404358,Decrease,Embryo
+Hypoxanthine,1.2845464065219128,Decrease,Embryo
+Adenosine,1.2822540243249683,Decrease,Embryo
+CDP-ethanolamine,1.2816485242533384,Increase,Larvae
+Acetyllysine,1.2810343290318342,Increase,Larvae
+4-Guanidinobutanoic acid,1.2770615359821316,Decrease,Embryo
+Ribitol,1.2743065269193798,Increase,Larvae
+5-Hydroxylysine,1.2722326461570947,Increase,Larvae
+Malonic acid,1.2548048221536792,Decrease,Embryo
+CMP,1.2489857200123768,Increase,Larvae
+GMP,1.2449535267090603,Decrease,Embryo
+Trigonelline,1.2370202086745434,Decrease,Embryo
+Diethanolamine,1.2354743152770171,Decrease,Embryo
+CDP-Choline ,1.2244959988612965,Increase,Larvae
+Carnosine,1.21815806862772,Increase,Larvae
+Adipic acid,1.197232080954971,Decrease,Embryo
+Arginine,1.1959440978395448,Increase,Larvae
+N-Acetylaspartate,1.1954138300155348,Decrease,Embryo
+Alanine,1.1914934944304352,Decrease,Embryo
+Glutaric acid,1.1856422549201788,Decrease,Embryo
+Inositol,1.1818119134143925,Increase,Larvae
+Guanine,1.1725381170276596,Decrease,Embryo
+O-Decanoyl-L-carnitine,1.17127654654249,Decrease,Embryo
+Alanine-Alanine,1.1710279997353752,Increase,Larvae
+Fumarate,1.1669198135450127,Decrease,Embryo
+Homocitrulline,1.1623546053893286,Increase,Larvae
+Pipecolic acid,1.1612214991332015,Increase,Larvae
+Deoxyadenosine,1.1578755673510808,Increase,Larvae
+Succinate,1.1551880884355221,Decrease,Embryo
+Pantothenate,1.1515120140411466,Increase,Larvae
+Phenylalanine,1.1439929137152713,Decrease,Embryo
+GDP,1.1406818862242187,Increase,Larvae
+Lumichrome,1.1394184081376721,Decrease,Embryo
+Acetyl CoA,1.1386438508100565,Increase,Larvae
+Tryptamine,1.138250515909549,Decrease,Embryo
+Citrulline,1.1351209939325038,Decrease,Embryo
+UDP-N-acetyl-glucosamine,1.1290396415177748,Increase,Larvae
+Methionine,1.1228631078229179,Decrease,Embryo
+Riboflavin,1.1216431691830069,Increase,Larvae
+Itaconic acid,1.1211503943000263,Increase,Larvae
+Valine,1.1149947738276107,Decrease,Embryo
+Dopamine,1.1136182669640668,Increase,Larvae
+Cytosine,1.1098920211664853,Increase,Larvae
+"NAD+",1.1087796595892756,Increase,Larvae
+Methionine sulfoxide,1.108068385506745,Decrease,Embryo
+Lactate,1.1065665496506465,Decrease,Embryo
+Pyruvate,1.105650137767381,Decrease,Embryo
+ADP-ribose,1.1055375806159748,Increase,Larvae
+Acetyl-arginine,1.102674346821675,Decrease,Embryo
+S-Adenosyl-homocysteine,1.098875787387457,Increase,Larvae
+Glutamate,1.0853253620501586,Increase,Larvae
+Uric acid,1.0852800552395896,Increase,Larvae
+UDP-D-Glucose,1.0840353879760267,Increase,Larvae
+Acetyl glycine,1.0838207171273089,Decrease,Embryo
+GDP-Mannose,1.0789945575171191,Increase,Larvae
+Carbamoyl phosphate,1.0646655213998097,Decrease,Embryo
+Guanidinoacetate,1.0593335705337883,Increase,Larvae
+Hydroxyoctanoic acid,1.0556924760511366,Decrease,Embryo
+Phosphoenolpyruvate,1.0556147465822736,Decrease,Embryo
+Montiporic Acid B,1.049678616729597,Increase,Larvae
+O-Butanoylcarnitine,1.0495542658910868,Nonsig,NA
+Sorbitol,1.0462192874622502,Increase,Larvae
+Methylphenyllactate,1.0447102889115703,Decrease,Embryo
+2-Hydroxybutyric acid,1.0423010890765028,Decrease,Embryo
+Creatine,1.040518908001202,Decrease,Embryo
+S-Carboxymethyl-L-cysteine,1.0381943352600629,Increase,Larvae
+Montiporic Acid A,1.0347323433814517,Increase,Larvae
+Urocanate,1.034527349079767,Decrease,Embryo
+Montiporic Acid C,1.0295979060246558,Increase,Larvae
+L-Octanoylcarnitine,1.0276694941983024,Decrease,Embryo
+5- Methylthioadenosine,1.0255011795077829,Decrease,Embryo
+Pirbuterol,1.020379625863238,Increase,Larvae
+2-Hydroxyglutarate,1.0202836806890438,Decrease,Embryo
+4-Aminobutyrate,1.013877386586149,Decrease,Embryo
+Galactitol,1.0128457255772174,Increase,Larvae
+Montiporic Acid D,1.0032717927591595,Increase,Larvae
+NG-dimethyl-L-arginine,1.0013467752611918,Increase,Larvae
+2-Furoyl glycine,1.0006515813679677,Increase,Larvae

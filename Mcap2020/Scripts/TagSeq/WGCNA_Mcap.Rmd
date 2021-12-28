@@ -259,6 +259,7 @@ There don't look to be any outliers, so we will move on with business as usual.
 
 The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.  
 ```{r, message=FALSE, warning=FALSE}
+allowWGCNAThreads()
 # # Choose a set of soft-thresholding powers
 powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
 # 

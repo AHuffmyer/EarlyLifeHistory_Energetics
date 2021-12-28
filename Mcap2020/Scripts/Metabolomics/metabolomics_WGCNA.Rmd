@@ -307,6 +307,10 @@ dev.off()
 ```
 
 **Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 90% similarity as my merging threshold.
+
+
+
+METree doesn't exist before this point? 
 ```{r}
 MEDissThres= 0.15 #merge modules that are 85% similar
 

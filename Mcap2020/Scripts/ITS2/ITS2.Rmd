@@ -1,0 +1,182 @@
+---
+title: Montipora capitata 2020 ITS2 analysis
+author: "AS Huffmyer"
+date: '2021'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+## install packages if you dont already have them in your library
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
+if ("janitor" %in% rownames(installed.packages()) == 'FALSE') install.packages('janitor') 
+
+#load packages
+library("ggplot2")
+library('cowplot')
+library("tidyverse")
+library("janitor")
+```
+
+# Load data  
+
+Load data obtained from SymPortal analysis on URI HPC cluster. Load relative abundance of ITS2 types for each sample.  
+
+```{r}
+its2<-read.csv(file="Mcap2020/Data/ITS2/relative_abundance_results.csv")
+
+its2<-its2%>%
+  rename(Sample=X, C=C31.C17d.C21.C21ac.C31a, D=D1.D4.D6.D1ab.D17d)
+
+its2<-its2%>%
+  gather(key=Clade, value=relabund, 3:4)
+
+its2$Clade<-as.factor(its2$Clade)
+its2$relabund<-as.numeric(its2$relabund)
+
+its2<-its2%>%
+  drop_na()
+
+```
+
+Load metadata.  
+
+```{r}
+metadata<-read.csv(file="Mcap2020/Data/ITS2/metadata.csv")
+metadata<-metadata%>%
+  select(sample_name, tube.id, timepoint, lifestage, hpf, group)%>%
+  rename(Sample=sample_name)
+```
+
+Merge metadata with data.  
+
+```{r}
+data<-left_join(its2, metadata, by="Sample")
+```
+
+# Plotting  
+
+Plot the relative abundance of each sample displaying the lifestage.  
+
+```{r}
+plot<-data%>%
+  ggplot(., aes(fill=Clade, y=relabund, x=Sample)) +
+  facet_grid(~lifestage, scales="free_x")+
+  geom_bar(position="fill", stat="identity")+
+  scale_fill_manual(values=c("darkorange", "brown"))+
+  theme_classic()+
+  theme(panel.spacing.y = unit(-2, "lines")); plot
+```
+
+Plot with an average proportion D for each lifestage.  
+
+```{r}
+plot2<-data%>%
+  group_by(lifestage)%>%
+  filter(!lifestage=="Recruit1")%>%
+  spread(Clade, relabund)%>%
+  summarise(mean=mean(D), sd=sd(D), N=length(D), se=sd/sqrt(N))%>%
+  ggplot(., aes(x = as.factor(lifestage), y = mean, group=lifestage)) +
+    geom_point(aes(group=lifestage), pch = 21, size=6, alpha=0.8, position = position_dodge(0.3)) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=lifestage), width=0, linetype="solid", position=position_dodge(0.3), size=1, color="black")+
+    xlab("Lifestage") + 
+    ylab("Relative Proportion D")+
+    ylim(0,0.5)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); plot2
+```
+
+Plot with an average proportion C for each lifestage.  
+
+```{r}
+plot3<-data%>%
+  group_by(lifestage)%>%
+  filter(!lifestage=="Recruit1")%>%
+  spread(Clade, relabund)%>%
+  summarise(mean=mean(C), sd=sd(C), N=length(C), se=sd/sqrt(N))%>%
+  ggplot(., aes(x = as.factor(lifestage), y = mean, group=lifestage)) +
+    geom_point(aes(group=lifestage), pch = 21, size=6, alpha=0.8, position = position_dodge(0.3)) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=lifestage), width=0, linetype="solid", position=position_dodge(0.3), size=1, color="black")+
+    xlab("Lifestage") + 
+    ylab("Relative Proportion C")+
+    ylim(0,0.5)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); plot3
+```
+
+Create side by side plot.  
+
+```{r}
+plot4<-data%>%
+  group_by(lifestage, Clade)%>%
+  filter(!lifestage=="Recruit1")%>%
+  summarise(mean=mean(relabund), sd=sd(relabund), N=length(relabund), se=sd/sqrt(N))%>%
+  ggplot(., aes(x = as.factor(lifestage), y = mean, group=interaction(lifestage, Clade), fill=Clade)) +
+    geom_point(aes(group=interaction(lifestage, Clade)), pch = 21, size=6, alpha=0.8, position = position_dodge(0.3)) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=interaction(lifestage, Clade)), width=0, linetype="solid", position=position_dodge(0.3), size=1, color="black")+
+    scale_fill_manual(values=c("darkorange", "brown"))+
+    xlab("Lifestage") + 
+    ylab("Relative Clade")+
+    ylim(0,0.5)+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x = element_text(angle = 45, vjust=0.5)
+      ); plot4
+```
+
+
+# Analysis  
+
+Anova analysis for proportion D over lifestages.  
+```{r}
+anova<-data%>%
+      spread(Clade, relabund)%>%
+     aov(D~lifestage, data=.)
+
+summary(anova)
+```
+
+Anova analysis for proportion C over lifestages.  
+```{r}
+anova<-data%>%
+      spread(Clade, relabund)%>%
+     aov(C~lifestage, data=.)
+
+summary(anova)
+```
+
+C and D proportions change across life stages.  
+
+

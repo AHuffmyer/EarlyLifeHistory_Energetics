@@ -1,0 +1,5 @@
+Species references
+LaJeunesse, T. C., D. C. Wham, D. T. Pettay, J. E. Parkinson, S. Keshavmurthy and C. A. Chen (2014). Ecologically differentiated stress-tolerant endosymbionts in the dinoflagellate genus Symbiodinium (Dinophyceae) Clade D are different species. Phycologia 53(4): 305-319.
+LaJeunesse, T. C., D. T. Pettay, E. M. Sampayo, N. Phongsuwan, B. Brown, D. O. Obura, O. Hoegh-Guldberg and W. K. Fitt (2010). Long-standing environmental conditions, geographic isolation and host-symbiont specificity influence the relative ecological dominance and genetic diversification of coral endosymbionts in the genus Symbiodinium. Journal of Biogeography 37(5): 785-800.
+['Output as part of data_analysis ID: 4; Number of data_set objects as part of analysis = 1; submitting_user: ashuffmyer; time_stamp: 20211231T111413']
+Data_set ID: 5; Data_set name: Mcap_Development; submitting_user: ashuffmyer; time_stamp: 20211231T004410

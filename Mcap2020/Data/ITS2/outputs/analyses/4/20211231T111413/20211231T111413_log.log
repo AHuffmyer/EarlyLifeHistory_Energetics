@@ -1,0 +1,2 @@
+INFO:Note: NumExpr detected 24 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+INFO:NumExpr defaulting to 8 threads.

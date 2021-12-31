@@ -1,0 +1,50 @@
+INFO:pre-MED to ReferenceSequence matching took 4.800052165985107s to complete using multithreading for clade C
+INFO:pre-MED to ReferenceSequence matching took 3.0208687782287598s to complete using multithreading for clade D
+INFO:pre-MED to ReferenceSequence matching took 0.7978534698486328s to complete using multithreading for clade A
+INFO:SAMPLE PROCESSING SUMMARY
+INFO:WSH046: Successful
+INFO:WSH047: Successful
+INFO:WSH048: Successful
+INFO:WSH049: Successful
+INFO:WSH050: Successful
+INFO:WSH051: Successful
+INFO:WSH052: Successful
+INFO:WSH053: Successful
+INFO:WSH054: Successful
+INFO:WSH055: Successful
+INFO:WSH056: Successful
+INFO:WSH057: Successful
+INFO:WSH058: Successful
+INFO:WSH059: Successful
+INFO:WSH060: Successful
+INFO:WSH061: Successful
+INFO:WSH062: Successful
+INFO:WSH063: Successful
+INFO:WSH064: Successful
+INFO:WSH065: Successful
+INFO:WSH066: Successful
+INFO:WSH067: Successful
+INFO:WSH068: Successful
+INFO:WSH069: Successful
+INFO:WSH070: Successful
+INFO:WSH071: Successful
+INFO:WSH072: Successful
+INFO:WSH073: Successful
+INFO:WSH074: Successful
+INFO:WSH075: Successful
+INFO:WSH076: Successful
+INFO:WSH077: Successful
+INFO:WSH078: Successful
+INFO:WSH079: Successful
+INFO:WSH080: Successful
+INFO:WSH081: Successful
+INFO:WSH082: Successful
+INFO:WSH083: Successful
+INFO:WSH084: Successful
+INFO:
+
+39 out of 39 samples successfully passed QC.
+0 samples produced errors
+
+INFO:Note: NumExpr detected 24 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+INFO:NumExpr defaulting to 8 threads.

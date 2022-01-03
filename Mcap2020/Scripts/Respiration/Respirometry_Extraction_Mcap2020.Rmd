@@ -225,8 +225,8 @@ plot(blank_data$R.umol.min , ylab="umol O2 min-1") #blanks during dark phase
 plot(blank_data$P.umol.min , ylab="umol O2 min-1") #blanks during light phase
 
 #display mean blankvalues
-mean(blank_data$R.umol.min) #mean R phase blanks
-mean(blank_data$P.umol.min) #mean P phase blanks
+meanRblank<-mean(blank_data$R.umol.min) #mean R phase blanks
+meanPblank<-mean(blank_data$P.umol.min) #mean P phase blanks
 ```
 
 Remove blank wells that are outliers.  
@@ -246,9 +246,13 @@ plot(blank_data$P.umol.min , ylab="umol O2 min-1") #blanks during dark phase
 
 ```
 
+Run 2 on 20210723 had both blanks removed as they were strong outliers. REspiration rates were not significantly greater in this run than on Run 1 on this day. Therefore, we will take the average respiration blank value and use this for corrections for this run.   
 
-
-Add blank values into data frame.  
+```{r}
+oxygen$code<-paste(oxygen$Date, oxygen$Run)
+plot(oxygen$R.umol.min~as.factor(oxygen$code), ylab="umol O2 min-1")
+plot(oxygen$P.umol.min~as.factor(oxygen$code), ylab="umol O2 min-1")
+```
 
 ```{r}
 resp.blnk <- aggregate(R.umol.min ~ Date*Run, data=blank_data, mean) #calculate average blank during light for each run
@@ -256,9 +260,18 @@ colnames(resp.blnk)[colnames(resp.blnk) == 'R.umol.min'] <- 'R.Blank.umol.min' #
 
 photo.blnk <- aggregate(P.umol.min ~ Date*Run, data=blank_data, mean) #calculate average blank during dark for each run
 colnames(photo.blnk)[colnames(photo.blnk) == 'P.umol.min'] <- 'P.Blank.umol.min' #rename to specify blank for P
+```
 
+Merge together.  
+```{r}
 oxygen <- full_join(oxygen, resp.blnk) #add R blanks to master
 oxygen <- full_join(oxygen, photo.blnk) #add P blanks to master
+```
+Add blank values into data frame and add average blank value to replace NA values from 20210723 Run 2.    
+```{r}
+oxygen<-oxygen%>%
+  mutate(R.Blank.umol.min = ifelse(is.na(R.Blank.umol.min), meanRblank, R.Blank.umol.min))%>%
+  mutate(P.Blank.umol.min = ifelse(is.na(P.Blank.umol.min), meanPblank, P.Blank.umol.min))
 ```
 
 Subtract blank values to generate a "corrected" value for umol O2 sec-1.  

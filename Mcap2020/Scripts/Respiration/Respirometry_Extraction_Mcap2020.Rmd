@@ -104,9 +104,9 @@ Run loop to extract slopes from respiration data. Subset for respiration data by
 
 ```{r, results=FALSE, warning=FALSE, message=FALSE}
 for(i in 1:length(file.names)) { # for every file in list start at the first and run this following function
-  Resp.Data <-read.table(file.path(path.p,file.names[i]), skip = 72, header=T, sep=",", na.string="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files
+  Resp.Data <-read.table(file.path(path.p,file.names[i]), skip = 56, header=T, sep=",", na.string="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files
   Resp.Data$Temp <- Resp.Data[,31] #assigns temp column
-  Resp.Data$Time.Min <- seq.int(0.017, (nrow(Resp.Data))*0.25, by = 0.25) #set time in min
+  Resp.Data$Time.Min <- seq.int(from=0, to=((nrow(Resp.Data)*0.25)-0.25), by = 0.25) #set time in min
   Resp.Data <- Resp.Data %>% #filters data by phase (respiration only)
      filter(Time.Min > rtime[i])
   Resp.Data.N <- Resp.Data[,3:26] #subset desired columns
@@ -154,9 +154,9 @@ Run loop to extract slopes from photosynthesis data ( time < respiration start t
 
 ```{r, warning=FALSE, message=FALSE}
 for(i in 1:length(file.names)) { # for every file in list start at the first and run this following function
-  Photo.Data <-read.table(file.path(path.p,file.names[i]), skip = 72, header=T, sep=",", na.string="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files
+  Photo.Data <-read.table(file.path(path.p,file.names[i]), skip = 56, header=T, sep=",", na.string="NA", fill = TRUE, as.is=TRUE, fileEncoding="latin1") #reads in the data files
   Photo.Data$Temp <- Photo.Data[,31] #assign temperature column
-  Photo.Data$Time.Min <- seq.int(0.017, (nrow(Photo.Data))*0.25, by = 0.25) #set time in min
+  Photo.Data$Time.Min <- seq.int(from=0, to=((nrow(Photo.Data)*0.25)-0.25), by = 0.25) #set time in min
   Photo.Data <- Photo.Data %>% #filters data by phase (photosynthesis only)
      filter(Time.Min <= ptime[i])
   Photo.Data.N <- Photo.Data[,3:26] #select desired columns
@@ -211,6 +211,8 @@ colnames(oxygen)[colnames(oxygen) == 'Intercept'] <- 'Photo.Intercept' #rename t
 colnames(oxygen)[colnames(oxygen) == 'umol.L.min'] <- 'P.umol.L.min' #rename to specify P
 ```
 
+We do not need to remove any wells. PDF outputs show that there were no wells that had abnormal data/curves.  
+
 Account for volume and substract blank values. Average blank calculated for each run for P and R phases. Display mean blank value in order of R and P phases.    
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 #Account for chamber volume to convert from umol L-1 m-1 to umol m-1. This standardizes across water volumes (different because of coral size) and removes per Liter
@@ -225,7 +227,30 @@ plot(blank_data$P.umol.min , ylab="umol O2 min-1") #blanks during light phase
 #display mean blankvalues
 mean(blank_data$R.umol.min) #mean R phase blanks
 mean(blank_data$P.umol.min) #mean P phase blanks
+```
 
+Remove blank wells that are outliers.  
+```{r}
+#filter dark phase blank values  
+blank_data<-blank_data%>%
+  filter(R.umol.min > -0.00010)
+
+plot(blank_data$R.umol.min , ylab="umol O2 min-1") #blanks during dark phase
+
+
+#filter dark phase blank values  
+blank_data<-blank_data%>%
+  filter(P.umol.min < 2e-04)
+
+plot(blank_data$P.umol.min , ylab="umol O2 min-1") #blanks during dark phase
+
+```
+
+
+
+Add blank values into data frame.  
+
+```{r}
 resp.blnk <- aggregate(R.umol.min ~ Date*Run, data=blank_data, mean) #calculate average blank during light for each run
 colnames(resp.blnk)[colnames(resp.blnk) == 'R.umol.min'] <- 'R.Blank.umol.min' #rename to specify blank for R
 
@@ -274,5 +299,4 @@ Save as .csv file.
 write.csv(oxygen.bio, paste0("Mcap2020/Output/Respiration/oxygen_P_R_calc.csv", sep="")) #save final file
 ```
 
-This point ends the general use script for P and R rates. Below are project-specific scripts.  
 

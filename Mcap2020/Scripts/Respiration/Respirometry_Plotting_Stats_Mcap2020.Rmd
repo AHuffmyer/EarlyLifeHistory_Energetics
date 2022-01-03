@@ -13,7 +13,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section along with summaries of potential implications. See Conclusions section for general overview of findings.    
+This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section along with summaries of potential implications.  
 
 # **Setup**  
 

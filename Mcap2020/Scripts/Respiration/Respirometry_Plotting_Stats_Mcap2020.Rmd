@@ -73,7 +73,9 @@ Calculate a P:R ratio using gross photosynthesis.
 ```{r, warning=FALSE, message=FALSE}
 PRdata$ratio<-abs(PRdata$GP.nmol.org.min)/abs(PRdata$R.nmol.org.min) #calculate ratio with absolute values
 #remove outliers detected by values of P:R ratio data
-PRdata<-PRdata%>%filter(ratio < 15)
+plot(PRdata$ratio)
+PRdata<-PRdata%>%filter(ratio < 8)
+plot(PRdata$ratio)
 
 fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min)
 ```

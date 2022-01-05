@@ -262,6 +262,8 @@ photo.blnk <- aggregate(P.umol.min ~ Date*Run, data=blank_data, mean) #calculate
 colnames(photo.blnk)[colnames(photo.blnk) == 'P.umol.min'] <- 'P.Blank.umol.min' #rename to specify blank for P
 ```
 
+
+
 Merge together.  
 ```{r}
 oxygen <- full_join(oxygen, resp.blnk) #add R blanks to master

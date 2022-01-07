@@ -13,7 +13,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-This script generates combined data frame of early life history respirometry and physiology data for comparisons.  
+This script generates combined data frame of early life history size and symbiont density data.  m
 
 # **Setup**  
 

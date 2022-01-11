@@ -148,7 +148,7 @@ plot4<-data%>%
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
     scale_shape_manual(values=c(16,5))+
     xlab("Hours Post Fertilization") + 
-    ylab("Relative Abundance")+
+    ylab("Mean Relative Abundance")+
     ylim(0,0.5)+
     theme_classic() + 
     theme(

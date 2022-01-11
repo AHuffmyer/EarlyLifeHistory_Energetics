@@ -161,6 +161,7 @@ plot4<-data%>%
   ggplot(., aes(x = as.factor(hpf), y = mean, fill=group, shape=Clade)) +
     geom_point(aes(group=interaction(hpf, group, Clade), colour=group, shape=Clade), size=6, alpha=0.8, position = position_dodge(0.7)) + 
     geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=interaction(hpf, group, Clade)), width=0, linetype="solid", position=position_dodge(0.7), size=1, color="black")+
+   geom_hline(yintercept=0.5, linetype="dashed", color = "darkgray")+
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
     scale_shape_manual(values=c(16,5))+

@@ -44,10 +44,23 @@ Load data obtained from SymPortal analysis on URI HPC cluster. Load relative abu
 its2<-read.csv(file="Mcap2020/Data/ITS2/relative_abundance_results.csv")
 
 its2<-its2%>%
-  rename(Sample=X, C=C31.C17d.C21.C21ac.C31a, D=D1.D4.D6.D1ab.D17d)
+  rename(Sample=X, C=C31.C17d.C21.C21ac.C31a, D=D1.D4.D6.D1ab.D17d)%>%
+  filter(!ITS2.type.profile=="Sequence accession / SymPortal UID")%>%
+  filter(!ITS2.type.profile=="Average defining sequence proportions and [stdev]")
+
+its2$C<-as.numeric(its2$C)
+its2$D<-as.numeric(its2$D)
+
+#calculate relative abundance such that proportions add up to 1 
+its2<-its2%>%
+  mutate(sum = rowSums(across(where(is.numeric))))%>%
+  mutate(relC = C/sum)%>%
+  mutate(relD = D/sum)%>%
+  dplyr::select(Sample, relC, relD)%>%
+  rename(C=relC, D=relD)
 
 its2<-its2%>%
-  gather(key=Clade, value=relabund, 3:4)
+  gather(key=Clade, value=relabund, 2:3)
 
 its2$Clade<-as.factor(its2$Clade)
 its2$relabund<-as.numeric(its2$relabund)
@@ -101,7 +114,7 @@ plot2<-data%>%
     geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=lifestage), width=0, linetype="solid", position=position_dodge(0.3), size=1, color="black")+
     xlab("Lifestage") + 
     ylab("Relative Proportion D")+
-    ylim(0,0.5)+
+    ylim(0,0.7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -125,7 +138,7 @@ plot3<-data%>%
     geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=lifestage), width=0, linetype="solid", position=position_dodge(0.3), size=1, color="black")+
     xlab("Lifestage") + 
     ylab("Relative Proportion C")+
-    ylim(0,0.5)+
+    ylim(0,0.7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -153,7 +166,7 @@ plot4<-data%>%
     scale_shape_manual(values=c(16,5))+
     xlab("Hours Post Fertilization") + 
     ylab("Mean Relative Abundance")+
-    ylim(0,0.5)+
+    ylim(0,0.7)+
     theme_classic() + 
     theme(
       legend.position="right",

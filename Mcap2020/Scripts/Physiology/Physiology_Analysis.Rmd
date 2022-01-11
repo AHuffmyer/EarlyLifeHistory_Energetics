@@ -50,6 +50,7 @@ library(lme4)
 library(GGally)
 library(lmerTest)
 library(cowplot)
+library(Hmisc)
 ```
 
 
@@ -97,7 +98,7 @@ Present means and standard error of each group and save summary table
 ```{r}
 size%>%
   group_by(lifestage, hpf)%>%
-  summarize(n=length(area),
+  summarise(n=length(area),
             Mean=format(round(mean(area), 3), 3), 
             SE=format(round(sd(area)/sqrt(length(area)),3),3))%>%
   rename(Lifestage=lifestage, HPF=hpf)%>%
@@ -108,7 +109,7 @@ size%>%
 #need to output to csv 
 size%>%
   group_by(lifestage, hpf)%>%
-  summarize(n=length(area),
+  summarise(n=length(area),
             Mean=format(round(mean(area), 3), 3), 
             SE=format(round(sd(area)/sqrt(length(area)),3),3))%>%
   rename(Lifestage=lifestage, HPF=hpf)%>%
@@ -277,7 +278,7 @@ Present means and standard error of each group and save summary table.
 ```{r}
 sym_counts%>%
   group_by(group, hpf, lifestage)%>%
-  summarize(n=length(cells.ind),
+  summarise(n=length(cells.ind),
             Mean=format(round(mean(cells.ind), 0), 0), 
             SE=format(round(sd(cells.ind)/sqrt(length(cells.ind)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
@@ -287,7 +288,7 @@ sym_counts%>%
 
 sym_counts%>%
   group_by(group, hpf, lifestage)%>%
-  summarize(n=length(cells.mm),
+  summarise(n=length(cells.mm),
             Mean=format(round(mean(cells.mm), 0), 0), 
             SE=format(round(sd(cells.mm)/sqrt(length(cells.mm)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
@@ -298,7 +299,7 @@ sym_counts%>%
 #need to output to csv 
 sym_counts%>%
   group_by(group, hpf, lifestage)%>%
-  summarize(n=length(cells.ind),
+  summarise(n=length(cells.ind),
             Mean=format(round(mean(cells.ind), 0), 0), 
             SE=format(round(sd(cells.ind)/sqrt(length(cells.ind)),0),0))%>%
   rename(group=group, HPF=hpf)%>%
@@ -307,8 +308,6 @@ sym_counts%>%
 
 Plot data as a scatterplot   
 ```{r}
-sym_counts$code<-paste(sym_counts$lifestage, "\n (", sym_counts$hpf, ")")
-sym_counts$code <- factor(sym_counts$code,levels = c("Egg Fertilized \n ( 1 )", "Embryo 1 \n ( 5 )", "Larvae 1 \n ( 38 )", "Larvae 2 \n ( 65 )", "Larvae 3 \n ( 93 )", "Larvae 4 \n ( 163 )", "Larvae 5 \n ( 183 )", "Recruit 1 \n ( 183 )", "Larvae 6 \n ( 231 )", "Recruit 2 \n ( 231 )", "Plug 1 \n ( 183 )", "Plug 2 \n ( 231 )", "Plug 3 \n ( 255 )"))
 sym_counts$hpf<-as.numeric(as.character(sym_counts$hpf))
 
 symb_plot<-sym_counts %>%
@@ -335,7 +334,7 @@ symb_plot<-sym_counts %>%
 #EMBRYO: #DFC27D
 #LARVAE: #80CDC1
 #RECRUIT: #003C30
-#ATTACHED: 
+#ATTACHED: #BA55D3
 
 ```
 
@@ -462,13 +461,16 @@ Significant correlation between size and cell counts.  r=0.37, p=0.017
 Plot cells per mm^2 as a boxplot.  
 
 ```{r}
+#order for creating a legend for all plots 
+corr$group <- factor(corr$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
+
 cells_size_plot<-corr %>%
     ggplot(., aes(x = hpf, y = counts_area)) +
     geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#BA55D3", "#8C510A", "#DFC27D","#80CDC1", "#003C30"), guide="none")+
-    scale_color_manual(name="Lifestage", values=c("#BA55D3", "#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
     ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
     #ylim(2000, 35000)+
     theme_classic() + 
@@ -479,6 +481,28 @@ cells_size_plot<-corr %>%
       legend.title=element_text(face="bold", size=14)
       ); cells_size_plot
 
+```
+
+Plot as linear relationship.  
+
+```{r}
+cells_size_plot2<-corr %>%
+    ggplot(., aes(x = as.numeric(as.character(hpf)), y = counts_area)) +
+    #geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
+    geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
+    geom_smooth(method="lm", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c( "#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
+    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
+    #ylim(2000, 35000)+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14)
+      ); cells_size_plot2
 ```
 
 Analyze differences in normalized cell counts by timepoint. 
@@ -511,7 +535,7 @@ Generate summary table of descriptive statistics.
 #need to output to csv 
 corr%>%
   group_by(group, hpf, lifestage)%>%
-  summarize(n=length(counts_area),
+  summarise(n=length(counts_area),
             Mean_sym_mm2=format(round(mean(counts_area), 0), 0), 
             SE=format(round(sd(counts_area)/sqrt(length(counts_area)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
@@ -538,19 +562,27 @@ resp<-resp%>%
     rename(Lifestage=group)%>%
     dplyr::select(Lifestage, Mean_R, Mean_P, Mean_GP, Mean_PR)
 
-levels(resp$Lifestage) <- list(`Larvae 2`  = "Larvae2", `Larvae 3`  = "Larvae3", `Larvae 5`  = "Larvae5",`Larvae 6`  = "Larvae6", `Recruit 1`  = "Recruit1", `Recruit 2`  = "Recruit2")
-  
+resp$Lifestage<-as.factor(resp$Lifestage)
+
+levels(resp$Lifestage) <- list(`Larvae 2` = "Larvae2", `Larvae 3`  = "Larvae3", `Larvae 5`  = "Larvae5", `Larvae 6`  = "Larvae6", `Recruit 1`  = "Recruit1", `Recruit 2`  = "Recruit2")
+
 size<-size%>%
   dplyr::select(Lifestage, Mean)%>%
   rename(Mean_Size=Mean)
+
+size$Lifestage<-as.factor(size$Lifestage)
 
 size_density<-size_density%>%
   dplyr::select(lifestage, Mean_sym_mm2)%>%
   rename(Mean_Size_Density=Mean_sym_mm2, Lifestage=lifestage)
 
+size_density$Lifestage<-as.factor(size_density$Lifestage)
+
 density<-density%>%
     rename(Lifestage=lifestage, Mean_Density=Mean)%>%
   dplyr::select(Lifestage, Mean_Density)
+
+density$Lifestage<-as.factor(density$Lifestage)
 ```
 
 Combine dataframes.  
@@ -575,7 +607,7 @@ print(g)
 dev.off()
 ```
 
-There is a significant correlation between size normalized symbiont cell density and respiration. Plot this relationship.  
+There is a significant correlation between size normalized symbiont cell density and respiration. Plot this relationship. 
 
 Run Pearson correlation between respiration and size normalized cell densities.  
 
@@ -625,13 +657,19 @@ legend <- get_legend(
 size_plot2<-size_plot2+theme(legend.position="none")
 symb_plot2<-symb_plot2+theme(legend.position="none")
 r_corr_plot<-r_corr_plot+theme(legend.position="none")
-cells_size_plot<-cells_size_plot+theme(legend.position="none")
+cells_size_plot_l<-cells_size_plot+theme(legend.position="none")
 
 #assemble plots
-all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot, r_corr_plot, labels = c("A", "B", "C", "D"), label_size=18, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,1), align="h")
+all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot_l, r_corr_plot, labels = c("A", "B", "C", "D"), label_size=18, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,0.8), align="h")
 
 all_plots_legend<-plot_grid(all_plots, legend, rel_widths = c(4, 0.5), ncol=2, nrow=1)
 
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure.pdf", all_plots_legend, dpi=300, width=20, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure.pdf", all_plots_legend, dpi=300, width=24, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure.png", all_plots_legend, dpi=300, width=24, height=6, units="in")
+
 ```
+
+
+![Early life history physiology](../../Figures/Physiology/Physiology_figure.png)
+
 

@@ -4,7 +4,6 @@ author: "AS Huffmyer"
 date: '2021'
 output:
   html_document:
-    code_folding: hide
     toc: yes
     toc_depth: 6
     toc_float: yes
@@ -25,12 +24,16 @@ if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages
 if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
 if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
 if ("janitor" %in% rownames(installed.packages()) == 'FALSE') install.packages('janitor') 
+if ("kableExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('kableExtra') 
+if ("car" %in% rownames(installed.packages()) == 'FALSE') install.packages('car') 
 
 #load packages
 library("ggplot2")
 library('cowplot')
 library("tidyverse")
 library("janitor")
+library("car")
+library("kableExtra")
 ```
 
 # Load data  
@@ -81,6 +84,8 @@ plot<-data%>%
   scale_fill_manual(values=c("darkorange", "brown"))+
   theme_classic()+
   theme(panel.spacing.y = unit(-2, "lines")); plot
+
+ggsave(plot, file="Mcap2020/Figures/ITS2/individual_relabund.png", width=16, height=6, dpi=300)
 ```
 
 Plot with an average proportion D for each lifestage.  
@@ -172,6 +177,8 @@ anova<-data%>%
      aov(D~lifestage, data=.)
 
 summary(anova)
+
+qqPlot(residuals(anova))
 ```
 
 Anova analysis for proportion C over lifestages.  
@@ -181,7 +188,10 @@ anova<-data%>%
      aov(C~lifestage, data=.)
 
 summary(anova)
+
+qqPlot(residuals(anova))
 ```
+
 
 C and D proportions change across life stages.  
 
@@ -190,6 +200,16 @@ Display summary of C and D proportions.
 ```{r}
 data%>%
   group_by(lifestage, Clade)%>%
-  summarise(mean=mean(relabund), n=length(relabund), stdev=sd(relabund), sterr=stdev/sqrt(n))
+  summarise(mean=mean(relabund), n=length(relabund), stdev=sd(relabund), sterr=stdev/sqrt(n))%>%
+  kbl(caption="Descriptive statistics of relative abundance")%>%
+  kable_classic(full_width=FALSE, html_font="Arial")%>%
+  row_spec(0, bold = TRUE) 
+
+data%>%
+  group_by(Clade)%>%
+  summarise(mean=mean(relabund), n=length(relabund), stdev=sd(relabund), sterr=stdev/sqrt(n))%>%
+  kbl(caption="Descriptive statistics of overall relative abundance")%>%
+  kable_classic(full_width=FALSE, html_font="Arial")%>%
+  row_spec(0, bold = TRUE) 
 ```
 

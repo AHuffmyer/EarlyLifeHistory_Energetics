@@ -166,7 +166,7 @@ ggsave(plot4, file="Mcap2020/Figures/ITS2/relabund.png", width=10, height=6, dpi
 
 # Analysis  
 
-Anova analysis for proportion D over lifestages.  
+Anova analysis for proportion D over lifestages (lifestage = combination of hpf and stage).  
 ```{r}
 anova<-data%>%
       spread(Clade, relabund)%>%

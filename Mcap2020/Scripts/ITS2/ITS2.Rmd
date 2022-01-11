@@ -133,7 +133,6 @@ plot3<-data%>%
 
 Create side by side plot.  
 
-GENERATE PLOT with color for lifestage and open/closed for C/D
 ```{r}
 data$group <- factor(data$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
 
@@ -186,4 +185,11 @@ summary(anova)
 
 C and D proportions change across life stages.  
 
+Display summary of C and D proportions.  
+
+```{r}
+data%>%
+  group_by(lifestage, Clade)%>%
+  summarise(mean=mean(relabund), n=length(relabund), stdev=sd(relabund), sterr=stdev/sqrt(n))
+```
 

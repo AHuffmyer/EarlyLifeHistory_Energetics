@@ -197,6 +197,7 @@ View posthoc comparisons for differences between lifestages.
 ```{r}
 emm = emmeans(size_model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
+pairs(emm)
 ```
 
 
@@ -383,6 +384,7 @@ There is a significant effect of lifestage on cell densities. View posthoc compa
 ```{r}
 emm = emmeans(sym_ind_model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
+pairs(emm)
 ```
 
 Output data to file.  
@@ -526,6 +528,7 @@ View posthoc differences.
 ```{r}
 emm = emmeans(model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
+pairs(emm)
 ```
 
 Generate summary table of descriptive statistics.  

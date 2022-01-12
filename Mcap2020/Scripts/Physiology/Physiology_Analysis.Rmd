@@ -422,7 +422,8 @@ corr<-left_join(sym_counts, area)
 Generate number of symbiont cells per mm^2 area for each tube.    
 ```{r}
 corr<-corr%>%
-  mutate(counts_area=cells.ind/mean_area)%>%
+  mutate(mean_area_2=mean_area*2)%>%
+  mutate(counts_area=cells.ind/mean_area_2)%>%
   mutate(counts_area=ifelse(is.na(counts_area), cells.mm, counts_area)) #add attached recruit data already calculated as cells per mm2
 ```
 
@@ -431,7 +432,7 @@ Plot correlation between cell counts (cells per individual) and size (area mm^2)
 ```{r}
 correlation<-corr %>%
     filter(!group=="Attached Recruit")%>%
-    ggplot(., aes(x = mean_area, y = cells.ind)) +
+    ggplot(., aes(x = mean_area_2, y = cells.ind)) +
     #geom_smooth(method="lm", se=TRUE, fullrange=TRUE, level=0.95, color="black", fill="gray") +
     geom_point(aes(fill=group), pch = 21, size=4) + 
     xlab(expression(bold(paste("Larval Size (mm"^2, ")")))) + 

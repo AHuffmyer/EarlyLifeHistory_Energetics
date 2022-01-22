@@ -84,7 +84,7 @@ plot(PRdata$R.nmol.org.min)
 fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min)
 ```
 
-# **Analysis and plotting of core dataset**  
+# **Analysis and plotting of P and R**  
 
 Load sample metadata to identify stage and hpf.  
 
@@ -234,9 +234,9 @@ pr_plot<-PRdf %>%
 ## Generate final figure  
 
 ```{r}
-full_fig<-plot_grid(r_plot, p_plot, gp_plot, pr_plot, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,1.2), label_y=1, align="h")
+full_fig<-plot_grid(r_plot, p_plot, gp_plot, pr_plot, labels=c("A", "B", "C", "D"), label_size=20, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,1.2), label_y=1, align="h")
 
-ggsave(filename="Mcap2020/Figures/Respiration/respirometry_fig.png", plot=full_fig, dpi=500, width=26, height=6, units="in")
+ggsave(filename="Mcap2020/Figures/Respiration/respirometry_fig.png", plot=full_fig, dpi=300, width=26, height=6, units="in")
 ```
 
 ## Analyze data  

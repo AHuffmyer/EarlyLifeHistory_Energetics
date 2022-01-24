@@ -663,7 +663,7 @@ r_corr_plot<-r_corr_plot+theme(legend.position="none")
 cells_size_plot_l<-cells_size_plot+theme(legend.position="none")
 
 #assemble plots
-all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot_l, r_corr_plot, labels = c("A", "B", "C", "D"), label_size=18, ncol=4, nrow=1, rel_heights= c(1,1,1,1), rel_widths = c(1,1,1,0.8), align="h")
+all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot_l, labels = c("A", "B", "C"), label_size=18, ncol=3, nrow=1, rel_heights= c(1,1,1), rel_widths = c(1,1,1), align="h")
 
 all_plots_legend<-plot_grid(all_plots, legend, rel_widths = c(4, 0.5), ncol=2, nrow=1)
 

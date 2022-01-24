@@ -1,14 +1,14 @@
 Lifestage,HPF,lifestage,n,Mean_sym_mm2,SE
-Egg,1,Egg Fertilized,4,7746,578
-Embryo,5,Embryo 1,4,9923,654
-Embryo,38,Larvae 1,4,8720,1341
-Embryo,65,Larvae 2,4,16867,1846
-Larvae,93,Larvae 3,4,14756,2165
-Larvae,163,Larvae 4,4,14732,1010
-Larvae,183,Larvae 5,4,17732,788
-Larvae,231,Larvae 6,4,16510,1247
-Metamorphosed Recruit,183,Recruit 1,4,25137,2929
-Metamorphosed Recruit,231,Recruit 2,4,23301,1126
+Egg,1,Egg Fertilized,4,3873,289
+Embryo,5,Embryo 1,4,4962,327
+Embryo,38,Larvae 1,4,4360,670
+Embryo,65,Larvae 2,4,8433,923
+Larvae,93,Larvae 3,4,7378,1083
+Larvae,163,Larvae 4,4,7366,505
+Larvae,183,Larvae 5,4,8866,394
+Larvae,231,Larvae 6,4,8255,623
+Metamorphosed Recruit,183,Recruit 1,4,12568,1465
+Metamorphosed Recruit,231,Recruit 2,4,11650,563
 Attached Recruit,183,Plug 1,3,3241,639
 Attached Recruit,231,Plug 2,2,4055,385
 Attached Recruit,255,Plug 3,3,6307,680

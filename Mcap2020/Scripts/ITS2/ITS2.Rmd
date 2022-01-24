@@ -164,7 +164,7 @@ plot4<-data%>%
    geom_hline(yintercept=0.5, linetype="dashed", color = "darkgray")+
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
-    scale_shape_manual(values=c(16,5))+
+    scale_shape_manual(name="Genus", labels=c("Cladocopium", "Durusdinium"), values=c(16,5))+
     xlab("Hours Post Fertilization") + 
     ylab("Mean Relative Abundance")+
     ylim(0,0.7)+
@@ -178,7 +178,7 @@ plot4<-data%>%
       axis.text.x = element_text(angle = 45, vjust=0.5)
       ); plot4
 
-ggsave(plot4, file="Mcap2020/Figures/ITS2/relabund.png", width=10, height=6, dpi=300)
+ggsave(plot4, file="Mcap2020/Figures/ITS2/relabund.png", width=8, height=6, dpi=300)
 ```
 
 

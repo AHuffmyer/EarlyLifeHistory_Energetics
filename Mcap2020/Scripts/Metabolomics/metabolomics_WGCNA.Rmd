@@ -36,6 +36,7 @@ if ("mixOmics" %in% rownames(installed.packages()) == 'FALSE') BiocManager::inst
 if ("RVAideMemoire" %in% rownames(installed.packages()) == 'FALSE') install.packages('RVAideMemoire') 
 if ("VennDiagram" %in% rownames(installed.packages()) == 'FALSE') install.packages('VennDiagram') 
 if ("broom" %in% rownames(installed.packages()) == 'FALSE') install.packages('broom') 
+if ("devtools" %in% rownames(installed.packages()) == 'FALSE') install.packages('devtools') 
 
 #load packages
 library("ggplot2")
@@ -49,19 +50,22 @@ library("tidyverse")
 library("RVAideMemoire")
 library("VennDiagram")
 library("broom")
+library("devtools")
 
-if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
-if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("genefilter") 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('DESeq2') 
 if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
-if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('WGCNA') 
 if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
 if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
-if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
-if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('goseq') 
 if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
-if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('clusterProfiler') 
 if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
 if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+if ("dendsort" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('dendsort') 
+if ("MetaboAnalystR" %in% rownames(installed.packages()) == 'FALSE') devtools::install_github("xia-lab/MetaboAnalystR", build = TRUE, build_vignettes = FALSE) 
 
 library("genefilter")
 library("DESeq2")
@@ -75,14 +79,32 @@ library("dplyr")
 library("clusterProfiler")
 library("pheatmap")
 library("magrittr")
-
+library("dendsort")
+library("MetaboAnalystR")
 ```
 
-This script uses WGCNA analysis on metabolomics data set to explore whether we can detect "modules" of genes that are correlated with lifestage as a comparison to PLS-DA and multivariate analyses used in metabolomics.Rmd script.  
+This script uses WGCNA analysis on metabolomics data set to explore whether we can detect "modules" of genes that are correlated with lifestage. PLS-DA analyses and multivariate analyses are conducted in metabolomics.Rmd script. The pipeline in this script is modified from K. Wong script: 
 
-# Load data  
+# Pipeline Overview
 
-Read in data file and create metadata with sample information as well as a count matrix with metabolite counts. Data will be read in from "selected metabolites" dataset that has already undergone polarity selection, cleaning metabolite names, and median-centered normalized ion counts.  
+1. Data preparation
+  + Load and format clean data
+  + Data filtering: PoverA and genefilter
+  + Outlier detection
+2. Network construction and consensus module detection
+  + Choosing a soft-thresholding power: Analysis of a network topology β  
+  + Identify modules using blockwiseModules  
+  + Relate modules to sample information  
+  + Relate modules to life stage
+3. Plot module-trait associations
+4. Plot mean eigengene values for each module  
+5. Pathway analysis    
+
+# 1. Data Preparation  
+
+## Load and format clean data  
+
+Read in data file and create metadata with sample information as well as a count matrix with metabolite counts. Data will be read in from "selected metabolites" dataset that has already undergone polarity selection, cleaning metabolite names, and median-centered normalized ion counts in the metabolomics.Rmd script.  
 
 ```{r}
 data<-read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
@@ -118,9 +140,11 @@ Check that there are no metabolites with 0 counts for all samples. Should return
 rowSums(dplyr::count(data)) > 0
 ```
 
+## Data filtering: PoverA and genefilter  
+
 Conduct data filtering, this includes:  
 
-*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (metabolomics.Rmd). We are further setting the minimum value of metabolites to 1 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
+*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (as analyzed in metabolomics.Rmd). We are further setting the minimum value of metabolites to 1 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
 
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 
@@ -129,9 +153,6 @@ filt <- filterfun(pOverA(0.04,0.01))
 
 #create filter for the counts data
 gfilt <- genefilter(data, filt)
-
-#identify genes to keep by count filter
-keep <- data[gfilt,]
 
 #identify genes to keep by count filter
 keep <- data[gfilt,]
@@ -147,13 +168,16 @@ nrow(data) #Before
 nrow(data_filt) #After
 ```
 
-Filtering does not remove any metablites, all 182 metabolites are used in analysis.  
+Filtering does not remove any metabolites, all 182 metabolites are used in analysis.  
 
+Check that all row and column names match. Should return TRUE.  
 ```{r}
 #Checking that all row and column names match. Should return "TRUE"
 all(rownames(metadata$sample_id) %in% colnames(data_filt))
 all(rownames(metadata$sample_id) == colnames(data_filt)) 
 ```
+
+## Outlier detection  
 
 Look for outliers by examining tree of metabolites  
 ```{r}
@@ -165,12 +189,22 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 dev.off()
 ```
 
-Betaine is a large outlier, remove.  
+Betaine could be a large outlier, likely due to very high abundance compared to other metabolites. Try analysis with and without Betaine. Proceeding now without removing Betaine.    
 
 ```{r}
 outlier<-c("Betaine")
-data_filt<-data_filt%>%
-  filter(!row.names(data_filt) %in% outlier)
+#data_filt<-data_filt%>%
+  #filter(!row.names(data_filt) %in% outlier)
+```
+
+Now look at the tree again.   
+```{r}
+sampleTree = hclust(dist(data_filt), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/Metabolomics/WGCNA/outliers_metabolites_filt.pdf")
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
 ```
 
 Transpose such that samples are in rows and metabolites are in columns.  
@@ -179,7 +213,7 @@ Transpose such that samples are in rows and metabolites are in columns.
 data_filt <- t(data_filt) 
 ```
 
-Look for outliers by examining tree of samples  
+Look for outlier samples by examining tree of samples  
 ```{r}
 sampleTree = hclust(dist(data_filt), method = "average");
 # Plot the sample tree: Open a graphic output window of size 12 by 9 inches
@@ -189,14 +223,19 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 dev.off()
 ```
 
-# Network construction and consensus module detection  
+No clear outliers.  
+
+
+# 2. Network construction and consensus module detection  
 
 ## Choosing a soft-thresholding power: Analysis of network topology β  
 
 The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.  
 ```{r, message=FALSE, warning=FALSE}
 # # Choose a set of soft-thresholding powers
-powers <- c(seq(from = 1, to=200, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+allowWGCNAThreads()
+
+powers <- c(c(1:20), seq(from = 12, to=20, by=2)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
 # 
 # # Call the network topology analysis function
 sft <-pickSoftThreshold(data_filt, powerVector = powers, verbose = 5)
@@ -223,6 +262,691 @@ plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
 ```
 
 From this data, it appears that our **soft thresholding power is 7**.  
+
+## Identify modules using blockwiseModules  
+
+Use blockwiseModules to identify modules of metabolites.  
+
+Settings used: **Add explanations to this**  
+
+networkType = "unsigned" 
+deepSplit = 2
+pamRespectsDendro = F
+minModuleSize = 5
+maxBlockSize = 4000
+reassignThreshold = 0
+mergeCutHeight = 0.25
+
+Need to change RData output 
+
+``` {r, echo=TRUE, warning=FALSE, message=FALSE}
+
+picked_power = 7
+temp_cor <- cor       
+cor <- WGCNA::cor                                             # Force it to use WGCNA cor function (fix a namespace conflict issue)
+netwk <- blockwiseModules(data_filt,                         # <= input here
+
+                          # == Adjacency Function ==
+                          power = picked_power,               # <= power here
+                          networkType = "unsigned",
+
+                          # == Tree and Block Options ==
+                          deepSplit = 2,
+                          pamRespectsDendro = F,
+                          # detectCutHeight = 0.75,
+                          minModuleSize = 5,                  #consider increasing or decreasing this
+                          maxBlockSize = 4000,
+
+                          # == Module Adjustments ==
+                          reassignThreshold = 0,
+                          mergeCutHeight = 0.25,
+
+                          # == TOM == Archive the run results in TOM file (saves time) but it doesn't save a file
+                          saveTOMs = F,
+                          saveTOMFileBase = "ER",
+
+                          # == Output Options
+                          numericLabels = T,
+                          verbose = 3)
+
+cor <- temp_cor     # Return cor function to original namespace
+
+# Identify labels as numbers 
+mergedColors = netwk$colors
+# Plot the dendrogram and the module colors underneath
+
+pdf("Mcap2020/Figures/Metabolomics/WGCNA/blockwise_module_colors.pdf")
+plotDendroAndColors(
+  netwk$dendrograms[[1]],
+  mergedColors[netwk$blockGenes[[1]]],
+  "Module colors",
+  dendroLabels = FALSE,
+  hang = 0.03,
+  addGuide = TRUE,
+  guideHang = 0.05 )
+dev.off()
+```
+
+## Relate modules to sample information  
+
+``` {r, echo=TRUE, warning=FALSE, message=FALSE}
+module_df <- data.frame(
+  Metabolite = names(netwk$colors),
+  colors = netwk$colors
+  #colors = labels2colors(netwk$colors)
+)
+
+module_df[1:5,]
+
+write.csv(module_df, "Mcap2020/Output/Metabolomics/WGCNA/metabolite_modules.csv")
+
+# Get Module Eigengenes per cluster
+MEs <- moduleEigengenes(data_filt, mergedColors)$eigengenes
+
+# Reorder modules so similar modules are next to each other
+MEs <- orderMEs(MEs)
+module_order = names(MEs) %>% gsub("ME","", .)
+
+# Add Sample names
+MEs0 <- MEs
+MEs0$Sample.ID = row.names(MEs)
+
+# tidy & plot data
+mME = MEs0 %>%
+  pivot_longer(-Sample.ID) %>%
+  mutate(
+    name = gsub("ME", "", name),
+    name = factor(name, levels = module_order)
+  )
+
+mME %>% ggplot(., aes(x=Sample.ID, y=name, fill=value)) +
+  geom_tile() +
+  theme_bw() +
+  scale_fill_gradient2(
+    low = "blue",
+    high = "red",
+    mid = "white",
+    midpoint = 0,
+    limit = c(-1,1)) +
+  theme(axis.text.x = element_text(angle=90)) +
+  labs(title = "Module-Sample Relationships", y = "Modules", fill="corr")
+```
+
+
+## Relate modules to life stage  
+
+Prepare trait data. Data has to be numeric, so I will substitute time points/developmental stages for numeric values. The "trait" we are considering here is lifestage. Make a dataframe that has a column for each lifestage name and a row for samples. Populate a 1 for samples that match each lifestage and a 0 for samples not matching respective lifestages. This process changes lifestages from a categorical variable into a binary variable. This will allow for correlations between mean eigengenes and lifestage.  
+ 
+```{r}
+metadata$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(metadata, names_from = Lifestage, values_from = num, id_cols = Sample))
+allTraits[is.na(allTraits)] <- c("0")
+rownames(allTraits) <- allTraits$Sample
+datTraits <- allTraits[,c(-1)]
+head(datTraits)
+
+#define numbers of metabolites and samples and view 
+nMetabolites = ncol(data_filt)
+nSamples = nrow(data_filt)
+
+nMetabolites
+nSamples
+```
+
+We have 182 metabolites and 47 samples.   
+
+Next correlate the trait of life stage with eigengenes (modules).  
+
+```{r}
+# Correlations of traits with eigengenes
+moduleTraitCor = cor(MEs, datTraits, use = "p");
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
+Colors=sub("ME","", names(MEs))
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average")
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/ModuleTraitClusterTree.pdf", height=8, width=22)
+plot(moduleTraitTree)
+dev.off()
+
+# Correlations of metabolites with eigengenes. Calculate correlations between ME's and groups 
+moduleGeneCor=cor(MEs,data_filt)
+moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
+head(moduleGenePvalue)
+```
+
+## Plot module-trait associations
+
+Represent module trait correlations as a heatmap.  
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+head(textMatrix)
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+pdf(file="Mcap2020/Figures/Metabolomics/WGCNA/Module-trait-relationships.pdf")
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+dev.off()
+
+```
+
+# 3. Plot module triat associations with a complex heatmap   
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+#bold sig p-values
+#dendrogram with WGCNA MEtree cut-off
+#colored y-axis
+#Create list of pvalues for eigengene correlation with specific life stages
+heatmappval <- signif(moduleTraitPvalue, 1)
+#Make list of heatmap row colors
+htmap.colors <- names(MEs)
+htmap.colors <- gsub("ME", "", htmap.colors)
+
+row_dend = dendsort(hclust(dist(moduleTraitCor)))
+col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
+
+
+#row_ha = rowAnnotation(ModuleSize = anno_text("11", "127", "8", "64", "85"), just = "left", 
+#        location = unit(0.5, "npc"), show_name = TRUE)
+# brown (11), grey (127), yellow (8), blue (64), turqoise (85) #figure out how to do row annotations to add sample sizes
+
+pdf(file = "Mcap2020/Figures/Metabolomics/WGCNA/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
+ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Group Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(5, "in"), 
+        height = unit(4.5, "in"), 
+        column_dend_reorder = TRUE, 
+        cluster_columns = col_dend,
+        row_dend_reorder = FALSE,
+        column_split = 4, 
+        row_split = 3, 
+        column_dend_height = unit(.5, "in"),
+        cluster_rows = row_dend, 
+        row_gap = unit(2.5, "mm"), 
+        border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] < 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+draw(ht)
+dev.off()
+```
+
+
+# 4. Plot mean eigengene values for each module
+
+Load metadata and plot expression plots.  
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+
+# Number of each metabolites in each module 
+row_mod_num <- data.frame(table(module_df$colors)) 
+
+# Bring in additional metadata
+
+sample_metadata <- read.csv("Mcap2020/Data/Metabolomics/metabolomics_meta_wgcna.csv") 
+
+sample_metadata$Sample.ID <- as.factor(sample_metadata$Sample.ID)
+sample_metadata$lifestage <- as.factor(sample_metadata$lifestage)
+sample_metadata$hpf <- as.factor(sample_metadata$hpf)
+sample_metadata$group <- as.factor(sample_metadata$group)
+
+mME_meta <- merge(mME, sample_metadata, by = "Sample.ID") %>%
+  rename(Module = name)
+```
+
+Add module "cluster" categories determined by WGCNA above.  
+```{r}
+mME_meta<-mME_meta%>%
+  mutate(Cluster=if_else(Module == "2", "Cluster1", 
+                               if_else(Module =="5", "Cluster1", 
+                                       if_else(Module == "0", "Cluster1", 
+                                               if_else(Module == "7", "Cluster2",
+                                               if_else(Module=="6", "Cluster2", 
+                                                       if_else(Module == "3", "Cluster2", 
+                                                       if_else(Module == "1", "Cluster3", 
+                                                               if_else(Module == "8", "Cluster3",
+                                                               if_else(Module == "4", "Cluster3", "NA"))))))))))
+
+mME_meta$Cluster<-as.factor(mME_meta$Cluster)
+```
+
+
+Plot by time point with individual modules.  
+```{r}
+
+mME_meta$group <- factor(mME_meta$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
+mME_meta$Module <- factor(mME_meta$Module, levels = c("0", "1", "2", "3", "4", "5", "6", "7", "8"))
+
+expression_plots<-mME_meta%>%
+#  group_by(Module) %>%
+  ggplot(aes(x=hpf, y=value, fill=group)) +
+  facet_wrap(~ Module)+
+  ylab("Mean Module Eigenegene Value") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  geom_boxplot(width=.5, outlier.shape= NA, position = position_dodge(width = 0.5), alpha = 0.7) +
+  stat_summary(fun=mean, geom="line", aes(group=lifestage, color = group), position = position_dodge(width = 0.5))  + 
+  geom_point(pch = 21, position = position_dodge(width = 0.5)) +
+  scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) +
+  scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) + 
+  xlab("Hours Post-Fertilization") + #Axis titles
+  theme_bw() + theme(panel.border = element_rect(color="black", fill=NA, size=0.75), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_blank()) +
+  theme(axis.text = element_text(size = 11 , color = "black"),
+        axis.title = element_text(size = 16, color = "black"), 
+        axis.text.x = element_text(size=11, color="black"), 
+        legend.title=element_blank(), 
+        legend.text=element_text(color="black", size=12)); expression_plots
+
+ggsave(filename="Mcap2020/Figures//Metabolomics/WGCNA/expression_eigengene.jpeg", plot=expression_plots, dpi=300, width=12, height=8, units="in")
+
+```
+
+Plot by time point with module clusters.  
+```{r}
+mME_meta$group <- factor(mME_meta$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
+mME_meta$Cluster <- factor(mME_meta$Cluster, levels = c("Cluster1", "Cluster2", "Cluster3"))
+
+expression_plots_cluster<-mME_meta%>%
+#  group_by(Module) %>%
+  ggplot(aes(x=hpf, y=value, fill=group)) +
+  facet_grid(Cluster ~.)+
+  ylab("Mean Module Cluster Eigenegene Value") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  geom_boxplot(width=.5, outlier.shape= NA, position = position_dodge(width = 0.5), alpha = 0.7) +
+  stat_summary(fun=mean, geom="line", aes(group=lifestage, color = group), position = position_dodge(width = 0.5))  + 
+  geom_point(pch = 21, position = position_dodge(width = 0.5)) +
+  scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) +
+  scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) + 
+  xlab("Hours Post-Fertilization") + #Axis titles
+  theme_bw() + theme(panel.border = element_rect(color="black", fill=NA, size=0.75), panel.grid.major = element_blank(), #Makes background theme white
+                     panel.grid.minor = element_blank(), axis.line = element_blank()) +
+  theme(axis.text = element_text(size = 11 , color = "black"),
+        axis.title = element_text(size = 16, color = "black"), 
+        axis.text.x = element_text(size=11, color="black"), 
+        legend.position="top", 
+        legend.title=element_blank(), 
+        legend.text=element_text(color="black", size=12), 
+        strip.text.y = element_text(size = 14, color = "black", face = "bold.italic")); expression_plots_cluster
+
+ggsave(filename="Mcap2020/Figures//Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=7, height=10, units="in")
+
+``` 
+
+
+# 5. Pathway Analysis  
+
+Conduct pathway anlaysis for each module cluster - clusters 1, 2, and 3 as determined by WGCNA analysis above.  
+
+First, generate a list of metabolites contained within each module cluster.  
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+
+module_df <- read.csv("Mcap2020/Output/Metabolomics/WGCNA/metabolite_modules.csv")
+
+module_df <- module_df %>% rename(Module = colors)
+
+# Select metabolites for each module 
+cluster1<-c("2", "5", "0")
+cluster2<-c("7", "6", "3")
+cluster3<-c("1", "8", "4")
+
+module_cluster1 <- module_df %>% filter(Module %in% cluster1)  %>% select(Metabolite)
+module_cluster2 <- module_df %>% filter(Module %in% cluster2)  %>% select(Metabolite)
+module_cluster3 <- module_df %>% filter(Module %in% cluster3)  %>% select(Metabolite)
+```
+
+Cluster 1 = 53 metabolites
+Cluster 2 = 41 metabolites
+Cluster 3 = 88 metabolites 
+
+Conduct pathway analysis in Metaboanalyst. For compounds that do not match in the database, they are manually renamed here as determined using the Metaboanalyst web interface.  
+
+First download the compound.db.rds file and store in working directory.  
+
+
+
+
+
+
+Conduct enrichment analysis for Cluster 1 and save data frame with KEGG terms.  
+```{r}
+library(curl)
+# Enrichment analysis for cluster 1 modules
+mSet_c1 <-InitDataObjects("conc", "msetora", FALSE)
+cmpd.vec<-c(module_cluster1$Metabolite)
+mSet_c1<-Setup.MapData(mSet_c1, cmpd.vec)
+
+my.lib<-readRDS("Mcap2020/Data/Metabolomics/compound_db.rds")
+
+mSet_c1<-CrossReferencing(mSet_c1, "name")
+
+mSet_c1<-CreateMappingResultTable(mSet_c1)
+mSet_c1<-GetCandidateList(mSet_c1)
+mSet_c1[["name.map"]][["hit.values"]]
+mSet_c1<-SetMetabolomeFilter(mSet_c1, F)
+
+mSet_c1<-Setup.MapData(mSet_c1, cmpd.vec);
+mSet_c1<-CrossReferencing(mSet_c1, "name");
+mSet_c1<-CreateMappingResultTable(mSet_c1)
+mSet_c1<-PerformDetailMatch(mSet_c1, "1-Methylimidazole acetic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "1-Methylimidazole acetic acid", "Methylimidazoleacetic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "3-Indo-L-tyrosine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "3-Indo-L-tyrosine", "Iodotyrosine");
+mSet_c1<-PerformDetailMatch(mSet_c1, "3-Phenylbutyric acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "3-Phenylbutyric acid", "3-Phenylbutyric acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "3-Indo-L-tyrosine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-PerformDetailMatch(mSet_c1, "4-Guanidinobutanoic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "4-Guanidinobutanoic acid", "4-Guanidinobutanoic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Acetyl glycine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Acetyl glycine", "Acetylglycine");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Adipic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Adipic acid", "Oxoadipic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Arginine-Valine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Arginine-Valine", "Arginyl-Valine");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Carbamoyl phosphate");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Carbamoyl phosphate", "Carbamoyl phosphate");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Cyclic AMP");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Cyclic AMP", "Cyclic AMP");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Glucuronic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Glucuronic acid", "D-Glucuronic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Glutaric acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Glutaric acid", "Glutaric acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Glutaryl-carnitine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Glutaryl-carnitine", "Glutamylarginine");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Hippuric acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Hippuric acid", "Hippuric acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Hydroxyoctanoic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Hydroxyoctanoic acid", "7-Hydroxyoctanoic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Malonic acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Malonic acid", "Malonic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Methylphenyllactate");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Methylphenyllactate", "3-Methylphenylacetic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "N-carbomoyl-L-aspartate");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "N-carbomoyl-L-aspartate", "Ureidosuccinic acid");
+mSet_c1<-PerformDetailMatch(mSet_c1, "NG-dimethyl-L-arginine");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "NG-dimethyl-L-arginine", "Asymmetric dimethylarginine");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Ribose phosphate");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Ribose phosphate", "Ribose 1-phosphate");
+mSet_c1<-PerformDetailMatch(mSet_c1, "Uric acid");
+mSet_c1<-GetCandidateList(mSet_c1);
+mSet_c1<-SetCandidate(mSet_c1, "Uric acid", "Uric acid");
+
+mSet_c1<-SetMetabolomeFilter(mSet_c1, F);
+mSet_c1<-SetCurrentMsetLib(mSet_c1, "kegg_pathway", 2);
+mSet_c1<-CalculateHyperScore(mSet_c1)
+mSet_c1<-PlotORA(mSet_c1, "ora_0_", "net", "png", 72, width=NA)
+mSet_c1<-PlotEnrichDotPlot(mSet_c1, "ora", "ora_dot_0_", "png", 72, width=NA)
+mSet_c1<-CalculateHyperScore(mSet_c1)
+mSet_c1<-PlotORA(mSet_c1, "ora_1_", "net", "png", 72, width=NA)
+mSet_c1<-PlotEnrichDotPlot(mSet_c1, "ora", "ora_dot_1_", "png", 72, width=NA)
+mSet_c1<-SetMetabolomeFilter(mSet_c1, F);
+mSet_c1<-SetCurrentMsetLib(mSet_c1, "main_class", 2);
+mSet_c1<-CalculateHyperScore(mSet_c1)
+mSet_c1<-PlotORA(mSet_c1, "ora_2_", "net", "png", 72, width=NA)
+mSet_c1<-PlotEnrichDotPlot(mSet_c1, "ora", "ora_dot_2_", "png", 72, width=NA)
+mSet_c1<-PlotEnrichPieChart(mSet_c1, "ora", "ora_pie_0_", "png", 72)
+mSet_c1<-CalculateHyperScore(mSet_c1)
+mSet_c1<-PlotORA(mSet_c1, "ora_3_", "net", "png", 72, width=NA)
+mSet_c1<-PlotEnrichDotPlot(mSet_c1, "ora", "ora_dot_3_", "png", 72, width=NA)
+mSet_c1<-PlotEnrichPieChart(mSet_c1, "ora", "ora_pie_1_", "png", 72)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+mSet_c1<-Setup.MapData(mSet_c1, cmpd.vec)
+mSet_c1<-CrossReferencing(mSet_c1, "name")
+mSet_c1<-CreateMappingResultTable(mSet_c1)
+mSet_c1<-GetCandidateList(mSet_c1)
+mSet_c1[["name.map"]][["hit.values"]]
+mSet_c1<-SetMetabolomeFilter(mSet_c1, F)
+
+mSet_cluster1_dataset <- mSet_c1$dataSet #extracting input dataframe
+mSet_brown_KEGG <- as.data.frame(mSet_brown_dataset$map.table) #extracting KEGG terms
+write.csv(mSet_brown_KEGG, "../../output/Metabolomics/MetaboAnalyst/mSet_brown_KEGG.csv")
+
+mSet_c1<-SetCurrentMsetLib(mSet_c1, "kegg_pathway", 2)
+mSet_c1<-CalculateHyperScore(mSet_c1)
+mSet_c1_Path_KEGG <- mSet_c1$api
+mSet_c1_ora <- as.data.frame(mmSet_c1_Path_KEGG$ora.results)
+write.csv(mSet_brown_ora, "Mcap2020/Output/Metabolomics/MetaboAnalyst/mSet_brown_ora.csv")
+
+#Figure out how to print associated metabolites for each pathway. Ideally print a column in the mSet_brown_ora with a metabolites column
+#mSet_c1[["analSet"]][["ora.hits"]][["Galactose metabolism"]]
+
+
+
+
+mSet<-InitDataObjects("conc", "msetora", FALSE)
+cmpd.vec<-c("1-Methylimidazole acetic acid","3-Indo-L-tyrosine","3-Phenylbutyric acid","4-Aminobutyrate","4-Guanidinobutanoic acid","5-Methylcytosine","Acetyl glycine","Adipic acid","Alanine","Arginine-Valine","Betaine","Carbamoyl phosphate","Creatinine","Cyclic AMP","Deoxyadenosine","Deoxycarnitine","Deoxyguanosine","Diethanolamine","Fumarate","Glucuronic acid","Glutaric acid","Glutaryl-carnitine","Glycerol-3-phosphate","Glycerophosphocholine","Glycine","Glycyl-L-proline","Guanine","Hippuric acid","Hydroxyoctanoic acid","IMP","Indole","Isocitrate","Isoleucine","L-Octanoylcarnitine","Lumichrome","Malonic acid","Methylphenyllactate","N-Acetylaspartate","N-carbomoyl-L-aspartate","N-octanoylglycine","NAADP","NG-dimethyl-L-arginine","O-Decanoyl-L-carnitine","Ornithine","Phosphoenolpyruvate","Porphobilinogen","Pterin","Ribose phosphate","Succinate","Taurine","Thiamine","Threonine","Uric acid")
+mSet<-Setup.MapData(mSet, cmpd.vec);
+mSet<-CrossReferencing(mSet, "name");
+mSet<-CreateMappingResultTable(mSet)
+mSet<-PerformDetailMatch(mSet, "1-Methylimidazole acetic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "1-Methylimidazole acetic acid", "Methylimidazoleacetic acid");
+mSet<-PerformDetailMatch(mSet, "3-Indo-L-tyrosine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "3-Indo-L-tyrosine", "Iodotyrosine");
+mSet<-PerformDetailMatch(mSet, "3-Phenylbutyric acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "3-Phenylbutyric acid", "3-Phenylbutyric acid");
+mSet<-PerformDetailMatch(mSet, "3-Indo-L-tyrosine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "3-Indo-L-tyrosine", "Iodotyrosine");
+mSet<-SetCandidate(mSet, "3-Indo-L-tyrosine", "Iodotyrosine");
+mSet<-PerformDetailMatch(mSet, "4-Guanidinobutanoic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "4-Guanidinobutanoic acid", "4-Guanidinobutanoic acid");
+mSet<-PerformDetailMatch(mSet, "Acetyl glycine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Acetyl glycine", "Acetylglycine");
+mSet<-PerformDetailMatch(mSet, "Adipic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Adipic acid", "Oxoadipic acid");
+mSet<-PerformDetailMatch(mSet, "Arginine-Valine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Arginine-Valine", "Arginyl-Valine");
+mSet<-PerformDetailMatch(mSet, "Carbamoyl phosphate");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Carbamoyl phosphate", "Carbamoyl phosphate");
+mSet<-PerformDetailMatch(mSet, "Cyclic AMP");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Cyclic AMP", "Cyclic AMP");
+mSet<-PerformDetailMatch(mSet, "3-Indo-L-tyrosine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "3-Indo-L-tyrosine", "Iodotyrosine");
+mSet<-PerformDetailMatch(mSet, "Glucuronic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Glucuronic acid", "D-Glucuronic acid");
+mSet<-PerformDetailMatch(mSet, "Glutaric acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Glutaric acid", "Glutaric acid");
+mSet<-PerformDetailMatch(mSet, "Glutaryl-carnitine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Glutaryl-carnitine", "Glutamylarginine");
+mSet<-PerformDetailMatch(mSet, "Hippuric acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Hippuric acid", "Hippuric acid");
+mSet<-PerformDetailMatch(mSet, "Hydroxyoctanoic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Hydroxyoctanoic acid", "7-Hydroxyoctanoic acid");
+mSet<-PerformDetailMatch(mSet, "Malonic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Malonic acid", "Malonic acid");
+mSet<-PerformDetailMatch(mSet, "Methylphenyllactate");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Methylphenyllactate", "3-Methylphenylacetic acid");
+mSet<-PerformDetailMatch(mSet, "N-carbomoyl-L-aspartate");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "N-carbomoyl-L-aspartate", "Ureidosuccinic acid");
+mSet<-PerformDetailMatch(mSet, "NG-dimethyl-L-arginine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "NG-dimethyl-L-arginine", "Asymmetric dimethylarginine");
+mSet<-PerformDetailMatch(mSet, "Ribose phosphate");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Ribose phosphate", "Ribose 1-phosphate");
+mSet<-PerformDetailMatch(mSet, "Uric acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Uric acid", "Uric acid");
+mSet<-PerformDetailMatch(mSet, "3-Indo-L-tyrosine");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "3-Indo-L-tyrosine", "3,5-Diiodo-L-tyrosine");
+mSet<-SetMetabolomeFilter(mSet, F);
+mSet<-SetCurrentMsetLib(mSet, "kegg_pathway", 2);
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_0_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_0_", "png", 72, width=NA)
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_1_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_1_", "png", 72, width=NA)
+mSet<-SetMetabolomeFilter(mSet, F);
+mSet<-SetCurrentMsetLib(mSet, "main_class", 2);
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_2_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_2_", "png", 72, width=NA)
+mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_0_", "png", 72)
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_3_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_3_", "png", 72, width=NA)
+mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_1_", "png", 72)
+
+
+
+
+
+
+```
+
+Conduct enrichment analysis for Cluster 2 and save data frame with KEGG terms.  
+```{r}
+# Enrichment analysis for Yellow module
+
+mSet_yellow <-InitDataObjects("conc", "msetora", FALSE)
+cmpd.vec.yellow<-c(module_yellow$Metabolite)
+mSet_yellow<-Setup.MapData(mSet_yellow, cmpd.vec.yellow)
+mSet_yellow<-CrossReferencing(mSet_yellow, "name")
+mSet_yellow<-CreateMappingResultTable(mSet_yellow)
+mSet_yellow<-GetCandidateList(mSet_yellow)
+mSet_yellow[["name.map"]][["hit.values"]]
+mSet_yellow<-SetMetabolomeFilter(mSet_yellow, F)
+
+mSet_yellow_dataset <- mSet_yellow$dataSet #extracting input dataframe
+mSet_yellow_KEGG <- as.data.frame(mSet_yellow_dataset$map.table) #extracting KEGG terms
+write.csv(mSet_yellow_KEGG, "../../output/Metabolomics/MetaboAnalyst/mSet_yellow_KEGG.csv")
+
+mSet_yellow<-SetCurrentMsetLib(mSet_yellow, "kegg_pathway", 2)
+mSet_yellow<-CalculateHyperScore(mSet_yellow)
+mSet_yellow_Path_KEGG <- mSet_yellow$api
+mSet_yellow_ora <- as.data.frame(mSet_yellow_Path_KEGG$ora.results)
+write.csv(mSet_yellow_ora, "../../output/Metabolomics/MetaboAnalyst/mSet_yellow_ora.csv")
+```
+
+Conduct enrichment analysis for Cluster 3 and save data frame with KEGG terms.  
+```{r}
+# Enrichment analysis for blue module
+
+mSet_blue <-InitDataObjects("conc", "msetora", FALSE)
+cmpd.vec.blue<-c(module_blue$Metabolite)
+mSet_blue<-Setup.MapData(mSet_blue, cmpd.vec.blue)
+mSet_blue<-CrossReferencing(mSet_blue, "name")
+mSet_blue<-CreateMappingResultTable(mSet_blue)
+mSet_blue<-GetCandidateList(mSet_blue)
+
+mSet_blue<-PerformDetailMatch(mSet_blue, "N-acetyl-L-ornithine")
+mSet_blue<-SetCandidate(mSet_blue, "N-acetyl-L-ornithine", "N-Acetylornithine")
+
+mSet_blue<-PerformDetailMatch(mSet_blue, "NG-dimethyl-L-arginine")
+mSet_blue<-SetCandidate(mSet_blue, "NG-dimethyl-L-arginine", "Asymmetric dimethylarginine")
+
+# mSet_blue<-PerformDetailMatch(mSet_blue, "Xanthosine-5-phosphate")
+# mSet_blue<-GetCandidateList(mSet_blue)
+# mSet_blue<-SetCandidate(mSet_blue, "Xanthosine-5-phosphate", "Xanthylic acid") #not working for some reason
+
+mSet_blue[["name.map"]][["hit.values"]]
+mSet_blue<-SetMetabolomeFilter(mSet_blue, F)
+
+mSet_blue_dataset <- mSet_blue$dataSet #extracting input dataframe
+mSet_blue_KEGG <- as.data.frame(mSet_blue_dataset$map.table) #extracting KEGG terms
+write.csv(mSet_blue_KEGG, "../../output/Metabolomics/MetaboAnalyst/mSet_blue_KEGG.csv") #Invesrigate KEGG matching further
+
+mSet_blue<-SetCurrentMsetLib(mSet_blue, "kegg_pathway", 2)
+mSet_blue<-CalculateHyperScore(mSet_blue)
+mSet_blue_Path_KEGG <- mSet_blue$api
+mSet_blue_ora <- as.data.frame(mSet_blue_Path_KEGG$ora.results)
+write.csv(mSet_blue_ora, "../../output/Metabolomics/MetaboAnalyst/mSet_blue_ora.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Co-expression adjacency and topological overlap matrix similarity  
 
@@ -351,6 +1075,20 @@ METree = flashClust(as.dist(MEDiss), method = "average")
 MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
 dev.off()
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Correlate to developmental stages  

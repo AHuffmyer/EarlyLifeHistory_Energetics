@@ -1,0 +1,49 @@
+Sample.ID,lifestage,hpf,group
+Egg-rep1,Egg (1 hpf),1,Egg
+Egg-rep2,Egg (1 hpf),1,Egg
+Egg-rep3,Egg (1 hpf),1,Egg
+Egg-rep4,Egg (1 hpf),1,Egg
+Embryo-rep1,Embryo (5 hpf),5,Embryo
+Embryo-rep2,Embryo (5 hpf),5,Embryo
+Embryo-rep3,Embryo (5 hpf),5,Embryo
+Embryo-rep4,Embryo (5 hpf),5,Embryo
+Larvae1-rep1,Embryo (38 hpf),38,Embryo
+Larvae1-rep2,Embryo (38 hpf),38,Embryo
+Larvae1-rep3,Embryo (38 hpf),38,Embryo
+Larvae1-rep4,Embryo (38 hpf),38,Embryo
+Larvae2-rep3,Embryo (65 hpf),65,Embryo
+Larvae2-rep4,Embryo (65 hpf),65,Embryo
+Larvae3-rep1,Larvae (93 hpf) ,93,Larvae
+Larvae3-rep2,Larvae (93 hpf) ,93,Larvae
+Larvae3-rep3,Larvae (93 hpf) ,93,Larvae
+Larvae3-rep4,Larvae (93 hpf) ,93,Larvae
+Larvae4-rep1,Larvae (163 hpf),163,Larvae
+Larvae4-rep2,Larvae (163 hpf),163,Larvae
+Larvae4-rep3,Larvae (163 hpf),163,Larvae
+Larvae4-rep4,Larvae (163 hpf),163,Larvae
+Larvae5-rep1,Larvae (183 hpf),183,Larvae
+Larvae5-rep2,Larvae (183 hpf),183,Larvae
+Larvae5-rep3,Larvae (183 hpf),183,Larvae
+Larvae5-rep4,Larvae (183 hpf),183,Larvae
+Larvae6-rep3,Larvae (231 hpf) ,231,Larvae
+Larvae6-rep4,Larvae (231 hpf) ,231,Larvae
+Recruit1-rep1,Metamorphosed Recruit (183 hpf),183,Metamorphosed Recruit
+Recruit1-rep2,Metamorphosed Recruit (183 hpf),183,Metamorphosed Recruit
+Recruit1-rep3,Metamorphosed Recruit (183 hpf),183,Metamorphosed Recruit
+Recruit1-rep4,Metamorphosed Recruit (183 hpf),183,Metamorphosed Recruit
+Recruit1plug-rep1,Attached Recruit (183 hpf) ,183,Attached Recruit
+Recruit1plug-rep2,Attached Recruit (183 hpf) ,183,Attached Recruit
+Recruit1plug-rep3,Attached Recruit (183 hpf) ,183,Attached Recruit
+Recruit1plug-rep4,Attached Recruit (183 hpf) ,183,Attached Recruit
+Recruit2-rep1,Metamorphosed Recruit (231 hpf),231,Metamorphosed Recruit
+Recruit2-rep2,Metamorphosed Recruit (231 hpf),231,Metamorphosed Recruit
+Recruit2-rep3,Metamorphosed Recruit (231 hpf),231,Metamorphosed Recruit
+Recruit2-rep4,Metamorphosed Recruit (231 hpf),231,Metamorphosed Recruit
+Recruit2plug-rep1,Attached Recruit (231 hpf),231,Attached Recruit
+Recruit2plug-rep2,Attached Recruit (231 hpf),231,Attached Recruit
+Recruit2plug-rep3,Attached Recruit (231 hpf),231,Attached Recruit
+Recruit2plug-rep4,Attached Recruit (231 hpf),231,Attached Recruit
+Recruit3plug-rep1,Attached Recruit (255 hpf),255,Attached Recruit
+Recruit3plug-rep2,Attached Recruit (255 hpf),255,Attached Recruit
+Recruit3plug-rep3,Attached Recruit (255 hpf),255,Attached Recruit
+Recruit3plug-rep4,Attached Recruit (255 hpf),255,Attached Recruit

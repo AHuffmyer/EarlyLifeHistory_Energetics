@@ -579,6 +579,11 @@ ggsave(filename="Mcap2020/Figures//Metabolomics/WGCNA/expression_eigengene_clust
 
 # 5. Pathway Analysis  
 
+
+THIS SCRIPT CURRENTLY WILL NOT RUN DUE TO DOWNLOADING ERRORS WITH CURL
+
+
+
 Conduct pathway anlaysis for each module cluster - clusters 1, 2, and 3 as determined by WGCNA analysis above.  
 
 First, generate a list of metabolites contained within each module cluster.  
@@ -605,13 +610,6 @@ Cluster 3 = 88 metabolites
 
 Conduct pathway analysis in Metaboanalyst. For compounds that do not match in the database, they are manually renamed here as determined using the Metaboanalyst web interface.  
 
-First download the compound.db.rds file and store in working directory.  
-
-
-
-
-
-
 Conduct enrichment analysis for Cluster 1 and save data frame with KEGG terms.  
 ```{r}
 library(curl)
@@ -620,9 +618,14 @@ mSet_c1 <-InitDataObjects("conc", "msetora", FALSE)
 cmpd.vec<-c(module_cluster1$Metabolite)
 mSet_c1<-Setup.MapData(mSet_c1, cmpd.vec)
 
-my.lib<-readRDS("Mcap2020/Data/Metabolomics/compound_db.rds")
+lib.url <- paste("https://www.metaboanalyst.ca/resources/libs/", "compound_db.qs", sep = "")
 
+compound_db.rds<-readRDS("Mcap2020/Data/Metabolomics/compound_db.rds")
+my.lib<-"Mcap2020/Data/Metabolomics/compound_db.qs"
 mSet_c1<-CrossReferencing(mSet_c1, "name")
+
+
+
 
 mSet_c1<-CreateMappingResultTable(mSet_c1)
 mSet_c1<-GetCandidateList(mSet_c1)

@@ -267,7 +267,7 @@ From this data, it appears that our **soft thresholding power is 7**.
 
 Use blockwiseModules to identify modules of metabolites.  
 
-Settings used: **Add explanations to this**  
+Settings used: 
 
 networkType = "unsigned" 
 deepSplit = 2

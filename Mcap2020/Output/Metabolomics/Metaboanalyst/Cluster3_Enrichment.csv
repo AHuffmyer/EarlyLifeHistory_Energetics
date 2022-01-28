@@ -1,0 +1,19 @@
+class,total,expected,hits,Raw p,Holm p,FDR
+Amino acids and peptides,723,0.299,21,6.88E-33,1.68E-30,1.68E-30
+Pyrimidines,78,0.0322,10,1.01E-22,2.45E-20,1.23E-20
+Purines,89,0.0368,6,2.33E-12,5.65E-10,1.90E-10
+TCA acids,9,0.00372,3,5.70E-09,1.37E-06,3.48E-07
+Monosaccharides,97,0.0401,4,9.11E-08,2.19E-05,4.44E-06
+Glycosyl compounds,19,0.00785,2,2.87E-05,0.00686,0.00117
+Nicotinamides,3,0.00124,1,0.00124,0.295,0.0432
+Cholines,4,0.00165,1,0.00165,0.391,0.0448
+Flavins,4,0.00165,1,0.00165,0.391,0.0448
+Short-chain acids and derivatives,7,0.00289,1,0.00289,0.679,0.0705
+Phosphate esters,9,0.00372,1,0.00371,0.869,0.0824
+Alkaloids,13,0.00537,1,0.00536,1,0.109
+Benzenediols,16,0.00661,1,0.00659,1,0.124
+Pyridines,29,0.012,1,0.0119,1,0.208
+Organooxygen compounds,70,0.0289,1,0.0285,1,0.464
+Benzamides,1470,0.606,2,0.123,1,1
+Fatty esters,1870,0.773,2,0.181,1,1
+Fatty Acids and Conjugates,3090,1.28,1,0.724,1,1

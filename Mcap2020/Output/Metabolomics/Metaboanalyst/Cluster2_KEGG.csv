@@ -1,0 +1,31 @@
+pathway,total,expected,hits,Raw p,Holm p,FDR
+Starch and sucrose metabolism,18,0.438,5,4.39E-05,3.68E-03,3.68E-03
+Galactose metabolism,27,0.656,5,3.52E-04,2.92E-02,1.48E-02
+"Neomycin, kanamycin and gentamicin biosynthesis",2,0.0486,2,5.75E-04,0.0472,1.61E-02
+Aminoacyl-tRNA biosynthesis,48,1.17,6,7.92E-04,0.0641,1.66E-02
+Phenylalanine metabolism,10,0.243,3,1.41E-03,0.113,2.37E-02
+"Phenylalanine, tyrosine and tryptophan biosynthesis",4,0.0972,2,3.35E-03,0.264,0.0469
+Purine metabolism,65,1.58,6,0.00394,0.307,0.0472
+D-Glutamine and D-glutamate metabolism,6,0.146,2,0.00811,0.625,0.0852
+Amino sugar and nucleotide sugar metabolism,37,0.899,4,0.011,0.836,0.103
+Glycolysis / Gluconeogenesis,26,0.632,3,0.0234,1,0.197
+"Alanine, aspartate and glutamate metabolism",28,0.681,3,0.0285,1,0.218
+Pyrimidine metabolism,39,0.948,3,0.0663,1,0.464
+Fructose and mannose metabolism,20,0.486,2,0.0831,1,0.537
+Pyruvate metabolism,22,0.535,2,0.098,1,0.588
+Nitrogen metabolism,6,0.146,1,0.137,1,0.77
+Glutathione metabolism,28,0.681,2,0.147,1,0.77
+Taurine and hypotaurine metabolism,8,0.194,1,0.179,1,0.797
+Glyoxylate and dicarboxylate metabolism,32,0.778,2,0.181,1,0.797
+"Glycine, serine and threonine metabolism",33,0.802,2,0.19,1,0.797
+Cysteine and methionine metabolism,33,0.802,2,0.19,1,0.797
+Ubiquinone and other terpenoid-quinone biosynthesis,9,0.219,1,0.199,1,0.797
+Arginine and proline metabolism,38,0.924,2,0.235,1,0.899
+Tryptophan metabolism,41,0.997,2,0.263,1,0.952
+Tyrosine metabolism,42,1.02,2,0.272,1,0.952
+Arginine biosynthesis,14,0.34,1,0.293,1,0.983
+Histidine metabolism,16,0.389,1,0.327,1,1
+Citrate cycle (TCA cycle),20,0.486,1,0.391,1,1
+Pentose phosphate pathway,22,0.535,1,0.42,1,1
+Propanoate metabolism,23,0.559,1,0.435,1,1
+Inositol phosphate metabolism,30,0.729,1,0.526,1,1

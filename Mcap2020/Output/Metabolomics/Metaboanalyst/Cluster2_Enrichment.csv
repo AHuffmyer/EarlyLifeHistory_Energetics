@@ -1,0 +1,13 @@
+class,total,expected,hits,Raw p,Holm p,FDR
+Amino acids and peptides,723,0.135,8,1.05E-12,2.56E-10,2.56E-10
+Monosaccharides,97,0.0181,4,3.50E-09,8.50E-07,4.27E-07
+Pyrimidines,78,0.0145,3,4.49E-07,0.000109,3.65E-05
+Purines,89,0.0166,3,6.70E-07,0.000161,4.09E-05
+Disaccharides,9,0.00168,2,1.22E-06,0.000292,5.94E-05
+Indoles,36,0.00671,2,2.12E-05,0.00507,0.000863
+Nicotinamides,3,0.000559,1,0.000559,0.133,0.0195
+Short-chain acids and derivatives,7,0.00131,1,0.0013,0.309,0.0398
+Imidazoles,12,0.00224,1,0.00223,0.527,0.0606
+Phenols,61,0.0114,1,0.0113,1,0.276
+Benzenes,151,0.0282,1,0.0278,1,0.616
+Fatty Acids and Conjugates,3090,0.576,2,0.113,1,1

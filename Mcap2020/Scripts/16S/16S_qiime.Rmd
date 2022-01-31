@@ -1,5 +1,5 @@
 ---
-title: Montipora capitata 2020 ITS2 analysis
+title: Montipora capitata 2020 16S analysis
 author: "AS Huffmyer"
 date: '2021'
 output:
@@ -43,11 +43,13 @@ library("RColorBrewer")
 library("Heatplus")
 ```
 
-# Load data  
+# QIIME 2 Data  
+
+## Load data  
 
 Load data with abundance at level 5 taxonomy obtained from QIIME2 viewer of .qzv object.    
 ```{r}
-abundance<-read.csv(file="Mcap2020/Data/16S/abundance_level5_data.csv")
+abundance<-read.csv(file="Mcap2020/Output/16S/qiime/abundance_level5_data.csv")
 ```
 
 Extract metadata for use later.  
@@ -57,6 +59,8 @@ metadata<-abundance%>%
   select(index, tube.id, timepoint, lifestage, hpf, group)%>%
   rename(Sample=index)
 ```
+
+## Filtering and relative abundance plots  
 
 ```{r}
 #make sample names as row names 
@@ -70,6 +74,21 @@ Turn data into relative abundance, rather than read counts.
 
 ```{r}
 abundance <- abundance/rowSums(abundance)
+```
+
+Plot relative abundance of unknown taxa (d__Bacteria.__.__.__.__).  
+
+```{r}
+abun_plot<-abundance%>%
+  mutate(sample=rownames(.))%>%
+  gather("Taxa", "RelativeAbundance", 1:304)%>%
+  filter(Taxa=="d__Bacteria.__.__.__.__")
+
+
+ggplot(abun_plot, aes(fill=Taxa, y=RelativeAbundance, x=sample)) + 
+    geom_bar(stat="identity", show.legend=FALSE) +
+    theme(axis.text.x=element_text(angle=90))
+
 ```
 
 Remove unidentified bacteria for now.  
@@ -86,15 +105,36 @@ Remove taxa with abundance <0.001 (0.1% or less).
 maxab <- apply(abundance, 2, max)
 head(maxab)
 
-# remove the genera with less than 1% as their maximum relative abundance
+# remove the genera with less than 0.1% as their maximum relative abundance
 n1 <- names(which(maxab < 0.01))
 abund.filter <- abundance[, -which(names(abundance) %in% n1)]
 
 ```
 
-We now have 42 taxa to look at, rather than 103.  
+We now have 154 taxa to look at, rather than 304.  
 
-# Heatmaps  
+Plot relative abundance of all known taxa after filtering (excluding d__Bacteria.__.__.__.__).  
+
+```{r}
+abun_plot_b<-abund.filter%>%
+  mutate(sample=rownames(.))%>%
+  gather("Taxa", "RelativeAbundance", 1:42)
+
+
+plot2<-ggplot(abun_plot_b, aes(fill=Taxa, y=RelativeAbundance, x=sample)) + 
+    geom_bar(position="fill", stat="identity") +
+    theme(axis.text.x=element_text(angle=90))+
+    theme(legend.position="bottom")+
+    theme(legend.text=element_text(size=7))+
+    theme(legend.key.size = unit(0.5, 'cm')) #change legend key size
+
+ggsave("Mcap2020/Figures/16S/Rel_abund_filtered_qiime.pdf", plot2, width=26, height=6)
+
+
+
+```
+
+## Heatmaps  
 
 Basic heatmap.  
 ```{r}

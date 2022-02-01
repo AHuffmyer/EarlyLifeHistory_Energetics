@@ -28,6 +28,9 @@ if ("car" %in% rownames(installed.packages()) == 'FALSE') install.packages('car'
 if ("phyloseq" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('phyloseq') 
 if ("stringr" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('stringr')
 if ("ape" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('ape') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('DESeq2') 
+if ("microViz" %in% rownames(installed.packages()) == 'FALSE') devtools::install_github("david-barnett/microViz@0.9.0") 
+if ("vegan" %in% rownames(installed.packages()) == 'FALSE') install.packages('vegan') 
 
 #load packages
 library("ggplot2")
@@ -38,6 +41,9 @@ library("car")
 library("phyloseq")
 library("stringr")
 library("ape")
+library("DESeq2")
+library("microViz")
+library("vegan")
 ```
 
 # **Load data**  
@@ -70,7 +76,7 @@ Set default plot theme.
 theme_set(theme_bw())
 ```
 
-# **Visualize "full" dataset (not rarefied)**  
+# **Tree and heatmap for "full" dataset**  
 
 Prepare the matrix to be all numeric with taxa in rows.  
 ```{r}
@@ -157,6 +163,12 @@ Check that they are identical. Should return TRUE.
 identical(physeq1, physeq2)
 ```
 
+Filter out samples with low numbers in groups from phyloseq object.  
+```{r}
+physeq1<-ps_filter(physeq1, lifestage != "Metamorphosed Recruit (183 hpf)")
+physeq1<-ps_arrange(physeq1, hpf)
+```
+
 Now build a tree with the combined data.  
 ```{r}
 plot_tree(physeq1, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
@@ -165,10 +177,10 @@ plot_tree(physeq1, color="group", label.tips="taxa_names", ladderize="left", plo
 Plot a heatmap.  
 
 ```{r}
-plot_heatmap(physeq1)
+plot_heatmap(physeq1, "NMDS", "bray", "lifestage", "Family", low="#66CCFF", high="#000033", na.value="white")
 ```
 
-# **Visualize "rarefied" dataset**   
+# **Tree and heatmap for "rarefied" dataset**   
 
 Prepare the matrix to be all numeric with taxa in rows.  
 ```{r}
@@ -229,6 +241,14 @@ Check that they are identical. Should return TRUE.
 identical(physeq1_rare, physeq2_rare)
 ```
 
+Filter out samples with low numbers in groups from phyloseq object.  
+```{r}
+physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Metamorphosed Recruit (183 hpf)")
+physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Egg (1 hpf)")
+physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (5 hpf)")
+physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (38 hpf)")
+```
+
 Now build a tree with the combined data.  
 ```{r}
 plot_tree(physeq1_rare, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
@@ -237,16 +257,11 @@ plot_tree(physeq1_rare, color="group", label.tips="taxa_names", ladderize="left"
 Plot a heatmap.  
 
 ```{r}
-plot_heatmap(physeq1_rare)
+plot_heatmap(physeq1_rare, "NMDS", "bray", "lifestage", "Family", low="#66CCFF", high="#000033", na.value="white")
 ```  
 
+# **NMDS of rarefied dataset**  
 
-
-Based on the results of the visualization, we get different results from the rarefied and full datasets. I am going to continue with analyzing the full dataset for now and we can return to think about how to describe the samples that were removed during rarefication. 
-
-# **Plotting distance methods of rarefied dataset**  
-
-Remove OTU's that do not show up at least 3 times in more than half the samples.  
 ```{r}
 GP1 = physeq1_rare
 GP1
@@ -316,7 +331,18 @@ p
 
 We do see separation between lifestages!  
 
-# **Plotting distance methods of full dataset**  
+Conduct a permanova in the vegan package.  
+
+```{r}
+metadata <- as(sample_data(GP1), "data.frame")
+
+adonis(phyloseq::distance(GP1, method="bray") ~ lifestage,
+       data = metadata)
+```
+
+There is significant difference in the centroids between life stages in the rarefied dataset.  
+
+# **NMDS of full dataset**  
 
 Remove OTU's that do not show up at least 3 times in more than half the samples.  
 ```{r}
@@ -388,5 +414,194 @@ p
 
 We do see separation between lifestages with this method as well. It may be useful to separately analyze these samples - one analysis for those with enough to do the proper rarefication and one analysis for those that need to be subset for low sequence count.    
 
+Conduct a permanova in the vegan package.  
+
+```{r}
+metadata <- as(sample_data(GP1f), "data.frame")
+
+adonis(phyloseq::distance(GP1f, method="bray") ~ lifestage,
+       data = metadata)
+```
+
+There are also significant differences between centroids in life stages in the rarefied dataset.  
+
+# **Alpha Diversity - Full dataset**  
+
+Remove any OTU that has a count of 0 in all samples. (There are none in this dataset).    
+```{r}
+GP2f <- prune_taxa(taxa_sums(physeq1) > 0, physeq1)
+```
+
+Plot all richness metrics.  
+```{r}
+plot_richness(GP2f)
+```
+
+Plot the two most commonly used - Shannon and Inverse Simpson.  
+```{r}
+plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="group")
+```
+
+We see increase in alpha diversity across development with higher values in attached recruits.    
+
+Test for differences in alpha diversity.  
+```{r}
+metadata <- as(sample_data(GP2f), "data.frame")
+metadata$sample<-rownames(metadata)
+
+alpha_full<-estimate_richness(GP2f, measures=c("InvSimpson", "Shannon"))
+alpha_full$sample<-rownames(alpha_full)
+
+alpha_full<-full_join(metadata, alpha_full, by="sample")
+
+summary(aov(Shannon~lifestage, data=alpha_full))
+summary(aov(InvSimpson~lifestage, data=alpha_full))
+```
+
+There are significant differences in alpha diversity between lifestages.  
+
+# **Alpha Diversity - Rare dataset**  
+
+```{r}
+GP2 <- prune_taxa(taxa_sums(physeq1_rare) > 0, physeq1_rare)
+```
+
+Plot all richness metrics.  
+```{r}
+plot_richness(GP2)
+```
+
+Plot the two most commonly used - Shannon and Inverse Simpson.  
+```{r}
+plot_richness(GP2, measures=c("InvSimpson", "Shannon"), x="lifestage", color="group")
+```
+
+Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  
+
+Test for differences in alpha diversity.  
+```{r}
+metadata <- as(sample_data(GP2), "data.frame")
+metadata$sample<-rownames(metadata)
+
+alpha_rare<-estimate_richness(GP2, measures=c("InvSimpson", "Shannon"))
+alpha_rare$sample<-rownames(alpha_rare)
+
+alpha_rare<-full_join(metadata, alpha_rare, by="sample")
+
+summary(aov(Shannon~lifestage, data=alpha_rare))
+summary(aov(InvSimpson~lifestage, data=alpha_rare))
+```
+
+There are significant differences in alpha diversity between lifestages in both the full and rare datasets.   
+
+# **Networks - Full dataset**  
+
+Remove NA's. 
+```{r}
+GP3f = physeq1
+```
+
+Plot network.  
+```{r}
+plot_net(GP3f, maxdist = 1, point_label = "lifestage", color = "group")
+```
+
+Plot network.  
+```{r}
+igF <- make_network(GP3f, max.dist=1)
+plot_network(igF, GP3f, color="group", label=NULL)
+```
+
+The networks are not particularly informative for this dataset.  
+
+# **Networks - Rare dataset**  
+
+Remove NA's. 
+```{r}
+GP3 = physeq1_rare
+```
+
+Plot network.  
+```{r}
+plot_net(GP3, maxdist = 1, point_label = "lifestage", color = "group")
+```
+
+Plot network.  
+```{r}
+ig <- make_network(GP3, max.dist=1)
+plot_network(ig, GP3, color="group", label=NULL)
+```
+
+The networks are not particularly informative for this dataset.  
+# **Plot unknowns - Full dataset** 
+
+Plot data at the level of phylum. Bacteria_unclassified are our unknowns.      
+```{r}
+plot_bar(physeq1, fill="Phylum", facet_grid=~Phylum)
+```
+
+We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
+
+# **Plot unknowns - rare dataset** 
+
+Plot data at the level of phylum in the rarefied dataset. Bacteria_unclassified are our unknowns.      
+```{r}
+plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
+```
+
+We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
+
+# **DESeq2 - Full dataset**  
+
+Convert phyloseq object to DESeq2 object.  
+
+Construct DESeq2 object looking at differences by lifestage.  
+```{r}
+diagdds_full = phyloseq_to_deseq2(physeq1, ~ lifestage)
+
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+geoMeans = apply(counts(diagdds_full), 1, gm_mean)
+diagdds_full = estimateSizeFactors(diagdds_full, geoMeans = geoMeans)
+#diagdds_full = DESeq(diagdds_full, fitType="local")
+
+diagdds_full = DESeq(diagdds_full, test="Wald", fitType="parametric")
+```
+
+Look at results table.  
+```{r}
+res_full = results(diagdds_full, cooksCutoff = FALSE)
+alpha = 1
+sigtab = res_full[which(res_full$padj < alpha), ]
+sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1)[rownames(sigtab), ], "matrix"))
+head(sigtab)
+```
 
 
+# **DESeq2 - Rare dataset**  
+
+Convert phyloseq object to DESeq2 object.  
+
+Construct DESeq2 object looking at differences by lifestage.  
+```{r}
+diagdds_rare = phyloseq_to_deseq2(physeq1_rare, ~ lifestage)
+
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+geoMeans = apply(counts(diagdds_rare), 1, gm_mean)
+diagdds_rare = estimateSizeFactors(diagdds_rare, geoMeans = geoMeans)
+#diagdds_rare = DESeq(diagdds_rare, fitType="local")
+
+diagdds_rare = DESeq(diagdds_rare, test="Wald", fitType="parametric")
+```
+
+Look at results table.  
+```{r}
+res_rare = results(diagdds_rare, cooksCutoff = FALSE)
+alpha = 1
+sigtab = res_rare[which(res_rare$padj < alpha), ]
+sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1_rare)[rownames(sigtab), ], "matrix"))
+head(sigtab)
+```

@@ -1,0 +1,40 @@
+sample	lifestage	group	hpf
+WSH174	Attached Recruit (183 hpf) 	AttachedRecruit	183
+WSH175	Attached Recruit (183 hpf) 	AttachedRecruit	183
+WSH176	Attached Recruit (183 hpf) 	AttachedRecruit	183
+WSH177	Attached Recruit (183 hpf) 	AttachedRecruit	183
+WSH178	Attached Recruit (231 hpf)	AttachedRecruit	231
+WSH179	Attached Recruit (231 hpf)	AttachedRecruit	231
+WSH180	Attached Recruit (231 hpf)	AttachedRecruit	231
+WSH181	Egg (1 hpf)	EggFertilized	1
+WSH182	Egg (1 hpf)	EggFertilized	1
+WSH183	Egg (1 hpf)	EggFertilized	1
+WSH184	Egg (1 hpf)	EggFertilized	1
+WSH185	Metamorphosed Recruit (183 hpf)	MetamorphosedRecruit	183
+WSH186	Metamorphosed Recruit (231 hpf)	MetamorphosedRecruit	231
+WSH187	Metamorphosed Recruit (231 hpf)	MetamorphosedRecruit	231
+WSH188	Metamorphosed Recruit (231 hpf)	MetamorphosedRecruit	231
+WSH189	Embryo (5 hpf)	Embryo	5
+WSH190	Embryo (5 hpf)	Embryo	5
+WSH191	Embryo (5 hpf)	Embryo	5
+WSH192	Embryo (5 hpf)	Embryo	5
+WSH193	Embryo (38 hpf)	Embryo	38
+WSH194	Embryo (38 hpf)	Embryo	38
+WSH195	Embryo (38 hpf)	Embryo	38
+WSH196	Embryo (38 hpf)	Embryo	38
+WSH201	Embryo (65 hpf)	Embryo	65
+WSH202	Embryo (65 hpf)	Embryo	65
+WSH203	Embryo (65 hpf)	Embryo	65
+WSH204	Embryo (65 hpf)	Embryo	65
+WSH205	Larvae (93 hpf) 	Larvae	93
+WSH206	Larvae (93 hpf) 	Larvae	93
+WSH207	Larvae (93 hpf) 	Larvae	93
+WSH208	Larvae (93 hpf) 	Larvae	93
+WSH209	Larvae (163 hpf)	Larvae	163
+WSH210	Larvae (163 hpf)	Larvae	163
+WSH211	Larvae (163 hpf)	Larvae	163
+WSH212	Larvae (163 hpf)	Larvae	163
+WSH213	Larvae (231 hpf) 	Larvae	231
+WSH214	Larvae (231 hpf) 	Larvae	231
+WSH215	Larvae (231 hpf) 	Larvae	231
+WSH216	Larvae (231 hpf) 	Larvae	231

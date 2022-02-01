@@ -1,0 +1,392 @@
+---
+title: "Analysis of 16S data output from Mothur"
+author: "Ariana S Huffmyer"
+date: 'January 2022'
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+## install packages if you dont already have them in your library
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
+if ("janitor" %in% rownames(installed.packages()) == 'FALSE') install.packages('janitor') 
+if ("car" %in% rownames(installed.packages()) == 'FALSE') install.packages('car') 
+if ("phyloseq" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('phyloseq') 
+if ("stringr" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('stringr')
+if ("ape" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('ape') 
+
+#load packages
+library("ggplot2")
+library('cowplot')
+library("tidyverse")
+library("janitor")
+library("car")
+library("phyloseq")
+library("stringr")
+library("ape")
+```
+
+# **Load data**  
+
+Load data for use in analysis with PhyloSeq. Here we will import an OTU table and a taxonomy table.  
+
+We will load "rare" files as those that were subsampled/rarefied.  
+
+```{r}
+otu.rare<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.0.03.subsample.txt", sep='\t', header=TRUE)
+otu.full<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.shared.txt", sep='\t', header=TRUE)
+
+taxonomy<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.taxonomy.txt", sep='\t', header=TRUE)
+```
+
+Load sample information.  
+```{r}
+metadata<-read.table("Mcap2020/Data/16S/mcap_metadata.txt", sep='\t', header=TRUE)
+
+rownames(metadata)<-metadata$sample
+
+metadata<-metadata%>%
+  select(!sample)
+  
+```
+
+Set default plot theme.  
+
+```{r}
+theme_set(theme_bw())
+```
+
+# **Visualize "full" dataset (not rarefied)**  
+
+Prepare the matrix to be all numeric with taxa in rows.  
+```{r}
+otu.full<-otu.full%>%
+  select(!label)%>%
+  select(!numOtus)
+
+rownames(otu.full)<-otu.full$Group
+
+otu.full<-otu.full%>%
+  select(!Group)
+
+otu.full<-t(otu.full)
+```
+
+Prepare the taxonomy table.  
+```{r}
+rownames(taxonomy)<-taxonomy$OTU
+
+taxonomy<-taxonomy%>%
+  select(!Size)%>%
+  select(!OTU)
+
+taxonomy<-taxonomy%>%
+   mutate_all(funs(str_replace_all(., "\\([^\\)]+\\)", ""))) #remove the certainty in parentheses for each taxa 
+
+taxonomy<-as.matrix(taxonomy)
+```
+
+Combine the OTU and taxonomic information.  
+```{r}
+OTU_full = otu_table(otu.full, taxa_are_rows = TRUE)
+TAX = tax_table(taxonomy)
+OTU_full
+```
+
+Load into phyloseq.  
+```{r}
+physeq = phyloseq(OTU_full, TAX)
+physeq
+```
+
+Plot an abundance table at the different taxonomic levels.    
+```{r}
+plot_bar(physeq, fill = "Domain")+theme(legend.position="bottom")
+plot_bar(physeq, fill = "Phylum")+theme(legend.position="bottom")
+plot_bar(physeq, fill = "Class")+theme(legend.position="bottom")
+plot_bar(physeq, fill = "Order")+theme(legend.position="bottom")
+plot_bar(physeq, fill = "Family")+theme(legend.position="bottom")
+```
+
+Plot a tree of OTU's.  
+```{r}
+random_tree = rtree(ntaxa(physeq), rooted=TRUE, tip.label=taxa_names(physeq))
+plot(random_tree)
+```
+
+Generate sample information.  
+```{r}
+sampledata = sample_data(data.frame(
+  lifestage = metadata$lifestage,
+  group = metadata$group, 
+  hpf = metadata$hpf,
+  row.names=sample_names(physeq),
+  stringsAsFactors=FALSE
+))
+sampledata
+```
+
+Merge the tree, sample information, and OTU table.  
+```{r}
+physeq1 = merge_phyloseq(physeq, sampledata, random_tree)
+physeq1
+```
+
+Now rebuild phyloseq.  
+```{r}
+physeq2 = phyloseq(OTU_full, TAX, sampledata, random_tree)
+physeq2
+```
+
+Check that they are identical. Should return TRUE.  
+```{r}
+identical(physeq1, physeq2)
+```
+
+Now build a tree with the combined data.  
+```{r}
+plot_tree(physeq1, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+```
+
+Plot a heatmap.  
+
+```{r}
+plot_heatmap(physeq1)
+```
+
+# **Visualize "rarefied" dataset**   
+
+Prepare the matrix to be all numeric with taxa in rows.  
+```{r}
+otu.rare<-otu.rare%>%
+  select(!label)%>%
+  select(!numOtus)
+
+rownames(otu.rare)<-otu.rare$Group
+
+otu.rare<-otu.rare%>%
+  select(!Group)
+
+otu.rare<-t(otu.rare)
+```
+
+Combine the OTU and taxonomic information.  
+```{r}
+OTU_rare = otu_table(otu.rare, taxa_are_rows = TRUE)
+TAX = tax_table(taxonomy)
+OTU_rare
+```
+
+Load into phyloseq.  
+```{r}
+physeq_rare = phyloseq(OTU_rare, TAX)
+physeq_rare
+```
+
+Plot an abundance table at the different taxonomic levels.    
+```{r}
+plot_bar(physeq_rare, fill = "Domain")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Phylum")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Class")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Order")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Family")+theme(legend.position="bottom")
+```
+
+Plot a tree of OTU's.  
+```{r}
+random_tree_rare = rtree(ntaxa(physeq_rare), rooted=TRUE, tip.label=taxa_names(physeq_rare))
+plot(random_tree)
+```
+
+Merge the tree, sample information, and OTU table.  
+```{r}
+physeq1_rare = merge_phyloseq(physeq_rare, sampledata, random_tree_rare)
+physeq1_rare
+```
+
+Now rebuild phyloseq.  
+```{r}
+physeq2_rare = phyloseq(OTU_rare, TAX, sampledata, random_tree_rare)
+physeq2_rare
+```
+
+Check that they are identical. Should return TRUE.  
+```{r}
+identical(physeq1_rare, physeq2_rare)
+```
+
+Now build a tree with the combined data.  
+```{r}
+plot_tree(physeq1_rare, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+```
+
+Plot a heatmap.  
+
+```{r}
+plot_heatmap(physeq1_rare)
+```  
+
+
+
+Based on the results of the visualization, we get different results from the rarefied and full datasets. I am going to continue with analyzing the full dataset for now and we can return to think about how to describe the samples that were removed during rarefication. 
+
+# **Plotting distance methods of rarefied dataset**  
+
+Remove OTU's that do not show up at least 3 times in more than half the samples.  
+```{r}
+GP1 = physeq1_rare
+GP1
+```
+
+Transform to even sampling depth.  
+```{r}
+GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
+```
+
+View ordination by OTU.  
+```{r}
+GP.ord <- ordinate(GP1, "NMDS", "bray")
+p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
+```
+
+View faceted by Phylum.  
+```{r}
+p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage", shape="group") 
+p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
+```
+
+Plot OTU and sample plots together.  
+```{r}
+p3 = plot_ordination(GP1, GP.ord, type="split", color="Phylum", label="lifestage", title="split") 
+p3
+```
+
+Now view through different ordination methods. 
+
+```{r}
+dist = "bray"
+ord_meths = c("DCA", "CCA", "RDA", "DPCoA", "NMDS", "MDS", "PCoA")
+plist = plyr::llply(as.list(ord_meths), function(i, physeq, dist){
+        ordi = ordinate(physeq, method=i, distance=dist)
+        plot_ordination(physeq, ordi, "samples", color="lifestage")
+}, GP1, dist)
+
+names(plist) <- ord_meths
+
+pdataframe = plyr::ldply(plist, function(x){
+    df = x$data[, 1:2]
+    colnames(df) = c("Axis_1", "Axis_2")
+    return(cbind(df, x$data))
+})
+names(pdataframe)[1] = "method"
+
+p = ggplot(pdataframe, aes(Axis_1, Axis_2, color=lifestage, fill=lifestage))
+p = p + geom_point(size=4) + geom_polygon()
+p = p + facet_wrap(~method, scales="free")
+#p = p + scale_fill_brewer(type="qual", palette="Set1")
+#p = p + scale_colour_brewer(type="qual", palette="Set1")
+p
+```
+
+Display NMDS, the method we will be using.  
+```{r}
+p = plist[[5]] 
+p = p + geom_point(size=5) + geom_polygon(aes(fill=lifestage))
+p
+```
+
+We do see separation between lifestages!  
+
+# **Plotting distance methods of full dataset**  
+
+Remove OTU's that do not show up at least 3 times in more than half the samples.  
+```{r}
+GP1f = physeq1
+GP1f
+```
+
+Transform to even sampling depth.  
+```{r}
+GP1f = transform_sample_counts(GP1f, function(x) 1E6 * x/sum(x))
+```
+
+View ordination by OTU.  
+```{r}
+GP.ord <- ordinate(GP1f, "NMDS", "bray")
+p1 = plot_ordination(GP1f, GP.ord, type="taxa", color="Class", title="taxa")
+```
+
+View faceted by Phylum.  
+```{r}
+p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1f, GP.ord, type="samples", color="lifestage", shape="group") 
+p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
+```
+
+Plot OTU and sample plots together.  
+```{r}
+p3 = plot_ordination(GP1f, GP.ord, type="split", color="Phylum", label="lifestage", title="split") 
+p3
+```
+
+Now view through different ordination methods. 
+
+```{r}
+dist = "bray"
+ord_meths = c("DCA", "CCA", "RDA", "DPCoA", "NMDS", "MDS", "PCoA")
+plist = plyr::llply(as.list(ord_meths), function(i, physeq, dist){
+        ordi = ordinate(physeq, method=i, distance=dist)
+        plot_ordination(physeq, ordi, "samples", color="lifestage")
+}, GP1f, dist)
+
+names(plist) <- ord_meths
+
+pdataframe = plyr::ldply(plist, function(x){
+    df = x$data[, 1:2]
+    colnames(df) = c("Axis_1", "Axis_2")
+    return(cbind(df, x$data))
+})
+names(pdataframe)[1] = "method"
+
+p = ggplot(pdataframe, aes(Axis_1, Axis_2, color=lifestage, fill=lifestage))
+p = p + geom_point(size=4) + geom_polygon()
+p = p + facet_wrap(~method, scales="free")
+#p = p + scale_fill_brewer(type="qual", palette="Set1")
+#p = p + scale_colour_brewer(type="qual", palette="Set1")
+p
+```
+
+Display NMDS, the method we will be using.  
+```{r}
+p = plist[[5]] 
+p = p + geom_point(size=5) + geom_polygon(aes(fill=lifestage))
+p
+```
+
+We do see separation between lifestages with this method as well. It may be useful to separately analyze these samples - one analysis for those with enough to do the proper rarefication and one analysis for those that need to be subset for low sequence count.    
+
+
+

@@ -91,7 +91,12 @@ pdata<- gcount %>%
     labs(x = "Sample ID", y = "Gene Counts"); p      
 ```
 
-Check that there are no genes with 0 counts across all samples. Should return TRUE.  
+Check that there are no genes with 0 counts across all samples. Should return TRUE.  DOUBLE CHECK THIS PART!!!! MAYBE DO: 
+
+genes<-genes %>%
+     mutate(Total = rowSums(.[, 2:40]))%>%
+    filter(!Total==0)%>%
+    select(!Total)
 
 ```{r}
 rowSums(dplyr::count(gcount)) > 0

@@ -71,9 +71,20 @@ We have 47 samples with 186 metabolites.
 Now we have a count matrix for metabolites with the first 4 columns as metadata.  
 
 Load and format gene count matrix and add in metadata.  
+
+Subset for genes with total counts >100 to reduce the dataset.  
 ```{r}
 genes<-read.csv("Mcap2020/Data/Integration/Mcapitata_gene_count_matrix.csv")
 gene_names<-read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv")
+
+#check for any rows that have all zeros
+genes[, 2:40] <- sapply(genes[, 2:40], as.numeric)
+str(genes)
+
+genes<-genes %>%
+     mutate(Total = rowSums(.[, 2:40]))%>%
+    filter(Total>1000)%>%
+    select(!Total)
 
 genes<-t(genes)
 
@@ -106,10 +117,9 @@ genes<-genes%>%
   relocate(hpf)%>%
   relocate(lifestage)%>%
   relocate(group)
-
 ```
 
-We have gene expression data for 39 samples with 63,227 genes with four metadata columns at the start of the matrix.  
+We have gene expression data for 39 samples with 39,598 genes with four metadata columns at the start of the matrix.  
 
 # **Calculate means for each timepoint**  
 
@@ -154,7 +164,7 @@ gene_matrix<-genes%>%
   select(!hpf)%>%
   select(!lifestage)
 
-gene_matrix[, 2:63228] <- sapply(gene_matrix[, 2:63228], as.numeric)
+gene_matrix[, 2:4645] <- sapply(gene_matrix[, 2:4645], as.numeric)
 
 gene_matrix$code<-as.factor(gene_matrix$code)
 
@@ -174,15 +184,38 @@ We now have two matrices that have metabolite data and gene expression data for 
 
 # **Conduct corpcor shrinkage**  
 
-Why is my metabolite matrix in a different format than gene expression? 
+Here we are using a smaller gene dataset (~9000 compared to the full 34000). To run this script on a larger dataset I think we would need to run this script on the cluster.  
 
-ERROR: Error in w * x : non-numeric argument to binary operator
-
-
+Conduct shrinkage for each matrix.  
 ```{r}
-genes_shrink<-cov.shrink(gene_matrix) 
+gene_matrix_num <- matrix(as.numeric(gene_matrix),    # Convert to numeric matrix
+                ncol = ncol(gene_matrix))
+str(gene_matrix_num)
+
+genes_shrink<-cov.shrink(gene_matrix_num) 
 ```
 
 ```{r}
-metab_shrink<-cov.shrink(metabolites_matrix) 
+rank.condition(genes_shrink) 
+is.positive.definite(genes_shrink)  
+solve(genes_shrink)
 ```
+
+Everything looks good for the metabolite dataset. We just need to figure out later on how to keep column and row names or match them back in after analysis.  
+
+
+```{r}
+metabolites_matrix_num <- matrix(as.numeric(metabolites_matrix),    # Convert to numeric matrix
+                ncol = ncol(metabolites_matrix))
+str(metabolites_matrix_num)
+
+metab_shrink<-cov.shrink(metabolites_matrix_num) 
+```
+
+```{r}
+rank.condition(metab_shrink) 
+is.positive.definite(metab_shrink)  
+solve(metab_shrink)
+```
+
+Everything looks good for the metabolite dataset. We just need to figure out later on how to keep column and row names or match them back in after analysis.  

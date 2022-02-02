@@ -111,3 +111,78 @@ genes<-genes%>%
 
 We have gene expression data for 39 samples with 63,227 genes with four metadata columns at the start of the matrix.  
 
+# **Calculate means for each timepoint**  
+
+Metabolites data set:  
+
+Collapse matrices to get averages for each "code" (lifestage time point) so that the matrices can be correlated.
+  
+```{r}
+metabolites_matrix<-metabolites%>%
+  select(!group)%>%
+  select(!hpf)%>%
+  select(!lifestage)
+
+metabolites_matrix$code<-as.factor(metabolites_matrix$code)
+
+#Only keep lifestages that we have in common for each dataset 
+timepoint_list<-levels(as.factor(genes$code))
+timepoint_list<-as.factor(timepoint_list)
+  
+metabolites_matrix<-metabolites_matrix%>%  
+  filter(code %in% timepoint_list)
+
+metabolites_matrix<-metabolites_matrix%>%  
+  group_by(code)%>%
+  summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+
+metabolites_matrix<-as.matrix(metabolites_matrix)
+
+rownames(metabolites_matrix)<-metabolites_matrix[,1]
+
+metabolites_matrix<-metabolites_matrix[,-1]
+
+metabolites_matrix[, 1:182] <- sapply(metabolites_matrix[, 1:182], as.numeric)
+```
+
+Genes data set:  
+
+Collapse matrices to get averages for each "code" (lifestage time point) so that the matrices can be correlated.    
+```{r}
+gene_matrix<-genes%>%
+  select(!group)%>%
+  select(!hpf)%>%
+  select(!lifestage)
+
+gene_matrix[, 2:63228] <- sapply(gene_matrix[, 2:63228], as.numeric)
+
+gene_matrix$code<-as.factor(gene_matrix$code)
+
+gene_matrix<-gene_matrix%>%  
+  group_by(code)%>%
+  summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+
+gene_matrix<-as.matrix(gene_matrix)
+
+rownames(gene_matrix)<-gene_matrix[,1]
+
+gene_matrix<-gene_matrix[,-1]
+```
+
+
+We now have two matrices that have metabolite data and gene expression data for the same time points.  
+
+# **Conduct corpcor shrinkage**  
+
+Why is my metabolite matrix in a different format than gene expression? 
+
+ERROR: Error in w * x : non-numeric argument to binary operator
+
+
+```{r}
+genes_shrink<-cov.shrink(gene_matrix) 
+```
+
+```{r}
+metab_shrink<-cov.shrink(metabolites_matrix) 
+```

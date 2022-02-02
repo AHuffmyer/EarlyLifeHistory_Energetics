@@ -1,0 +1,113 @@
+---
+title: "Integration"
+author: "AS Huffmyer"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Script to run co-occurrence network analyses between omic datasets: metabolomics, bacterial communities, gene expression, and symbiont communities (ITS2).  
+
+# **Setup**  
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r setup, include = FALSE}
+## install packages if you dont already have them
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("corpcor")) install.packages("corpcor")
+if (!require("janitor")) install.packages("janitor")
+
+# load packages
+library(tidyverse)
+library(ggplot2)
+library(corpcor)
+library(janitor)
+
+```
+
+# **Load data** 
+
+- Load data  
+- Format to counts across columns and samples in rows  
+- Associate metadata  
+
+Load metadata that will help with standardizing life stage and group names.  
+```{r}
+metadata<-read.csv("Mcap2020/Data/lifestage_metadata.csv")
+```
+
+Load and format the metabolomics matrix.  
+
+```{r}
+metabolites<-read.csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+metabolites<-metabolites%>%
+  mutate(sample=paste(Lifestage, Rep))%>%
+  select(Lifestage, compound, log_norm_counts, sample)%>%
+  dplyr::rename(code=Lifestage)%>%
+  spread(compound, log_norm_counts)
+
+metabolites<-right_join(metadata, metabolites, by="code")
+
+rownames(metabolites)<-metabolites$sample
+
+metabolites<-metabolites%>%select(!sample)
+
+dim(metabolites)
+```
+
+We have 47 samples with 186 metabolites.  
+
+Now we have a count matrix for metabolites with the first 4 columns as metadata.  
+
+Load and format gene count matrix and add in metadata.  
+```{r}
+genes<-read.csv("Mcap2020/Data/Integration/Mcapitata_gene_count_matrix.csv")
+gene_names<-read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv")
+
+genes<-t(genes)
+
+genes<-genes%>%
+  janitor::row_to_names(row_number = 1)
+
+dim(genes)
+
+genes<-as.data.frame(genes)
+
+genes<-tibble::rownames_to_column(genes, "sample_id")
+
+gene_names<-gene_names%>%
+  select(sample_id, code)
+
+genes<-left_join(genes, gene_names, by="sample_id")
+
+metadata_genes<-metadata%>%
+  select(code, hpf, group, lifestage)
+
+genes<-left_join(genes, metadata_genes, by="code")
+
+rownames(genes)<-genes$sample_id
+
+genes<-genes%>%
+  select(!sample_id)
+
+genes<-genes%>%
+  relocate(code)%>%
+  relocate(hpf)%>%
+  relocate(lifestage)%>%
+  relocate(group)
+
+```
+
+We have gene expression data for 39 samples with 63,227 genes with four metadata columns at the start of the matrix.  
+

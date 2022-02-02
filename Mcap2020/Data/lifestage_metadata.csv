@@ -1,15 +1,29 @@
-lifestage,hpf,group
-Egg Fertilized,1,Egg
-Embryo 1,5,Embryo
-Larvae 1,38,Embryo
-Larvae 2,65,Embryo
-Larvae 3,93,Larvae
-Larvae 4,163,Larvae
-Larvae 5,183,Larvae
-Larvae 6,231,Larvae
-Recruit 1,183,Metamorphosed Recruit
-Recruit 2,231,Metamorphosed Recruit
-Recruit 3,255,Metamorphosed Recruit
-Plug 1,183,Attached Recruit
-Plug 2,231,Attached Recruit
-Plug 3,255,Attached Recruit
+code,hpf,group,lifestage
+Egg Fertilized,1,Egg,Egg (1 hpf)
+Embryo 1,5,Embryo,Embryo (5 hpf)
+Larvae 1,38,Embryo,Embryo (38 hpf)
+Larvae 2,65,Embryo,Embryo (65 hpf)
+Larvae 3,93,Larvae,Larvae (93 hpf)
+Larvae 4,163,Larvae,Larvae (163 hpf)
+Larvae 5,183,Larvae,Larvae (183 hpf)
+Larvae 6,231,Larvae,Larvae (231 hpf)
+Recruit 1,183,Metamorphosed Recruit,Metamorphosed Recruit (183 hpf)
+Recruit 2,231,Metamorphosed Recruit,Metamorphosed Recruit (231 hpf)
+Recruit 3,255,Metamorphosed Recruit,Metamorphosed Recruit (231 hpf)
+Plug 1,183,Attached Recruit,Attached Recruit (183 hpf)
+Plug 2,231,Attached Recruit,Attached Recruit (231 hpf)
+Plug 3,255,Attached Recruit,Attached Recruit (255 hpf)
+Recruit1plug,183,Attached Recruit,Attached Recruit (183 hpf)
+Recruit2plug,231,Attached Recruit,Attached Recruit (231 hpf)
+Recruit3plug,255,Attached Recruit,Attached Recruit (255 hpf)
+Egg Fertilized,1,Egg,Egg (1 hpf)
+Embryo,5,Embryo,Embryo (5 hpf)
+Larvae1,38,Embryo,Embryo (38 hpf)
+Larvae2,65,Embryo,Embryo (65 hpf)
+Larvae3,93,Larvae,Larvae (93 hpf)
+Larvae4,163,Larvae,Larvae (163 hpf)
+Larvae5,183,Larvae,Larvae (183 hpf)
+Larvae6,231,Larvae,Larvae (231 hpf)
+Recruit1,183,Metamorphosed Recruit,Metamorphosed Recruit (183 hpf)
+Recruit2,231,Metamorphosed Recruit,Metamorphosed Recruit (231 hpf)
+Egg,1,Egg,Egg (1 hpf)

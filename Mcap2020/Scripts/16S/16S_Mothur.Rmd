@@ -221,7 +221,7 @@ plot_bar(physeq_rare, fill = "Family")+theme(legend.position="bottom")
 Plot a tree of OTU's.  
 ```{r}
 random_tree_rare = rtree(ntaxa(physeq_rare), rooted=TRUE, tip.label=taxa_names(physeq_rare))
-plot(random_tree)
+plot(random_tree_rare)
 ```
 
 Merge the tree, sample information, and OTU table.  
@@ -285,48 +285,9 @@ p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
 
 Plot with samples now.  
 ```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage", shape="group") 
-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
-```
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset")
 
-Plot OTU and sample plots together.  
-```{r}
-p3 = plot_ordination(GP1, GP.ord, type="split", color="Phylum", label="lifestage", title="split") 
-p3
-```
-
-Now view through different ordination methods. 
-
-```{r}
-dist = "bray"
-ord_meths = c("DCA", "CCA", "RDA", "DPCoA", "NMDS", "MDS", "PCoA")
-plist = plyr::llply(as.list(ord_meths), function(i, physeq, dist){
-        ordi = ordinate(physeq, method=i, distance=dist)
-        plot_ordination(physeq, ordi, "samples", color="lifestage")
-}, GP1, dist)
-
-names(plist) <- ord_meths
-
-pdataframe = plyr::ldply(plist, function(x){
-    df = x$data[, 1:2]
-    colnames(df) = c("Axis_1", "Axis_2")
-    return(cbind(df, x$data))
-})
-names(pdataframe)[1] = "method"
-
-p = ggplot(pdataframe, aes(Axis_1, Axis_2, color=lifestage, fill=lifestage))
-p = p + geom_point(size=4) + geom_polygon()
-p = p + facet_wrap(~method, scales="free")
-#p = p + scale_fill_brewer(type="qual", palette="Set1")
-#p = p + scale_colour_brewer(type="qual", palette="Set1")
-p
-```
-
-Display NMDS, the method we will be using.  
-```{r}
-p = plist[[5]] 
-p = p + geom_point(size=5) + geom_polygon(aes(fill=lifestage))
-p
 ```
 
 We do see separation between lifestages!  
@@ -368,51 +329,10 @@ p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
 
 Plot with samples now.  
 ```{r}
-p2 = plot_ordination(GP1f, GP.ord, type="samples", color="lifestage", shape="group") 
-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
+p2 = plot_ordination(GP1f, GP.ord, type="samples", color="lifestage") 
+p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("full dataset")
+p2
 ```
-
-Plot OTU and sample plots together.  
-```{r}
-p3 = plot_ordination(GP1f, GP.ord, type="split", color="Phylum", label="lifestage", title="split") 
-p3
-```
-
-Now view through different ordination methods. 
-
-```{r}
-dist = "bray"
-ord_meths = c("DCA", "CCA", "RDA", "DPCoA", "NMDS", "MDS", "PCoA")
-plist = plyr::llply(as.list(ord_meths), function(i, physeq, dist){
-        ordi = ordinate(physeq, method=i, distance=dist)
-        plot_ordination(physeq, ordi, "samples", color="lifestage")
-}, GP1f, dist)
-
-names(plist) <- ord_meths
-
-pdataframe = plyr::ldply(plist, function(x){
-    df = x$data[, 1:2]
-    colnames(df) = c("Axis_1", "Axis_2")
-    return(cbind(df, x$data))
-})
-names(pdataframe)[1] = "method"
-
-p = ggplot(pdataframe, aes(Axis_1, Axis_2, color=lifestage, fill=lifestage))
-p = p + geom_point(size=4) + geom_polygon()
-p = p + facet_wrap(~method, scales="free")
-#p = p + scale_fill_brewer(type="qual", palette="Set1")
-#p = p + scale_colour_brewer(type="qual", palette="Set1")
-p
-```
-
-Display NMDS, the method we will be using.  
-```{r}
-p = plist[[5]] 
-p = p + geom_point(size=5) + geom_polygon(aes(fill=lifestage))
-p
-```
-
-We do see separation between lifestages with this method as well. It may be useful to separately analyze these samples - one analysis for those with enough to do the proper rarefication and one analysis for those that need to be subset for low sequence count.    
 
 Conduct a permanova in the vegan package.  
 
@@ -423,7 +343,7 @@ adonis(phyloseq::distance(GP1f, method="bray") ~ lifestage,
        data = metadata)
 ```
 
-There are also significant differences between centroids in life stages in the rarefied dataset.  
+There are also significant differences between centroids in life stages in the full dataset.  
 
 # **Alpha Diversity - Full dataset**  
 
@@ -532,7 +452,8 @@ ig <- make_network(GP3, max.dist=1)
 plot_network(ig, GP3, color="group", label=NULL)
 ```
 
-The networks are not particularly informative for this dataset.  
+The networks are not particularly informative for this dataset.  \
+
 # **Plot unknowns - Full dataset** 
 
 Plot data at the level of phylum. Bacteria_unclassified are our unknowns.      
@@ -550,6 +471,12 @@ plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
 ```
 
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
+
+
+
+
+
+
 
 # **DESeq2 - Full dataset**  
 

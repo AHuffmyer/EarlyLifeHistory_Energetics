@@ -12,7 +12,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Script to run co-occurrence network analyses between omic datasets: metabolomics, bacterial communities, gene expression, and symbiont communities (ITS2).  
+Script to run co-occurrence network analyses between -omic datasets: metabolomics, bacterial communities, gene expression, and symbiont communities (ITS2).  
 
 # **Setup**  
 
@@ -83,7 +83,7 @@ str(genes)
 
 genes<-genes %>%
      mutate(Total = rowSums(.[, 2:40]))%>%
-    filter(Total>1000)%>%
+    filter(Total>5000)%>%
     select(!Total)
 
 genes<-t(genes)
@@ -164,7 +164,7 @@ gene_matrix<-genes%>%
   select(!hpf)%>%
   select(!lifestage)
 
-gene_matrix[, 2:4645] <- sapply(gene_matrix[, 2:4645], as.numeric)
+gene_matrix[, 2:1250] <- sapply(gene_matrix[, 2:1250], as.numeric)
 
 gene_matrix$code<-as.factor(gene_matrix$code)
 
@@ -199,10 +199,11 @@ genes_shrink<-cov.shrink(gene_matrix_num)
 rank.condition(genes_shrink) 
 is.positive.definite(genes_shrink)  
 solve(genes_shrink)
+
+hist(genes_shrink)
 ```
 
 Everything looks good for the metabolite dataset. We just need to figure out later on how to keep column and row names or match them back in after analysis.  
-
 
 ```{r}
 metabolites_matrix_num <- matrix(as.numeric(metabolites_matrix),    # Convert to numeric matrix
@@ -216,6 +217,10 @@ metab_shrink<-cov.shrink(metabolites_matrix_num)
 rank.condition(metab_shrink) 
 is.positive.definite(metab_shrink)  
 solve(metab_shrink)
+
+hist(metab_shrink)
 ```
 
 Everything looks good for the metabolite dataset. We just need to figure out later on how to keep column and row names or match them back in after analysis.  
+
+

@@ -1,0 +1,293 @@
+---
+title: Montipora capitata 2020 ITS2 analysis
+author: "AS Huffmyer"
+date: '2021'
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ITS2 strain variation data analysis based on scripts written by Shayle Matsuda, Shedd Aquarium.   
+
+```{r}
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("readxl")) install.packages("readxl")
+if (!require("phyloseq")) install.packages("phyloseq")
+if (!require("janitor")) install.packages("janitor")
+if (!require("writexl")) install.packages("writexl")
+
+library("tidyverse")
+library("readxl")
+library("phyloseq")
+library("janitor")
+library("writexl")
+
+library("ggplot2")
+library('cowplot')
+library("tidyverse")
+library("janitor")
+library("car")
+library("phyloseq")
+library("stringr")
+library("ape")
+library("DESeq2")
+library("microViz")
+library("vegan")
+```
+
+Load metadata.  
+```{r}
+#create metadata and load
+Metadata<-read.csv("Mcap2020/Data/ITS2/ITS2_Metadata.csv")
+rownames(Metadata) <- Metadata$sample_name
+Metadata <- Metadata %>%
+  select(code, hpf, group, lifestage)
+Metadata <- as.matrix(Metadata)
+Metadata <- sample_data(data.frame(Metadata))
+```
+
+Load profile level data.  
+```{r}
+#load data for taxonomy
+tax0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.profiles.absolute.abund_and_meta.txt",
+  n_max = 6) %>%
+  dplyr::select(-2) %>% 
+  gather(UID, value, -1) %>% 
+  spread(1, value) %>%
+  clean_names()
+
+tax1 <- as.matrix(tax0[, -1], dimnames = list(tax0$uid, colnames(tax0[-1])))
+rownames(tax1) <- tax0$uid
+tax <- tax_table(tax1)
+
+#load data for count matrix 
+otu0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.profiles.absolute.abund_and_meta.txt", col_names = TRUE) 
+
+list<-c("UID", "sample_name", "8", "9")
+colnames(otu0)<-list
+
+otu0<-otu0%>%
+  select(-1) %>%
+  dplyr::slice(7:n()) %>%
+  mutate_at(2:ncol(.), as.numeric)
+
+otu1 <- as.matrix(otu0[, -1])
+rownames(otu1) <- otu0$sample_name
+otu <- otu_table(otu1, taxa_are_rows = FALSE)
+
+#combine to phyloseq object
+coral <- phyloseq(otu, tax, Metadata)
+coral
+```
+
+Note that taxa 8 is CladeC and taxa 9 is CladeD.  
+
+Next load the data for coral strain level information.  
+
+```{r}
+#gather the taxonomy names  
+taxnames <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_only.txt",
+  n_max = 0) %>%
+  select(-1) %>%
+  names(.)
+
+#extract clade letter  
+tax0 <- data_frame(
+  DIV = taxnames,
+  clade = str_extract(DIV, "[A-Z]")
+)
+
+tax1 <- as.matrix(tax0)
+rownames(tax1) <- tax0$DIV
+tax <- tax_table(tax1)
+
+otu0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_only.txt") %>%
+  select(-1, )
+otu1 <- as.matrix(otu0[, -1])
+rownames(otu1) <- Metadata$sample_name
+otu <- otu_table(otu1, taxa_are_rows = FALSE)
+
+coralDIV <- phyloseq(otu, tax, Metadata)
+coralDIV
+```
+
+Now save the object.  
+```{r} 
+save(coral, coralDIV, file = "Mcap2020/Data/ITS2/ITS2_phyloseq.RData")
+```
+
+# **Explore DIV Data**  
+
+Load the data.  
+```{r}
+load("Mcap2020/Data/ITS2/ITS2_phyloseq.RData")
+```
+
+```{r}
+coralDIV
+```
+
+View the number of sequence counts in our dataset.   
+```{r}
+Samps<-read_tsv(file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.txt")
+
+hist(Samps$post_taxa_id_absolute_symbiodiniaceae_seqs, breaks=30)
+
+```
+We have >10,000 sequences for all of our samples. This is a high number and we can keep all samples.  
+
+Plot tree.  
+```{r}
+random_tree = rtree(ntaxa(coralDIV), rooted=TRUE, tip.label=taxa_names(coralDIV))
+plot(random_tree)
+```
+
+Merge phyloseq data. 
+```{r}
+phylo_coral_DIV = merge_phyloseq(coralDIV, Metadata, random_tree)
+phylo_coral_DIV
+```
+
+Filter out samples with low numbers in groups from phyloseq object.  
+```{r}
+phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Recruit (183 hpf)")
+phylo_coral_DIV<-ps_arrange(phylo_coral_DIV, lifestage)
+```
+
+Now build a tree with the combined data.  
+```{r}
+plot_tree(phylo_coral_DIV, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+```
+
+Plot a heatmap.  
+
+```{r}
+plot_heatmap(phylo_coral_DIV, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
+```
+
+Plot ordinations.  
+
+```{r}
+GP1 = phylo_coral_DIV
+GP1
+```
+
+Transform to even sampling depth.  
+```{r}
+GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
+```
+
+View ordination by OTU.  
+```{r}
+GP.ord <- ordinate(GP1, "NMDS", "bray")
+p1 = plot_ordination(GP1, GP.ord, type="taxa", title="taxa")
+p1
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
+p2
+```
+
+Conduct a permanova in the vegan package.  
+
+```{r}
+metadata <- as(sample_data(GP1), "data.frame")
+
+adonis(phyloseq::distance(GP1, method="bray") ~ lifestage,
+       data = metadata)
+```
+
+Permanova suggests there is separation by lifestage in ITS2 profiles.  
+
+Look at alpha diversity.  
+
+Remove any OTU that has a count of 0 in all samples. (There are none in this dataset).    
+```{r}
+GP2f <- prune_taxa(taxa_sums(phylo_coral_DIV) > 0, phylo_coral_DIV)
+```
+
+Plot the two most commonly used richness metrics - Shannon and Inverse Simpson.  
+```{r}
+plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="group")
+```
+
+Pretty similar across life stages.     
+
+Test for differences in alpha diversity.  
+```{r}
+metadata <- as(sample_data(GP2f), "data.frame")
+metadata$sample<-rownames(metadata)
+
+alpha_full<-estimate_richness(GP2f, measures=c("InvSimpson", "Shannon"))
+alpha_full$sample<-rownames(alpha_full)
+
+alpha_full<-full_join(metadata, alpha_full, by="sample")
+
+summary(aov(Shannon~lifestage, data=alpha_full))
+summary(aov(InvSimpson~lifestage, data=alpha_full))
+```
+
+No difference in ITS2 alpha diversity by lifestage.  
+
+Try DESeq2 to look at drivers of differences.  
+
+Convert phyloseq object to DESeq2 object.  
+
+Construct DESeq2 object looking at differences by lifestage.  
+```{r}
+diagdds_full = phyloseq_to_deseq2(phylo_coral_DIV, ~ lifestage)
+
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+geoMeans = apply(counts(diagdds_full), 1, gm_mean)
+diagdds_full = estimateSizeFactors(diagdds_full, geoMeans = geoMeans)
+#diagdds_full = DESeq(diagdds_full, fitType="local")
+
+diagdds_full = DESeq(diagdds_full, test="Wald", fitType="parametric")
+```
+
+Look at results table.  
+```{r}
+res_full = results(diagdds_full, cooksCutoff = FALSE)
+alpha = 0.05
+sigtab = res_full[which(res_full$padj < alpha), ]
+sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(phylo_coral_DIV)[rownames(sigtab), ], "matrix"))
+head(sigtab)
+length(sigtab)
+```
+
+There are 8 members of the community that shift by lifestage, 5 in clade C and 1 in clade D.  
+
+```{r}
+sigtab
+```
+
+
+
+
+
+
+
+
+
+
+

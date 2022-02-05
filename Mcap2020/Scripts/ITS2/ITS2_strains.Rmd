@@ -202,7 +202,7 @@ p1
 Plot with samples now.  
 ```{r}
 p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("samples")
+p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("samples")
 p2
 ```
 

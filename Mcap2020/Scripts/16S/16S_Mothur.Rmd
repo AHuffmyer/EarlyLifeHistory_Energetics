@@ -480,6 +480,8 @@ We have some unclassified bacteria, but a higher proportion of proteobacteria an
 
 # **DESeq2 - Full dataset**  
 
+THERE IS SOMETHING GOING ON WITH THE PVALUE ADJUSTMENT HERE - all the values are close to 1 - high number of comparisons? But there must be significant drivers? 
+
 Convert phyloseq object to DESeq2 object.  
 
 Construct DESeq2 object looking at differences by lifestage.  
@@ -499,10 +501,11 @@ diagdds_full = DESeq(diagdds_full, test="Wald", fitType="parametric")
 Look at results table.  
 ```{r}
 res_full = results(diagdds_full, cooksCutoff = FALSE)
-alpha = 1
+alpha = 0.05
 sigtab = res_full[which(res_full$padj < alpha), ]
 sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1)[rownames(sigtab), ], "matrix"))
 head(sigtab)
+length(sigtab)
 ```
 
 

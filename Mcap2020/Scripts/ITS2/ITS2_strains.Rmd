@@ -46,6 +46,8 @@ library("microViz")
 library("vegan")
 ```
 
+# **Prepare data**  
+
 Load metadata.  
 ```{r}
 #create metadata and load
@@ -187,7 +189,7 @@ GP1 = phylo_coral_DIV
 GP1
 ```
 
-Transform to even sampling depth.  
+Transform to relative abundance.  
 ```{r}
 GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
 ```
@@ -275,19 +277,19 @@ head(sigtab)
 length(sigtab)
 ```
 
-There are 8 members of the community that shift by lifestage, 5 in clade C and 1 in clade D.  
+There are 6 members of the community that shift by lifestage, 5 in clade C and 1 in clade D.  
 
 ```{r}
 sigtab
+sig_taxa<-rownames(sigtab)
 ```
 
+FIGURE OUT HOW TO CONVERT TO RELATIVE ABUNDANCE? 
 
+Plot the abundance of these taxa over each lifestage using the GP1 object. 
 
-
-
-
-
-
-
-
+```{r}
+sig_coral_DIV = prune_taxa(sig_taxa, GP1)
+plot_bar(sig_coral_DIV, fill = "lifestage", facet_grid=~DIV)
+```
 

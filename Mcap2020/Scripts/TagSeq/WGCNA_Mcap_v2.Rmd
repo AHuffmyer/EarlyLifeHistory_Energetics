@@ -1,0 +1,227 @@
+---
+title: "WGCNA with V2 of Mcap genome"
+author: "Ariana S Huffmyer"
+date: "2/9/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Running WGCNA analysis of assembly with version 2 of the Mcap genome.  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+Load required libraries.  
+
+```{r}
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+
+library("tidyverse")
+library("genefilter")
+library("DESeq2")
+library("RColorBrewer")
+library("WGCNA")
+library("flashClust")
+library("gridExtra")
+library("ComplexHeatmap")
+library("goseq")
+library("dplyr")
+library("clusterProfiler")
+library("pheatmap")
+library("magrittr")
+
+```
+
+# **Data input and filtering**  
+ 
+Import the data files.  
+
+```{r}
+#load metadata sheet with sample name and developmental stage information
+metadata <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(metadata)
+
+#load gene count matrix generated from cluster computation
+gcount <- as.data.frame(read.csv("Mcap2020/Output/TagSeq/Mcapitata_gene_count_matrix_V2.csv", row.names="gene_id"), colClasses = double)
+head(gcount)
+
+#remove metamorphosed recruit 1 because this was the timepoint that we only had one sample for: D36, AH23
+gcount<-gcount[ , !(names(gcount) %in% c("AH23_S54_L002.gtf"))]
+
+metadata <- metadata%>%
+  filter(!sample_id=="AH23")
+```
+
+Check that there are no genes with 0 counts across all samples. Should return TRUE.  DOUBLE CHECK THIS PART!!!! MAYBE DO: 
+
+```{r}
+gcount<-gcount %>%
+     mutate(Total = rowSums(.[, 1:38]))%>%
+    filter(!Total==0)%>%
+    select(!Total)
+```
+There wer about 15,000 genes that had 0 across all rows.  
+
+
+Conduct data filtering, this includes:  
+
+*pOverA*: Specifying the minimum count for a proportion of samples for each gene. Here, we are using a pOverA of 0.07. This is because we have 38 samples with a minimum of n=3 samples per lifestage. Therefore, we will accept genes that are present in 3/38 = 0.07 of the samples because we expect different expression by life stage. We are further setting the minimum count of genes to 10, such that 7% of the samples must have a gene count of >10 in order for the gene to remain in the data set.  
+
+Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
+
+```{r}
+filt <- filterfun(pOverA(0.07,10))
+
+#create filter for the counts data
+gfilt <- genefilter(gcount, filt)
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify gene lists
+gn.keep <- rownames(gkeep)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+gcount_filt <- as.data.frame(gcount[which(rownames(gcount) %in% gn.keep),])
+
+#How many rows do we have before and after filtering?
+nrow(gcount) #Before
+nrow(gcount_filt) #After
+```
+
+Before filtering, we had approximately 35,000 genes. After filtering for pOverA, we have approximately 11,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+
+In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
+```{r}
+#Checking that all row and column names match. Should return "TRUE"
+all(rownames(metadata$sample_id) %in% colnames(gcount_filt))
+all(rownames(metadata$sample_id) == colnames(gcount_filt)) 
+```
+
+Match metadata sample id's.  
+```{r}
+result<-sub("_.*", "", colnames(gcount_filt)) #keep characters before _
+#result2<-sub(".*AH", "", result) #keep characters after X
+colnames(gcount_filt)<-result #keep just tube number 
+```
+
+Order metadata the same as the column order in the gene matrix.  
+```{r}
+list<-colnames(gcount_filt)
+list<-as.factor(list)
+
+metadata$sample_id<-as.factor(metadata$sample_id)
+
+# Re-order the levels
+metadata$sample_id <- factor( as.character(metadata$sample_id), levels=list)
+# Re-order the data.frame
+metadata_ordered <- metadata[order(metadata$sample_id),]
+metadata_ordered$sample_id
+
+metadata_ordered<-metadata_ordered%>%
+  select(sample_id, lifestage)
+```
+
+# **Construct DESeq2 data set**  
+
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.
+```{r}
+#Set DESeq2 design
+gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
+                              colData = metadata_ordered,
+                              design = ~lifestage)
+```
+
+First we are going to log-transform the data using a variance stabilizing transforamtion (VST). This is only for visualization purposes. Essentially, this is roughly similar to putting the data on the log2 scale. It will deal with the sampling variability of low counts by calculating within-group variability (if blind=FALSE). Importantly, it does not use the design to remove variation in the data, and so can be used to examine if there may be any variability do to technical factors such as extraction batch effects.
+
+To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4.
+
+Chunk should return TRUE if <4.  
+```{r}
+SF.gdds <- estimateSizeFactors(gdds) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than 4 for us to use vst
+print(sizeFactors(SF.gdds)) #View size factors
+
+all(sizeFactors(SF.gdds)) < 4
+```
+
+All size factors are less than 4, so we can use VST transformation.  
+
+```{r}
+gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
+head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
+```
+
+# **Examine PCA and sample distances**  
+
+Plot a heatmap to sample to sample distances  
+
+```{r}
+gsampleDists <- dist(t(assay(gvst))) #calculate distance matix
+gsampleDistMatrix <- as.matrix(gsampleDists) #distance matrix
+rownames(gsampleDistMatrix) <- colnames(gvst) #assign row names
+colnames(gsampleDistMatrix) <- NULL #assign col names
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
+
+pdf("Mcap2020/Figures/TagSeq/GenomeV2/pheatmap.pdf")
+pht=pheatmap(gsampleDistMatrix, #plot matrix
+         clustering_distance_rows=gsampleDists, #cluster rows
+         clustering_distance_cols=gsampleDists, #cluster columns
+         col=colors) #set colors
+draw(pht)
+dev.off()
+```
+
+Plot a PCA of samples by lifestages  
+
+```{r}
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE)
+percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
+
+allgenesfilt_PCA <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage)) + 
+  geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=1, "2_Embryo"=10, "3_Larvae1"=5, "4_Larvae2"=14, "5_Larvae3"=11, "6_Larvae4"=6, "7_Larvae6"=2, "8_MetamorposedRecruit2"=8, "9_CalcifyingRecruit1"=3)) +
+  #xlim(-40,40)+ 
+  #ylim(-40,40)+
+  coord_fixed()+
+  theme_bw() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) # + #Set the plot background
+  #theme(legend.position = ("none")) #set title attributes
+allgenesfilt_PCA
+ggsave("Mcap2020/Figures/TagSeq/GenomeV2/allgenesfilt-PCA.pdf", allgenesfilt_PCA, width=11, height=8)
+```
+
+We still have strong life stage groupings with the new reference genome.   
+
+
+
+
+
+
+
+

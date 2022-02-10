@@ -58,35 +58,24 @@ library(Hmisc)
 ## Import and manipulate data
 ```{r}
 # Larval size data
-size <- read_csv("Mcap2020/Data/Physiology/Size/larval_volume.csv")
+size <- read_csv("Mcap2020/Data/Physiology/Size/larval_size.csv")
 
 #metadata
 metadata <- read_csv("Mcap2020/Data/lifestage_metadata.csv")
 
-# select columns
-size <- size %>%
-  dplyr::select(tube.ID, code, replicate, volume)%>%
-  drop_na() #remove na's that could not be measured
-
-size$replicate<-as.factor(size$replicate)
-size$tube.ID<-as.factor(size$tube.ID)
-size$code<-as.factor(size$code)
-
-size$hpf<-metadata$hpf[match(size$code, metadata$code)]
-size$group<-metadata$group[match(size$code, metadata$code)]
-size$lifestage<-metadata$lifestage[match(size$code, metadata$code)]
-
+size <- left_join(size, metadata)
 size$hpf <- as.factor(size$hpf)
-size$group <- as.factor(size$group)
-size$lifestage <- as.factor(size$lifestage)
 ```
 
 Prep data frame.   
 ```{r}
 # Calculate mean counts for each sample
 size <- size %>%
-  dplyr::select(tube.ID, lifestage, replicate, volume, hpf, group, code)%>%
-  drop_na() #remove na's that could not be measured
+  dplyr::select(tube.ID, lifestage, replicate, `area (mm)`, hpf, group)%>%
+  drop_na()%>% #remove na's that could not be measured
+  rename(area=`area (mm)`) #rename column
+
+size$lifestage<-as.factor(size$lifestage)
 ```
 
 ## Plotting  
@@ -94,8 +83,8 @@ size <- size %>%
 Plot data with mean and standard error for each lifestage.  
 ```{r}
 size %>%
-  ggplot(aes(x = hpf, y = volume, color = group)) +
-  labs(x = "",y = "Mean Larval Volume (mm^3)") +
+  ggplot(aes(x = lifestage, y = area, color = lifestage)) +
+  labs(x = "",y = "Mean Larval Size (mm^2)") +
 geom_jitter(width = 0.1) +                                            # Plot all points
   stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
                geom = "errorbar", color = "black", width = 0.5) +
@@ -108,11 +97,11 @@ Present means and standard error of each group and save summary table
 ```{r}
 size%>%
   group_by(lifestage, hpf)%>%
-  summarise(n=length(volume),
-            Mean=format(round(mean(volume), 3), 3), 
-            SE=format(round(sd(volume)/sqrt(length(volume)),3),3))%>%
+  summarise(n=length(area),
+            Mean=format(round(mean(area), 3), 3), 
+            SE=format(round(sd(area)/sqrt(length(area)),3),3))%>%
   rename(Lifestage=lifestage, HPF=hpf)%>%
-  kbl(caption="Descriptive statistics of larval volume across ontogeny")%>%
+  kbl(caption="Descriptive statistics of larval size across ontogeny")%>%
   kable_classic(full_width=FALSE, html_font="Arial")%>%
   row_spec(0, bold = TRUE) 
 
@@ -131,13 +120,13 @@ Plot data as a scatterplot
 ```{r}
 size$hpf<-as.factor(size$hpf)
 size_plot<-size %>%
-    ggplot(., aes(x = hpf, y = volume)) +
+    ggplot(., aes(x = hpf, y = area)) +
     #geom_boxplot(outlier.size = 0) +
     geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
+    ylab(expression(bold(paste("Planar Size (mm"^2, ")"))))+
     ylim(0,1)+
     theme_classic() + 
     theme(
@@ -157,13 +146,13 @@ size_plot<-size %>%
 ## Plot data as box plot  
 ```{r}
 size_plot2<-size %>%
-    ggplot(., aes(x = hpf, y = volume)) +
+    ggplot(., aes(x = hpf, y = area)) +
     geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     geom_point(aes(fill=group), pch = 21, size=2, position = position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
+    ylab(expression(bold(paste("Planar Size (mm"^2, ")"))))+
     ylim(0, 0.8)+
     theme_classic() + 
     #geom_text(label="A", x=1, y=2500, size=4, color="black")+ #egg
@@ -188,7 +177,7 @@ size_plot2<-size %>%
 
 Run lmer on cells per larvae by sampling point, specified by sequence of samples taken (life stage, hpf). Use tube ID as random effect.       
 ```{r}
-size_model<-lmer(volume~lifestage + (1|tube.ID), data=size)
+size_model<-lmer(area~lifestage + (1|tube.ID), data=size)
 summary(size_model)
 qqPlot(residuals(size_model))
 leveneTest(residuals(size_model)~lifestage, data=size)
@@ -198,7 +187,7 @@ anova(size_model, type=2)
 Violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  
 
 ```{r}
-kruskal.test(volume~lifestage, data=size)
+kruskal.test(area~lifestage, data=size)
 ```
 
 Significant difference in size between lifestages.   
@@ -221,8 +210,8 @@ pairs(emm)
 # Cell count data
 sym_counts <- read_csv("Mcap2020/Data/Physiology/CellDensity/symbiont.counts.csv")
 
-sym_counts<-sym_counts%>%
-  rename(code=lifestage)
+sym_counts <- left_join(sym_counts, metadata)
+sym_counts$hpf <- as.factor(sym_counts$hpf)
 ```
 
 Calculate cells and normalize to either planar size (eggs through metamorphosed recruits) or surface area (attached recruits)   
@@ -235,17 +224,16 @@ df <- sym_counts %>%
   summarise(mean_count = mean(count, na.rm = TRUE))
 
 #match in identifying information
-df$code<-sym_counts$code[match(df$tube.ID, sym_counts$tube.ID)]
+df$lifestage<-sym_counts$lifestage[match(df$tube.ID, sym_counts$tube.ID)]
 df$total.volume.ul<-sym_counts$total.volume.ul[match(df$tube.ID, sym_counts$tube.ID)]
 df$num.individuals<-sym_counts$num.individuals[match(df$tube.ID, sym_counts$tube.ID)]
 df$surface.area<-sym_counts$surface.area[match(df$tube.ID, sym_counts$tube.ID)]
+df$hpf<-sym_counts$hpf[match(df$tube.ID, sym_counts$tube.ID)]
+df$group<-sym_counts$group[match(df$tube.ID, sym_counts$tube.ID)]
+df$lifestage<-as.factor(df$lifestage)
+df$group<-as.factor(df$group)
 
-#add in metadata
-df$hpf<-metadata$hpf[match(df$code, metadata$code)]
-df$group<-metadata$group[match(df$code, metadata$code)]
-df$lifestage<-metadata$lifestage[match(df$code, metadata$code)]
-
-# Normalize counts by homogenate volume and surface area
+# Normalize counts by homogenat volume and surface area
 df <- df %>%
   mutate(cells.mL = mean_count * 10000 / num.squares,
          cells = cells.mL * (total.volume.ul/1000),
@@ -263,7 +251,7 @@ Display cells per individual.
 ```{r}
 sym_counts %>%
   filter(!group=="Attached Recruit")%>%
-  ggplot(aes(x = lifestage, y = cells.ind, color = group)) +
+  ggplot(aes(x = lifestage, y = cells.ind, color = lifestage)) +
   labs(x = "",y = "Cell Density per larva") +
 geom_jitter(width = 0.1) +                                            # Plot all points
   stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
@@ -411,9 +399,9 @@ sym_counts %>%
 
 ### Data manipulation and correlation  
 
-First, test for correlation between symbiont cell density and larval volume to see if there is a relationship.  
+First, test for correlation between symbiont cell density and larval size to see if there is a relationship.  
 
-Generate data frame with summarized size and cell density information for each time point from eggs to metamorphosed recruits, because we have data for volume and counts for each sample. We do not include attached recruits here yet, because we cannot calculate densities per individual.   
+Generate data frame with summarised size and cell density information for each time point from eggs to metamorphosed recruits, because we have data for size and counts for each sample. We do not include attached recruits here yet, becuase we cannot calculate densities per individual.  
 
 ```{r}
 #read in data frame generated in previous chunk 
@@ -421,36 +409,36 @@ sym_counts<-sym_counts%>%
   dplyr::select(tube.ID, lifestage, group, hpf, cells.ind, cells.mm)
 
 #grab size data
-volume<-size%>%
+area<-size%>%
   group_by(tube.ID)%>%
-  summarise(mean_volume=mean(volume, na.rm=TRUE))
+  summarise(mean_area=mean(area, na.rm=TRUE))
 
-volume$tube.ID<-as.factor(volume$tube.ID)
+area$tube.ID<-as.factor(area$tube.ID)
 sym_counts$hpf<-as.factor(sym_counts$hpf)
 
-corr<-left_join(sym_counts, volume)
+corr<-left_join(sym_counts, area)
 ```
 
 Generate number of symbiont cells per mm^2 area for each tube.    
 ```{r}
 corr<-corr%>%
-  mutate(mean_volume_2=mean_volume*2)%>%
-  mutate(counts_volume=cells.ind/mean_volume)%>%
-  mutate(counts_volume=ifelse(is.na(counts_volume), cells.mm, counts_volume)) #add attached recruit data already calculated as cells per mm2
+  mutate(mean_area_2=mean_area*2)%>%
+  mutate(counts_area=cells.ind/mean_area_2)%>%
+  mutate(counts_area=ifelse(is.na(counts_area), cells.mm, counts_area)) #add attached recruit data already calculated as cells per mm2
 ```
 
-Plot correlation between cell counts (cells per individual) and volume (mm^3).  
+Plot correlation between cell counts (cells per individual) and size (area mm^2).  
 
 ```{r}
 correlation<-corr %>%
     filter(!group=="Attached Recruit")%>%
-    ggplot(., aes(x = mean_volume, y = cells.ind)) +
+    ggplot(., aes(x = mean_area_2, y = cells.ind)) +
     #geom_smooth(method="lm", se=TRUE, fullrange=TRUE, level=0.95, color="black", fill="gray") +
     geom_point(aes(fill=group), pch = 21, size=4) + 
     xlab(expression(bold(paste("Larval Size (mm"^2, ")")))) + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    xlab(expression(bold(paste("Individual Volume (mm"^3, ")"))))+
+    xlab(expression(bold(paste("Individual Size (mm"^2, ")"))))+
     ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
     #ylim(0, 9000)+
     theme_classic() + 
@@ -465,48 +453,27 @@ correlation<-corr %>%
 Test relationship with a spearman correlation.  
 
 ```{r}
-cor.test(corr$mean_volume, corr$cells.ind, method=c("spearman"))
+cor.test(corr$mean_area, corr$cells.ind, method=c("spearman"))
 ```
 
-There is not a significant correlation between volume and symbiont density.   
+Significant correlation between size and cell counts.  r=0.37, p=0.017   
 
 ### Plotting  
 
-Plot cells per mm^3 as a boxplot.    
+Plot cells per mm^2 as a boxplot.  
 
 ```{r}
 #order for creating a legend for all plots 
 corr$group <- factor(corr$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
 
 cells_size_plot<-corr %>%
-    filter(!group=="Attached Recruit")%>%
-    ggplot(., aes(x = hpf, y = counts_volume)) +
+    ggplot(., aes(x = hpf, y = counts_area)) +
     geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-3))))+
-    #ylim(2000, 35000)+
-    theme_classic() + 
-    theme(
-      legend.position="top",
-      axis.title=element_text(face="bold", size=14),
-      axis.text=element_text(size=12, color="black"), 
-      legend.title=element_text(face="bold", size=14)
-      ); cells_size_plot
-
-#making a plot with a legend for use later on 
-#we are NOT using this plot for comparisons due to different units for attached recruits that cannot be compared.  
-legend_plot<-corr %>%
-    #filter(!group=="Attached Recruit")%>%
-    ggplot(., aes(x = hpf, y = counts_volume)) +
-    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
-    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
-    xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
-    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-3))))+
+    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
     #ylim(2000, 35000)+
     theme_classic() + 
     theme(
@@ -514,7 +481,7 @@ legend_plot<-corr %>%
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
       legend.title=element_text(face="bold", size=14)
-      ); legend_plot
+      ); cells_size_plot
 
 ```
 
@@ -522,14 +489,14 @@ Plot as linear relationship.
 
 ```{r}
 cells_size_plot2<-corr %>%
-    filter(!group=="Attached Recruit")%>%
-    ggplot(., aes(x = as.numeric(as.character(hpf)), y = counts_volume)) +
+    ggplot(., aes(x = as.numeric(as.character(hpf)), y = counts_area)) +
+    #geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
     geom_smooth(method="lm", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c( "#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-3))))+
+    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
     #ylim(2000, 35000)+
     theme_classic() + 
     theme(
@@ -544,15 +511,15 @@ Analyze differences in normalized cell counts by timepoint.
 
 ```{r}
 model<-corr%>%
-  filter(!group=="Attached Recruit")%>%
-  droplevels()%>%
-  aov(counts_volume~lifestage, data=.)
+  #filter(!group=="Attached Recruit")%>%
+  #droplevels()%>%
+  aov(counts_area~lifestage, data=.)
 
 qqPlot(residuals(model))
 
 corr%>%
-  filter(!group=="Attached Recruit")%>%
-  droplevels()%>%
+  #filter(!group=="Attached Recruit")%>%
+  #droplevels()%>%
   leveneTest(residuals(model)~lifestage, data=.)
 
 summary(model)
@@ -571,55 +538,114 @@ Generate summary table of descriptive statistics.
 #need to output to csv 
 corr%>%
   group_by(group, hpf, lifestage)%>%
-  filter(!group=="Attached Recruit")%>%
-  droplevels()%>%
-  summarise(n=length(counts_volume),
-            Mean_sym_mm3=format(round(mean(counts_volume), 0), 0), 
-            SE=format(round(sd(counts_volume)/sqrt(length(counts_volume)),0),0))%>%
+  summarise(n=length(counts_area),
+            Mean_sym_mm2=format(round(mean(counts_area), 0), 0), 
+            SE=format(round(sd(counts_area)/sqrt(length(counts_area)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary.csv")
 ```
 
-### Attached Recruit Plotting  
+# **3. Correlations**  
 
-Plot as box plot.  
+## Respirometry correlated with density 
+
+Load dataframes  
 
 ```{r}
-recruit_size_plot<-corr %>%
-    filter(group=="Attached Recruit")%>%
-    ggplot(., aes(x = hpf, y = counts_volume)) +
-    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
-    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
-    xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#BA55D3"), guide="none")+
-    scale_color_manual(name="Lifestage", values=c("#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
-    #ylim(2000, 35000)+
+resp<-read.csv("Mcap2020/Output/Respiration/mean_respiration.csv")
+size<-read.csv("Mcap2020/Output/Physiology/larval_size_table.csv")
+size_density<-read.csv("Mcap2020/Output/Physiology/normalized_size_cells_summary.csv")
+density<-read.csv("Mcap2020/Output/Physiology/cell_density_table.csv")
+```
+
+Standardize column names.  
+
+```{r}
+resp<-resp%>%
+    rename(Lifestage=group)%>%
+    dplyr::select(Lifestage, Mean_R, Mean_P, Mean_GP, Mean_PR)
+
+resp$Lifestage<-as.factor(resp$Lifestage)
+
+levels(resp$Lifestage) <- list(`Larvae 2` = "Larvae2", `Larvae 3`  = "Larvae3", `Larvae 5`  = "Larvae5", `Larvae 6`  = "Larvae6", `Recruit 1`  = "Recruit1", `Recruit 2`  = "Recruit2")
+
+size<-size%>%
+  dplyr::select(Lifestage, Mean)%>%
+  rename(Mean_Size=Mean)
+
+size$Lifestage<-as.factor(size$Lifestage)
+
+size_density<-size_density%>%
+  dplyr::select(lifestage, Mean_sym_mm2)%>%
+  rename(Mean_Size_Density=Mean_sym_mm2, Lifestage=lifestage)
+
+size_density$Lifestage<-as.factor(size_density$Lifestage)
+
+density<-density%>%
+    rename(Lifestage=lifestage, Mean_Density=Mean)%>%
+  dplyr::select(Lifestage, Mean_Density)
+
+density$Lifestage<-as.factor(density$Lifestage)
+```
+
+Combine dataframes.  
+
+```{r}
+master<-full_join(resp, size, by=c("Lifestage"))
+
+master<-full_join(master, size_density, by=c("Lifestage"))
+
+master<-full_join(master, density, by=c("Lifestage"))
+
+head(master)
+```
+
+### Generate correlation matrix  
+
+Check for correlations between all variables.  
+```{r}
+pdf("Mcap2020/Figures/Physiology/Correlations.pdf", height = 9, width = 9)
+g <-ggpairs(master, columns=2:8)
+print(g)
+dev.off()
+```
+
+There is a significant correlation between size normalized symbiont cell density and respiration. Plot this relationship. 
+
+Run Pearson correlation between respiration and size normalized cell densities.  
+
+```{r}
+cor<-master%>%
+  drop_na()
+
+cor.test(cor$Mean_Size_Density, cor$Mean_R, method=c("pearson"))
+
+```
+
+There is a significant correlation r=-0.98, p=0.0009.  
+
+```{r}
+r_corr_plot<-master %>%
+    drop_na()%>%
+    ggplot(., aes(x = Mean_Size_Density, y = Mean_R)) +
+    #geom_smooth(method="glm", se=FALSE, fullrange=TRUE, level=0.95, color="gray", fill="gray") +
+    geom_point(aes(fill=Lifestage), pch = 21, size=4) + 
+    xlab(expression(bold(paste("Symbiont cells mm"^-2)))) + 
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#80CDC1", "#80CDC1", "#003C30", "#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#80CDC1", "#80CDC1", "#003C30", "#003C30"))+
+    ylab(expression(bold(paste("Respiration (nmol O2) individual"^-1))))+
+    #ylim(0, 9000)+
     theme_classic() + 
     theme(
-      legend.position="top",
+      legend.position="right",
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
       legend.title=element_text(face="bold", size=14)
-      ); recruit_size_plot
+      ); r_corr_plot
+
 ```
 
-View summary of symbiont densities per unit surface area.  
-
-```{r}
-#need to output to csv 
-corr%>%
-  group_by(group, hpf, lifestage)%>%
-  filter(group=="Attached Recruit")%>%
-  droplevels()%>%
-  summarise(n=length(counts_volume),
-            Mean_sym_mm2=format(round(mean(counts_volume), 0), 0), 
-            SE=format(round(sd(counts_volume)/sqrt(length(counts_volume)),0),0))%>%
-  rename(Lifestage=group, HPF=hpf)%>%
-  write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary_attached.csv")
-```
-
-# **3. Generate Figures**  
+# **4. Generate Figures**  
 
 Generate physiology panel with all variables of interest.    
 
@@ -627,12 +653,13 @@ Generate physiology panel with all variables of interest.
 # extract the legend from one of the plots
 legend <- get_legend(
   # create some space to the left of the legend
-  cells_size_plot + theme(legend.position="right") + theme(legend.box.margin = margin(1,1,1,1))
+  cells_size_plot + theme(legend.box.margin = margin(1,1,1,1))
 )
 
 #remove legends from plots  
 size_plot2<-size_plot2+theme(legend.position="none")
 symb_plot2<-symb_plot2+theme(legend.position="none")
+r_corr_plot<-r_corr_plot+theme(legend.position="none")
 cells_size_plot_l<-cells_size_plot+theme(legend.position="none")
 
 #assemble plots
@@ -640,39 +667,12 @@ all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot_l, labels = c("A", 
 
 all_plots_legend<-plot_grid(all_plots, legend, rel_widths = c(4, 0.5), ncol=2, nrow=1)
 
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_all.png", all_plots_legend, dpi=300, width=24, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure.pdf", all_plots_legend, dpi=300, width=24, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure.png", all_plots_legend, dpi=300, width=24, height=6, units="in")
 
 ```
 
 
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_all.png)
-
-Generate a figure that has just the symbiont density metrics of interest. We will discuss larval size and symbiont density per unit size in the text.  
-
-```{r}
-# extract the legend from one of the plots
-legend <- get_legend(
-  # create some space to the left of the legend
-  legend_plot +  theme(legend.box.margin = margin(1,1,1,1))
-)
-
-symb_plot2b<-symb_plot2+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))
-recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=10))+ylim(500,9000)
-
-target_plots<- ggdraw(symb_plot2b) +
-  draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
-  draw_plot_label(
-    c("A", "B"),
-    c(0.05, 0.2),
-    c(1, 0.96),
-    size = 16
-  );target_plots
-
-target_plots_legend<-plot_grid(target_plots, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
-
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=8, height=6, units="in")
-
-```
+![Early life history physiology](../../Figures/Physiology/Physiology_figure.png)
 
 
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities.png)

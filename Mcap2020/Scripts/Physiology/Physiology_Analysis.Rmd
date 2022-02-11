@@ -53,7 +53,9 @@ library(Hmisc)
 ```
 
 
-# **1. Larval Size**  
+# **1. Larval Volume**  
+
+Volume is calculated as an elliptical sphere using the length and width measurements of each individual.  
 
 ## Import and manipulate data
 ```{r}
@@ -647,7 +649,7 @@ ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_all.png", all_plots_l
 
 ![Early life history physiology](../../Figures/Physiology/Physiology_figure_all.png)
 
-Generate a figure that has just the symbiont density metrics of interest. We will discuss larval size and symbiont density per unit size in the text.  
+Generate a figure that has just the symbiont density metrics of interest: counts per individual. 
 
 ```{r}
 # extract the legend from one of the plots
@@ -674,5 +676,34 @@ ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", targe
 
 ```
 
+![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities.png)  
 
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities.png)
+Generate a figure that has just the symbiont density metrics of interest: volume normalized counts. 
+
+```{r}
+# extract the legend from one of the plots
+legend <- get_legend(
+  # create some space to the left of the legend
+  legend_plot +  theme(legend.box.margin = margin(1,1,1,1))
+)
+
+cells_size_plotb<-cells_size_plot+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))+ylim(2000,85000)
+recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=10))+ylim(500,9000)
+
+target_plots2<- ggdraw(cells_size_plotb) +
+  draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
+  draw_plot_label(
+    c("A", "B"),
+    c(0.05, 0.2),
+    c(1, 0.96),
+    size = 16
+  );target_plots2
+
+target_plots_legend2<-plot_grid(target_plots2, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
+
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_volume.png", target_plots_legend2, dpi=300, width=8, height=6, units="in")
+
+```
+
+
+![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities_volume.png)  

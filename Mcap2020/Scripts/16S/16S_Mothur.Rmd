@@ -13,6 +13,16 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+
+RERUN THIS WITH THE NEW DATA  
+
+
+
+
+
+
+
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -53,7 +63,7 @@ Load data for use in analysis with PhyloSeq. Here we will import an OTU table an
 We will load "rare" files as those that were subsampled/rarefied.  
 
 ```{r}
-otu.rare<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.0.03.subsample.txt", sep='\t', header=TRUE)
+otu.rare<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.0.03.subsample.shared.txt", sep='\t', header=TRUE)
 otu.full<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.shared.txt", sep='\t', header=TRUE)
 
 taxonomy<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.taxonomy.txt", sep='\t', header=TRUE)
@@ -241,12 +251,25 @@ Check that they are identical. Should return TRUE.
 identical(physeq1_rare, physeq2_rare)
 ```
 
-Filter out samples with low numbers in groups from phyloseq object.  
+
+
+
+
+
+
+
+
+
+CHECK THIS BELOW TO SEE WHAT OUR SAMPLE SIZE IS FOR THESE!!! 
+
+
+
+Filter out samples with low numbers in groups from phyloseq object.   
 ```{r}
 physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Metamorphosed Recruit (183 hpf)")
 physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Egg (1 hpf)")
 physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (5 hpf)")
-physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (38 hpf)")
+#physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (38 hpf)")
 ```
 
 Now build a tree with the combined data.  
@@ -287,7 +310,7 @@ Plot with samples now.
 ```{r}
 p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
 p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset")
-
+p2
 ```
 
 We do see separation between lifestages!  
@@ -473,11 +496,6 @@ plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
 
 
-
-
-
-
-
 # **DESeq2 - Full dataset**  
 
 THERE IS SOMETHING GOING ON WITH THE PVALUE ADJUSTMENT HERE - all the values are close to 1 - high number of comparisons? But there must be significant drivers? 
@@ -530,7 +548,7 @@ diagdds_rare = DESeq(diagdds_rare, test="Wald", fitType="parametric")
 Look at results table.  
 ```{r}
 res_rare = results(diagdds_rare, cooksCutoff = FALSE)
-alpha = 1
+alpha = 0.05
 sigtab = res_rare[which(res_rare$padj < alpha), ]
 sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1_rare)[rownames(sigtab), ], "matrix"))
 head(sigtab)

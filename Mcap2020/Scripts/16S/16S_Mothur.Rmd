@@ -13,16 +13,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-
-RERUN THIS WITH THE NEW DATA  
-
-
-
-
-
-
-
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -250,18 +240,6 @@ Check that they are identical. Should return TRUE.
 ```{r}
 identical(physeq1_rare, physeq2_rare)
 ```
-
-
-
-
-
-
-
-
-
-
-CHECK THIS BELOW TO SEE WHAT OUR SAMPLE SIZE IS FOR THESE!!! 
-
 
 
 Filter out samples with low numbers in groups from phyloseq object.   

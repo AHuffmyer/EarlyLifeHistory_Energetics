@@ -1,0 +1,22 @@
+database aln                                      : /mnt/scratch/nfs_fs02/agave/mnt/scratch/nfs_fs02/agave/cen/job-4276025324426236396-242ac114-0001-007-ariana_feb22_1200_cen-16s-pipeline-uhhpc-0-0-2-1645219023/databases/silva.nr_v132.align
+database tax                                      : /mnt/scratch/nfs_fs02/agave/mnt/scratch/nfs_fs02/agave/cen/job-4276025324426236396-242ac114-0001-007-ariana_feb22_1200_cen-16s-pipeline-uhhpc-0-0-2-1645219023/databases/silva.full_v132.tax
+single end                                        : false
+min reads per sample                              : 50
+min read length                                   : 20
+read truncation                                   : 220,190
+max number of expected errors                     : 3
+quality truncation                                : 2
+keep phix genome                                  : false
+min overlap for merging                           : 20
+max mismatches for merging                        : 1
+Percentile for start/end contig filtering         : 95
+Minimum contig alignment length against db        : 50
+Filtered taxa                                     : unknown;-Bacteria;Proteobacteria;Alphaproteobacteria;Rickettsiales;Mitochondria;-Bacteria;Cyanobacteria;Oxyphotobacteria;Chloroplast;
+Skip subsampling                                  : false
+Subsampling                                       : 1200
+clustering similarity thresholds                  : 100,99,97
+Min OTU abundace filter                           : 2
+Lulu ratio type                                   : min
+Lulu parent/daughter min similarity               : 97
+Lulu parent/daughter min abundance ratio          : 1
+Lulu parent/daughter min co-occurrence            : 1

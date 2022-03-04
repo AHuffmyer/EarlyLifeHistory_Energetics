@@ -57,6 +57,8 @@ otu.rare<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.0.03.s
 otu.full<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.shared.txt", sep='\t', header=TRUE)
 
 taxonomy<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.taxonomy.txt", sep='\t', header=TRUE)
+
+rarefaction<-read.table("Mcap2020/Output/16S/mothur/TextFormat/mcap.opti_mcc.groups.rarefaction.txt", sep='\t', header=TRUE)
 ```
 
 Load sample information.  
@@ -75,6 +77,25 @@ Set default plot theme.
 ```{r}
 theme_set(theme_bw())
 ```
+
+Format columns of our taxonomy file. We need to separate by ; and remove the quotes. We also need to remove the confidence values.  
+```{r}
+head(taxonomy)
+
+taxonomy<-taxonomy%>%
+  mutate(Taxonomy=str_replace_all(string=Taxonomy, pattern="\\(\\d*\\)", replacement="")) %>% #remove parentheses with numbers
+	mutate(Taxonomy=str_replace_all(string=Taxonomy, pattern=";$", replacement="")) %>% #remove semicolons
+ # mutate(Taxonomy=str_replace_all(string=Taxonomy, pattern="*", replacement="")) %>% #remove quotes
+  #mutate(Taxonomy=str_replace_all(string=Taxonomy, pattern="""$", replacement="")) %>% #remove quotes
+	separate(Taxonomy, into=c("Domain", "Phylum", "Class", "Order", "Family", "Genus"), sep=";") #separate columns
+
+head(taxonomy)
+
+rownames(taxonomy)<-taxonomy$OTU
+taxonomy<-as.matrix(taxonomy)
+
+```
+
 
 # **Tree and heatmap for "full" dataset**  
 
@@ -100,9 +121,6 @@ taxonomy<-taxonomy%>%
   select(!Size)%>%
   select(!OTU)
 
-taxonomy<-taxonomy%>%
-   mutate_all(funs(str_replace_all(., "\\([^\\)]+\\)", ""))) #remove the certainty in parentheses for each taxa 
-
 taxonomy<-as.matrix(taxonomy)
 ```
 
@@ -123,9 +141,9 @@ Plot an abundance table at the different taxonomic levels.
 ```{r}
 plot_bar(physeq, fill = "Domain")+theme(legend.position="bottom")
 plot_bar(physeq, fill = "Phylum")+theme(legend.position="bottom")
-plot_bar(physeq, fill = "Class")+theme(legend.position="bottom")
-plot_bar(physeq, fill = "Order")+theme(legend.position="bottom")
-plot_bar(physeq, fill = "Family")+theme(legend.position="bottom")
+#plot_bar(physeq, fill = "Class")+theme(legend.position="bottom")
+#plot_bar(physeq, fill = "Order")+theme(legend.position="bottom")
+#plot_bar(physeq, fill = "Family")+theme(legend.position="bottom")
 ```
 
 Plot a tree of OTU's.  
@@ -214,8 +232,7 @@ Plot an abundance table at the different taxonomic levels.
 plot_bar(physeq_rare, fill = "Domain")+theme(legend.position="bottom")
 plot_bar(physeq_rare, fill = "Phylum")+theme(legend.position="bottom")
 plot_bar(physeq_rare, fill = "Class")+theme(legend.position="bottom")
-plot_bar(physeq_rare, fill = "Order")+theme(legend.position="bottom")
-plot_bar(physeq_rare, fill = "Family")+theme(legend.position="bottom")
+#plot_bar(physeq_rare, fill = "Order")+theme(legend.position="bottom")
 ```
 
 Plot a tree of OTU's.  
@@ -241,7 +258,6 @@ Check that they are identical. Should return TRUE.
 identical(physeq1_rare, physeq2_rare)
 ```
 
-
 Filter out samples with low numbers in groups from phyloseq object.   
 ```{r}
 physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Metamorphosed Recruit (183 hpf)")
@@ -261,6 +277,20 @@ Plot a heatmap.
 plot_heatmap(physeq1_rare, "NMDS", "bray", "lifestage", "Family", low="#66CCFF", high="#000033", na.value="white")
 ```  
 
+Plot relative abundance now with group information.  
+
+```{r}
+bar1<-plot_bar(physeq1_rare, fill = "Class")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
+ggsave(plot=bar1, file="Mcap2020/Figures/16S/relabund_class_rare.png", h=6, w=18)
+
+bar2<-plot_bar(physeq1_rare, fill = "Phylum")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
+ggsave(plot=bar2, file="Mcap2020/Figures/16S/relabund_phylum_rare.png", h=6, w=18)
+
+bar3<-plot_bar(physeq1_rare, fill = "Order")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
+ggsave(plot=bar3, file="Mcap2020/Figures/16S/relabund_order_rare.png", h=9, w=18)
+```
+
+
 # **NMDS of rarefied dataset**  
 
 ```{r}
@@ -270,10 +300,54 @@ GP1
 
 Transform to even sampling depth.  
 ```{r}
-GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
+#GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
 ```
 
-View ordination by OTU.  
+View ordinations: PCoA + unifrac.    
+```{r}
+GP.ord <- ordinate(GP1, "PCoA", "unifrac")
+p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
+```
+
+View faceted by Phylum.  
+```{r}
+p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset PCoA Unifrac")
+#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
+p2
+
+ggsave(plot=p2, filename="Mcap2020/Figures/16S/pcoa_unifrac_rare.png")
+```
+
+
+View ordinations: PCoA + bray curtis    
+```{r}
+GP.ord <- ordinate(GP1, "PCoA", "bray")
+p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
+```
+
+View faceted by Phylum.  
+```{r}
+p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset PCoA Bray Curtis")
+#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
+p2
+
+ggsave(plot=p2, filename="Mcap2020/Figures/16S/pcoa_bray_rare.png")
+```
+
+
+View ordinations: NMDS + bray curtis    
 ```{r}
 GP.ord <- ordinate(GP1, "NMDS", "bray")
 p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
@@ -287,26 +361,55 @@ p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
 Plot with samples now.  
 ```{r}
 p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset")
+p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset NMDS Bray Curtis")
+#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
 p2
+
+ggsave(plot=p2, filename="Mcap2020/Figures/16S/NMDS_bray_rare.png")
 ```
 
-We do see separation between lifestages!  
+
+View ordinations: NMDS + unifrac    
+```{r}
+GP.ord <- ordinate(GP1, "NMDS", "unifrac")
+p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
+```
+
+View faceted by Phylum.  
+```{r}
+p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
+```
+
+Plot with samples now.  
+```{r}
+p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset NMDS unifrac")
+#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
+p2
+
+ggsave(plot=p2, filename="Mcap2020/Figures/16S/NMDS_unifrac_rare.png")
+```
+
+
+We do see separation between lifestages.    
 
 Conduct a permanova in the vegan package.  
 
 ```{r}
+
 metadata <- as(sample_data(GP1), "data.frame")
 
 adonis(phyloseq::distance(GP1, method="bray") ~ lifestage,
        data = metadata)
+
+adonis(phyloseq::distance(GP1, method="unifrac") ~ lifestage,
+       data = metadata)
 ```
 
-There is significant difference in the centroids between life stages in the rarefied dataset.  
+There is significant difference in the centroids between life stages in the rarefied dataset for both unifrac and bray-curtis distance measures.  
 
 # **NMDS of full dataset**  
 
-Remove OTU's that do not show up at least 3 times in more than half the samples.  
 ```{r}
 GP1f = physeq1
 GP1f
@@ -394,7 +497,10 @@ plot_richness(GP2)
 
 Plot the two most commonly used - Shannon and Inverse Simpson.  
 ```{r}
-plot_richness(GP2, measures=c("InvSimpson", "Shannon"), x="lifestage", color="group")
+alpha1<-plot_richness(GP2, measures=c("InvSimpson", "Shannon", "Chao1"), x="lifestage", color="group")
+alpha1
+
+ggsave(plot=alpha1, file="Mcap2020/Figures/16S/alpha_rare.png")
 ```
 
 Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  
@@ -404,16 +510,17 @@ Test for differences in alpha diversity.
 metadata <- as(sample_data(GP2), "data.frame")
 metadata$sample<-rownames(metadata)
 
-alpha_rare<-estimate_richness(GP2, measures=c("InvSimpson", "Shannon"))
+alpha_rare<-estimate_richness(GP2, measures=c("InvSimpson", "Shannon", "Chao1"))
 alpha_rare$sample<-rownames(alpha_rare)
 
 alpha_rare<-full_join(metadata, alpha_rare, by="sample")
 
 summary(aov(Shannon~lifestage, data=alpha_rare))
 summary(aov(InvSimpson~lifestage, data=alpha_rare))
+summary(aov(Chao1~lifestage, data=alpha_rare))
 ```
 
-There are significant differences in alpha diversity between lifestages in both the full and rare datasets.   
+There are significant differences in alpha diversity between lifestages for all metrics.    
 
 # **Networks - Full dataset**  
 
@@ -460,6 +567,12 @@ The networks are not particularly informative for this dataset.  \
 Plot data at the level of phylum. Bacteria_unclassified are our unknowns.      
 ```{r}
 plot_bar(physeq1, fill="Phylum", facet_grid=~Phylum)
+
+p5<-plot_bar(physeq1, fill="Order", facet_grid=~Order)
+
+pdf(file="Mcap2020/Figures/16S/order_abund.pdf", height = 8, width = 100)
+p5 + theme(legend.position="none")
+dev.off()
 ```
 
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
@@ -511,7 +624,7 @@ Convert phyloseq object to DESeq2 object.
 
 Construct DESeq2 object looking at differences by lifestage.  
 ```{r}
-diagdds_rare = phyloseq_to_deseq2(physeq1_rare, ~ lifestage)
+diagdds_rare = phyloseq_to_deseq2(physeq1_rare, ~ group)
 
 gm_mean = function(x, na.rm=TRUE){
   exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
@@ -531,3 +644,5 @@ sigtab = res_rare[which(res_rare$padj < alpha), ]
 sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1_rare)[rownames(sigtab), ], "matrix"))
 head(sigtab)
 ```
+
+We do not get any members that are differential - why is this when we have group separation?   

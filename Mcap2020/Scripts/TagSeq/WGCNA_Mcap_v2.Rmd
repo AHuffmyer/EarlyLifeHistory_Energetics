@@ -7,8 +7,36 @@ editor_options:
   chunk_output_type: console
 ---
 
-Running WGCNA analysis of assembly with version 2 of the Mcap genome.  
+WGCNA analysis of TagSeq dataset across *M. capitata* lifestages in developmental time series collected in Hawaii in 2020. These scripts are based on scripts from Erin Chille's master's thesis at the University of Rhode Island (https://github.com/echille).  
 
+This script conducts WGCNA and DEG analysis of TagSeq data set using version 2 of the *M. capitata* genome made available through Rutgers (http://cyanophora.rutgers.edu/montipora/).  
+
+# Pipeline Overview
+
+1. Data preparation
+  + Load and format gene count matrix and align metadata
+  + Data filtering: PoverA and genefilter
+  + Outlier detection
+2. Generate DESeq object 
+3. View PCA and heatmap of samples
+
+
+4. Network construction and consensus module detection
+  + Examine outliers 
+  + Choosing a soft-thresholding power: Analysis of a network topology β  
+  + Identify modules using blockwiseModules 
+  
+  
+  + Relate modules to sample information  
+  + Relate modules to life stage
+  
+  
+  
+3. Plot module-trait associations
+4. Plot mean eigengene values for each module  
+5. Pathway analysis 
+
+# **Load libraries**  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -49,7 +77,7 @@ library("magrittr")
 
 ```
 
-# **Data input and filtering**  
+# **1. Data input and filtering**  
  
 Import the data files.  
 
@@ -69,16 +97,19 @@ metadata <- metadata%>%
   filter(!sample_id=="AH23")
 ```
 
-Check that there are no genes with 0 counts across all samples. Should return TRUE.  DOUBLE CHECK THIS PART!!!! MAYBE DO: 
+Check that there are no genes with 0 counts across all samples. 
 
 ```{r}
+nrow(gcount)
+
 gcount<-gcount %>%
      mutate(Total = rowSums(.[, 1:38]))%>%
     filter(!Total==0)%>%
     select(!Total)
-```
-There wer about 15,000 genes that had 0 across all rows.  
 
+nrow(gcount)
+```
+There were about 20,000 genes that had 0 across all rows. These were removed. We now have 34,667 genes.    
 
 Conduct data filtering, this includes:  
 
@@ -109,20 +140,15 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had approximately 35,000 genes. After filtering for pOverA, we have approximately 11,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+Before filtering, we had approximately 35,000 genes. After filtering for pOverA, we have approximately 10,600 genes. This indicates that there were many low count genes present in <7% of samples at <10 counts per gene.  
 
-In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
-```{r}
-#Checking that all row and column names match. Should return "TRUE"
-all(rownames(metadata$sample_id) %in% colnames(gcount_filt))
-all(rownames(metadata$sample_id) == colnames(gcount_filt)) 
-```
+In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. 
 
 Match metadata sample id's.  
 ```{r}
 result<-sub("_.*", "", colnames(gcount_filt)) #keep characters before _
 #result2<-sub(".*AH", "", result) #keep characters after X
-colnames(gcount_filt)<-result #keep just tube number 
+colnames(gcount_filt)<-result #keep just sample number 
 ```
 
 Order metadata the same as the column order in the gene matrix.  
@@ -139,12 +165,12 @@ metadata_ordered <- metadata[order(metadata$sample_id),]
 metadata_ordered$sample_id
 
 metadata_ordered<-metadata_ordered%>%
-  select(sample_id, lifestage)
+  select(sample_id, lifestage, hpf, code)
 ```
 
-# **Construct DESeq2 data set**  
+# **2. Construct DESeq2 data set**  
 
-Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.  
 ```{r}
 #Set DESeq2 design
 gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
@@ -171,7 +197,7 @@ gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to m
 head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
 ```
 
-# **Examine PCA and sample distances**  
+# **3. Examine PCA and sample distances**  
 
 Plot a heatmap to sample to sample distances  
 
@@ -182,16 +208,24 @@ rownames(gsampleDistMatrix) <- colnames(gvst) #assign row names
 colnames(gsampleDistMatrix) <- NULL #assign col names
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
 
-pdf("Mcap2020/Figures/TagSeq/GenomeV2/pheatmap.pdf")
-pht=pheatmap(gsampleDistMatrix, #plot matrix
+save_pheatmap_pdf <- function(x, filename, width=7, height=7) {
+   stopifnot(!missing(x))
+   stopifnot(!missing(filename))
+   pdf(filename, width=width, height=height)
+   grid::grid.newpage()
+   grid::grid.draw(x$gtable)
+   dev.off()
+}
+
+pht<-pheatmap(gsampleDistMatrix, #plot matrix
          clustering_distance_rows=gsampleDists, #cluster rows
          clustering_distance_cols=gsampleDists, #cluster columns
          col=colors) #set colors
-draw(pht)
-dev.off()
+
+save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/GenomeV2/pheatmap.pdf")
 ```
 
-Plot a PCA of samples by lifestages  
+Plot a PCA of samples by lifestages.    
 
 ```{r}
 gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE)
@@ -218,6 +252,469 @@ ggsave("Mcap2020/Figures/TagSeq/GenomeV2/allgenesfilt-PCA.pdf", allgenesfilt_PCA
 
 We still have strong life stage groupings with the new reference genome.   
 
+# **4. Network construction and consensus module detection**  
+
+## Examine outliers  
+
+Transpose the filtered gene count matrix so that the gene IDs are rows and the sample IDs are columns.
+```{r}
+datExpr <- as.data.frame(t(assay(gvst))) #transpose to output to a new data frame with the column names as row names. And make all data numeric
+```
+
+Check for genes and samples with too many missing values with goodSamplesGenes. There shouldn't be any because we performed pre-filtering. Code should return TRUE.  
+```{r}
+gsg = goodSamplesGenes(datExpr, verbose = 3)
+gsg$allOK #Should return TRUE if not, the R chunk below will take care of flagged data
+```
+
+Look for outliers by examining a tree of samples.    
+```{r}
+sampleTree = hclust(dist(datExpr), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+pdf("Mcap2020/Figures/TagSeq/GenomeV2/outliers.pdf")
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+```
+There don't look to be any outliers, so we will move on with business as usual.  
+
+## Choosing a soft-thresholding power: Analysis of network topology β  
+
+The soft thresholding power (β) is the number to which the co-expression similarity is raised to calculate adjacency. The function pickSoftThreshold performs a network topology analysis. The user chooses a set of candidate powers, however the default parameters are suitable values.  
+```{r, message=FALSE, warning=FALSE}
+allowWGCNAThreads()
+# # Choose a set of soft-thresholding powers
+powers <- c(seq(from = 1, to=19, by=2), c(21:30)) #Create a string of numbers from 1 through 10, and even numbers from 10 through 20
+# 
+# # Call the network topology analysis function
+sft <-pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+```
+
+Plot the results.  
+```{r}
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# # # Scale-free topology fit index as a function of the soft-thresholding power
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+     main = paste("Scale independence"));
+ text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
+     labels=powers,cex=cex1,col="red");
+# # # this line corresponds to using an R^2 cut-off
+ abline(h=0.9,col="red")
+# # # Mean connectivity as a function of the soft-thresholding power
+ plot(sft$fitIndices[,1], sft$fitIndices[,5],
+     xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+     main = paste("Mean connectivity"))
+ text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+```
+I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the lowest power before the R^2=0.9 threshold that maximizes with model fit.  
+
+## Identify modules using blockwiseModules  
+
+We will use blockwiseModules to identify modules of genes. We use a single block for this analysis. 
+
+We will use a signed network with deepSplit=2 (this value ranges from 0-4 with 4 being most sensitive and 1 being least sensitive). We will use a detect cut height of 0.95, a minimum module size of 20, and a merge cut height of 0.15, which will merge modules with 85% similarity.  
+
+``` {r, echo=TRUE, warning=FALSE, message=FALSE}
+
+picked_power = 5
+temp_cor <- cor       
+cor <- WGCNA::cor                                             # Force it to use WGCNA cor function (fix a namespace conflict issue)
+netwk <- blockwiseModules(datExpr,                            # <= input here
+
+                          # == Adjacency Function ==
+                          power = picked_power,               # <= power here
+                          networkType = "signed",             # network type (signed or unsigned)
+
+                          # == Tree and Block Options ==
+                          deepSplit = 2,
+                          pamStage=FALSE,
+                          pamRespectsDendro = F,
+                          detectCutHeight = 0.95, 
+                          minModuleSize = 20,                   #minimum size of module (# genes)
+                          maxBlockSize = 14000,                 #maximum size of blocks (analyze all in one block)
+                          
+                           # == Gene reassignment, module trimming, and module "significance" criteria ==
+
+                          #reassignThreshold = 1e-6,            #p-value for gene reassignment
+                          #minCoreKME = 0.5,                    #minimum module membership score 
+                          #minCoreKMESize = 6,
+                          #minKMEtoStay = 0.3,
+
+                          # == Module Adjustments ==
+                          #reassignThreshold = 0,
+                          mergeCutHeight = 0.15,               #merge 85% similar modules
+
+                          # == TOM == Archive the run results in TOM file (saves time) but it doesn't save a file
+                          saveTOMs = F,
+                          saveTOMFileBase = "ER",
+                          
+                          # == Output Options
+                          numericLabels = T,                   #use numeric labels for modules rather than colors 
+                          verbose = 3)
+
+cor <- temp_cor     # Return cor function to original namespace
+
+# Identify labels as numbers 
+mergedColors = netwk$colors
+
+# Plot the dendrogram and the module colors underneath
+
+pdf("Mcap2020/Figures/TagSeq/GenomeV2/blockwise_module_colors.pdf")
+plotDendroAndColors(
+  netwk$dendrograms[[1]],
+  mergedColors[netwk$blockGenes[[1]]],
+  "Module colors",
+  dendroLabels = FALSE,
+  hang = 0.03,
+  addGuide = TRUE,
+  guideHang = 0.05 )
+dev.off()
+```
+
+Now view the number of genes in each module detected.  
+```{r}
+table(mergedColors)
+```
+
+deepSplit=3 gives us 11 modules with 5685 in module 0
+deepSplit=2 gives us 7 modules with 3319 in module 0
+
+deepSplit=2 with mergecut=0.15 gives us 7 modules
+deepSplit=2 with mergecut=0.1 gives us 7 modules
+
+deepSplit=3 with mergecut=0.15 gives us 10 modules
+deepSplit=3 with mergecut=0.1 gives us 11 modules 
+
+
+
+
+
+WHY AM I GETTING DIFFERENT MODULE RESULTS THAN WITH THE V1 OF THE GENOME???? 
+
+BLOCKWISE MODULE RESULTS FROM V1 OF THE GENOME: 
+
+   0    1    2    3    4    5    6    7    8 
+1204 3536 2862 2725  720  541  372  165  112 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Co-expression adjacency and topological overlap matrix similarity  
+
+Adjacency and TOMsimilarity will be executed in supercomputer, Bluewaves, as our dataset is too large for most standard laptops to handle.
+
+Save Rdata necessary for analysis
+```{r}
+save(datExpr, file = "Mcap2020/Output/TagSeq/datExpr.RData")
+```
+
+Co-expression similarity and adjacency, using the soft thresholding power 5 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**: https://peterlangfelder.com/2018/11/25/__trashed/
+```{r, }
+# #Set up workspace
+#getwd() #Display the current working directory
+# #If necessary, change the path below to the directory where the data files are stored. "." means current directory. On Windows use a forward slash / instead of the usual \.
+#workingDir = ".";
+# setwd(WGCNA_dev);
+# library(WGCNA) #Load the WGCNA package
+options(stringsAsFactors = FALSE) #The following setting is important, do not omit.
+enableWGCNAThreads() #Allow multi-threading within WGCNA. 
+# 
+# #Load the data saved in the first part
+adjTOM <- load(file="Mcap2020/Output/TagSeq/datExpr.RData")
+adjTOM
+# 
+# #Run analysis
+softPower=5 #Set softPower to 5
+adjacency=adjacency(datExpr, power=softPower,type="signed") #Calculate adjacency
+
+TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topological overlap matrix
+#this step can take awhile 
+
+dissTOM= 1-TOM #Calculate dissimilarity in TOM
+
+save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
+
+save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
+```
+
+Load in dissTOM file obtained from previous R chunk.    
+```{r}
+dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
+dissTOM_in
+```
+
+### Clustering using TOM
+
+Form distance matrix
+```{r}
+geneTree= flashClust(as.dist(dissTOM), method="average")
+```
+
+We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.
+```{r}
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMClustering.pdf", width=20, height=20)
+plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
+dev.off()
+```
+
+### Module identification using dynamicTreeCut  
+
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. I chose 30 as it is the default value chosen by most studies using WGCNA. 
+
+```{r}
+minModuleSize = 30
+dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
+deepSplit = 2, pamRespectsDendro = FALSE,
+minClusterSize = minModuleSize)
+table(dynamicMods) #list modules and respective sizes
+save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData") #Save to load into RStudio
+```
+Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest.
+
+Load modules calculated from the adjacency matrix.  
+```{r}
+dyMod_geneTree <- load(file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData")
+dyMod_geneTree
+```
+
+Plot the module assignment under the gene dendrogram
+```{r}
+#dynamicColors = labels2colors(dynamicMods) # Convert numeric labels into colors
+dynamicColors=dynamicMods
+table(dynamicColors)
+
+pdf(file="Mcap2020/Figures/TagSeq/dissTOMColorClustering.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = "Gene dendrogram and module colors")
+dev.off()
+```
+
+### Merge modules with similar expression profiles  
+
+Plot module similarity based on eigengene value 
+```{r}
+#Calculate eigengenes
+MEList = moduleEigengenes(datExpr, colors = dynamicColors, softPower = 5)
+MEs = MEList$eigengenes
+
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+
+#Cluster again and plot the results
+METree = flashClust(as.dist(MEDiss), method = "average")
+
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering1.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+dev.off()
+```
+
+**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
+```{r}
+MEDissThres= 0.15 #merge modules that are 85% similar
+
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering2.pdf", width = 20)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+abline(h=MEDissThres, col="red")
+dev.off()
+
+merge= mergeCloseModules(datExpr, dynamicColors, cutHeight= MEDissThres, verbose =3)
+
+mergedColors= merge$colors
+mergedMEs= merge$newMEs
+
+pdf(file="Mcap2020/Figures/TagSeq/mergedClusters.pdf", width=20, height=20)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
+dev.off()
+```
+
+There are 9 modules before merging with 85% similarity.  
+
+Save new colors
+```{r}
+moduleLabels=mergedColors
+moduleColors = mergedColors # Rename to moduleColors
+#colorOrder = c("grey", standardColors(50)); # Construct numerical labels corresponding to the colors
+#moduleLabels = match(moduleColors, colorOrder)-1;
+MEs = mergedMEs;
+ncol(MEs) #How many modules do we have now?
+```
+
+We have 8 modules after merging with 85% similarity.   
+
+Plot new tree with 8 modules.  
+```{r}
+#Calculate dissimilarity of module eigengenes
+MEDiss = 1-cor(MEs)
+#Cluster again and plot the results
+pdf(file="Mcap2020/Figures/TagSeq/eigengeneClustering3.pdf")
+METree = flashClust(as.dist(MEDiss), method = "average")
+MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
+dev.off()
+```
+
+##  Relating modules to developmental stage
+
+### Quantifying module–trait associations
+
+Prepare trait data. Data has to be numeric, so I will substitute time_points and type for numeric values. The "trait" we are considering here is ontogeny.  
+
+Make a dataframe that has a column for each lifestage name and a row for samples. Populate a 1 for samples that match each lifestage and a 0 for samples not matching respective lifestages. 
+
+This process changes lifestages from a categorical variable into a binary variable. This will allow for correlations between mean eigengenes and lifestage.  
+ 
+```{r}
+metadata$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(metadata, names_from = lifestage, values_from = num, id_cols = sample_id))
+allTraits[is.na(allTraits)] <- c("0")
+rownames(allTraits) <- allTraits$sample_id
+datTraits <- allTraits[,c(-1)]
+datTraits
+```
+
+Define numbers of genes and samples and print.  
+```{r}
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
+
+nGenes
+nSamples
+```
+
+We have 12,237 genes and 38 samples.  
+
+Generate labels for module eigengenes as numbers.  
+```{r}
+MEs0 = moduleEigengenes(datExpr, moduleLabels,softPower=5)$eigengenes
+MEs = orderMEs(MEs0)
+names(MEs)
+```
+
+Correlations of traits with eigengenes
+```{r}
+moduleTraitCor = cor(MEs, datTraits, use = "p");
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
+Colors=sub("ME","", names(MEs))
+
+moduleTraitTree = hclust(dist(t(moduleTraitCor)), method = "average")
+
+pdf(file="Mcap2020/Figures/TagSeq/ModuleTraitClusterTree.pdf")
+plot(moduleTraitTree)
+dev.off()
+```
+
+Correlations of genes with eigengenes. Calculate correlations between ME's and lifestages. 
+```{r}
+
+moduleGeneCor=cor(MEs,datExpr)
+moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
+```
+
+Calculate kME values (module membership). 
+
+```{r}
+datKME = signedKME(datExpr, MEs, outputColumnName = "kME")
+head(datKME)
+```
+
+Save module colors and labels for use in subsequent analyses.  
+
+```{r}
+save(MEs, moduleLabels, moduleColors, geneTree, file = "Mcap2020/Output/TagSeq/NetworkConstruction-stepByStep.RData") 
+
+```
+
+### Plot module-trait associations
+
+Represent module trait correlations as a heatmap 
+```{r}
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+head(textMatrix)
+
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+
+pdf(file="Mcap2020/Figures/TagSeq/Module-trait-relationships.pdf")
+labeledHeatmap(Matrix = moduleTraitCor, xLabels = names(datTraits),  yLabels = names(MEs), ySymbols = names(MEs), cex.lab.y= 0.55, cex.lab.x= 0.55, colors = blueWhiteRed(50), textMatrix = textMatrix, setStdMargins = TRUE, cex.text = 0.25, textAdj = , zlim = c(-1,1), main = paste("Module-trait relationships"))
+dev.off()
+```
+
+Generate a complex heatmap of module-trait relationships.  
+
+```{r}
+#bold sig p-values
+#dendrogram with WGCNA MEtree cut-off
+#colored y-axis
+
+#Create list of pvalues for eigengene correlation with specific life stages
+heatmappval <- signif(moduleTraitPvalue, 1)
+
+#Make list of heatmap row colors
+htmap.colors <- names(MEs)
+htmap.colors <- gsub("ME", "", htmap.colors)
+
+lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+
+library(dendsort)
+row_dend = dendsort(hclust(dist(moduleTraitCor)))
+col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
+
+pdf(file = "Mcap2020/Figures/TagSeq/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
+ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Lifestage Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(5, "in"), 
+        height = unit(4.5, "in"), 
+        column_dend_reorder = TRUE, 
+        #cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"),
+        cluster_columns = col_dend,
+        row_dend_reorder = TRUE,
+        column_split = 6, 
+        column_dend_height = unit(.5, "in"),
+        #cluster_rows = METree, 
+        cluster_rows = row_dend, 
+        row_gap = unit(2.5, "mm"), 
+        border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] < 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+draw(ht)
+dev.off()
+
+```
 
 
 

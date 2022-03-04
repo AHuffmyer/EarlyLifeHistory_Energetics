@@ -99,6 +99,8 @@ echo "Cleaned MultiQC report generated." $(date)
 sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/qc.sh
 ```
 
+
+
 # 3. HISAT2  
 
 Obtain reference genome assembly and gff annotation file 

@@ -22,27 +22,6 @@ Unzip gff file
 gunzip sequences/Montipora_capitata_HIv2.genes.gff3.gz
 ```
 
-Transfer the gff file to the local computer and run the FixGeMoMa R script. I am offloading to look at the output in more detail, but this can be run as an R script on Andromeda in the future.  
-
-V2 gff file 
-
-```
-scp ashuffmyer@ssh3.hac.uri.edu:/data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences/Montipora_capitata_HIv2.genes.gff3 ~/MyProjects/EarlyLifeHistory_Energetics/Mcap2020/Data/TagSeq
-```
-
-V1 gff file
-
-```
-scp ashuffmyer@ssh3.hac.uri.edu:/data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences/Mcap.GFFannotation.gff ~/MyProjects/EarlyLifeHistory_Energetics/Mcap2020/Data/TagSeq
-```
-
-
-
-Upload back to Andromeda.  
-
-
-
-
 ```
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/align_v2.sh
 ```
@@ -55,7 +34,7 @@ nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/align_v2.sh
 #SBATCH --mem=200GB
 #SBATCH --mail-type=BEGIN,END,FAIL #email you when job starts, stops and/or fails
 #SBATCH --mail-user=ashuffmyer@uri.edu #your email to send notifications
-#SBATCH --account=putnamlab                  
+#SBATCH --partition=putnamlab                  
 #SBATCH --error="alignV2_error" #if your job fails, the error report will be put in this file
 #SBATCH --output="alignV2_output" #once your job is completed, any final job report comments will be put in this file
 #SBATCH -D /data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences
@@ -91,10 +70,9 @@ sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/align_v2.sh
 
 This creates a .bam file for each sample.  
 
+
+
 # 2. Stringtie 2  
-
-
-IS THE PROBLEM IN THE "FIXED GFF"????? Do we need to run GeMoMA??? Looks like that just corrects gene names? Do we need to do this? 
 
 ```
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/stringtie_v2.sh

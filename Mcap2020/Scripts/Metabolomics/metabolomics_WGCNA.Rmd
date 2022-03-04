@@ -427,7 +427,7 @@ dev.off()
 
 ```
 
-# 3. Plot module triat associations with a complex heatmap   
+# 3. Plot module trait associations with a complex heatmap   
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 #bold sig p-values

@@ -69,38 +69,17 @@ metadata <- metadata%>%
   filter(!sample_id=="AH23")
 ```
 
-Pivot longer the data frame for initial visualization. Plot sample vs counts to identify any obvious outliers in the data.  
-```{r}
-pdata<- gcount %>% 
-  tidyr::pivot_longer( 
-    .,                        
-    col = starts_with("AH")
-    )
-```
+Check that there are no genes with 0 counts across all samples.
 
 ```{r}
-#this may take some time to plot 
- p <- pdata %>%
-    ggplot(., aes(x = name, y = value)) +             # x = treatment, y = gene count
-    geom_violin() +                                   # violin plot, show distribution
-    geom_point(alpha = 0.2) +                         # scatter plot
-    theme_bw() +
-    theme(
-      axis.text.x = element_text(angle = 90)          # Rotate text
-    ) +
-    labs(x = "Sample ID", y = "Gene Counts"); p      
-```
-
-Check that there are no genes with 0 counts across all samples. Should return TRUE.  DOUBLE CHECK THIS PART!!!! MAYBE DO: 
-
-genes<-genes %>%
-     mutate(Total = rowSums(.[, 2:40]))%>%
+nrow(gcount)
+gcount<-gcount %>%
+     mutate(Total = rowSums(.[, 1:38]))%>%
     filter(!Total==0)%>%
     select(!Total)
-
-```{r}
-rowSums(dplyr::count(gcount)) > 0
+nrow(gcount)
 ```
+We had 63,000 genes, which was filtered down to 39,000 by removing genes with row sums of 0.  
 
 Conduct data filtering, this includes:  
 
@@ -131,7 +110,7 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had approximately 63,000 genes. After filtering for pOverA, we have approximately 12,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+Before filtering, we had approximately 39,000 genes. After filtering for pOverA, we have approximately 12,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
 
 In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
 ```{r}
@@ -182,13 +161,21 @@ rownames(gsampleDistMatrix) <- colnames(gvst) #assign row names
 colnames(gsampleDistMatrix) <- NULL #assign col names
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
 
-pdf("Mcap2020/Figures/TagSeq/pheatmap.pdf")
-pht=pheatmap(gsampleDistMatrix, #plot matrix
+save_pheatmap_pdf <- function(x, filename, width=7, height=7) {
+   stopifnot(!missing(x))
+   stopifnot(!missing(filename))
+   pdf(filename, width=width, height=height)
+   grid::grid.newpage()
+   grid::grid.draw(x$gtable)
+   dev.off()
+}
+
+pht<-pheatmap(gsampleDistMatrix, #plot matrix
          clustering_distance_rows=gsampleDists, #cluster rows
          clustering_distance_cols=gsampleDists, #cluster columns
          col=colors) #set colors
-draw(pht)
-dev.off()
+
+save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/pheatmap.pdf")
 ```
 
 Plot a PCA of samples by lifestages  
@@ -326,25 +313,25 @@ TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topol
 
 dissTOM= 1-TOM #Calculate dissimilarity in TOM
 
-save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
+#save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
 
-save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
+#save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
 ```
 
 Load in dissTOM file obtained from previous R chunk.    
 ```{r}
-dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
-dissTOM_in
+#dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
+#dissTOM_in
 ```
 
 ### Clustering using TOM
 
-Form distance matrix
+Form distance matrix  
 ```{r}
 geneTree= flashClust(as.dist(dissTOM), method="average")
 ```
 
-We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.
+We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.  
 ```{r}
 pdf(file="Mcap2020/Figures/TagSeq/dissTOMClustering.pdf", width=20, height=20)
 plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarity", labels= FALSE,hang=0.04)
@@ -445,6 +432,97 @@ MEtreePlot = plot(METree, main = "Clustering of module eigengenes", xlab = "", s
 dev.off()
 ```
 
+Display table of module gene counts.  
+
+```{r}
+table(mergedColors)
+```
+
+
+  1    2    3    5    6    7    8    9 
+3930 3352 3185  730  496  372   91   81 
+
+
+### Identify modules using BlockWise Modules 
+
+We will also try using blockwiseModules to identify modules of genes and will analyze all modules in one "block".     
+
+``` {r, echo=TRUE, warning=FALSE, message=FALSE}
+
+picked_power = 5
+temp_cor <- cor       
+cor <- WGCNA::cor                                             # Force it to use WGCNA cor function (fix a namespace conflict issue)
+netwk <- blockwiseModules(datExpr,                            # <= input here
+
+                          # == Adjacency Function ==
+                          power = picked_power,               # <= power here
+                          networkType = "signed",             # network type (signed or unsigned)
+
+                          # == Tree and Block Options ==
+                          deepSplit = 2,
+                          pamRespectsDendro = F,
+                          detectCutHeight = 0.95, 
+                          #minModuleSize = min(20, ncol(datExpr)/2), 
+                          minModuleSize = 30,                  #minimum size of module (# genes)
+                          maxBlockSize = 13000,                 #maximum size of blocks (analyze all in one block)
+                          
+                           # == Gene reassignment, module trimming, and module "significance" criteria ==
+
+                          reassignThreshold = 1e-6,            #p-value for gene reassignment
+                          minCoreKME = 0.5,                    #minimum module membership score 
+                          minCoreKMESize = minModuleSize/3,
+                          minKMEtoStay = 0.3,
+
+                          # == Module Adjustments ==
+                          #reassignThreshold = 0,
+                          mergeCutHeight = 0.15,               #merge 85% similar modules
+
+                          # == TOM == Archive the run results in TOM file (saves time) but it doesn't save a file
+                          saveTOMs = F,
+                          saveTOMFileBase = "ER",
+
+                          # == Output Options
+                          numericLabels = T,
+                          verbose = 3)
+
+cor <- temp_cor     # Return cor function to original namespace
+
+# Identify labels as numbers 
+mergedColors = netwk$colors
+
+# Plot the dendrogram and the module colors underneath
+
+pdf("Mcap2020/Figures/TagSeq/blockwise_module_colors.pdf")
+plotDendroAndColors(
+  netwk$dendrograms[[1]],
+  mergedColors[netwk$blockGenes[[1]]],
+  "Module colors",
+  dendroLabels = FALSE,
+  hang = 0.03,
+  addGuide = TRUE,
+  guideHang = 0.05 )
+dev.off()
+```
+
+```{r}
+table(mergedColors)
+```
+
+   0    1    2    3    4    5    6    7    8 
+1204 3536 2862 2725  720  541  372  165  112 
+
+Blockwise also gives us 8 modules, dynamic tree cut gives us 8 modules. Blockwise modules has more genes in the modules than dynamic tree cut. 
+
+
+
+
+
+
+
+
+
+
+
 ##  Relating modules to developmental stage
 
 ### Quantifying module–trait associations
@@ -477,7 +555,7 @@ We have 12,237 genes and 38 samples.
 
 Generate labels for module eigengenes as numbers.  
 ```{r}
-MEs0 = moduleEigengenes(datExpr, moduleLabels,softPower=5)$eigengenes
+MEs0 = moduleEigengenes(datExpr, moduleLabels, softPower=5)$eigengenes
 MEs = orderMEs(MEs0)
 names(MEs)
 ```

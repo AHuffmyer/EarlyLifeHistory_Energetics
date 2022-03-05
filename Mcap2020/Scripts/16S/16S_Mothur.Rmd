@@ -290,7 +290,10 @@ bar3<-plot_bar(physeq1_rare, fill = "Order")+theme(legend.position="bottom")+fac
 ggsave(plot=bar3, file="Mcap2020/Figures/16S/relabund_order_rare.png", h=9, w=18)
 
 bar4<-plot_bar(physeq1_rare, fill = "Family")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar4, file="Mcap2020/Figures/16S/relabund_family_rare.png", h=9, w=18)
+ggsave(plot=bar4, file="Mcap2020/Figures/16S/relabund_family_rare.png", h=12, w=18)
+
+bar5<-plot_bar(physeq1_rare, fill = "Genus")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
+ggsave(plot=bar5, file="Mcap2020/Figures/16S/relabund_genus_rare.png", h=25, w=18)
 ```
 
 

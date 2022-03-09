@@ -227,12 +227,21 @@ physeq_rare = phyloseq(OTU_rare, TAX)
 physeq_rare
 ```
 
+Filter out least abundant taxa.  
+
+```{r}
+physeq_rare_f  = transform_sample_counts(physeq_rare, function(x) x / sum(x) )
+physeq_rare = filter_taxa(physeq_rare_f, function(x) mean(x) > 1e-3, TRUE)
+```
+
 Plot an abundance table at the different taxonomic levels.    
 ```{r}
 plot_bar(physeq_rare, fill = "Domain")+theme(legend.position="bottom")
 plot_bar(physeq_rare, fill = "Phylum")+theme(legend.position="bottom")
 plot_bar(physeq_rare, fill = "Class")+theme(legend.position="bottom")
-#plot_bar(physeq_rare, fill = "Order")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Order")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Family")+theme(legend.position="bottom")
+plot_bar(physeq_rare, fill = "Genus")+theme(legend.position="bottom")
 ```
 
 Plot a tree of OTU's.  

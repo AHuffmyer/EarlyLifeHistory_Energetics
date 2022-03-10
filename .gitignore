@@ -8,3 +8,6 @@
 **/._.DS_Store
 .fastq
 .fastq.gz
+**/.fastq
+**/.fastq.gz 
+

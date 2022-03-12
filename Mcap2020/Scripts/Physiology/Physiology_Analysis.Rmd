@@ -488,7 +488,7 @@ cells_size_plot<-corr %>%
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-3))))+
+    ylab(expression(bold(paste("Volume-normalized cell density (mm"^-3,")"))))+
     #ylim(2000, 35000)+
     theme_classic() + 
     theme(
@@ -595,7 +595,7 @@ recruit_size_plot<-corr %>%
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
+    ylab(expression(bold(paste("Surface area-normalized cell density (mm"^-2,")"))))+
     #ylim(2000, 35000)+
     theme_classic() + 
     theme(
@@ -670,7 +670,7 @@ target_plots<- ggdraw(symb_plot2b) +
     size = 16
   );target_plots
 
-target_plots_legend<-plot_grid(target_plots, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
+target_plots_legend<-plot_grid(symb_plot2b, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
 
 ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=8, height=6, units="in")
 
@@ -688,20 +688,20 @@ legend <- get_legend(
 )
 
 cells_size_plotb<-cells_size_plot+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))+ylim(2000,85000)
-recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=10))+ylim(500,9000)
+recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=14))+ylim(0,8000)
 
-target_plots2<- ggdraw(cells_size_plotb) +
-  draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
-  draw_plot_label(
-    c("A", "B"),
-    c(0.05, 0.2),
-    c(1, 0.96),
-    size = 16
-  );target_plots2
+#target_plots2<- ggdraw(cells_size_plotb) +
+  #draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
+  #draw_plot_label(
+   # c("A", "B"),
+  #c(0.05, 0.2),
+   # c(1, 0.96),
+    #size = 16
+  #);target_plots2
 
-target_plots_legend2<-plot_grid(target_plots2, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
+target_plots_legend2<-plot_grid(cells_size_plotb, recruit_size_plot2, legend, labels=c("A", "B"), rel_widths = c(3,1.3, 1), ncol=3, nrow=1)
 
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_volume.png", target_plots_legend2, dpi=300, width=8, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_volume.png", target_plots_legend2, dpi=300, width=10, height=6, units="in")
 
 ```
 

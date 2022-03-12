@@ -225,7 +225,6 @@ dev.off()
 
 No clear outliers.  
 
-
 # 2. Network construction and consensus module detection  
 
 ## Choosing a soft-thresholding power: Analysis of network topology β  
@@ -541,8 +540,16 @@ expression_plots<-mME_meta%>%
         legend.title=element_blank(), 
         legend.text=element_text(color="black", size=12)); expression_plots
 
-ggsave(filename="Mcap2020/Figures//Metabolomics/WGCNA/expression_eigengene.jpeg", plot=expression_plots, dpi=300, width=12, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene.jpeg", plot=expression_plots, dpi=300, width=12, height=8, units="in")
 
+head(mME_meta)
+
+```
+
+Output eigengene values to a data frame.  
+
+```{r}
+write.csv(mME_meta, "Mcap2020/Output/Metabolomics/WGCNA/module_expression.csv")
 ```
 
 Plot by time point with module clusters.  
@@ -572,7 +579,7 @@ expression_plots_cluster<-mME_meta%>%
         legend.text=element_text(color="black", size=12), 
         strip.text.y = element_text(size = 14, color = "black", face = "bold.italic")); expression_plots_cluster
 
-ggsave(filename="Mcap2020/Figures//Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=7, height=10, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=7, height=10, units="in")
 
 ``` 
 

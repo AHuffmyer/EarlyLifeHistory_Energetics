@@ -258,9 +258,6 @@ ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_v
 ```
 
 
-
-
-
 # **WGCNA analysis using Dynamic Tree Cut**  
 
 Data are analyzed using dynamic tree cut approach, our data set is not large enough to have to use blockwiseModules to break data into "blocks". This code uses step by step network analysis and module detection based on scripts from https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/index.html. 
@@ -1184,6 +1181,415 @@ Next Run GOMWU script in TagSeq Output folder.
 
 # **Tracking expression of specific genes**  
 
+## Plot function specific genes of interest  
 
+Format our gene vst data frame for plotting.  
+```{r}
+gene_expr<-as.matrix(datExpr)
+gene_expr<-t(gene_expr)
+gene_expr<-as.data.frame(gene_expr, row.names = rownames(gene_expr), make.names=TRUE)
+```
 
+Create list of expression of genes for carbonic anhydrase: 
+
+```{r}
+carbanhyd<-c("adi2mcaRNA26720_R2", "adi2mcaRNA26720_R3")
+
+carbanhyd_genes<-gene_expr[rownames(gene_expr) %in% carbanhyd, ]
+carbanhyd_genes
+
+carbanhyd_genes$Function<-c("Carbonic Anhydrase")
+carbanhyd_genes$gene_id<-rownames(carbanhyd_genes)
+rownames(carbanhyd_genes) <- NULL
+```
+
+Create list of expression of genes for glycogen synthase: 
+
+```{r}
+glycsyn<-c("g16014", "g19866")
+glycsyn_genes<-gene_expr[rownames(gene_expr) %in% glycsyn, ]
+glycsyn_genes
+
+glycsyn_genes$Function<-c("Glycogen Synthase")
+glycsyn_genes$gene_id<-rownames(glycsyn_genes)
+rownames(glycsyn_genes) <- NULL
+```
+
+Create list of expression of genes for sugar transporters: 
+
+```{r}
+sugartr<-c("g24450", "g62860", "g12293")
+sugartr_genes<-gene_expr[rownames(gene_expr) %in% sugartr, ]
+sugartr_genes
+
+sugartr_genes$Function<-c("Sugar Transporter")
+sugartr_genes$gene_id<-rownames(sugartr_genes)
+rownames(sugartr_genes) <- NULL
+```
+
+Create list of expression of genes for ammonium transporters: 
+
+```{r}
+ammontr<-c("adi2mcaRNA16885_R0", "adi2mcaRNA8162_R0", "g13023", "g15870", "g16203", "g21992", "g26425")
+ammontr_genes<-gene_expr[rownames(gene_expr) %in% ammontr, ]
+ammontr_genes
+
+ammontr_genes$Function<-c("Ammonium Transporter")
+ammontr_genes$gene_id<-rownames(ammontr_genes)
+rownames(ammontr_genes) <- NULL
+```
+
+Create list of expression of genes for acetyl CoA carboxylase: 
+
+```{r}
+acetylcarb<-c("g4402", "g52786")
+acetylcarb_genes<-gene_expr[rownames(gene_expr) %in% acetylcarb, ]
+acetylcarb_genes
+
+acetylcarb_genes$Function<-c("Acetyl CoA Carboxylase")
+acetylcarb_genes$gene_id<-rownames(acetylcarb_genes)
+rownames(acetylcarb_genes) <- NULL
+```
+
+Create list of expression of genes for glutathione peroxidase activity: 
+
+```{r}
+glutperox<-c("g26468", "g30035", "g34381", "g50455")
+glutperox_genes<-gene_expr[rownames(gene_expr) %in% glutperox, ]
+glutperox_genes
+
+glutperox_genes$Function<-c("Glutathione Peroxidase")
+glutperox_genes$gene_id<-rownames(glutperox_genes)
+rownames(glutperox_genes) <- NULL
+```
+
+Create list of expression of genes for glucose transporters: 
+
+```{r}
+gluctr<-c("g65554", "g27005")
+gluctr_genes<-gene_expr[rownames(gene_expr) %in% gluctr, ]
+gluctr_genes
+
+gluctr_genes$Function<-c("Glucose Transporter")
+gluctr_genes$gene_id<-rownames(gluctr_genes)
+rownames(gluctr_genes) <- NULL
+```
+
+Create list of expression of genes for solute transporters: 
+
+```{r}
+solutetr<-c("g68935", "adi2mcaRNA15205_R0", "adi2mcaRNA5856_R0", "adi2mcaRNA9950_R0", "g14988", "g15720", "g22279")
+solutetr_genes<-gene_expr[rownames(gene_expr) %in% solutetr, ]
+solutetr_genes
+
+solutetr_genes$Function<-c("Solute Transporter")
+solutetr_genes$gene_id<-rownames(solutetr_genes)
+rownames(solutetr_genes) <- NULL
+```
+
+Create list of expression of genes for H+ATPase: 
+
+```{r}
+atpase<-c("g36721", "g42331", "g58299")
+atpase_genes<-gene_expr[rownames(gene_expr) %in% atpase, ]
+atpase_genes
+
+atpase_genes$Function<-c("H+ ATPase")
+atpase_genes$gene_id<-rownames(atpase_genes)
+rownames(atpase_genes) <- NULL
+```
+
+Create list of expression of genes for glucose homeostasis: 
+
+```{r}
+glucosehomeo<-c("g16598", "g64416")
+glucosehomeo_genes<-gene_expr[rownames(gene_expr) %in% glucosehomeo, ]
+glucosehomeo_genes
+
+glucosehomeo_genes$Function<-c("Glucose Homeostasis")
+glucosehomeo_genes$gene_id<-rownames(glucosehomeo_genes)
+rownames(glucosehomeo_genes) <- NULL
+```
+
+Bring all of the data frames together.  
+carbanhyd_genes
+glycsyn_genes
+sugartr_genes
+ammontr_genes
+acetylcarb_genes
+glutperox_genes
+solutetr_genes
+atpase_genes
+glucosehomeo_genes
+
+```{r}
+specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, sugartr_genes, ammontr_genes, acetylcarb_genes, glutperox_genes, solutetr_genes, atpase_genes, glucosehomeo_genes)
+```
+
+Gather the data set and merge in metadata information.  
+
+```{r}
+specific_genes<-specific_genes%>%
+  gather(key="Sample", value="vst", 1:38)
+
+specific_genes$lifestage<-metadata_ordered$code[match(specific_genes$Sample, metadata_ordered$sample_id)]
+```
+
+Plot the data for each function.  
+
+Plot H+ATPase
+```{r}
+lifestage_order<-c("Egg", "Embryo", "Larvae1", "Larvae2", "Larvae3", "Larvae4", "Larvae6", "Recruit2", "Recruit1plug", "Recruit2plug")
+
+specific_genes$lifestage<-factor(specific_genes$lifestage, levels = lifestage_order)
+  
+atpase_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="H+ ATPase")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); atpase_plot
+```
+
+Plot Acetyl CoA Carboxylase
+
+```{r}
+acetyl_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Acetyl CoA Carboxylase")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); acetyl_plot
+```
+
+Plot Carbonic Anhydrase
+
+```{r}
+anhydrase_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Carbonic Anhydrase")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); anhydrase_plot
+```
+
+Plot Ammonium Transporter
+
+```{r}
+ammonium_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Ammonium Transporter")%>%
+    #filter(gene_id=="g26425")%>%
+    ggplot(., aes(x = lifestage, y = mean, group=gene_id, linetype=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); ammonium_plot
+```
+
+Plot Glucose Homeostasis
+
+```{r}
+glucose_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Glucose Homeostasis")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); glucose_plot
+```
+
+Plot Glutathione Peroxidase
+
+```{r}
+glutathione_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Glutathione Peroxidase")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); glutathione_plot
+```
+
+Plot Glycogen Synthase
+
+```{r}
+glycogen_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Glycogen Synthase")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); glycogen_plot
+```
+
+Plot Solute Transporter
+
+```{r}
+solute_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Solute Transporter")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); solute_plot
+```
+
+Plot Sugar Transporter
+
+```{r}
+sugar_plot<-specific_genes%>%
+    group_by(Function, gene_id, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Sugar Transporter")%>%
+    ggplot(., aes(x = lifestage, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); sugar_plot
+```
+
+Assemble all plots together.  
+```{r}
+library(cowplot)
+
+gene_plots<-plot_grid(anhydrase_plot, acetyl_plot, ammonium_plot, atpase_plot, glucose_plot, glutathione_plot, glycogen_plot, solute_plot, sugar_plot, ncol=5, nrow=2, align="h")
+                      
+ggsave(filename="Mcap2020/Figures/TagSeq/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=16, height=6, units="in")
+```
 

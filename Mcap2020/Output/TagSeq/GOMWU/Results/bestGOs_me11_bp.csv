@@ -1,0 +1,5 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"36",0,4.74920161214578e-07,4,38,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
+"40",0,1.23636404623121e-07,5,63,"GO:0006486;GO:0043413;GO:0070085","protein glycosylation",0
+"46",0,7.31414030298883e-06,3,46,"GO:0006518;GO:0043603","cellular amide metabolic process",0
+"121",0,2.68182791132775e-05,2,49,"GO:0016071","mRNA metabolic process",0

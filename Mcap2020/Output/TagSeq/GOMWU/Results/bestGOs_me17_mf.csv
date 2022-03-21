@@ -1,0 +1,4 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"11",0,5.67813824009679e-11,2,320,"GO:0003677","DNA binding",0
+"78",0,3.4772212462822e-06,2,54,"GO:0004713","protein tyrosine kinase activity",0
+"84",0,4.95942588149123e-05,4,68,"GO:0004842;GO:0019787","ubiquitin-protein transferase activity",0.00714285714285714

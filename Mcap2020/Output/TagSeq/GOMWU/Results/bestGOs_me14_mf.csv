@@ -1,0 +1,8 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"8",0,5.22323791384077e-07,2,86,"GO:0000981","DNA-binding transcription factor activity, RNA polymerase II-specific",0
+"21",0,8.16279406534875e-08,2,120,"GO:0003735","structural constituent of ribosome",0
+"80",0,1.50546324386948e-06,2,54,"GO:0004713","protein tyrosine kinase activity",0
+"89",0,9.64564270753407e-05,3,26,"GO:0004866;GO:0030414;GO:0061135;GO:0061134","peptidase inhibitor activity",0.00357142857142857
+"99",0,1.46910117320287e-11,1,163,"GO:0005198","structural molecule activity",0
+"116",0,5.00862502699143e-08,2,328,"GO:0005509","calcium ion binding",0
+"236",0,2.6443244398465e-05,2,296,"GO:0022857;GO:0005215","transporter activity",0.00454545454545455

@@ -1,0 +1,9 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"9",0,5.50668207651837e-09,3,86,"GO:0000981","DNA-binding transcription factor activity, RNA polymerase II-specific",0
+"20",0,1.10383169123338e-05,2,245,"GO:0003723","RNA binding",0
+"22",0,2.57053746401704e-18,2,120,"GO:0003735","structural constituent of ribosome",0
+"52",0,6.28361370835075e-05,2,12,"GO:0004298;GO:0070003","threonine-type endopeptidase activity",0.00909090909090909
+"97",0,4.61593912311981e-12,1,163,"GO:0005198","structural molecule activity",0
+"143",0,7.35065656812562e-06,4,20,"GO:0008484","sulfuric ester hydrolase activity",0
+"147",0,9.5080744582488e-06,3,30,"GO:0009055","electron transfer activity",0
+"210",0,6.69733734446267e-05,3,22,"GO:0016879","ligase activity, forming carbon-nitrogen bonds",0.00833333333333333

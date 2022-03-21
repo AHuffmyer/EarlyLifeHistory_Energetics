@@ -63,7 +63,8 @@ gcount <- as.data.frame(read.csv("Mcap2020/Output/TagSeq/Mcapitata_gene_count_ma
 head(gcount)
 
 #remove metamorphosed recruit 1 because this was the timepoint that we only had one sample for: D36, AH23
-gcount<-gcount[ , !(names(gcount) %in% c("AH23"))]
+#gcount<-gcount[ , !(names(gcount) %in% c("AH23"))]
+gcount<-gcount[ , !(names(gcount) %in% c("AH23_S54_L002.gtf"))]
 
 metadata <- metadata%>%
   filter(!sample_id=="AH23")
@@ -88,7 +89,7 @@ Conduct data filtering, this includes:
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 
 ```{r}
-filt <- filterfun(pOverA(0.07,10))
+filt <- filterfun(pOverA(0.07,5))
 
 #create filter for the counts data
 gfilt <- genefilter(gcount, filt)
@@ -110,7 +111,7 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had approximately 39,000 genes. After filtering for pOverA, we have approximately 12,000 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+Before filtering, we had approximately 39,000 genes. After filtering for pOverA, we have approximately 15,000 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
 
 In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
 ```{r}
@@ -119,6 +120,35 @@ all(rownames(metadata$sample_id) %in% colnames(gcount_filt))
 all(rownames(metadata$sample_id) == colnames(gcount_filt)) 
 ```
 
+Match metadata sample id's.  
+```{r}
+result<-sub("_.*", "", colnames(gcount_filt)) #keep characters before _
+#result2<-sub(".*AH", "", result) #keep characters after X
+colnames(gcount_filt)<-result #keep just sample number 
+```
+
+Display current order of metadata and gene count matrix.  
+```{r}
+metadata$sample_id
+colnames(gcount_filt)
+```
+
+Order metadata the same as the column order in the gene matrix.  
+```{r}
+list<-colnames(gcount_filt)
+list<-as.factor(list)
+
+metadata$sample_id<-as.factor(metadata$sample_id)
+
+# Re-order the levels
+metadata$sample_id <- factor(as.character(metadata$sample_id), levels=list)
+# Re-order the data.frame
+metadata_ordered <- metadata[order(metadata$sample_id),]
+metadata_ordered$sample_id
+
+metadata_ordered<-metadata_ordered%>%
+  select(sample_id, lifestage, hpf, code)
+```
 
 # **Construct DESeq2 data set**  
 
@@ -126,7 +156,7 @@ Create a DESeqDataSet design from gene count matrix and labels. Here we set the 
 ```{r}
 #Set DESeq2 design
 gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
-                              colData = metadata,
+                              colData = metadata_ordered,
                               design = ~lifestage)
 ```
 
@@ -145,7 +175,7 @@ all(sizeFactors(SF.gdds)) < 4
 All size factors are less than 4, so we can use VST transformation.  
 
 ```{r}
-gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transforamtion to minimize effects of small counts and normalize wrt library size
+gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transformation to minimize effects of small counts and normalize wrt library size
 head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
 ```
 
@@ -203,7 +233,35 @@ allgenesfilt_PCA
 ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA, width=11, height=8)
 ```
 
-# **WGCNA analysis**  
+Generate a PCA for visualization/presentations.  
+
+```{r}
+allgenesfilt_PCA_visual <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=16, "2_Embryo"=16, "3_Larvae1"=15, "4_Larvae2"=17, "5_Larvae3"=15, "6_Larvae4"=16, "7_Larvae6"=17, "8_MetamorposedRecruit2"=16, "9_CalcifyingRecruit1"=15), labels=c("Egg (1 hpf)", "Attached Recruit (231 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)")) +
+  scale_colour_manual(values = c("1_Egg"="#8C510A", "10_CalcifyingRecruit2"="#BA55D3", "2_Embryo"="#DFC27D", "3_Larvae1"="#DFC27D", "4_Larvae2"="#DFC27D", "5_Larvae3"="#80CDC1", "6_Larvae4"="#80CDC1", "7_Larvae6"="#80CDC1", "8_MetamorposedRecruit2"="#003C30", "9_CalcifyingRecruit1"="#BA55D3"), labels=c("Egg (1 hpf)", "Attached Recruit (231 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)")) +
+  #xlim(-40,40)+ 
+  #ylim(-40,40)+
+  coord_fixed()+
+  theme_classic() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) # + #Set the plot background
+  #theme(legend.position = ("none")) #set title attributes
+allgenesfilt_PCA_visual
+
+ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_visual, width=11, height=8)
+```
+
+
+
+
+
+# **WGCNA analysis using Dynamic Tree Cut**  
 
 Data are analyzed using dynamic tree cut approach, our data set is not large enough to have to use blockwiseModules to break data into "blocks". This code uses step by step network analysis and module detection based on scripts from https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/index.html. 
 
@@ -278,7 +336,7 @@ plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
      main = paste("Mean connectivity"))
  text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 ```
-I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the loweest power before the R^2=0.9 threshold that maximizes with model fit.  
+I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the lowest power before the R^2=0.9 threshold that maximizes with model fit.  
 
 ### Co-expression adjacency and topological overlap matrix similarity  
 
@@ -313,22 +371,22 @@ TOM= TOMsimilarity(adjacency,TOMType = "signed") #Translate adjacency into topol
 
 dissTOM= 1-TOM #Calculate dissimilarity in TOM
 
-#save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
+save(adjacency, TOM, dissTOM, file = "Mcap2020/Output/TagSeq/adjTOM.RData") #Save 
 
-#save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
+save(dissTOM, file = "Mcap2020/Output/TagSeq/dissTOM.RData") #Save 
 ```
 
 Load in dissTOM file obtained from previous R chunk.    
 ```{r}
-#dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
-#dissTOM_in
+dissTOM_in <- load(file="Mcap2020/Output/TagSeq/dissTOM.RData") 
+dissTOM_in
 ```
 
 ### Clustering using TOM
 
 Form distance matrix  
 ```{r}
-geneTree= flashClust(as.dist(dissTOM), method="average")
+geneTree=flashClust(as.dist(dissTOM), method="average")
 ```
 
 We will now plot a dendrogram of genes. Each leaf corresponds to a gene, branches grouping together densely are interconnected, highly co-expressed genes.  
@@ -340,7 +398,7 @@ dev.off()
 
 ### Module identification using dynamicTreeCut  
 
-Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. I chose 30 as it is the default value chosen by most studies using WGCNA. 
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 20. 
 
 ```{r}
 minModuleSize = 20
@@ -407,7 +465,7 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tre
 dev.off()
 ```
 
-There are 9 modules before merging with 85% similarity.  
+We had 19 modules before merging.  
 
 Save new colors
 ```{r}
@@ -419,9 +477,9 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-We have 8 modules after merging with 85% similarity.   
+We have 12 modules after merging with 85% similarity.   
 
-Plot new tree with 8 modules.  
+Plot new tree with 12 modules.  
 ```{r}
 #Calculate dissimilarity of module eigengenes
 MEDiss = 1-cor(MEs)
@@ -438,25 +496,11 @@ Display table of module gene counts.
 table(mergedColors)
 ```
 
+We have 12 modules with no modules "unassigned". All genes were assigned to a module.  
 
-
-
-
-
-
-
-WHY NO MODULE 0??? Here this is saying that all genes end up in a module. Is this right? 
-
-  1    2    3    5    6    7    8    9 
-3930 3352 3185  730  496  372   91   81 
-
-with deepsplit=2
-
-
-with deepsplit=TRUE
 mergedColors
-   1    2    3    5    6    7   10   11   13   14   15 
-3562 3302 3074  710  764  499  144   80   39   39   24 
+   1    2    4    6    8   11   12   14   15   16   17   18 
+3954 3662  955 1049 2194  156 3599   54   51   36   58   29 
 
 ##  Relating modules to developmental stage
 
@@ -469,8 +513,8 @@ Make a dataframe that has a column for each lifestage name and a row for samples
 This process changes lifestages from a categorical variable into a binary variable. This will allow for correlations between mean eigengenes and lifestage.  
  
 ```{r}
-metadata$num <- c("1")
-allTraits <- as.data.frame(pivot_wider(metadata, names_from = lifestage, values_from = num, id_cols = sample_id))
+metadata_ordered$num <- c("1")
+allTraits <- as.data.frame(pivot_wider(metadata_ordered, names_from = lifestage, values_from = num, id_cols = sample_id))
 allTraits[is.na(allTraits)] <- c("0")
 rownames(allTraits) <- allTraits$sample_id
 datTraits <- allTraits[,c(-1)]
@@ -486,7 +530,7 @@ nGenes
 nSamples
 ```
 
-We have 12,237 genes and 38 samples.  
+We have 15,797 genes and 38 samples.  
 
 Generate labels for module eigengenes as numbers.  
 ```{r}
@@ -510,7 +554,6 @@ dev.off()
 
 Correlations of genes with eigengenes. Calculate correlations between ME's and lifestages. 
 ```{r}
-
 moduleGeneCor=cor(MEs,datExpr)
 moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
 ```
@@ -525,8 +568,7 @@ head(datKME)
 Save module colors and labels for use in subsequent analyses.  
 
 ```{r}
-save(MEs, moduleLabels, moduleColors, geneTree, file = "Mcap2020/Output/TagSeq/NetworkConstruction-stepByStep.RData") 
-
+save(MEs, moduleLabels, moduleColors, geneTree, file="Mcap2020/Output/TagSeq/NetworkConstruction-stepByStep.RData") 
 ```
 
 ### Plot module-trait associations
@@ -576,7 +618,7 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Lifestage 
         cluster_columns = col_dend,
         row_dend_reorder = TRUE,
         column_split = 6,
-        row_split=5,
+        row_split=4,
         column_dend_height = unit(.5, "in"),
         #cluster_rows = METree, 
         cluster_rows = row_dend, 
@@ -603,7 +645,7 @@ View module eigengene data and make dataframe for Strader plots.
 head(MEs)
 names(MEs)
 Strader_MEs <- MEs
-Strader_MEs$lifestage <- metadata$lifestage
+Strader_MEs$lifestage <- metadata_ordered$lifestage
 Strader_MEs$sample_id <- rownames(Strader_MEs)
 head(Strader_MEs)
 
@@ -709,7 +751,10 @@ names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
 names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
 ```
 
-View correlation between module membership score and gene significance for each module: 1, 2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 
+View correlation between module membership score and gene significance for each module: 
+
+1, 2, 4, 6, 8, 11, 12, 14, 15, 16, 17, 18
+
 ```{r}
 module = "1"
 column = match(module, modNames);
@@ -737,20 +782,7 @@ verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
                    main = paste("Module membership vs. gene significance\n"),
                    cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
 
-module = "3"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "5"
+module = "4"
 column = match(module, modNames);
 moduleGenes = moduleColors==module;
 
@@ -776,20 +808,7 @@ verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
                    main = paste("Module membership vs. gene significance\n"),
                    cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
 
-module = "7"
-column = match(module, modNames);
-moduleGenes = moduleColors==module;
-
-sizeGrWindow(7, 7);
-par(mfrow = c(1,1));
-verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
-                   abs(geneTraitSignificance[moduleGenes, 1]),
-                   xlab = paste("Module Membership in", module, "module"),
-                   ylab = "Gene significance for body weight",
-                   main = paste("Module membership vs. gene significance\n"),
-                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
-
-module = "10"
+module = "8"
 column = match(module, modNames);
 moduleGenes = moduleColors==module;
 
@@ -815,7 +834,7 @@ verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
                    main = paste("Module membership vs. gene significance\n"),
                    cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
 
-module = "13"
+module = "12"
 column = match(module, modNames);
 moduleGenes = moduleColors==module;
 
@@ -854,14 +873,51 @@ verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
                    main = paste("Module membership vs. gene significance\n"),
                    cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
 
-```
+module = "16"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
 
-Why are some plots not clear positive relationship???
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "17"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+module = "18"
+column = match(module, modNames);
+moduleGenes = moduleColors==module;
+
+sizeGrWindow(7, 7);
+par(mfrow = c(1,1));
+verboseScatterplot(abs(geneModuleMembership[moduleGenes, column]),
+                   abs(geneTraitSignificance[moduleGenes, 1]),
+                   xlab = paste("Module Membership in", module, "module"),
+                   ylab = "Gene significance for body weight",
+                   main = paste("Module membership vs. gene significance\n"),
+                   cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+```
 
 Generate a list of genes associated with each module. Change the module number in this code to look at respective module.   
 
 ```{r}
-names(datExpr)[moduleColors=="10"]
+names(datExpr)[moduleColors=="14"]
 ```
 
 # **Summary output of network analysis**  
@@ -893,12 +949,15 @@ missing<-as.data.frame(probes[row_nas])
 print(missing)
 ```
  
+Currently 700+ are missing 
 
 CHECK THIS TO SEE IF FORMATTING IS DIFFERENT????? WHY ARE 500 MISSING???
 
+WE NEED TO REDO THE ANNOTATION
+
+There are 771 gene_id in the datExpr that are not matched in the annotation file. Manually searching for these genes shows that they are not in the annotation file, which confirms that we do not have a gene_id formatting error. Unknown why some genes are not matched in the annotation file, look into this.    
 
 
-There are 517 gene_id in the datExpr that are not matched in the annotation file. Manually searching for these genes shows that they are not in the annotation file, which confirms that we do not have a gene_id formatting error. Unknown why some genes are not matched in the annotation file, look into this.    
 
 Create the starting data frame
 ```{r}
@@ -1040,7 +1099,7 @@ go_mwu_terms<-geneInfo%>%
 
 Subset genes that are included in each module, substitue 0 for module membership scores for genes included in module. 
 
-Module list: 1, 2, 3, 5, 6, 7, 10, 11, 13, 14, 15     
+Module list: 1, 2, 4, 6, 8, 11, 12, 14, 15, 16, 17, 18     
 ```{r}
 go_mwu_me1<-geneInfo%>%
   select(gene_id, MM.1, moduleColor)%>%
@@ -1054,47 +1113,35 @@ go_mwu_me2<-geneInfo%>%
   select(gene_id, MM.2)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me2.csv", row.names=FALSE, quote = FALSE)
   
-go_mwu_me3<-geneInfo%>%
-  select(gene_id, MM.3, moduleColor)%>%
-  mutate(MM.3 = if_else(moduleColor==3, 0, MM.3))%>%
-  select(gene_id, MM.3)%>%
-  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me3.csv", row.names=FALSE, quote = FALSE)
-
-go_mwu_me5<-geneInfo%>%
-  select(gene_id, MM.5, moduleColor)%>%
-  mutate(MM.5 = if_else(moduleColor==5, 0, MM.5))%>%
-  select(gene_id, MM.5)%>%
-  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me5.csv", row.names=FALSE, quote = FALSE)
+go_mwu_me4<-geneInfo%>%
+  select(gene_id, MM.4, moduleColor)%>%
+  mutate(MM.4 = if_else(moduleColor==4, 0, MM.4))%>%
+  select(gene_id, MM.4)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me4.csv", row.names=FALSE, quote = FALSE)
 
 go_mwu_me6<-geneInfo%>%
   select(gene_id, MM.6, moduleColor)%>%
   mutate(MM.6 = if_else(moduleColor==6, 0, MM.6))%>%
   select(gene_id, MM.6)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me6.csv", row.names=FALSE, quote = FALSE)
-  
-go_mwu_me7<-geneInfo%>%
-  select(gene_id, MM.7, moduleColor)%>%
-  mutate(MM.7 = if_else(moduleColor==7, 0, MM.7))%>%
-  select(gene_id, MM.7)%>%
-  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me7.csv", row.names=FALSE, quote = FALSE)
-  
-go_mwu_me10<-geneInfo%>%
-  select(gene_id, MM.10, moduleColor)%>%
-  mutate(MM.10 = if_else(moduleColor==10, 0, MM.10))%>%
-  select(gene_id, MM.10)%>%
-  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me10.csv", row.names=FALSE, quote = FALSE)
 
+go_mwu_me8<-geneInfo%>%
+  select(gene_id, MM.8, moduleColor)%>%
+  mutate(MM.8 = if_else(moduleColor==8, 0, MM.8))%>%
+  select(gene_id, MM.8)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me8.csv", row.names=FALSE, quote = FALSE)
+  
 go_mwu_me11<-geneInfo%>%
   select(gene_id, MM.11, moduleColor)%>%
   mutate(MM.11 = if_else(moduleColor==11, 0, MM.11))%>%
   select(gene_id, MM.11)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me11.csv", row.names=FALSE, quote = FALSE)
-
-go_mwu_me13<-geneInfo%>%
-  select(gene_id, MM.13, moduleColor)%>%
-  mutate(MM.13 = if_else(moduleColor==13, 0, MM.13))%>%
-  select(gene_id, MM.13)%>%
-  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me13.csv", row.names=FALSE, quote = FALSE)
+  
+go_mwu_me12<-geneInfo%>%
+  select(gene_id, MM.12, moduleColor)%>%
+  mutate(MM.12 = if_else(moduleColor==12, 0, MM.12))%>%
+  select(gene_id, MM.12)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me12.csv", row.names=FALSE, quote = FALSE)
 
 go_mwu_me14<-geneInfo%>%
   select(gene_id, MM.14, moduleColor)%>%
@@ -1107,6 +1154,36 @@ go_mwu_me15<-geneInfo%>%
   mutate(MM.15 = if_else(moduleColor==15, 0, MM.15))%>%
   select(gene_id, MM.15)%>%
   write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me15.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me14<-geneInfo%>%
+  select(gene_id, MM.14, moduleColor)%>%
+  mutate(MM.14 = if_else(moduleColor==14, 0, MM.14))%>%
+  select(gene_id, MM.14)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me14.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me16<-geneInfo%>%
+  select(gene_id, MM.16, moduleColor)%>%
+  mutate(MM.16 = if_else(moduleColor==16, 0, MM.16))%>%
+  select(gene_id, MM.16)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me16.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me17<-geneInfo%>%
+  select(gene_id, MM.17, moduleColor)%>%
+  mutate(MM.17 = if_else(moduleColor==17, 0, MM.17))%>%
+  select(gene_id, MM.17)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me17.csv", row.names=FALSE, quote = FALSE)
+
+go_mwu_me18<-geneInfo%>%
+  select(gene_id, MM.18, moduleColor)%>%
+  mutate(MM.18 = if_else(moduleColor==18, 0, MM.18))%>%
+  select(gene_id, MM.18)%>%
+  write.csv(., "Mcap2020/Output/TagSeq/GOMWU/go_mwu_me18.csv", row.names=FALSE, quote = FALSE)
 ```
 
 Next Run GOMWU script in TagSeq Output folder.  
+
+# **Tracking expression of specific genes**  
+
+
+
+

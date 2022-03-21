@@ -1,10 +1,11 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"45",0,4.8992250067688e-07,2,65,"GO:0004222","metalloendopeptidase activity",0
-"78",0,5.62869294097643e-05,3,31,"GO:0004857","enzyme inhibitor activity",0.00357142857142857
-"81",0,8.88989885664977e-08,2,162,"GO:0004888;GO:0038023;GO:0060089","transmembrane signaling receptor activity",0
-"83",0,4.07850546744454e-05,2,20,"GO:0005044;GO:0038024","scavenger receptor activity",0.00416666666666667
-"89",0,3.14586315277052e-11,2,21,"GO:0005201","extracellular matrix structural constituent",0
-"90",0,3.5938799454391e-06,3,116,"GO:0005216;GO:0015267;GO:0022803","passive transmembrane transporter activity",0
-"104",0,2.63191480683193e-06,4,267,"GO:0005509","calcium ion binding",0
-"152",0,1.24056255723912e-06,4,30,"GO:0016298","lipase activity",0
-"158",0,2.21186781054906e-09,2,307,"GO:0016491","oxidoreductase activity",0
+"76",0,7.26704574341381e-06,2,54,"GO:0004713","protein tyrosine kinase activity",0
+"85",0,1.8255672286371e-06,5,26,"GO:0004866;GO:0030414;GO:0061135;GO:0061134","peptidase inhibitor activity",0
+"91",0,0.000205572971016177,2,23,"GO:0005044;GO:0038024","scavenger receptor activity",0.00952380952380952
+"97",0,4.51359804822869e-10,2,23,"GO:0005201","extracellular matrix structural constituent",0
+"98",0,2.36880656583591e-06,4,160,"GO:0005216;GO:0015267;GO:0022803","channel activity",0
+"112",0,4.68447880441634e-10,2,328,"GO:0005509","calcium ion binding",0
+"125",0,1.76607606818239e-05,2,54,"GO:0008146;GO:0016782","transferase activity, transferring sulfur-containing groups",0
+"132",0,1.99458476824885e-07,3,103,"GO:0008237","metallopeptidase activity",0
+"162",0,2.79521483320278e-05,2,36,"GO:0016298","lipase activity",0
+"168",0,8.853775694236e-07,2,386,"GO:0016491","oxidoreductase activity",0

@@ -1,1 +1,15 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
+"3",0,0.579796581046742,3,32,"GO:0000398;GO:0000377;GO:0000375;GO:0008380","RNA splicing",1
+"30",0,0.716731729055277,3,38,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",1
+"40",0,0.501324668128527,2,46,"GO:0006518;GO:0043603","cellular amide metabolic process",1
+"84",0,0.874938496743558,2,83,"GO:0009059","macromolecule biosynthetic process",1
+"104",0,0.9938350035366,5,80,"GO:0015031;GO:0015833;GO:0045184;GO:0042886;GO:0008104;GO:0033036","amide transport",1
+"121",0,0.695114786166547,4,63,"GO:0022607","cellular component assembly",1
+"137",0,0.773017434241407,4,6,"GO:0033108;GO:0017004","mitochondrial respiratory chain complex assembly",1
+"141",0,0.91578244564908,2,50,"GO:0034622;GO:0065003;GO:0043933","protein-containing complex subunit organization",1
+"142",0,0.722235206847202,2,67,"GO:0034645","cellular macromolecule biosynthetic process",1
+"157",0,0.958440376476124,2,104,"GO:0044271","cellular nitrogen compound biosynthetic process",1
+"212",0,0.562825480219243,2,74,"GO:1901566","organonitrogen compound biosynthetic process",1
+"224",0,1,4,14,"GO:0001510","RNA methylation",1
+"242",0,1,2,15,"GO:0034613;GO:0070727","cellular protein localization",1
+"250",0,1,5,8,"GO:0072657","protein localization to membrane",1

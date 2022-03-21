@@ -1,7 +1,4 @@
 "","delta.rank","pval","level","nseqs","term","name","p.adj"
-"14",0,1.69497945348306e-06,2,34,"GO:0005975","carbohydrate metabolic process",0
-"32",0,2.37488696213897e-14,2,37,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
-"39",0,1.70931873428784e-05,4,78,"GO:0006508","proteolysis",0
-"41",0,1.26586126336668e-12,2,44,"GO:0006518;GO:0043603","cellular amide metabolic process",0
-"53",0,3.60162662144355e-05,2,27,"GO:0006812","cation transport",0.00555555555555556
-"204",0,6.73499137319399e-10,4,66,"GO:1901566","organonitrogen compound biosynthetic process",0
+"33",0,7.68689150020932e-06,6,87,"GO:0006396","RNA processing",0
+"137",0,2.06813750312271e-05,2,88,"GO:0031323;GO:0051171;GO:0080090","regulation of cellular metabolic process",0
+"157",0,5.3461490254835e-06,2,44,"GO:0035556","intracellular signal transduction",0

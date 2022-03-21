@@ -15,7 +15,6 @@
 
 ############################MODULE 1: MF####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
@@ -188,14 +187,13 @@ bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me2_mf.csv")
 
-
-############################MODULE 3: MF####################################
+############################MODULE 4: MF####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me3.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me4.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
 goDivision="MF" # either MF, or BP, or CC
@@ -219,7 +217,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module3_mf.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module4_mf.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -274,93 +272,7 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me3_mf.csv")
-
-############################MODULE 5: MF####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me5.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="MF" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module5_mf.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me5_mf.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me4_mf.csv")
 
 ############################MODULE 6: MF####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
@@ -391,7 +303,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 
 # ----------- Plotting results
-
 pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module6_mf.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
@@ -448,94 +359,6 @@ bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me6_mf.csv")
-
-############################MODULE 7: MF####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me7.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="MF" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module7_mf.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me7_mf.csv")
-
 
 ############################MODULE 8: MF####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
@@ -624,14 +447,13 @@ bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me8_mf.csv")
 
-
-############################MODULE 9: MF####################################
+############################MODULE 11: MF####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me9.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me11.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
 goDivision="MF" # either MF, or BP, or CC
@@ -655,7 +477,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module9_mf.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module11_mf.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -710,8 +532,535 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me9_mf.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me11_mf.csv")
 
+
+############################MODULE 12: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me12.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module12_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me12_mf.csv")
+
+
+############################MODULE 14: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me14.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module14_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me14_mf.csv")
+
+
+############################MODULE 15: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me15.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module15_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me15_mf.csv")
+
+
+############################MODULE 16: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me16.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module16_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me16_mf.csv")
+
+
+
+############################MODULE 17: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me17.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module17_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me17_mf.csv")
+
+############################MODULE 18: MF####################################
+# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
+
+getwd()
+setwd("Mcap2020/Output/TagSeq/GOMWU/")
+# Edit these to match your data file names: 
+input="go_mwu_me18.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
+goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
+goDivision="MF" # either MF, or BP, or CC
+source("gomwu.functions.R")
+
+
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
+gomwuStats(input, goDatabase, goAnnotations, goDivision,
+           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
+           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
+           smallest=5,   # a GO category should contain at least this many genes to be considered
+           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
+           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
+           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
+           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
+)
+# do not continue if the printout shows that no GO terms pass 10% FDR.
+
+
+# ----------- Plotting results
+
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module18_mf.pdf")
+results=gomwuPlot(input,goAnnotations,goDivision,
+                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+                  #	absValue=1, # un-remark this if you are using log2-fold changes
+                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
+                  level3=0.001, # FDR cutoff to print in large bold font.
+                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+                  treeHeight=0.5, # height of the hierarchical clustering tree
+                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+)
+dev.off()
+# manually rescale the plot so the tree matches the text 
+# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+
+# text representation of results, with actual adjusted p-values
+results[[1]]
+
+
+# ------- extracting representative GOs
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
+
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+plot(results[[2]],cex=0.6)
+abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
+annots=c();ci=1
+for (ci in unique(ct)) {
+  message(ci)
+  rn=names(ct)[ct==ci]
+  obs=grep("obsolete",rn)
+  if(length(obs)>0) { rn=rn[-obs] }
+  if (length(rn)==0) {next}
+  rr=results[[1]][rn,]
+  bestrr=rr[which(rr$pval==min(rr$pval)),]
+  best=1
+  if(nrow(bestrr)>1) {
+    nns=sub(" .+","",row.names(bestrr))
+    fr=c()
+    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+    best=which(fr==max(fr))
+  }
+  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
+
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me18_mf.csv")
 
 
 
@@ -719,7 +1068,6 @@ write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me9_mf.csv")
 
 ############################MODULE 1: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
@@ -892,14 +1240,13 @@ bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me2_bp.csv")
 
-
-############################MODULE 3: BP####################################
+############################MODULE 4: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me3.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me4.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
 goDivision="BP" # either MF, or BP, or CC
@@ -923,7 +1270,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module3_bp.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module4_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -978,93 +1325,7 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me3_bp.csv")
-
-############################MODULE 5: BP####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me5.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="BP" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module5_bp.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me5_bp.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me4_bp.csv")
 
 ############################MODULE 6: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
@@ -1095,7 +1356,6 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 
 # ----------- Plotting results
-
 pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module6_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
@@ -1152,94 +1412,6 @@ bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me6_bp.csv")
-
-############################MODULE 7: BP####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me7.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="BP" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module7_bp.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me7_bp.csv")
-
 
 ############################MODULE 8: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
@@ -1328,14 +1500,13 @@ bestGOs
 
 write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me8_bp.csv")
 
-
-############################MODULE 9: BP####################################
+############################MODULE 11: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me9.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me11.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
 goDivision="BP" # either MF, or BP, or CC
@@ -1359,7 +1530,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module9_bp.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module11_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1414,22 +1585,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me9_bp.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me11_bp.csv")
 
 
-
-
-
-############################MODULE 1: CC####################################
+############################MODULE 12: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me1.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me12.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1450,7 +1618,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module1_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module12_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1505,19 +1673,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me1_cc.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me12_bp.csv")
 
 
-############################MODULE 2: CC####################################
+############################MODULE 14: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me2.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me14.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1538,7 +1706,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module2_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module14_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1593,19 +1761,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me2_cc.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me14_bp.csv")
 
 
-############################MODULE 3: CC####################################
+############################MODULE 15: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me3.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me15.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1626,7 +1794,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module3_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module15_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1681,104 +1849,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me3_cc.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me15_bp.csv")
 
-############################MODULE 5: CC####################################
+
+############################MODULE 16: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me5.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me16.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module5_cc.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me5_cc.csv")
-
-############################MODULE 6: CC####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me6.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1799,7 +1882,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module6_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module16_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1854,18 +1937,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me6_cc.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me16_bp.csv")
 
-############################MODULE 7: CC####################################
+
+############################MODULE 17: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me7.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me17.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1886,7 +1970,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module7_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module17_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -1941,19 +2025,19 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me7_cc.csv")
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me17_bp.csv")
 
 
-############################MODULE 8: CC####################################
+############################MODULE 18: BP####################################
 # First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
 
 getwd()
 setwd("Mcap2020/Output/TagSeq/GOMWU/")
 # Edit these to match your data file names: 
-input="go_mwu_me8.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="go_mwu_me18.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="BP" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -1974,7 +2058,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 # ----------- Plotting results
 
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module8_cc.pdf")
+pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module18_bp.pdf")
 results=gomwuPlot(input,goAnnotations,goDivision,
                   absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
                   #	absValue=1, # un-remark this if you are using log2-fold changes
@@ -2029,95 +2113,6 @@ mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
 bestGOs=mwus[mwus$name %in% annots,]
 bestGOs
 
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me8_cc.csv")
-
-
-############################MODULE 9: CC####################################
-# First, press command-D on mac or ctrl-shift-H in Rstudio and navigate to the directory containing scripts and input files. Then edit, mark and execute the following bits of code, one after another.
-
-getwd()
-setwd("Mcap2020/Output/TagSeq/GOMWU/")
-# Edit these to match your data file names: 
-input="go_mwu_me9.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
-goAnnotations="go_mwu_terms.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
-goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
-source("gomwu.functions.R")
-
-
-# ------------- Calculating stats
-# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
-
-gomwuStats(input, goDatabase, goAnnotations, goDivision,
-           perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
-           largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
-           smallest=5,   # a GO category should contain at least this many genes to be considered
-           clusterCutHeight=0.15, # threshold for merging similar (gene-sharing) terms. See README for details.
-           #	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. 
-           Module=TRUE,Alternative="g" # un-remark this if you are analyzing a SIGNED WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.001 (count number of "good genes" that fall into the module)
-           #	Module=TRUE # un-remark this if you are analyzing an UNSIGNED WGCNA module 
-)
-# do not continue if the printout shows that no GO terms pass 10% FDR.
-
-
-# ----------- Plotting results
-
-pdf("../../../Figures/TagSeq/GOMWU/GOMWU_Module9_cc.pdf")
-results=gomwuPlot(input,goAnnotations,goDivision,
-                  absValue=0.001,  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-                  #	absValue=1, # un-remark this if you are using log2-fold changes
-                  level1=0.05, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-                  level2=0.01, # FDR cutoff to print in regular (not italic) font.
-                  level3=0.001, # FDR cutoff to print in large bold font.
-                  txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-                  treeHeight=0.5, # height of the hierarchical clustering tree
-                  #colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-dev.off()
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
-
-
-# ------- extracting representative GOs
-
-# this module chooses GO terms that best represent *independent* groups of significant GO terms
-
-pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
-
-# plotting the GO tree with the cut level (un-remark the next two lines to plot)
-plot(results[[2]],cex=0.6)
-abline(h=hcut,col="red")
-
-# cutting
-ct=cutree(results[[2]],h=hcut)
-annots=c();ci=1
-for (ci in unique(ct)) {
-  message(ci)
-  rn=names(ct)[ct==ci]
-  obs=grep("obsolete",rn)
-  if(length(obs)>0) { rn=rn[-obs] }
-  if (length(rn)==0) {next}
-  rr=results[[1]][rn,]
-  bestrr=rr[which(rr$pval==min(rr$pval)),]
-  best=1
-  if(nrow(bestrr)>1) {
-    nns=sub(" .+","",row.names(bestrr))
-    fr=c()
-    for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
-    best=which(fr==max(fr))
-  }
-  if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
-}
-
-mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
-bestGOs=mwus[mwus$name %in% annots,]
-bestGOs
-
-write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me9_cc.csv")
-
+write.csv(bestGOs, "../../TagSeq/GOMWU/Results/bestGOs_me18_bp.csv")
 
 

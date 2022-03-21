@@ -1,0 +1,6 @@
+"","delta.rank","pval","level","nseqs","term","name","p.adj"
+"2",0,2.7361757120246e-05,5,11,"GO:0000049","tRNA binding",0
+"20",0,1.15972163118772e-53,2,120,"GO:0003735","structural constituent of ribosome",0
+"50",0,1.62126256937688e-08,4,12,"GO:0004298;GO:0070003","threonine-type peptidase activity",0
+"87",0,3.26222927984972e-05,3,277,"GO:0004888;GO:0038023;GO:0060089","signaling receptor activity",0
+"150",0,1.40642535294849e-05,2,17,"GO:0015078","proton transmembrane transporter activity",0

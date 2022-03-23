@@ -1314,13 +1314,39 @@ rownames(glucosehomeo_genes) <- NULL
 Create list of expression of genes for apoptosis regulation: 
 
 ```{r}
-apoptosis<-c("g11795", "adi2mcaRNA13549_R0", "adi2mcaRNA18229_R0", "adi2mcaRNA1941_R1", "adi2mcaRNA19725_R7")
+apoptosis<-c("g7993", "g25930", "g62182", "g25928")
 apoptosis_genes<-gene_expr[rownames(gene_expr) %in% apoptosis, ]
 apoptosis_genes
 
 apoptosis_genes$Function<-c("Apoptosis Regulation")
 apoptosis_genes$gene_id<-rownames(apoptosis_genes)
 rownames(apoptosis_genes) <- NULL
+```
+
+Create list of expression of genes for cellular communication/signaling: 
+
+```{r}
+communication<-c("g47126", "g32455", "g29355")
+
+communication_genes<-gene_expr[rownames(gene_expr) %in% communication, ]
+communication_genes
+
+communication_genes$Function<-c("Cell Communication")
+communication_genes$gene_id<-rownames(communication_genes)
+rownames(communication_genes) <- NULL
+```
+
+Create list of expression of genes for carbohydrate metabolism: 
+
+```{r}
+carbs<-c("g27530", "g27612", "g48204", "g36198", "g15393", "g27646")
+
+carbs_genes<-gene_expr[rownames(gene_expr) %in% carbs, ]
+carbs_genes
+
+carbs_genes$Function<-c("Carbohydrate Metabolism")
+carbs_genes$gene_id<-rownames(carbs_genes)
+rownames(carbs_genes) <- NULL
 ```
 
 Bring all of the data frames together.  
@@ -1334,9 +1360,11 @@ solutetr_genes
 atpase_genes
 glucosehomeo_genes
 apoptosis_genes
+communication_genes
+carbs_genes
 
 ```{r}
-specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, sugartr_genes, ammontr_genes, acetylcarb_genes, glutperox_genes, solutetr_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes)
+specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, sugartr_genes, ammontr_genes, acetylcarb_genes, glutperox_genes, solutetr_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes)
 ```
 
 Gather the data set and merge in metadata information.  
@@ -1405,7 +1433,7 @@ apoptosis_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1432,7 +1460,7 @@ acetyl_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1459,7 +1487,7 @@ anhydrase_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,8)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1487,7 +1515,7 @@ ammonium_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,8)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1514,7 +1542,7 @@ glucose_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1541,7 +1569,7 @@ glutathione_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,8)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1568,7 +1596,7 @@ glycogen_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1595,7 +1623,7 @@ solute_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,7)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1622,7 +1650,7 @@ sugar_plot<-specific_genes%>%
     xlab("Lifestage") + 
     ylab("VST expression")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylim(5,9)+
+    ylim(5,8)+
     theme_classic() + 
     theme(
       legend.position="none",
@@ -1634,12 +1662,66 @@ sugar_plot<-specific_genes%>%
       ); sugar_plot
 ```
 
+Plot Cell Communication
+```{r}
+communication_plot<-specific_genes%>%
+    group_by(Function, gene_id, group)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Cell Communication")%>%
+    
+  ggplot(., aes(x = group, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,7)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); communication_plot
+```
+
+Plot Carb Metabolism
+```{r}
+carb_plot<-specific_genes%>%
+    group_by(Function, gene_id, group)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Carbohydrate Metabolism")%>%
+    
+  ggplot(., aes(x = group, y = mean, linetype=gene_id, group=gene_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=gene_id), color="black", position = position_dodge(0.1)) +
+    geom_point(aes(group=gene_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=gene_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(5,9)+
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); carb_plot
+```
+
 Assemble all plots together.  
 ```{r}
 library(cowplot)
 
-gene_plots<-plot_grid(anhydrase_plot, acetyl_plot, ammonium_plot, atpase_plot, glucose_plot, glutathione_plot, glycogen_plot, solute_plot, sugar_plot, apoptosis_plot, ncol=5, nrow=2, align="h")
+gene_plots<-plot_grid(anhydrase_plot, acetyl_plot, ammonium_plot, atpase_plot, glucose_plot, glutathione_plot, glycogen_plot, solute_plot, sugar_plot, apoptosis_plot, carb_plot, ncol=6, nrow=2, align="h")
                       
-ggsave(filename="Mcap2020/Figures/TagSeq/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=12, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=15, height=8, units="in")
 ```
 

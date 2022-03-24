@@ -699,7 +699,7 @@ metab_expr<-as.data.frame(metab_expr, row.names = rownames(metab_expr), make.nam
 Create list of expression of genes for carbohydrate metabolism: 
 
 ```{r}
-carbmetab<-c("Glucose", "Sucrose", "Fructose")
+carbmetab<-c("Glucose", "Sucrose", "Fructose", "Pyruvate")
 
 carbmetab_metab<-metab_expr[rownames(metab_expr) %in% carbmetab, ]
 carbmetab_metab
@@ -717,7 +717,7 @@ signals<-c("Inositol")
 signal_metab<-metab_expr[rownames(metab_expr) %in% signals, ]
 signal_metab
 
-signal_metab$Function<-c("Signalling")
+signal_metab$Function<-c("Signaling")
 signal_metab$metabolite_id<-rownames(signal_metab)
 rownames(signal_metab) <- NULL
 ```
@@ -738,27 +738,14 @@ rownames(lipid_metab) <- NULL
 Create list of expression of genes for nitrogen: 
 
 ```{r}
-nitrogen <-c("Glutamate", "Arginine", "Ornithine", "Isoleucine")
+nitrogen <-c("Glutamate", "Arginine", "Ornithine", "Tyrosine", "Phenylalanine", "Glutamine")
 
 nitrogen_metab<-metab_expr[rownames(metab_expr) %in% nitrogen, ]
 nitrogen_metab
 
-nitrogen_metab$Function<-c("Nitrogen")
+nitrogen_metab$Function<-c("Nitrogen Metabolism")
 nitrogen_metab$metabolite_id<-rownames(nitrogen_metab)
 rownames(nitrogen_metab) <- NULL
-```
-
-Create list of expression of genes for antioxidants: 
-
-```{r}
-antiox <-c("Glutamine")
-
-antiox_metab<-metab_expr[rownames(metab_expr) %in% antiox, ]
-antiox_metab
-
-antiox_metab$Function<-c("Antioxidant")
-antiox_metab$metabolite_id<-rownames(antiox_metab)
-rownames(antiox_metab) <- NULL
 ```
 
 Create list of expression of genes for fatty acid metabolism: 
@@ -769,14 +756,14 @@ fattyacid <-c("Glycine", "Glycerol-3-phosphate")
 fattyacid_metab<-metab_expr[rownames(metab_expr) %in% fattyacid, ]
 fattyacid_metab
 
-fattyacid_metab$Function<-c("Fatty Acid")
+fattyacid_metab$Function<-c("Fatty Acid Metabolism")
 fattyacid_metab$metabolite_id<-rownames(fattyacid_metab)
 rownames(fattyacid_metab) <- NULL
 ```
 
 Combine all lists together.  
 ```{r}
-specific_metab<-rbind(antiox_metab, carbmetab_metab, fattyacid_metab, lipid_metab, nitrogen_metab, signal_metab)
+specific_metab<-rbind(carbmetab_metab, fattyacid_metab, lipid_metab, nitrogen_metab, signal_metab)
 ```
 
 Gather the data set and merge in metadata information.  
@@ -817,7 +804,7 @@ carbon_plot<-specific_metab%>%
     xlab("Lifestage") + 
     ylab("Normalized Ion Count")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    #ylim(5,9)+
+    ylim(0,4)+
     theme_classic() + 
     theme(
       legend.position="right",
@@ -835,7 +822,7 @@ Plot signalling metabolites.
 signal_plot<-specific_metab%>%
     group_by(Function, metabolite_id, group)%>%
     summarise(mean=mean(normalized_ions), N=length(normalized_ions), sd=sd(normalized_ions), sem=sd/N)%>%
-    filter(Function=="Signalling")%>%
+    filter(Function=="Signaling")%>%
     ggplot(., aes(x = group, y = mean, linetype=metabolite_id, group=metabolite_id)) +
     facet_wrap(~Function)+
     geom_line(aes(group=metabolite_id), color="black", position = position_dodge(0.1)) +
@@ -861,8 +848,8 @@ Plot fatty acid metabolites.
 fatty_plot<-specific_metab%>%
     group_by(Function, metabolite_id, group)%>%
     summarise(mean=mean(normalized_ions), N=length(normalized_ions), sd=sd(normalized_ions), sem=sd/N)%>%
-    filter(Function=="Fatty Acid")%>%
-    filter(!metabolite_id=="Glycerol-3-phosphate")%>%
+    filter(Function=="Fatty Acid Metabolism")%>%
+    #filter(!metabolite_id=="Glycerol-3-phosphate")%>%
     ggplot(., aes(x = group, y = mean, linetype=metabolite_id, group=metabolite_id)) +
     facet_wrap(~Function)+
     geom_line(aes(group=metabolite_id), color="black", position = position_dodge(0.1)) +
@@ -888,8 +875,7 @@ Plot nitrogen metabolites.
 nitrogen_plot<-specific_metab%>%
     group_by(Function, metabolite_id, group)%>%
     summarise(mean=mean(normalized_ions), N=length(normalized_ions), sd=sd(normalized_ions), sem=sd/N)%>%
-    filter(Function=="Nitrogen")%>%
-    filter(!metabolite_id=="Isoleucine")%>%
+    filter(Function=="Nitrogen Metabolism")%>%
     ggplot(., aes(x = group, y = mean, linetype=metabolite_id, group=metabolite_id)) +
     facet_wrap(~Function)+
     geom_line(aes(group=metabolite_id), color="black", position = position_dodge(0.1)) +
@@ -898,7 +884,7 @@ nitrogen_plot<-specific_metab%>%
     xlab("Lifestage") + 
     ylab("Normalized Ion Count")+
     #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    #ylim(5,9)+
+    #ylim(0,25)+
     theme_classic() + 
     theme(
       legend.position="right",
@@ -936,38 +922,12 @@ betaine_plot<-specific_metab%>%
       ); betaine_plot
 ```
 
-Plot antioxidant metabolites.  
-```{r}
-antiox_plot<-specific_metab%>%
-    group_by(Function, metabolite_id, group)%>%
-    summarise(mean=mean(normalized_ions), N=length(normalized_ions), sd=sd(normalized_ions), sem=sd/N)%>%
-    filter(Function=="Antioxidant")%>%
-    ggplot(., aes(x = group, y = mean, linetype=metabolite_id, group=metabolite_id)) +
-    facet_wrap(~Function)+
-    geom_line(aes(group=metabolite_id), color="black", position = position_dodge(0.1)) +
-    geom_point(aes(group=metabolite_id), size=2, position = position_dodge(0.1)) + 
-  geom_errorbar(aes(group=metabolite_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
-    xlab("Lifestage") + 
-    ylab("Normalized Ion Count")+
-    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    #ylim(5,9)+
-    theme_classic() + 
-    theme(
-      legend.position="right",
-      axis.title=element_text(face="bold", size=14),
-      axis.text=element_text(size=12, color="black"), 
-            axis.text.x=element_text(angle=90),
-      legend.title=element_text(face="bold", size=14), 
-      legend.text=element_text(size=12)
-      ); antiox_plot
-```
-
 Join all plots together.  
 
 ```{r}
 library(cowplot)
 
-metab_plots<-plot_grid(carbon_plot, antiox_plot, fatty_plot, nitrogen_plot, ncol=2, nrow=2, align="h")
+metab_plots<-plot_grid(carbon_plot, nitrogen_plot, ncol=2, nrow=1, align="h")
                       
-ggsave(filename="Mcap2020/Figures/Metabolomics/metabolite_expression_class.pdf", plot=metab_plots, dpi=300, width=10, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/metabolite_expression_class.pdf", plot=metab_plots, dpi=300, width=10, height=4, units="in")
 ```

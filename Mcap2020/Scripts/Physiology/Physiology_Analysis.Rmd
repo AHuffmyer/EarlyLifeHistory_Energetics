@@ -121,11 +121,11 @@ size%>%
 #need to output to csv 
 size%>%
   group_by(lifestage, hpf)%>%
-  summarise(n=length(area),
-            Mean=format(round(mean(area), 3), 3), 
-            SE=format(round(sd(area)/sqrt(length(area)),3),3))%>%
+  summarise(n=length(volume),
+            Mean=format(round(mean(volume), 3), 3), 
+            SE=format(round(sd(volume)/sqrt(length(volume)),3),3))%>%
   rename(Lifestage=lifestage, HPF=hpf)%>%
-  write_csv(., "Mcap2020/Output/Physiology/larval_size_table.csv")
+  write_csv(., "Mcap2020/Output/Physiology/larval_volume_table.csv")
 ```
 
 

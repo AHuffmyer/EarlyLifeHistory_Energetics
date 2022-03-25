@@ -1,0 +1,11 @@
+Lifestage,HPF,n,Mean,SE
+Egg (1 hpf),1,60,0.1,0.002
+Embryo (38 hpf),38,60,0.122,0.003
+Embryo (5 hpf),5,60,0.09,0.002
+Embryo (65 hpf),65,60,0.067,0.003
+Larvae (163 hpf),163,60,0.093,0.002
+Larvae (183 hpf),183,60,0.1,0.003
+Larvae (231 hpf),231,56,0.15,0.007
+Larvae (93 hpf),93,60,0.057,0.003
+Metamorphosed Recruit (183 hpf),183,58,0.082,0.004
+Metamorphosed Recruit (231 hpf),231,39,0.124,0.009

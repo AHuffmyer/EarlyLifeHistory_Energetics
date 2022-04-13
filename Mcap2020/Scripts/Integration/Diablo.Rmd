@@ -1,0 +1,325 @@
+---
+title: "Integration"
+author: "AS Huffmyer"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Run trial of Diablo scripts for genes, 16S, and metabolomics. 
+
+Trialing first with genes and metabolites, since these are already normalized.  
+
+# **Setup**  
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r setup, include = FALSE}
+## install packages if you dont already have them
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("janitor")) install.packages("janitor")
+if (!require("mixOmics")) install.packages("mixOmics")
+if (!require("genefilter")) install.packages("genefilter")
+if (!require("DESeq2")) install.packages("DESeq2")
+
+# load packages
+library(ggplot2)
+library(corpcor)
+library(janitor)
+library(mixOmics)
+library(tidyverse)
+library(genefilter)
+library(DESeq2)
+
+```
+
+General Steps for this analysis:  
+
+1. Normalize: VST for gene counts for RNA (done), VST for 16S microbiome data, metabolomics (median normalized), VST for ITS2.    
+
+2. Tune an SPLSDA (on all datasets/blocks) parameters for ncomp and keepX for each dataset. ncomp = # of groups (k) - 1; then keepX for the number on each component     
+
+3. Then re run the PLSDA to obtain final version with ncomp and keepX from tuning parameters  
+
+4. Feed into circos plot and the cim heatmap plot  
+
+5. Look at perf plot for ncomp to look at variance explained  
+
+# **Load data**  
+
+We need to load data to have samples in rows and features in columns. 
+
+We will calculate averages for each dataframe for each timepoint.  
+
+Metadata 
+```{r}
+metadata<-read.csv("Mcap2020/Data/lifestage_metadata.csv")
+
+genes_metadata <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(genes_metadata)
+```
+
+Metabolomics
+```{r}
+metabolomics<-read.csv("Mcap2020/Data/Integration/selected_metabolites.csv")
+
+metabolomics<-metabolomics%>%
+  dplyr::select(Lifestage, compound, norm_counts)%>%
+  group_by(Lifestage, compound)%>%
+  summarise(metab=mean(norm_counts))%>%
+  spread(compound, metab)
+
+metabolomics<-as.data.frame(metabolomics)
+
+rownames(metabolomics)<-metabolomics$Lifestage #set row names 
+
+metabolomics<-metabolomics[-c(1)]
+```
+
+Gene expression 
+```{r}
+genes<-read.csv("Mcap2020/Output/TagSeq/transformed_filtered_genes.csv") 
+
+nrow(genes)
+#15797 genes 
+
+rownames(genes)<-genes$X
+
+genes<-genes[-c(1)]
+
+#transpose to have samples in rows and genes in columns
+dim(genes)
+
+genes_t<-t(genes)
+
+dim(genes_t)
+
+rownames(genes_t)
+```
+
+
+```{r}
+#correct for lifestage names to match metabolomics
+genes_t<-as.data.frame(genes_t)
+dim(genes_t)
+
+genes_t$Lifestage<-genes_metadata$code[match(rownames(genes_t), genes_metadata$sample_id)]
+dim(genes_t)
+
+#summarize gene counts for each lifestage
+gene_data<-genes_t%>%
+  relocate(Lifestage)%>%
+  group_by(Lifestage)%>%
+  summarise_at(vars(2:15797), mean, na.rm = TRUE)
+
+#finally make the lifestage the row names
+gene_data<-as.data.frame(gene_data)
+
+rownames(gene_data)<-gene_data$Lifestage
+
+gene_data<-gene_data%>%
+  dplyr::select(!Lifestage)
+
+dim(gene_data)
+
+```
+
+Add 16S and ITS2 here when ready  
+
+# **Tune SPLSDA**  
+
+HAVING ISSUES WITH FOLDS? FOR EACH DATA SET 
+
+Need to run this on the full data set for each matrix - then summarize AFTER this step and getting the keepX and ncomp numbers - then we run splsda on each data set (full) before summarizing and doing multivariate datasets 
+
+## *Metabolomics*  
+
+Create PLSDA
+```{r}
+#assigning datasets 
+X <- metabolomics
+
+Y <- as.character(rownames(X)) #select treatment names
+Y
+
+MyResult.plsda_metab <- plsda(X,Y, ncomp=12) #number of components is classes-1
+plotIndiv(MyResult.plsda_metab) 
+```
+
+Run SPLSDA
+```{r}
+set.seed(30) 
+MyPerf.plsda_metab <- perf(MyResult.plsda_metab, validation = "Mfold", folds=1, #fold #? 
+                     progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
+
+MyPerf.plsda_metab <- perf(MyResult.plsda_metab, validation = "loo") #using Loo correction 
+
+plot(MyPerf.plsda_metab,  sd = TRUE)
+```
+
+
+The problem is the Y matrix??
+
+Trying "tune" 
+```{r}
+list.keepX <- c(5:10,  seq(20, 300, 10))
+
+set.seed(30) # for reproducbility in this vignette, otherwise increase nrepeat
+tune.splsda.srbct <- tune.splsda(X, Y, ncomp = 2, 
+                                 validation = 'Mfold', folds=1,
+                                 measure = "BER", test.keepX = list.keepX, nrepeat=50)   # we suggest nrepeat = 50
+
+error <- tune.splsda.srbct$error.rate
+ncomp <- tune.splsda.srbct$choice.ncomp$ncomp # optimal number of components based on t-tests on the error rate
+ncomp
+
+select.keepX <- tune.splsda.srbct$choice.keepX# optimal number of variables to select
+select.keepX
+
+plot(tune.splsda.srbct)
+```
+
+
+## *Genes*  
+
+Create PLSDA
+```{r}
+#assigning datasets 
+X <- gene_data
+
+Y <- as.factor(rownames(X)) #select treatment names
+Y
+
+MyResult.plsda_genes <- plsda(X,Y, ncomp=9) #number of components is classes-1
+plotIndiv(MyResult.plsda_genes) 
+```
+
+Run SPLSDA
+```{r}
+set.seed(30) 
+MyPerf.plsda_genes <- perf(MyResult.plsda_genes, validation = "Mfold", folds=8, #fold #? 
+                     progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
+
+#MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
+
+plot(MyPerf.plsda_metab,  sd = TRUE)
+```
+
+# **Generate multivariate PLSDA**  
+
+## Larvae 
+
+Assemble dataframe  
+```{r}
+#filter metabolite data by the lifestages available in genes 
+groups<-rownames(gene_data)
+
+metabolomics<-metabolomics%>%
+  filter(rownames(.) %in% groups)
+
+larvae_list<-c("Larvae1", "Larvae2", "Larvae3", "Larvae4", "Larvae6")
+
+genes_larvae<-gene_data%>%
+  filter(rownames(.) %in% larvae_list)
+
+metab_larvae<-metabolomics%>%
+  filter(rownames(.) %in% larvae_list)
+
+
+X <- list(genes = genes_larvae, # all rows are samples, columns are compounds/genes
+          metabolites = metab_larvae)
+Y <- rownames(genes_larvae)
+summary(Y)
+
+```
+
+Specify test values.  
+```{r}
+list.keepX <- list(genes = c(100, 100), metabolites = c(100,100))
+```
+
+Run PLSDA
+```{r}
+MyResult.diablo <- block.splsda(X, Y, keepX=list.keepX)
+plotIndiv(MyResult.diablo) ## sample plot
+#plotVar(MyResult.diablo) ## variable plot
+
+```
+
+
+
+Plot circos plot  
+
+```{r}
+#circos plot
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE)
+
+
+
+
+#circos_data<-circosPlot(MyResult.diablo, cutoff=0.6, line = TRUE)
+
+```
+
+Look into sparceness in data frame - do we have 0's in some lifestages that would drive some of those strong relationships? 
+
+
+## Recruits 
+
+Assemble dataframe  
+```{r}
+#filter metabolite data by the lifestages available in genes 
+groups<-rownames(gene_data)
+
+metabolomics<-metabolomics%>%
+  filter(rownames(.) %in% groups)
+
+recruit_list<-c("Recruit1plug", "Recruit2", "Recruit2plug")
+
+genes_recruit<-gene_data%>%
+  filter(rownames(.) %in% recruit_list)
+
+metab_recruit<-metabolomics%>%
+  filter(rownames(.) %in% recruit_list)
+
+
+X <- list(genes = genes_recruit, # all rows are samples, columns are compounds/genes
+          metabolites = metab_recruit)
+Y <- rownames(genes_recruit)
+summary(Y)
+
+```
+
+Specify test values.  
+```{r}
+list.keepX <- list(genes = c(50, 50), metabolites = c(50,50))
+```
+
+Run PLSDA
+```{r}
+MyResult.diablo <- block.splsda(X, Y, keepX=list.keepX)
+plotIndiv(MyResult.diablo) ## sample plot
+#plotVar(MyResult.diablo) ## variable plot
+
+```
+
+Plot circos plot  
+
+```{r}
+#circos plot
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE)
+
+#circos_data<-circosPlot(MyResult.diablo, cutoff=0.6, line = TRUE)
+```
+
+Look into sparceness in data frame - do we have 0's in some lifestages that would drive some of those strong relationships? Subsetting by lifestage may help this

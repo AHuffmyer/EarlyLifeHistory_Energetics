@@ -257,7 +257,6 @@ allgenesfilt_PCA_visual
 ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_visual, width=11, height=8)
 ```
 
-
 # **WGCNA analysis using Dynamic Tree Cut**  
 
 Data are analyzed using dynamic tree cut approach, our data set is not large enough to have to use blockwiseModules to break data into "blocks". This code uses step by step network analysis and module detection based on scripts from https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/index.html. 
@@ -1188,6 +1187,11 @@ Format our gene vst data frame for plotting.
 gene_expr<-as.matrix(datExpr)
 gene_expr<-t(gene_expr)
 gene_expr<-as.data.frame(gene_expr, row.names = rownames(gene_expr), make.names=TRUE)
+```
+
+Output for other analysis
+```{r}
+write.csv(gene_expr, "Mcap2020/Output/TagSeq/transformed_filtered_genes.csv")
 ```
 
 Create list of expression of genes for carbonic anhydrase: 

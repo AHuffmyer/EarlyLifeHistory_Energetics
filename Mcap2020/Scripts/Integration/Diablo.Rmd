@@ -279,14 +279,14 @@ pheatmap::pheatmap(cor_mat, cluster_rows = TRUE, cluster_cols = TRUE, show_rowna
 
 Plot cim plot  
 ```{r}
-cimDiablo(MyResult.diablo, margin=c(8,8), legend.position = "none", comp = c(1,2), trim=FALSE)
+cimDiablo(MyResult.diablo, margin=c(8,8), legend.position = "none", comp = c(1,2), trim=2)
 
 res <- cimDiablo(MyResult.diablo) ## save the output
 res_mat<-res$mat
 #can use this to pull out correlations with groups (this is super great!)
 ```
 
-What are the numeric values? They are >1? What is our cutoff that we might want to use? 
+What are the numeric values? They are >1? What is our cutoff that we might want to use? What is the data that is actually going into this cim diablo plot? It doesn't seem to be true correlation values (outside range of 1). Default is trimming to 3 standard deviations - of what? 
 
 
 

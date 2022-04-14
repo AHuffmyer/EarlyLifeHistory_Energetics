@@ -217,6 +217,87 @@ plot(MyPerf.plsda_metab,  sd = TRUE)
 
 # **Generate multivariate PLSDA**  
 
+## All stages 
+
+Assemble dataframe  
+```{r}
+#filter metabolite data by the lifestages available in genes 
+groups<-rownames(gene_data)
+
+metabolomics<-metabolomics%>%
+  filter(rownames(.) %in% groups)
+
+#larvae_list<-c("Larvae1", "Larvae2", "Larvae3", "Larvae4", "Larvae6")
+
+#genes_larvae<-gene_data%>%
+  #filter(rownames(.) %in% larvae_list)
+
+#metab_larvae<-metabolomics%>%
+  #filter(rownames(.) %in% larvae_list)
+
+
+X <- list(genes = gene_data, # all rows are samples, columns are compounds/genes
+          metabolites = metabolomics)
+Y <- rownames(gene_data)
+summary(Y)
+
+```
+
+Specify test values.  
+```{r}
+list.keepX <- list(genes = c(200, 200), metabolites = c(150,150))
+```
+
+Run PLSDA
+```{r}
+MyResult.diablo <- block.splsda(X, Y, keepX=list.keepX)
+plotIndiv(MyResult.diablo) ## sample plot
+#plotVar(MyResult.diablo) ## variable plot
+
+```
+
+Plot circos plot  
+
+```{r}
+#circos plot
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "white"))
+
+cor_mat<-circosPlot(MyResult.diablo, cutoff=0.95)
+
+```
+
+
+Find a way to filter for positive only - you can see white lines, try to find a null color? 
+
+
+Plot heatmap  
+```{r}
+library(pheatmap)
+
+pheatmap::pheatmap(cor_mat, cluster_rows = TRUE, cluster_cols = TRUE, show_rownames = FALSE, show_colnames = FALSE)
+```
+
+Plot cim plot  
+```{r}
+cimDiablo(MyResult.diablo, margin=c(8,8), legend.position = "none", comp = c(1,2), trim=FALSE)
+
+res <- cimDiablo(MyResult.diablo) ## save the output
+res_mat<-res$mat
+#can use this to pull out correlations with groups (this is super great!)
+```
+
+What are the numeric values? They are >1? What is our cutoff that we might want to use? 
+
+
+
+
+
+
+
+
+
+
+
 ## Larvae 
 
 Assemble dataframe  

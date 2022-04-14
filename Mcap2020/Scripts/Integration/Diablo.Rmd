@@ -288,7 +288,7 @@ res_mat<-res$mat
 
 What are the numeric values? They are >1? What is our cutoff that we might want to use? What is the data that is actually going into this cim diablo plot? It doesn't seem to be true correlation values (outside range of 1). Default is trimming to 3 standard deviations - of what? 
 
-
+We think it might be euclidian distances as a distance matrix 
 
 
 

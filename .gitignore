@@ -10,4 +10,5 @@
 .fastq.gz
 **/.fastq
 **/.fastq.gz 
-
+**/.fasta
+.fasta  

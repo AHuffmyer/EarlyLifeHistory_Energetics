@@ -12,9 +12,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-Run trial of Diablo scripts for genes, 16S, and metabolomics. 
+Run trial of Diablo scripts for genes and metabolomics. 
 
-Trialing first with genes and metabolites, since these are already normalized.  
+Trialing first with genes and metabolites, since these are already normalized.  NEXT STEP: Run with 16S data.  
 
 # **Setup**  
 
@@ -42,18 +42,6 @@ library(genefilter)
 library(DESeq2)
 
 ```
-
-General Steps for this analysis:  
-
-1. Normalize: VST for gene counts for RNA (done), VST for 16S microbiome data, metabolomics (median normalized), VST for ITS2.    
-
-2. Tune an SPLSDA (on all datasets/blocks) parameters for ncomp and keepX for each dataset. ncomp = # of groups (k) - 1; then keepX for the number on each component     
-
-3. Then re run the PLSDA to obtain final version with ncomp and keepX from tuning parameters  
-
-4. Feed into circos plot and the cim heatmap plot  
-
-5. Look at perf plot for ncomp to look at variance explained  
 
 # **Metabolomics SPLSDA**  
 
@@ -308,7 +296,6 @@ gene_data<-gene_data%>%
   dplyr::select(!Lifestage)
 
 dim(gene_data)
-
 ```
 
 
@@ -357,7 +344,7 @@ How does the number of comps change our output?
     
 Run PLSDA
 ```{r}
-MyResult.diablo <- block.splsda(X, Y, keepX=list.keepX)
+MyResult.diablo <- block.splsda(X, Y, keepX=list.keepX, ncomp=2)
 plotIndiv(MyResult.diablo) ## sample plot
 #plotVar(MyResult.diablo) ## variable plot
 
@@ -367,9 +354,9 @@ Plot circos plot
 
 ```{r}
 #circos plot
-circosPlot(MyResult.diablo, cutoff=0.90, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "white"))
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "white"))
 
-cor_mat<-circosPlot(MyResult.diablo, cutoff=0.90)
+cor_mat<-circosPlot(MyResult.diablo, cutoff=0.95)
 
 ```
 
@@ -433,7 +420,20 @@ res_mat<-res$mat
 write.csv(res_mat, "Mcap2020/Output/Integration/cim_matrix.csv")
 ```
 
-
 What are the numeric values? It doesn't seem to be true correlation values (outside range of 1). Default is trimming to 3 standard deviations - of what? 
 
 We think it might be euclidian distances as a distance matrix. How do we want to choose our cut offs?  
+
+
+NEXT STEP: Trial adding in 16S data  
+
+
+OUTSTANDING QUESTIONS: 
+- How do ncomp and keepX relate to each other and how do we pick ncomp/keepX? 
+- How do we get to functional information about what things are correlated? 
+- Can we do 3-way correlations or multi omic correlations?  
+
+THINGS WE WANT TO SAY: 
+- What omic is driving differences? 
+- How connected are they together? 
+- What functions are correlated to each other?

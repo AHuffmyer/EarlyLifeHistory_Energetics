@@ -1,0 +1,316 @@
+"","GO_ID","over_represented_pvalue","under_represented_pvalue","numDEInCat","numInCat","term","ontology","GOSlim_bin","aspect"
+"1","GO:0009308",0.00206412346999119,1,4,4,"amine metabolic process","BP","other metabolic processes","P"
+"2","GO:0006284",0.0136185619289111,1,3,3,"base-excision repair","BP","stress response","P"
+"3","GO:0009058",2.33789813061518e-06,1,9,9,"biosynthetic process","BP","other metabolic processes","P"
+"4","GO:0005975",1.18868244416209e-15,1,23,23,"carbohydrate metabolic process","BP","other metabolic processes","P"
+"5","GO:0019752",0.0477805814892738,1,2,2,"carboxylic acid metabolic process","BP","other metabolic processes","P"
+"6","GO:0006812",0.000677507677257315,1,5,5,"cation transport","BP","transport","P"
+"7","GO:0007155",0.0022202416790337,1,4,4,"cell adhesion","BP","cell adhesion","P"
+"8","GO:0007154",0.0294572021127062,1,2,2,"cell communication","BP","other biological processes","P"
+"9","GO:0030154",0.0338593805478061,1,2,2,"cell differentiation","BP","other biological processes","P"
+"10","GO:0007166",3.38820170595927e-08,1,11,11,"cell surface receptor signaling pathway","BP","signal transduction","P"
+"11","GO:0007267",0.0484413904096391,1,2,2,"cell-cell signaling","BP","cell-cell signaling","P"
+"12","GO:0007160",0.0254764201779971,1,2,2,"cell-matrix adhesion","BP","cell adhesion","P"
+"13","GO:0006520",0.000728570561402834,1,5,5,"cellular amino acid metabolic process","BP","other metabolic processes","P"
+"14","GO:0006464",0.0467841463030358,1,2,2,"cellular protein modification process","BP","protein metabolism","P"
+"15","GO:0006182",0.0442403159649866,1,2,2,"cGMP biosynthetic process","BP","other metabolic processes","P"
+"16","GO:0006821",0.0107605797684622,1,3,3,"chloride transport","BP","transport","P"
+"17","GO:0009190",0.0319310270003649,1,2,2,"cyclic nucleotide biosynthetic process","BP","other metabolic processes","P"
+"18","GO:0006310",3.71777343254394e-05,1,7,7,"DNA recombination","BP","DNA metabolism","P"
+"19","GO:0006281",0.0022469171754886,1,4,4,"DNA repair","BP","stress response","P"
+"20","GO:0006260",0.00294118634837197,1,4,4,"DNA replication","BP","DNA metabolism","P"
+"21","GO:0006635",0.0103344554690458,1,3,3,"fatty acid beta-oxidation","BP","other metabolic processes","P"
+"22","GO:0006633",0.00448994162272537,1,3,3,"fatty acid biosynthetic process","BP","other metabolic processes","P"
+"23","GO:0006631",0.00080148858095621,1,5,5,"fatty acid metabolic process","BP","other metabolic processes","P"
+"24","GO:0007186",4.73984925695063e-37,1,57,57,"G protein-coupled receptor signaling pathway","BP","signal transduction","P"
+"25","GO:0006094",0.0431930754571164,1,2,2,"gluconeogenesis","BP","other metabolic processes","P"
+"26","GO:0006955",0.0033238621861592,1,4,4,"immune response","BP","other biological processes","P"
+"27","GO:0006886",0.000458744827687456,1,5,5,"intracellular protein transport","BP","transport","P"
+"28","GO:0034220",0.000167722747565056,1,6,6,"ion transmembrane transport","BP","transport","P"
+"29","GO:0006811",2.97051145949021e-10,1,14,14,"ion transport","BP","transport","P"
+"30","GO:0046373",0.0399995381095356,1,2,2,"L-arabinose metabolic process","BP","other metabolic processes","P"
+"31","GO:0016042",0.0141839665708087,1,3,3,"lipid catabolic process","BP","other metabolic processes","P"
+"32","GO:0006629",2.44899245298589e-08,1,12,12,"lipid metabolic process","BP","other metabolic processes","P"
+"33","GO:0006013",0.00852857313707672,1,3,3,"mannose metabolic process","BP","other metabolic processes","P"
+"34","GO:0030001",0.000738764439024562,1,5,5,"metal ion transport","BP","transport","P"
+"35","GO:0007018",2.26581868666983e-07,1,9,9,"microtubule-based movement","BP","other biological processes","P"
+"36","GO:0007275",1.03148877337862e-09,1,14,14,"multicellular organism development","BP","developmental processes","P"
+"37","GO:0006809",0.0325829536085213,1,2,2,"nitric oxide biosynthetic process","BP","other metabolic processes","P"
+"38","GO:0007219",0.000336617924468767,1,5,5,"Notch signaling pathway","BP","signal transduction","P"
+"39","GO:0006289",0.00334373160877719,1,4,4,"nucleotide-excision repair","BP","stress response","P"
+"40","GO:0006857",0.00147106949866988,1,4,4,"oligopeptide transport","BP","transport","P"
+"41","GO:0006644",4.86066275328372e-05,1,7,7,"phospholipid metabolic process","BP","other metabolic processes","P"
+"42","GO:0006813",8.22838870179116e-08,1,11,11,"potassium ion transport","BP","transport","P"
+"43","GO:0006457",3.68992575585535e-05,1,7,7,"protein folding","BP","protein metabolism","P"
+"44","GO:0006486",1.02790113331868e-05,1,8,8,"protein glycosylation","BP","protein metabolism","P"
+"45","GO:0051260",0.000160162288386138,1,6,6,"protein homooligomerization","BP","cell organization and biogenesis","P"
+"46","GO:0007205",0.0480041345711081,1,2,2,"protein kinase C-activating G protein-coupled receptor signaling pathway","BP","signal transduction","P"
+"47","GO:0006487",0.0425007028577285,1,2,2,"protein N-linked glycosylation","BP","protein metabolism","P"
+"48","GO:0006468",3.723542763233e-13,1,18,18,"protein phosphorylation","BP","protein metabolism","P"
+"49","GO:0016567",0.00561272706869153,1,3,3,"protein ubiquitination","BP","protein metabolism","P"
+"50","GO:0006508",1.20711764702098e-42,1,65,65,"proteolysis","BP","protein metabolism","P"
+"51","GO:0006357",0.000449985793476755,1,5,5,"regulation of transcription by RNA polymerase II","BP","RNA metabolism","P"
+"52","GO:0006355",1.75950942998019e-20,1,31,31,"regulation of transcription, DNA-templated","BP","RNA metabolism","P"
+"53","GO:0006979",0.00211404535981263,1,4,4,"response to oxidative stress","BP","stress response","P"
+"54","GO:0006396",0.00822358278260275,1,3,3,"RNA processing","BP","RNA metabolism","P"
+"55","GO:0007165",3.33538304389741e-12,1,18,18,"signal transduction","BP","signal transduction","P"
+"56","GO:0006814",0.0490039491113013,1,2,2,"sodium ion transport","BP","transport","P"
+"57","GO:0008272",0.047488654402908,1,2,2,"sulfate transport","BP","transport","P"
+"58","GO:0006801",0.0466567568535656,1,2,2,"superoxide metabolic process","BP","other metabolic processes","P"
+"59","GO:0000723",0.00955375537270042,1,3,3,"telomere maintenance","BP","DNA metabolism","P"
+"60","GO:0006099",7.49835900562938e-06,1,8,8,"tricarboxylic acid cycle","BP","other metabolic processes","P"
+"61","GO:0006511",2.22311864587167e-06,1,8,8,"ubiquitin-dependent protein catabolic process","BP","protein metabolism","P"
+"62","GO:0005737",2.83648362487711e-14,1,21,21,"cytoplasm","CC","other cellular component","C"
+"63","GO:0005856",0.0100296426469887,1,3,3,"cytoskeleton","CC","cytoskeleton","C"
+"64","GO:0005829",0.0136652410798175,1,3,3,"cytosol","CC","cytosol","C"
+"65","GO:0000145",0.0129088225555176,1,3,3,"exocyst","CC","other cellular component","C"
+"66","GO:0005576",1.7858456037139e-20,1,30,30,"extracellular region","CC","non-structural extracellular","C"
+"67","GO:0005794",0.0138614371261064,1,3,3,"Golgi apparatus","CC","ER/Golgi","C"
+"68","GO:0016021",1.17392329333304e-41,1,62,62,"integral component of membrane","CC","other membranes","C"
+"69","GO:0005887",0.0492109989641717,1,2,2,"integral component of plasma membrane","CC","plasma membrane","C"
+"70","GO:0005764",0.00310784921497636,1,4,4,"lysosome","CC","other cytoplasmic organelle","C"
+"71","GO:0016020",5.11279318846152e-51,1,76,76,"membrane","CC","other membranes","C"
+"72","GO:0005874",0.00310459350835633,1,4,4,"microtubule","CC","cytoskeleton","C"
+"73","GO:0005750",0.0142110346368397,1,3,3,"mitochondrial respiratory chain complex III","CC","mitochondrion","C"
+"74","GO:0005739",0.000170152494204894,1,6,6,"mitochondrion","CC","mitochondrion","C"
+"75","GO:0016459",0.0356109501575347,1,2,2,"myosin complex","CC","cytoskeleton","C"
+"76","GO:0005634",3.93759792024794e-15,1,23,23,"nucleus","CC","nucleus","C"
+"77","GO:0005886",0.0010367829523691,1,4,4,"plasma membrane","CC","plasma membrane","C"
+"78","GO:0005840",0.000831510441987253,1,5,5,"ribosome","CC","translational apparatus","C"
+"79","GO:0005667",0.048032311580598,1,2,2,"transcription regulator complex","CC","nucleus","C"
+"80","GO:0000151",0.0340953475360532,1,2,2,"ubiquitin ligase complex","CC","other cellular component","C"
+"81","GO:0008076",0.000160162288386138,1,6,6,"voltage-gated potassium channel complex","CC","plasma membrane","C"
+"82","GO:0003857",0.000652252343801121,1,5,5,"3-hydroxyacyl-CoA dehydrogenase activity","MF","other molecular function","F"
+"83","GO:0051539",0.0137540332920389,1,3,3,"4 iron, 4 sulfur cluster binding","MF","other molecular function","F"
+"84","GO:0003989",0.0273433426933365,1,2,2,"acetyl-CoA carboxylase activity","MF","other molecular function","F"
+"85","GO:0022848",0.000167722747565056,1,6,6,"acetylcholine-gated cation-selective channel activity","MF","transporter activity","F"
+"86","GO:0008376",0.0118422664885307,1,3,3,"acetylgalactosaminyltransferase activity","MF","other molecular function","F"
+"87","GO:0003994",0.0459102958947471,1,2,2,"aconitate hydratase activity","MF","other molecular function","F"
+"88","GO:0003779",0.00262823040782739,1,4,4,"actin binding","MF","cytoskeletal activity","F"
+"89","GO:0003995",0.000735057425745597,1,5,5,"acyl-CoA dehydrogenase activity","MF","other molecular function","F"
+"90","GO:0004560",0.00272314474340762,1,4,4,"alpha-L-fucosidase activity","MF","other molecular function","F"
+"91","GO:0004559",0.002090752652574,1,4,4,"alpha-mannosidase activity","MF","other molecular function","F"
+"92","GO:0004190",0.00924589167402795,1,3,3,"aspartic-type endopeptidase activity","MF","other molecular function","F"
+"93","GO:0005524",1.07216919763072e-87,1,128,128,"ATP binding","MF","other molecular function","F"
+"94","GO:0016887",5.75171861431294e-10,1,13,13,"ATP hydrolysis activity","MF","other molecular function","F"
+"95","GO:0005347",0.0139357800869169,1,3,3,"ATP transmembrane transporter activity","MF","transporter activity","F"
+"96","GO:0004176",0.0109792483145316,1,3,3,"ATP-dependent peptidase activity","MF","other molecular function","F"
+"97","GO:0042626",2.93873832457067e-07,1,9,9,"ATPase-coupled transmembrane transporter activity","MF","transporter activity","F"
+"98","GO:0004565",0.00253923536395161,1,4,4,"beta-galactosidase activity","MF","other molecular function","F"
+"99","GO:0004563",0.0486962669618568,1,2,2,"beta-N-acetylhexosaminidase activity","MF","other molecular function","F"
+"100","GO:0005262",0.00239198972726791,1,4,4,"calcium channel activity","MF","transporter activity","F"
+"101","GO:0005509",4.83529268841274e-42,1,60,60,"calcium ion binding","MF","other molecular function","F"
+"102","GO:0005516",0.00732257669463809,1,3,3,"calmodulin binding","MF","other molecular function","F"
+"103","GO:0004089",6.08679214731768e-07,1,10,10,"carbonate dehydratase activity","MF","other molecular function","F"
+"104","GO:0004096",1.64636188849456e-08,1,11,11,"catalase activity","MF","other molecular function","F"
+"105","GO:0003824",5.24666980620531e-07,1,10,10,"catalytic activity","MF","other molecular function","F"
+"106","GO:0008324",0.0122881971210416,1,3,3,"cation transmembrane transporter activity","MF","transporter activity","F"
+"107","GO:0005507",3.64076717925133e-06,1,8,8,"copper ion binding","MF","other molecular function","F"
+"108","GO:0004197",0.0030789090179949,1,4,4,"cysteine-type endopeptidase activity","MF","other molecular function","F"
+"109","GO:0003774",0.00149145806377588,1,4,4,"cytoskeletal motor activity","MF","cytoskeletal activity","F"
+"110","GO:0003684",3.35992571547071e-05,1,7,7,"damaged DNA binding","MF","nucleic acid binding activity","F"
+"111","GO:0004143",0.0480041345711081,1,2,2,"diacylglycerol kinase activity","MF","kinase activity","F"
+"112","GO:0003677",3.73289841740461e-33,1,51,51,"DNA binding","MF","nucleic acid binding activity","F"
+"113","GO:0003700",1.91344413558722e-23,1,36,36,"DNA-binding transcription factor activity","MF","transcription regulatory activity","F"
+"114","GO:0000981",1.51240051442686e-12,1,19,19,"DNA-binding transcription factor activity, RNA polymerase II-specific","MF",NA,NA
+"115","GO:0003899",0.0107656907920123,1,3,3,"DNA-directed 5'-3' RNA polymerase activity","MF","other molecular function","F"
+"116","GO:0003887",0.00759984447920064,1,3,3,"DNA-directed DNA polymerase activity","MF","other molecular function","F"
+"117","GO:0009055",4.6542006365975e-07,1,10,10,"electron transfer activity","MF","other molecular function","F"
+"118","GO:0004866",4.70824396373328e-05,1,6,6,"endopeptidase inhibitor activity","MF","enzyme regulator activity","F"
+"119","GO:0004300",0.0463006889663002,1,2,2,"enoyl-CoA hydratase activity","MF","other molecular function","F"
+"120","GO:0005201",0.0480277768213231,1,2,2,"extracellular matrix structural constituent","MF","extracellular structural activity","F"
+"121","GO:0050660",2.38826207214315e-12,1,18,18,"flavin adenine dinucleotide binding","MF","other molecular function","F"
+"122","GO:0010181",0.000299895242858942,1,5,5,"FMN binding","MF","other molecular function","F"
+"123","GO:0004930",2.49796455915998e-35,1,54,54,"G protein-coupled receptor activity","MF","signal transduction activity","F"
+"124","GO:0004364",4.74493664028678e-05,1,7,7,"glutathione transferase activity","MF","other molecular function","F"
+"125","GO:0005525",2.41795765618691e-13,1,20,20,"GTP binding","MF","other molecular function","F"
+"126","GO:0005096",0.0289411535957585,1,2,2,"GTPase activator activity","MF","enzyme regulator activity","F"
+"127","GO:0003924",1.40374798556759e-24,1,38,38,"GTPase activity","MF","other molecular function","F"
+"128","GO:0005085",1.74947941383323e-05,1,7,7,"guanyl-nucleotide exchange factor activity","MF","enzyme regulator activity","F"
+"129","GO:0004383",0.0442403159649866,1,2,2,"guanylate cyclase activity","MF","other molecular function","F"
+"130","GO:0004386",1.6017287884265e-05,1,7,7,"helicase activity","MF","other molecular function","F"
+"131","GO:0020037",6.90919070040771e-28,1,41,41,"heme binding","MF","other molecular function","F"
+"132","GO:0016787",1.11103093274304e-05,1,8,8,"hydrolase activity","MF","other molecular function","F"
+"133","GO:0004553",1.53103132483732e-10,1,15,15,"hydrolase activity, hydrolyzing O-glycosyl compounds","MF","other molecular function","F"
+"134","GO:0005216",5.25926705529941e-07,1,9,9,"ion channel activity","MF","transporter activity","F"
+"135","GO:0005506",7.32300747664996e-28,1,42,42,"iron ion binding","MF","other molecular function","F"
+"136","GO:0051536",0.0303112582758528,1,2,2,"iron-sulfur cluster binding","MF","other molecular function","F"
+"137","GO:0016853",0.0139924954692017,1,3,3,"isomerase activity","MF","other molecular function","F"
+"138","GO:0016301",0.0415898680215777,1,2,2,"kinase activity","MF","kinase activity","F"
+"139","GO:0031418",0.000161442069233566,1,6,6,"L-ascorbic acid binding","MF","other molecular function","F"
+"140","GO:0005319",0.0316845754570925,1,2,2,"lipid transporter activity","MF","transporter activity","F"
+"141","GO:0016829",0.00651364791626982,1,3,3,"lyase activity","MF","other molecular function","F"
+"142","GO:0000287",0.000642742819306981,1,5,5,"magnesium ion binding","MF","other molecular function","F"
+"143","GO:0046872",0.000473905782536547,1,5,5,"metal ion binding","MF","other molecular function","F"
+"144","GO:0046873",0.00305025827059312,1,4,4,"metal ion transmembrane transporter activity","MF","transporter activity","F"
+"145","GO:0004181",0.000165719600115245,1,6,6,"metallocarboxypeptidase activity","MF","other molecular function","F"
+"146","GO:0004222",6.18065548735548e-23,1,34,34,"metalloendopeptidase activity","MF","other molecular function","F"
+"147","GO:0008237",3.62852444181926e-06,1,8,8,"metallopeptidase activity","MF","other molecular function","F"
+"148","GO:0003777",1.4954849253132e-06,1,8,8,"microtubule motor activity","MF","cytoskeletal activity","F"
+"149","GO:0004497",0.0133433721342703,1,3,3,"monooxygenase activity","MF","other molecular function","F"
+"150","GO:0004499",0.000161244491794078,1,6,6,"N,N-dimethylaniline monooxygenase activity","MF","other molecular function","F"
+"151","GO:0051287",9.76564299560829e-06,1,8,8,"NAD binding","MF","other molecular function","F"
+"152","GO:0003950",0.0417800288474332,1,2,2,"NAD+ ADP-ribosyltransferase activity","MF","other molecular function","F"
+"153","GO:0003951",0.0480041345711081,1,2,2,"NAD+ kinase activity","MF","kinase activity","F"
+"154","GO:0008137",0.0124651620821879,1,3,3,"NADH dehydrogenase (ubiquinone) activity","MF","other molecular function","F"
+"155","GO:0050661",2.26639853887289e-08,1,12,12,"NADP binding","MF","other molecular function","F"
+"156","GO:0004517",0.0325829536085213,1,2,2,"nitric-oxide synthase activity","MF","other molecular function","F"
+"157","GO:0003676",1.99488308931219e-30,1,46,46,"nucleic acid binding","MF","nucleic acid binding activity","F"
+"158","GO:0000166",0.0436784525104973,1,2,2,"nucleotide binding","MF","other molecular function","F"
+"159","GO:0016491",1.32800912151838e-36,1,57,57,"oxidoreductase activity","MF","other molecular function","F"
+"160","GO:0016651",0.00328829816760982,1,4,4,"oxidoreductase activity, acting on NAD(P)H","MF","other molecular function","F"
+"161","GO:0016705",1.14422480459732e-19,1,30,30,"oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen","MF","other molecular function","F"
+"162","GO:0016715",0.0124999177835046,1,3,3,"oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced ascorbate as one donor, and incorporation of one atom of oxygen","MF","other molecular function","F"
+"163","GO:0016702",7.91647139951174e-07,1,9,9,"oxidoreductase activity, acting on single donors with incorporation of molecular oxygen, incorporation of two atoms of oxygen","MF","other molecular function","F"
+"164","GO:0016620",3.4936142915384e-05,1,7,7,"oxidoreductase activity, acting on the aldehyde or oxo group of donors, NAD or NADP as acceptor","MF","other molecular function","F"
+"165","GO:0003755",0.000769765533534803,1,5,5,"peptidyl-prolyl cis-trans isomerase activity","MF","other molecular function","F"
+"166","GO:0004601",0.00683042749181101,1,3,3,"peroxidase activity","MF","other molecular function","F"
+"167","GO:0004623",4.86066275328372e-05,1,7,7,"phospholipase A2 activity","MF","other molecular function","F"
+"168","GO:0016849",0.0319310270003649,1,2,2,"phosphorus-oxygen lyase activity","MF","other molecular function","F"
+"169","GO:0005267",0.0032351749642471,1,4,4,"potassium channel activity","MF","transporter activity","F"
+"170","GO:0008131",0.00206412346999119,1,4,4,"primary amine oxidase activity","MF","other molecular function","F"
+"171","GO:0005515",3.17159889499505e-127,1,186,186,"protein binding","MF","other molecular function","F"
+"172","GO:0004672",1.7933295807927e-22,1,33,33,"protein kinase activity","MF","kinase activity","F"
+"173","GO:0004674",7.42843179003194e-07,1,9,9,"protein serine/threonine kinase activity","MF","kinase activity","F"
+"174","GO:0004713",4.94541824249915e-08,1,11,11,"protein tyrosine kinase activity","MF","kinase activity","F"
+"175","GO:0004725",0.00169848823051136,1,4,4,"protein tyrosine phosphatase activity","MF","other molecular function","F"
+"176","GO:0015035",0.0139955575817607,1,3,3,"protein-disulfide reductase activity","MF","other molecular function","F"
+"177","GO:0003810",0.00995423677154139,1,3,3,"protein-glutamine gamma-glutamyltransferase activity","MF","other molecular function","F"
+"178","GO:0015078",0.0121694265734378,1,3,3,"proton transmembrane transporter activity","MF","transporter activity","F"
+"179","GO:0048038",2.84135413135803e-05,1,7,7,"quinone binding","MF","other molecular function","F"
+"180","GO:0003723",5.68796562388006e-06,1,8,8,"RNA binding","MF","nucleic acid binding activity","F"
+"181","GO:0005044",1.1706067057158e-09,1,12,12,"scavenger receptor activity","MF","signal transduction activity","F"
+"182","GO:0008271",0.047488654402908,1,2,2,"secondary active sulfate transmembrane transporter activity","MF","transporter activity","F"
+"183","GO:0004252",1.91075127603295e-21,1,32,32,"serine-type endopeptidase activity","MF","other molecular function","F"
+"184","GO:0004867",0.00814629674887962,1,3,3,"serine-type endopeptidase inhibitor activity","MF","enzyme regulator activity","F"
+"185","GO:0005102",4.53345220323938e-05,1,7,7,"signaling receptor binding","MF","signal transduction activity","F"
+"186","GO:0005200",0.0022834660676709,1,4,4,"structural constituent of cytoskeleton","MF","cytoskeletal activity","F"
+"187","GO:0003735",0.00020061773661671,1,6,6,"structural constituent of ribosome","MF","other molecular function","F"
+"188","GO:0008146",4.30235677987988e-05,1,7,7,"sulfotransferase activity","MF","other molecular function","F"
+"189","GO:0017025",0.0123206144121147,1,3,3,"TBP-class protein binding","MF","other molecular function","F"
+"190","GO:0004843",7.14793843724346e-05,1,6,6,"thiol-dependent deubiquitinase","MF","other molecular function","F"
+"191","GO:0008483",0.00322509303030605,1,4,4,"transaminase activity","MF","other molecular function","F"
+"192","GO:0003712",0.000449985793476755,1,5,5,"transcription coregulator activity","MF","transcription regulatory activity","F"
+"193","GO:0003743",0.000692107294452276,1,5,5,"translation initiation factor activity","MF","nucleic acid binding activity","F"
+"194","GO:0004714",0.00636246995199403,1,3,3,"transmembrane receptor protein tyrosine kinase activity","MF","signal transduction activity","F"
+"195","GO:0004888",1.16844206202091e-07,1,11,11,"transmembrane signaling receptor activity","MF","signal transduction activity","F"
+"196","GO:0022857",1.64919742520281e-34,1,52,52,"transmembrane transporter activity","MF","transporter activity","F"
+"197","GO:0004806",0.0135297561797081,1,3,3,"triglyceride lipase activity","MF","other molecular function","F"
+"198","GO:0005164",0.0033238621861592,1,4,4,"tumor necrosis factor receptor binding","MF","signal transduction activity","F"
+"199","GO:0004842",0.000122439271270218,1,6,6,"ubiquitin-protein transferase activity","MF","other molecular function","F"
+"200","GO:0005247",0.0453176648021993,1,2,2,"voltage-gated chloride channel activity","MF","transporter activity","F"
+"201","GO:0005249",3.50399801335485e-05,1,7,7,"voltage-gated potassium channel activity","MF","transporter activity","F"
+"202","GO:0008270",7.00394843435348e-20,1,30,30,"zinc ion binding","MF","other molecular function","F"
+"203","NA;NA",0,1,1277,1277,NA,NA,NA,NA
+"204","GO:0005515;NA",3.14331693990194e-173,1,260,260,NA,NA,NA,NA
+"205","GO:0055114;NA",8.69364818865888e-112,1,172,172,NA,NA,NA,NA
+"206","GO:0016021;NA",2.84678875327148e-68,1,105,105,NA,NA,NA,NA
+"207","GO:0055085;NA",3.82927135481262e-63,1,95,95,NA,NA,NA,NA
+"208","GO:0016020;NA",2.52167945005129e-47,1,71,71,NA,NA,NA,NA
+"209","GO:0005509;NA",3.02955495234053e-39,1,59,59,NA,NA,NA,NA
+"210","GO:0008270;NA",9.38759098509092e-38,1,57,57,NA,NA,NA,NA
+"211","GO:0006508;NA",1.11877747287321e-28,1,43,43,NA,NA,NA,NA
+"212","GO:0006468;NA",3.72347503276454e-28,1,42,42,NA,NA,NA,NA
+"213","GO:0046872;NA",9.29848081853263e-28,1,41,41,NA,NA,NA,NA
+"214","GO:0007165;NA",9.45453532673645e-23,1,34,34,NA,NA,NA,NA
+"215","GO:0005525;NA",6.47800966865217e-21,1,32,32,NA,NA,NA,NA
+"216","GO:0006355;NA",8.7070257164476e-21,1,32,32,NA,NA,NA,NA
+"217","GO:0003824;NA",1.24214467252288e-17,1,27,27,NA,NA,NA,NA
+"218","GO:0042981;NA",9.85606324432142e-15,1,22,22,NA,NA,NA,NA
+"219","GO:0005524;NA",1.37775104526553e-14,1,21,21,NA,NA,NA,NA
+"220","GO:0046983;NA",3.99953923261991e-14,1,21,21,NA,NA,NA,NA
+"221","GO:0005975;NA",1.31630925834776e-12,1,18,18,NA,NA,NA,NA
+"222","GO:0043565;NA",5.71745341445478e-12,1,18,18,NA,NA,NA,NA
+"223","GO:0005576;NA",2.14703235294835e-10,1,15,15,NA,NA,NA,NA
+"224","GO:0016787;NA",4.32658491004936e-10,1,15,15,NA,NA,NA,NA
+"225","GO:0035556;NA",7.72538970903215e-10,1,13,13,NA,NA,NA,NA
+"226","GO:0005201;NA",1.66895033814666e-09,1,14,14,NA,NA,NA,NA
+"227","GO:0015074;NA",4.61184461563191e-09,1,13,13,NA,NA,NA,NA
+"228","GO:0030246;NA",6.97675629498114e-09,1,12,12,NA,NA,NA,NA
+"229","GO:0003676;NA",2.49103893630543e-08,1,12,12,NA,NA,NA,NA
+"230","NA;GO:0016021",3.46434954501427e-08,1,12,12,NA,NA,NA,NA
+"231","GO:0035091;NA",1.03359810720744e-07,1,11,11,NA,NA,NA,NA
+"232","GO:0030170;NA",1.0415265975813e-07,1,11,11,NA,NA,NA,NA
+"233","GO:0008061;NA",2.84978088741036e-07,1,10,10,NA,NA,NA,NA
+"234","GO:0042626;NA",3.28831561972374e-07,1,10,10,NA,NA,NA,NA
+"235","GO:0008017;NA",3.7317395541639e-07,1,9,9,NA,NA,NA,NA
+"236","GO:0055114",3.79206989123487e-07,1,10,10,NA,NA,"other metabolic processes","P"
+"237","GO:0008146;NA",4.83686501699844e-07,1,10,10,NA,NA,NA,NA
+"238","GO:0008234;NA",5.94435493500492e-07,1,10,10,NA,NA,NA,NA
+"239","GO:0008289;NA",7.73504043231559e-06,1,8,8,NA,NA,NA,NA
+"240","GO:0005615;NA",1.17701044702726e-05,1,7,7,NA,NA,NA,NA
+"241","GO:0016746;NA",3.68337017158682e-05,1,7,7,NA,NA,NA,NA
+"242","GO:0051082;NA",3.68992575585535e-05,1,7,7,NA,NA,NA,NA
+"243","GO:0008236;NA",3.71778063183262e-05,1,7,7,NA,NA,NA,NA
+"244","GO:0016747;NA",4.0145003161692e-05,1,7,7,NA,NA,NA,NA
+"245","GO:0016055;NA",4.53345220323938e-05,1,7,7,NA,NA,NA,NA
+"246","GO:0016579;NA",7.14793843724346e-05,1,6,6,NA,NA,NA,NA
+"247","GO:0030414;NA",0.000103667611518957,1,6,6,NA,NA,NA,NA
+"248","GO:0007264;NA",0.00011115011476491,1,6,6,NA,NA,NA,NA
+"249","GO:0045211;NA",0.000167722747565056,1,6,6,NA,NA,NA,NA
+"250","GO:0016491;NA",0.000189222424167533,1,6,6,NA,NA,NA,NA
+"251","GO:0050482;NA",0.000200905741713127,1,6,6,NA,NA,NA,NA
+"252","GO:0051015;NA",0.000355007545663982,1,5,5,NA,NA,NA,NA
+"253","GO:0070588;NA",0.000464298457328517,1,5,5,NA,NA,NA,NA
+"254","GO:0071949;NA",0.00055155365549954,1,5,5,NA,NA,NA,NA
+"255","GO:0008374;NA",0.000660950659491526,1,5,5,NA,NA,NA,NA
+"256","GO:0008168;NA",0.000778962968496431,1,5,5,NA,NA,NA,NA
+"257","GO:0008218;GO:0008218",0.000823492266103273,1,5,5,NA,NA,NA,NA
+"258","GO:0006412;NA",0.000831510441987253,1,5,5,NA,NA,NA,NA
+"259","GO:0007156;NA",0.0010367829523691,1,4,4,NA,NA,NA,NA
+"260","GO:0016887;NA",0.00111142028501477,1,4,4,NA,NA,NA,NA
+"261","GO:0006470;NA",0.00169848823051136,1,4,4,NA,NA,NA,NA
+"262","GO:0071705;NA",0.00218038564523102,1,4,4,NA,NA,NA,NA
+"263","GO:1902600;NA",0.00220563461215142,1,4,4,NA,NA,NA,NA
+"264","GO:0007160;NA",0.00221231683802825,1,4,4,NA,NA,NA,NA
+"265","GO:0006629;NA",0.00254651709150757,1,4,4,NA,NA,NA,NA
+"266","GO:0008171;NA",0.00262454056803201,1,4,4,NA,NA,NA,NA
+"267","GO:0006004;NA",0.00272314474340762,1,4,4,NA,NA,NA,NA
+"268","GO:0006413;NA",0.002908673707814,1,4,4,NA,NA,NA,NA
+"269","GO:0008484;NA",0.0029416809996109,1,4,4,NA,NA,NA,NA
+"270","GO:0051087;NA",0.00311426802809057,1,4,4,NA,NA,NA,NA
+"271","GO:0008080;NA",0.00311626946672027,1,4,4,NA,NA,NA,NA
+"272","GO:0008194;NA",0.00320333354647128,1,4,4,NA,NA,NA,NA
+"273","GO:0071805;NA",0.0032351749642471,1,4,4,NA,NA,NA,NA
+"274","GO:0016788;NA",0.00325706916489195,1,4,4,NA,NA,NA,NA
+"275","GO:0055114;GO:0016491",0.00329925229848452,1,4,4,NA,NA,NA,NA
+"276","GO:0070403;NA",0.00333638831779681,1,4,4,NA,NA,NA,NA
+"277","GO:0005634;NA",0.00335095372608273,1,4,4,NA,NA,NA,NA
+"278","GO:0007169;NA",0.0075689903964367,1,3,3,NA,NA,NA,NA
+"279","GO:0016592;NA",0.00879707510042541,1,3,3,NA,NA,NA,NA
+"280","GO:0005509;GO:0005509",0.0106588112421411,1,3,3,NA,NA,NA,NA
+"281","GO:0051537;NA",0.0109318199137407,1,3,3,NA,NA,NA,NA
+"282","GO:0016192;NA",0.0110061786435615,1,3,3,NA,NA,NA,NA
+"283","GO:0003677;NA",0.01126396296638,1,3,3,NA,NA,NA,NA
+"284","GO:0042981;GO:0042981",0.0112693329838285,1,3,3,NA,NA,NA,NA
+"285","GO:0019901;NA",0.01177031776571,1,3,3,NA,NA,NA,NA
+"286","GO:0032580;NA",0.0118422664885307,1,3,3,NA,NA,NA,NA
+"287","GO:0070897;NA",0.0123206144121147,1,3,3,NA,NA,NA,NA
+"288","GO:0016757;NA",0.0128779085897537,1,3,3,NA,NA,NA,NA
+"289","GO:0006887;NA",0.0129088225555176,1,3,3,NA,NA,NA,NA
+"290","GO:0004620;NA",0.0132216653613369,1,3,3,NA,NA,NA,NA
+"291","GO:0070006;NA",0.013323558963079,1,3,3,NA,NA,NA,NA
+"292","GO:0031012;NA",0.0133481825435017,1,3,3,NA,NA,NA,NA
+"293","GO:0016791;NA",0.0133663085886864,1,3,3,NA,NA,NA,NA
+"294","GO:0006886;NA",0.0135192837502164,1,3,3,NA,NA,NA,NA
+"295","GO:0006281;NA",0.013628495653962,1,3,3,NA,NA,NA,NA
+"296","GO:0016409;NA",0.0137803536123469,1,3,3,NA,NA,NA,NA
+"297","GO:0008083;NA",0.0138461030107262,1,3,3,NA,NA,NA,NA
+"298","GO:0005737;NA",0.0140992568406504,1,3,3,NA,NA,NA,NA
+"299","GO:0006122;NA",0.0142110346368397,1,3,3,NA,NA,NA,NA
+"300","GO:0016525;NA",0.0313667663451524,1,2,2,NA,NA,NA,NA
+"301","GO:0050793;NA",0.0338593805478061,1,2,2,NA,NA,NA,NA
+"302","GO:0004842;NA",0.0346963805398792,1,2,2,NA,NA,NA,NA
+"303","GO:0043531;NA",0.0365448519649917,1,2,2,NA,NA,NA,NA
+"304","GO:0006260;NA",0.0396923872077768,1,2,2,NA,NA,NA,NA
+"305","GO:0016459;NA",0.0417560269167947,1,2,2,NA,NA,NA,NA
+"306","GO:0055085;GO:0016021;GO:0022857",0.0419179717094934,1,2,2,NA,NA,NA,NA
+"307","GO:0016010;NA",0.0424149219038691,1,2,2,NA,NA,NA,NA
+"308","GO:0030144;NA",0.0425007028577285,1,2,2,NA,NA,NA,NA
+"309","GO:0018149;NA",0.0456363258336128,1,2,2,NA,NA,NA,NA
+"310","GO:0016507;NA",0.0463006889663002,1,2,2,NA,NA,NA,NA
+"311","GO:0008173;NA",0.0473194398752001,1,2,2,NA,NA,NA,NA
+"312","GO:0030247;NA",0.0473658515692553,1,2,2,NA,NA,NA,NA
+"313","GO:0007179;NA",0.048032311580598,1,2,2,NA,NA,NA,NA
+"314","GO:0006397;NA",0.0490781098174207,1,2,2,NA,NA,NA,NA
+"315","GO:0016286;NA",0.0494339707783118,1,2,2,NA,NA,NA,NA

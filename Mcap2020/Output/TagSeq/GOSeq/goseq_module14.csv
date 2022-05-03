@@ -1,0 +1,31 @@
+"","GO_ID","over_represented_pvalue","under_represented_pvalue","numDEInCat","numInCat","term","ontology","GOSlim_bin","aspect"
+"1","GO:0006508",0.00476203463630683,1,1,1,"proteolysis","BP","protein metabolism","P"
+"2","GO:0000723",5.649656769637e-10,1,4,4,"telomere maintenance","BP","DNA metabolism","P"
+"3","GO:0005634",0.00375170799352783,1,1,1,"nucleus","CC","nucleus","C"
+"4","GO:0005685",0.00252806620973302,1,1,1,"U1 snRNP","CC","nucleus","C"
+"5","GO:0004190",0.00479726465888553,1,1,1,"aspartic-type endopeptidase activity","MF","other molecular function","F"
+"6","GO:0005524",0.00501499790086051,1,1,1,"ATP binding","MF","other molecular function","F"
+"7","GO:0003677",1.53662371926657e-05,1,2,2,"DNA binding","MF","nucleic acid binding activity","F"
+"8","GO:0003678",5.649656769637e-10,1,4,4,"DNA helicase activity","MF","other molecular function","F"
+"9","GO:0003700",8.39931689043151e-06,1,2,2,"DNA-binding transcription factor activity","MF","transcription regulatory activity","F"
+"10","GO:0003899",0.00501499790087112,1,1,1,"DNA-directed 5'-3' RNA polymerase activity","MF","other molecular function","F"
+"11","GO:0004386",0.00501499790086051,1,1,1,"helicase activity","MF","other molecular function","F"
+"12","GO:0003729",0.00252806620973302,1,1,1,"mRNA binding","MF","nucleic acid binding activity","F"
+"13","GO:0003676",0.00501499790086051,1,1,1,"nucleic acid binding","MF","nucleic acid binding activity","F"
+"14","GO:0005515",2.20725747140963e-05,1,2,2,"protein binding","MF","other molecular function","F"
+"15","GO:0003723",0.00375170799352783,1,1,1,"RNA binding","MF","nucleic acid binding activity","F"
+"16","GO:0004842",0.00501499790087372,1,1,1,"ubiquitin-protein transferase activity","MF","other molecular function","F"
+"17","NA;NA",0,1,34,34,NA,NA,NA,NA
+"18","GO:0006281;NA",5.649656769637e-10,1,4,4,NA,NA,NA,NA
+"19","GO:0006355;NA",8.39931689043151e-06,1,2,2,NA,NA,NA,NA
+"20","NA;GO:0000799;GO:0003682;GO:0007076;GO:0008270;GO:0044547;GO:0072587",0.00238115347232185,1,1,1,NA,NA,NA,NA
+"21","GO:0006376;NA",0.00252806620973302,1,1,1,NA,NA,NA,NA
+"22","GO:0004842;GO:0004842",0.00331473843412674,1,1,1,NA,NA,NA,NA
+"23","GO:0006397;NA",0.00375170799352783,1,1,1,NA,NA,NA,NA
+"24","GO:0005515;NA",0.0040259296564598,1,1,1,NA,NA,NA,NA
+"25","GO:0006351;NA",0.00446891761719162,1,1,1,NA,NA,NA,NA
+"26","GO:0008234;NA",0.00476203463630683,1,1,1,NA,NA,NA,NA
+"27","GO:0006508;NA",0.00479726465888553,1,1,1,NA,NA,NA,NA
+"28","GO:0046872;NA",0.00501499790086051,1,1,1,NA,NA,NA,NA
+"29","GO:0006351;GO:0003677;GO:0003899;GO:0006366",0.00501499790087112,1,1,1,NA,NA,NA,NA
+"30","GO:0008270;NA",0.00501499790087372,1,1,1,NA,NA,NA,NA

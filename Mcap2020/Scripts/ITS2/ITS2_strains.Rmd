@@ -13,6 +13,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+RECALCULATE RELATIVE ABUNDANCE 
+
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -95,7 +97,7 @@ coral <- phyloseq(otu, tax, Metadata)
 coral
 ```
 
-Note that taxa 8 is CladeC and taxa 9 is CladeD.  
+Note that taxa 8 is Clade C and taxa 9 is Clade D.  
 
 Next load the data for coral strain level information.  
 
@@ -118,10 +120,11 @@ rownames(tax1) <- tax0$DIV
 tax <- tax_table(tax1)
 
 otu0 <- read_tsv(
-  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_only.txt") %>%
+  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.txt") %>%
   select(-1, )
-otu1 <- as.matrix(otu0[, -1])
-rownames(otu1) <- Metadata$sample_name
+
+otu1 <- as.matrix(otu0[, 37:113])
+rownames(otu1) <- otu0$sample_name
 otu <- otu_table(otu1, taxa_are_rows = FALSE)
 
 coralDIV <- phyloseq(otu, tax, Metadata)
@@ -133,7 +136,7 @@ Now save the object.
 save(coral, coralDIV, file = "Mcap2020/Data/ITS2/ITS2_phyloseq.RData")
 ```
 
-# **Explore DIV Data**  
+# **Build DIV Data**  
 
 Load the data.  
 ```{r}
@@ -171,9 +174,18 @@ phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Recruit 
 phylo_coral_DIV<-ps_arrange(phylo_coral_DIV, lifestage)
 ```
 
+Reorder lifestage.  
+```{r}
+levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
+
+sample_data(phylo_coral_DIV)$lifestage = factor(sample_data(phylo_coral_DIV)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+
+levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
+```
+
 Now build a tree with the combined data.  
 ```{r}
-plot_tree(phylo_coral_DIV, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+plot_tree(phylo_coral_DIV, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
 ```
 
 Plot a heatmap.  
@@ -191,8 +203,10 @@ GP1
 
 Transform to relative abundance.  
 ```{r}
-GP1 = transform_sample_counts(GP1, function(x) 1E6 * x/sum(x))
+GP1 = transform_sample_counts(GP1, function(x) 100 * x/sum(x))
 ```
+
+# **Ordinations: PCoA and NMDS** 
 
 View ordination by OTU.  
 ```{r}
@@ -208,16 +222,42 @@ p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("samp
 p2
 ```
 
+View pcoa by OTU.  
+```{r}
+GP.ordb <- ordinate(GP1, "PCoA", "bray")
+p1b = plot_ordination(GP1, GP.ordb, type="taxa", title="taxa")
+p1b
+```
+
+Plot with samples now.  
+```{r}
+p2b = plot_ordination(GP1, GP.ordb, type="samples", color="lifestage") 
+p2b<- p2b + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("PCoA")
+p2b
+```
+
+Output PCoA plot. 
+```{r}
+p2b_viz<-p2b + scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + theme_classic()
+p2b_viz
+
+ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=8, w=10)
+```
+
 Conduct a permanova in the vegan package.  
 
 ```{r}
 metadata <- as(sample_data(GP1), "data.frame")
 
-adonis(phyloseq::distance(GP1, method="bray") ~ lifestage,
+perm1<-adonis2(phyloseq::distance(GP1, method="bray") ~ lifestage,
        data = metadata)
+
+perm1
 ```
 
-Permanova suggests there is separation by lifestage in ITS2 profiles.  
+Permanova suggests there is separation by lifestage in ITS2 profiles (p=0.001).  
+
+# **Alpha diversity**  
 
 Look at alpha diversity.  
 
@@ -228,10 +268,10 @@ GP2f <- prune_taxa(taxa_sums(phylo_coral_DIV) > 0, phylo_coral_DIV)
 
 Plot the two most commonly used richness metrics - Shannon and Inverse Simpson.  
 ```{r}
-plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="group")
+plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="lifestage")
 ```
 
-Pretty similar across life stages.     
+Pretty similar across life stages, maybe a trend for decrease across lifestages.     
 
 Test for differences in alpha diversity.  
 ```{r}
@@ -248,6 +288,8 @@ summary(aov(InvSimpson~lifestage, data=alpha_full))
 ```
 
 No difference in ITS2 alpha diversity by lifestage.  
+
+# **DESeq2**  
 
 Try DESeq2 to look at drivers of differences.  
 
@@ -273,23 +315,36 @@ res_full = results(diagdds_full, cooksCutoff = FALSE)
 alpha = 0.05
 sigtab = res_full[which(res_full$padj < alpha), ]
 sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(phylo_coral_DIV)[rownames(sigtab), ], "matrix"))
-head(sigtab)
-length(sigtab)
+
+sigtab
 ```
 
-There are 6 members of the community that shift by lifestage, 5 in clade C and 1 in clade D.  
+There are 12 members of the community that shift by lifestage, 10 in clade C and 2 in clade D.  
 
 ```{r}
-sigtab
 sig_taxa<-rownames(sigtab)
 ```
-
-FIGURE OUT HOW TO CONVERT TO RELATIVE ABUNDANCE? 
 
 Plot the abundance of these taxa over each lifestage using the GP1 object. 
 
 ```{r}
 sig_coral_DIV = prune_taxa(sig_taxa, GP1)
-plot_bar(sig_coral_DIV, fill = "lifestage", facet_grid=~DIV)
+plot_bar(sig_coral_DIV, x="lifestage", fill = "lifestage", facet_grid=~DIV)
+```
+
+# **Generate VST normalization for DIABLO**  
+
+```{r}
+gvst <- varianceStabilizingTransformation(diagdds_full, blind=FALSE)
+head(assay(gvst), 3)
+
+#generate as matrix 
+matrix<-assay(gvst)
+dim(matrix)
+
+matrix<-as.data.frame(matrix)
+
+#save for DIABLO 
+write.csv(matrix, "Mcap2020/Data/Integration/its2_div.csv")
 ```
 

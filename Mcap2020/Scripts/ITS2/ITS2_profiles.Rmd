@@ -38,15 +38,23 @@ library("kableExtra")
 
 # Load data  
 
-Load data obtained from SymPortal analysis on URI HPC cluster. Load relative abundance of ITS2 types for each sample.  
+Load data obtained from SymPortal analysis on URI HPC cluster. Load counts of ITS2 profiles for each sample.  
+
+C profile = C31.C17d.C21.C21ac.C31a
+D profile = D1.D4.D6.D1ab.D17d
 
 ```{r}
-its2<-read.csv(file="Mcap2020/Data/ITS2/relative_abundance_results.csv")
+its2<-read.table(file="Mcap2020/Data/ITS2/mcap.profiles.absolute.abund_and_meta.txt", skip=6, sep="\t")
 
-its2<-its2%>%
-  rename(Sample=X, C=C31.C17d.C21.C21ac.C31a, D=D1.D4.D6.D1ab.D17d)%>%
-  filter(!ITS2.type.profile=="Sequence accession / SymPortal UID")%>%
-  filter(!ITS2.type.profile=="Average defining sequence proportions and [stdev]")
+names(its2)<-its2[1,]
+
+its2<-its2[-1,]
+its2<-its2[-c(1)]
+
+names(its2)<-c("Sample", "C", "D")
+
+its2<-its2[-41,]
+its2<-its2[-40,]
 
 its2$C<-as.numeric(its2$C)
 its2$D<-as.numeric(its2$D)
@@ -56,7 +64,7 @@ its2<-its2%>%
   mutate(sum = rowSums(across(where(is.numeric))))%>%
   mutate(relC = C/sum)%>%
   mutate(relD = D/sum)%>%
-  dplyr::select(Sample, relC, relD)%>%
+  select(Sample, relC, relD)%>%
   rename(C=relC, D=relD)
 
 its2<-its2%>%
@@ -73,7 +81,7 @@ its2<-its2%>%
 Load metadata.  
 
 ```{r}
-metadata<-read.csv(file="Mcap2020/Data/ITS2/metadata.csv")
+metadata<-read.csv(file="Mcap2020/Data/ITS2/ITS2_metadata.csv")
 metadata<-metadata%>%
   dplyr::select(sample_name, tube.id, timepoint, lifestage, hpf, group)%>%
   rename(Sample=sample_name)
@@ -181,9 +189,6 @@ plot4<-data%>%
 ggsave(plot4, file="Mcap2020/Figures/ITS2/relabund.png", width=8, height=6, dpi=300)
 ```
 
-
-
-
 Plot as a regression over development.  
 ```{r}
 plot5<-data%>%
@@ -245,6 +250,7 @@ model_data<-data%>%
 
 model<-lm(ratio~as.numeric(hpf)*group, data=model_data)
 summary(model)
+anova(model)
 ```
 There is a significant increase in C:D ratio over development.  
 
@@ -289,3 +295,4 @@ model_data%>%
   row_spec(0, bold = TRUE) 
 ```
 
+Plot C:D ratio over time.  

@@ -1226,10 +1226,35 @@ GO_eggs.plot <-  ggplot(eggs.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_eggs.png", plot=GO_eggs.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_eggs_BP.png", plot=GO_eggs.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
 
+```{r}
+# Plotting by BP function
+eggs.GO_plot.MF <- eggs.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+eggs.GO_plot.MF$GOSlim_bin <- as.factor(eggs.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_eggs.plot.MF <-  ggplot(eggs.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_eggs_MF.png", plot=GO_eggs.plot.MF, dpi=300, width=12, height=12, units="in")
+```
 
 ## Embryos  
 
@@ -1311,9 +1336,35 @@ GO_embryos.plot <-  ggplot(embryos.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_embryos.png", plot=GO_embryos.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_embryos_BP.png", plot=GO_embryos.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular level.    
+
+```{r}
+# Plotting by BP function
+embryos.GO_plot.MF <- embryos.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+embryos.GO_plot.MF$GOSlim_bin <- as.factor(embryos.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_embryos.plot.MF <-  ggplot(embryos.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_embryos_MF.png", plot=GO_embryos.plot.MF, dpi=300, width=12, height=24, units="in")
+```
 
 
 ## Larvae 1  
@@ -1396,9 +1447,35 @@ GO_larvae1.plot <-  ggplot(larvae1.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae1.png", plot=GO_larvae1.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae1_BP.png", plot=GO_larvae1.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot by Molecular Function level.  
+
+```{r}
+# Plotting by BP function
+larvae1.GO_plot.MF <- larvae1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae1.GO_plot.MF$GOSlim_bin <- as.factor(larvae1.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae1.plot.MF <-  ggplot(larvae1.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae1_MF.png", plot=GO_larvae1.plot.MF, dpi=300, width=12, height=12, units="in")
+```
 
 
 ## Larvae 2  
@@ -1480,9 +1557,35 @@ GO_larvae2.plot <-  ggplot(larvae2.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae2.png", plot=GO_larvae2.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae2_BP.png", plot=GO_larvae2.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae2.GO_plot.MF <- larvae2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae2.GO_plot.MF$GOSlim_bin <- as.factor(larvae2.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae2.plot.MF <-  ggplot(larvae2.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae2_MF.png", plot=GO_larvae2.plot.MF, dpi=300, width=12, height=12, units="in")
+```
 
 
 ## Larvae 3  
@@ -1564,9 +1667,35 @@ GO_larvae3.plot <-  ggplot(larvae3.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae3.png", plot=GO_larvae3.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae3_BP.png", plot=GO_larvae3.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae3.GO_plot.MF <- larvae3.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae3.GO_plot.MF$GOSlim_bin <- as.factor(larvae3.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae3.plot.MF <-  ggplot(larvae3.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae3_MF.png", plot=GO_larvae3.plot.MF, dpi=300, width=12, height=24, units="in")
+```
 
 
 ## Larvae 4  
@@ -1648,9 +1777,35 @@ GO_larvae4.plot <-  ggplot(larvae4.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae4.png", plot=GO_larvae4.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae4_BP.png", plot=GO_larvae4.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae4.GO_plot.MF <- larvae4.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae4.GO_plot.MF$GOSlim_bin <- as.factor(larvae4.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae4.plot.MF <-  ggplot(larvae4.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae4_MF.png", plot=GO_larvae4.plot.MF, dpi=300, width=12, height=24, units="in")
+```
 
 
 ## Larvae 6  
@@ -1732,9 +1887,35 @@ GO_larvae6.plot <-  ggplot(larvae6.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae6.png", plot=GO_larvae6.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae6_BP.png", plot=GO_larvae6.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae6.GO_plot.MF <- larvae6.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae6.GO_plot.MF$GOSlim_bin <- as.factor(larvae6.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae6.plot.MF <-  ggplot(larvae6.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae6_MF.png", plot=GO_larvae6.plot.MF, dpi=300, width=12, height=24, units="in")
+```
 
 
 ## Polyps  
@@ -1816,9 +1997,35 @@ GO_polyps.plot <-  ggplot(polyps.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_polyps.png", plot=GO_polyps.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_polyps_BP.png", plot=GO_polyps.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+polyps.GO_plot.MF <- polyps.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+polyps.GO_plot.MF$GOSlim_bin <- as.factor(polyps.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_polyps.plot.MF <-  ggplot(polyps.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_polyps_MF.png", plot=GO_polyps.plot.MF, dpi=300, width=12, height=24, units="in")
+```
 
 
 ## Recruit 1  
@@ -1900,10 +2107,35 @@ GO_recruit1.plot <-  ggplot(recruit1.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit1.png", plot=GO_recruit1.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit1_BP.png", plot=GO_recruit1.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
 
+```{r}
+# Plotting by BP function
+recruit1.GO_plot.MF <- recruit1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit1.GO_plot.MF$GOSlim_bin <- as.factor(recruit1.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit1.plot.MF <-  ggplot(recruit1.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit1_MF.png", plot=GO_recruit1.plot.MF, dpi=300, width=12, height=12, units="in")
+```
 
 ## Recruit 2  
 
@@ -1984,7 +2216,36 @@ GO_recruit2.plot <-  ggplot(recruit2.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2.png", plot=GO_recruit2.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2_BP.png", plot=GO_recruit2.plot, dpi=300, width=12, height=12, units="in")
 ```
 
+Plot results by Molecular Function level.    
 
+```{r}
+# Plotting by BP function
+recruit2.GO_plot.MF <- recruit2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit2.GO_plot.MF$GOSlim_bin <- as.factor(recruit2.GO_plot.MF$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit2.plot.MF <-  ggplot(recruit2.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2_MF.png", plot=GO_recruit2.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+# **Plot all stages together on one plot**  
+
+INSERT KEVIN SCRIPTS HERE 

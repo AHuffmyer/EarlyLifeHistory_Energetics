@@ -534,12 +534,16 @@ cor_mat<-circosPlot(MyResult.diablo, cutoff=0.95)
 
 Output plot and correlation matrix.  
 ```{r}
+#col=c(LIST COLORS HERE)
+
+#Add color.Y = col
+
 pdf("Mcap2020/Figures/Integration/circos0.95_pos.pdf", width=12, height=12)
-circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "white"))
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "white"), ncol.legend=2)
 dev.off()
 
 pdf("Mcap2020/Figures/Integration/circos0.95.pdf", width=12, height=12)
-circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "blue"))
+circosPlot(MyResult.diablo, cutoff=0.95, line = TRUE, showIntraLinks=FALSE, color.cor=c("red", "blue"), ncol.legend=2)
 dev.off()
 ```
 
@@ -583,17 +587,15 @@ pheatmap::pheatmap(cor_mat, cluster_rows = TRUE, cluster_cols = TRUE, show_rowna
 
 Plot cim plot  
 ```{r}
-cimDiablo(MyResult.diablo, margin=c(8,8), legend.position = "none", comp = c(1,2), trim=2)
-
 pdf("Mcap2020/Figures/Integration/cim_plot.pdf", height=8, width=24)
 cimDiablo(MyResult.diablo, margin=c(8,8), legend.position = "none", comp = c(1,2), trim=2)
 dev.off()
 
-res <- cimDiablo(MyResult.diablo) ## save the output
-res_mat<-res$mat
+#res <- cimDiablo(MyResult.diablo) ## save the output
+#res_mat<-res$mat
 #can use this to pull out correlations with groups (this is super great!)
 
-write.csv(res_mat, "Mcap2020/Output/Integration/cim_matrix.csv")
+#write.csv(res_mat, "Mcap2020/Output/Integration/cim_matrix.csv")
 ```
 
 What are the numeric values? It doesn't seem to be true correlation values (outside range of 1). Default is trimming to 3 standard deviations - of what? 

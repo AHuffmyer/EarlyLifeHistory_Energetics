@@ -78,6 +78,11 @@ size$hpf<-metadata$hpf[match(size$code, metadata$code)]
 size$group<-metadata$group[match(size$code, metadata$code)]
 size$lifestage<-metadata$lifestage[match(size$code, metadata$code)]
 
+#change metamorphosed recruit to metamorphosed polyp 
+size$group <- if_else(size$group == "Metamorphosed Recruit", "Metamorphosed Polyp", size$group)
+size$lifestage <- if_else(size$lifestage == "Metamorphosed Recruit (231 hpf)", "Metamorphosed Polyp (231 hpf)", size$lifestage)
+size$lifestage <- if_else(size$lifestage == "Metamorphosed Recruit (183 hpf)", "Metamorphosed Polyp (183 hpf)", size$lifestage)
+
 size$hpf <- as.factor(size$hpf)
 size$group <- as.factor(size$group)
 size$lifestage <- as.factor(size$lifestage)
@@ -88,7 +93,7 @@ Prep data frame.
 # Calculate mean counts for each sample
 size <- size %>%
   dplyr::select(tube.ID, lifestage, replicate, volume, hpf, group, code)%>%
-  drop_na() #remove na's that could not be measured
+  drop_na()
 ```
 
 ## Plotting  
@@ -166,7 +171,7 @@ size_plot2<-size %>%
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
-    ylim(0, 0.8)+
+    ylim(0, 0.6)+
     theme_classic() + 
     #geom_text(label="A", x=1, y=2500, size=4, color="black")+ #egg
     #geom_text(label="A", x=2, y=2500, size=4, color="black")+ #embryo 1
@@ -184,6 +189,8 @@ size_plot2<-size %>%
       axis.text=element_text(size=12, color="black"), 
       legend.title=element_text(face="bold", size=14)
       ); size_plot2
+
+ggsave(plot=size_plot2, "Mcap2020/Figures/Physiology/size.png",height=8, width=8)
 ```
 
 ## Statistical analysis  
@@ -246,6 +253,11 @@ df$surface.area<-sym_counts$surface.area[match(df$tube.ID, sym_counts$tube.ID)]
 df$hpf<-metadata$hpf[match(df$code, metadata$code)]
 df$group<-metadata$group[match(df$code, metadata$code)]
 df$lifestage<-metadata$lifestage[match(df$code, metadata$code)]
+
+df$group <- if_else(df$group == "Metamorphosed Recruit", "Metamorphosed Polyp", df$group)
+df$lifestage <- if_else(df$lifestage == "Metamorphosed Recruit (231 hpf)", "Metamorphosed Polyp (231 hpf)", df$lifestage)
+df$lifestage <- if_else(df$lifestage == "Metamorphosed Recruit (183 hpf)", "Metamorphosed Polyp (183 hpf)", df$lifestage)
+
 
 # Normalize counts by homogenate volume and surface area
 df <- df %>%
@@ -478,7 +490,7 @@ Plot cells per mm^3 as a boxplot.
 
 ```{r}
 #order for creating a legend for all plots 
-corr$group <- factor(corr$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
+corr$group <- factor(corr$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit"))
 
 cells_size_plot<-corr %>%
     filter(!group=="Attached Recruit")%>%
@@ -516,7 +528,7 @@ legend_plot<-corr %>%
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
       legend.title=element_text(face="bold", size=14)
-      ); legend_plot
+      )
 
 ```
 
@@ -619,6 +631,16 @@ corr%>%
             SE=format(round(sd(counts_volume)/sqrt(length(counts_volume)),0),0))%>%
   rename(Lifestage=group, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary_attached.csv")
+```
+
+Test differences with a kruskal wallis test.  
+
+```{r}
+corr%>%
+  group_by(group, hpf, lifestage)%>%
+  filter(group=="Attached Recruit")%>%
+  droplevels()%>%
+  kruskal.test(counts_volume~hpf, data=.)
 ```
 
 # **3. Generate Figures**  

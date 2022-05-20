@@ -115,7 +115,7 @@ r_plot<-PRdf %>%
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nRecruit"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
     ylab(expression(bold(paste("Respiration (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -147,7 +147,7 @@ p_plot<-PRdf %>%
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nRecruit"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
     ylab(expression(bold(paste("Net Photosynthesis (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -179,7 +179,7 @@ gp_plot<-PRdf %>%
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position=position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nRecruit"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
     ylab(expression(bold(paste("Gross Photosynthesis (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
@@ -210,8 +210,8 @@ pr_plot<-PRdf %>%
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nRecruit"))+
-    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nRecruit"))+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
     ylab(expression(bold(paste("Photosynthesis:Respiration")))) +
     scale_y_continuous(limits=c(-0.5, 5), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 

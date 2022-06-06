@@ -335,8 +335,6 @@ I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R
 
 ### Co-expression adjacency and topological overlap matrix similarity  
 
-Adjacency and TOMsimilarity will be executed in supercomputer, Bluewaves, as our dataset is too large for most standard laptops to handle.
-
 Save Rdata necessary for analysis
 ```{r}
 save(datExpr, file = "Mcap2020/Output/TagSeq/datExpr.RData")
@@ -495,7 +493,7 @@ We have 12 modules with no modules "unassigned". All genes were assigned to a mo
 
 mergedColors
    1    2    4    6    8   11   12   14   15   16   17   18 
-3954 3662  955 1049 2194  156 3599   54   51   36   58   29 
+3954 3662  955 1049 2194  156 3599   54   51   36   58   29  
 
 ##  Relating modules to developmental stage
 
@@ -944,16 +942,6 @@ missing<-as.data.frame(probes[row_nas])
 print(missing)
 ```
  
-Currently 700+ are missing 
-
-CHECK THIS TO SEE IF FORMATTING IS DIFFERENT????? WHY ARE 500 MISSING???
-
-WE NEED TO REDO THE ANNOTATION
-
-There are 771 gene_id in the datExpr that are not matched in the annotation file. Manually searching for these genes shows that they are not in the annotation file, which confirms that we do not have a gene_id formatting error. Unknown why some genes are not matched in the annotation file, look into this.    
-
-
-
 Create the starting data frame
 ```{r}
 geneInfo0 = data.frame(gene_id = probes,
@@ -968,7 +956,6 @@ moduleColor = moduleColors,
 geneTraitSignificance,
 GSPvalue)
 ```
-
 
 Order modules by their significance for time_point
 ```{r}
@@ -1054,13 +1041,7 @@ lifestage = as.data.frame(lifestage$lifestage_num);
 names(lifestage) = "lifestage"
 # Add the weight to existing module eigengenes
 MET = orderMEs(cbind(MEs, lifestage))
-# Plot the relationships among the eigengenes and the trait
-sizeGrWindow(5,7.5);
-par(cex = 0.9)
-plotEigengeneNetworks(MET, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle
-= 90)
 ```
-
 
 ```{r}
 # Plot the dendrogram

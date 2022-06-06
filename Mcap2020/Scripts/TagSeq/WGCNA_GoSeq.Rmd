@@ -1213,6 +1213,7 @@ eggs.GO_plot <- eggs.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 eggs.GO_plot$GOSlim_bin <- as.factor(eggs.GO_plot$GOSlim_bin)
+eggs.GO_plot$Lifestage <- c("Fertilized Egg (1 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_eggs.plot <-  ggplot(eggs.GO_plot, aes(x = ontology, y = term)) + 
@@ -1240,6 +1241,7 @@ eggs.GO_plot.MF <- eggs.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 eggs.GO_plot.MF$GOSlim_bin <- as.factor(eggs.GO_plot.MF$GOSlim_bin)
+eggs.GO_plot.MF$Lifestage <- c("Fertilized Egg (1 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_eggs.plot.MF <-  ggplot(eggs.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1323,6 +1325,7 @@ embryos.GO_plot <- embryos.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 embryos.GO_plot$GOSlim_bin <- as.factor(embryos.GO_plot$GOSlim_bin)
+embryos.GO_plot$Lifestage <- c("Embryo (5 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_embryos.plot <-  ggplot(embryos.GO_plot, aes(x = ontology, y = term)) + 
@@ -1350,6 +1353,7 @@ embryos.GO_plot.MF <- embryos.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 embryos.GO_plot.MF$GOSlim_bin <- as.factor(embryos.GO_plot.MF$GOSlim_bin)
+embryos.GO_plot.MF$Lifestage <- c("Embryo (5 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_embryos.plot.MF <-  ggplot(embryos.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1422,7 +1426,6 @@ larvae1.GO <- GO.slim %>%
 write.csv(larvae1.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae1.csv")
 ```
 
-
 Plot results by Biological Process level.    
 
 ```{r}
@@ -1434,6 +1437,7 @@ larvae1.GO_plot <- larvae1.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae1.GO_plot$GOSlim_bin <- as.factor(larvae1.GO_plot$GOSlim_bin)
+larvae1.GO_plot$Lifestage <- c("Embryo (38 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae1.plot <-  ggplot(larvae1.GO_plot, aes(x = ontology, y = term)) + 
@@ -1461,6 +1465,7 @@ larvae1.GO_plot.MF <- larvae1.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae1.GO_plot.MF$GOSlim_bin <- as.factor(larvae1.GO_plot.MF$GOSlim_bin)
+larvae1.GO_plot.MF$Lifestage <- c("Embryo (38 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae1.plot.MF <-  ggplot(larvae1.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1544,6 +1549,7 @@ larvae2.GO_plot <- larvae2.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae2.GO_plot$GOSlim_bin <- as.factor(larvae2.GO_plot$GOSlim_bin)
+larvae2.GO_plot$Lifestage <- c("Embryo (65 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae2.plot <-  ggplot(larvae2.GO_plot, aes(x = ontology, y = term)) + 
@@ -1571,6 +1577,7 @@ larvae2.GO_plot.MF <- larvae2.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae2.GO_plot.MF$GOSlim_bin <- as.factor(larvae2.GO_plot.MF$GOSlim_bin)
+larvae2.GO_plot.MF$Lifestage <- c("Embryo (65 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae2.plot.MF <-  ggplot(larvae2.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1654,6 +1661,7 @@ larvae3.GO_plot <- larvae3.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae3.GO_plot$GOSlim_bin <- as.factor(larvae3.GO_plot$GOSlim_bin)
+larvae3.GO_plot$Lifestage <- c("Larvae (93 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae3.plot <-  ggplot(larvae3.GO_plot, aes(x = ontology, y = term)) + 
@@ -1681,6 +1689,7 @@ larvae3.GO_plot.MF <- larvae3.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae3.GO_plot.MF$GOSlim_bin <- as.factor(larvae3.GO_plot.MF$GOSlim_bin)
+larvae3.GO_plot.MF$Lifestage <- c("Larvae (93 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae3.plot.MF <-  ggplot(larvae3.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1764,6 +1773,7 @@ larvae4.GO_plot <- larvae4.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae4.GO_plot$GOSlim_bin <- as.factor(larvae4.GO_plot$GOSlim_bin)
+larvae4.GO_plot$Lifestage <- c("Larvae (163 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae4.plot <-  ggplot(larvae4.GO_plot, aes(x = ontology, y = term)) + 
@@ -1791,6 +1801,7 @@ larvae4.GO_plot.MF <- larvae4.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae4.GO_plot.MF$GOSlim_bin <- as.factor(larvae4.GO_plot.MF$GOSlim_bin)
+larvae4.GO_plot.MF$Lifestage <- c("Larvae (163 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae4.plot.MF <-  ggplot(larvae4.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1874,6 +1885,7 @@ larvae6.GO_plot <- larvae6.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae6.GO_plot$GOSlim_bin <- as.factor(larvae6.GO_plot$GOSlim_bin)
+larvae6.GO_plot$Lifestage <- c("Larvae (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae6.plot <-  ggplot(larvae6.GO_plot, aes(x = ontology, y = term)) + 
@@ -1901,6 +1913,7 @@ larvae6.GO_plot.MF <- larvae6.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 larvae6.GO_plot.MF$GOSlim_bin <- as.factor(larvae6.GO_plot.MF$GOSlim_bin)
+larvae6.GO_plot.MF$Lifestage <- c("Larvae (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_larvae6.plot.MF <-  ggplot(larvae6.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -1984,6 +1997,7 @@ polyps.GO_plot <- polyps.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 polyps.GO_plot$GOSlim_bin <- as.factor(polyps.GO_plot$GOSlim_bin)
+polyps.GO_plot$Lifestage <- c("Metamorphosed Polyp (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_polyps.plot <-  ggplot(polyps.GO_plot, aes(x = ontology, y = term)) + 
@@ -2011,6 +2025,7 @@ polyps.GO_plot.MF <- polyps.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 polyps.GO_plot.MF$GOSlim_bin <- as.factor(polyps.GO_plot.MF$GOSlim_bin)
+polyps.GO_plot.MF$Lifestage <- c("Metamorphosed Polyp (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_polyps.plot.MF <-  ggplot(polyps.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -2094,6 +2109,7 @@ recruit1.GO_plot <- recruit1.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 recruit1.GO_plot$GOSlim_bin <- as.factor(recruit1.GO_plot$GOSlim_bin)
+recruit1.GO_plot$Lifestage <- c("Attached Recruit (183 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_recruit1.plot <-  ggplot(recruit1.GO_plot, aes(x = ontology, y = term)) + 
@@ -2121,6 +2137,7 @@ recruit1.GO_plot.MF <- recruit1.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 recruit1.GO_plot.MF$GOSlim_bin <- as.factor(recruit1.GO_plot.MF$GOSlim_bin)
+recruit1.GO_plot.MF$Lifestage <- c("Attached Recruit (183 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_recruit1.plot.MF <-  ggplot(recruit1.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -2203,6 +2220,7 @@ recruit2.GO_plot <- recruit2.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 recruit2.GO_plot$GOSlim_bin <- as.factor(recruit2.GO_plot$GOSlim_bin)
+recruit2.GO_plot$Lifestage <- c("Attached Recruit (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_recruit2.plot <-  ggplot(recruit2.GO_plot, aes(x = ontology, y = term)) + 
@@ -2230,6 +2248,7 @@ recruit2.GO_plot.MF <- recruit2.GO %>%
   arrange(., ontology, GOSlim_bin, over_represented_pvalue)
 
 recruit2.GO_plot.MF$GOSlim_bin <- as.factor(recruit2.GO_plot.MF$GOSlim_bin)
+recruit2.GO_plot.MF$Lifestage <- c("Attached Recruit (231 hpf)")
 
 #plot significantly enriched GO terms by Slim Category
 GO_recruit2.plot.MF <-  ggplot(recruit2.GO_plot.MF, aes(x = ontology, y = term)) + 
@@ -2248,4 +2267,42 @@ ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2_MF.png", plot=G
 
 # **Plot all stages together on one plot**  
 
-INSERT KEVIN SCRIPTS HERE 
+Combine data frames together in order to generate one GoSeq plot with all terms across lifestages.  
+
+Plot at Biological Process level.  
+
+```{r}
+go_all<-rbind(eggs.GO_plot, embryos.GO_plot, larvae1.GO_plot, larvae2.GO_plot, larvae3.GO_plot, larvae4.GO_plot, larvae6.GO_plot, polyps.GO_plot, recruit1.GO_plot, recruit2.GO_plot)
+
+head(go_all)
+dim(go_all)
+
+levels(as.factor(go_all$Lifestage))
+```
+
+Files are merged.  
+
+Now plot.  
+
+```{r}
+#reorder x axis lifestages 
+list_lifestages<-c("Fertilized Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+go_all$Lifestage<-factor(as.character(go_all$Lifestage), levels=list_lifestages)
+
+#plot significantly enriched GO terms by Slim Category across lifestages
+GO_all.BP <-  ggplot(go_all, aes(x = Lifestage, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 20),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 10),
+  axis.text.x = element_text(angle=45, vjust=0.5),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=300, width=16, height=24, units="in")
+```
+
+Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  

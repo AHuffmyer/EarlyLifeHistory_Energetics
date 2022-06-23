@@ -324,7 +324,14 @@ plotDendroAndColors(
   addGuide = TRUE,
   guideHang = 0.05 )
 dev.off()
+
+table(mergedColors)
 ```
+
+Module sizes are as follows: 
+mergedColors
+ 0  1  2  3  4  5  6  7  8 
+14 66 29 27 17 10  8  6  5 
 
 ## Relate modules to sample information  
 

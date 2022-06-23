@@ -210,7 +210,8 @@ save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/pheatmap.pdf")
 Plot a PCA of samples by lifestages  
 
 ```{r}
-gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE)
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=15797) #use ntop to specify all genes
+
 percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
 
 allgenesfilt_PCA <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage)) + 
@@ -235,12 +236,18 @@ ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA.pdf", allgenesfilt_PCA, width=1
 Generate a PCA for visualization/presentations.  
 
 ```{r}
-allgenesfilt_PCA_visual <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
+levels(gPCAdata$lifestage)
+gPCAdata<-gPCAdata%>%
+   mutate(lifestage = factor(lifestage, levels = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")))
+levels(gPCAdata$lifestage)
+
+allgenesfilt_PCA_visual <- 
+  ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=16, "2_Embryo"=16, "3_Larvae1"=15, "4_Larvae2"=17, "5_Larvae3"=15, "6_Larvae4"=16, "7_Larvae6"=17, "8_MetamorposedRecruit2"=16, "9_CalcifyingRecruit1"=15), labels=c("Egg (1 hpf)", "Attached Recruit (231 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)")) +
-  scale_colour_manual(values = c("1_Egg"="#8C510A", "10_CalcifyingRecruit2"="#BA55D3", "2_Embryo"="#DFC27D", "3_Larvae1"="#DFC27D", "4_Larvae2"="#DFC27D", "5_Larvae3"="#80CDC1", "6_Larvae4"="#80CDC1", "7_Larvae6"="#80CDC1", "8_MetamorposedRecruit2"="#003C30", "9_CalcifyingRecruit1"="#BA55D3"), labels=c("Egg (1 hpf)", "Attached Recruit (231 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)")) +
+  scale_shape_manual(name="Lifestage", values = c("1_Egg"=17, "2_Embryo"=16, "3_Larvae1"=15, "4_Larvae2"=17,"5_Larvae3"=15, "6_Larvae4"=16,"7_Larvae6"=17,"8_MetamorposedRecruit2"=16, "9_CalcifyingRecruit1"=15, "10_CalcifyingRecruit2"=16), labels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")) +
+  scale_colour_manual(name="Lifestage", values = c("1_Egg"="#8C510A", "2_Embryo"="#DFC27D", "3_Larvae1"="#DFC27D", "4_Larvae2"="#DFC27D", "5_Larvae3"="#80CDC1", "6_Larvae4"="#80CDC1", "7_Larvae6"="#80CDC1", "8_MetamorposedRecruit2"="#003C30", "9_CalcifyingRecruit1"="#BA55D3", "10_CalcifyingRecruit2"="#BA55D3"), labels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")) +
   #xlim(-40,40)+ 
   #ylim(-40,40)+
   coord_fixed()+
@@ -600,7 +607,7 @@ row_dend = dendsort(hclust(dist(moduleTraitCor)))
 col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
 
 pdf(file = "Mcap2020/Figures/TagSeq/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
-ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Lifestage Eigengene Correlation", 
+ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_title = "Module-Lifestage Eigengene Correlation", 
         col = blueWhiteRed(50), 
         row_names_side = "left", 
         row_dend_side = "left",
@@ -666,7 +673,7 @@ expression_plots<-plot_MEs%>%
   facet_grid(~Module)+
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
-  scale_x_discrete(limits=time_point_order) +
+  scale_x_discrete(name="", labels=c("Egg_1hpf", "Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "MetamorphosedPolyp_231hpf", "AttachedRecruit_183hpf", "AttachedRecruit_231hpf"), limits=time_point_order) +
   #ylim(-0.5,1) +
   ylab("Mean Module Eigenegene") +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
@@ -691,7 +698,6 @@ ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/expression_eigengene.pdf"
 We quantify associations of individual genes with life stage by defining Gene Significance GS as the absolute value of the correlation between the gene and the lifestage timepoint. For each module, we also define a quantitative measure of module membership (MM) as the correlation of the module eigengene and the gene expression profile.  
 
 Define lifestage as a numeric value (ranging from 1 (egg, first timepoint)-10 (recruit, last time point)).  
-
 ```{r}
 expressionProfile_data <- Strader_MEs
 
@@ -731,7 +737,6 @@ names(geneModuleMembership) = paste("MM", modNames, sep="");
 names(MMPvalue) = paste("p.MM", modNames, sep="");
 ```
  
-
 Generate dataframe with Gene Significance GS as the absolute value of the correlation between the gene and the lifestage timepoint 
 - geneTraitSignificance = correlation of the gene and lifestage time point 
 - GSPvalue = p-value of correlation between gene and lifestage time point  
@@ -991,7 +996,6 @@ write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for
 
 ```
 
-
 # **Other approaches for network visualization**  
 
 Use TOM to visualize network. This can take a very long time to run, remove # if plot is desired.  
@@ -1007,7 +1011,6 @@ Use TOM to visualize network. This can take a very long time to run, remove # if
 #TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
 
 ```
-
 
 Plot with a reduced set of genes.  
 

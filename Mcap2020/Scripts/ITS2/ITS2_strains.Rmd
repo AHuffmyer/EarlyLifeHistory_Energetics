@@ -154,7 +154,7 @@ Samps<-read_tsv(file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.tx
 hist(Samps$post_taxa_id_absolute_symbiodiniaceae_seqs, breaks=30)
 
 ```
-We have >10,000 sequences for all of our samples. This is a high number and we can keep all samples.  
+We have >10,000 sequences for all of our samples. This is a high number and we can keep all samples. We will subsample to even sampling depth below.    
 
 Plot tree.  
 ```{r}
@@ -170,7 +170,7 @@ phylo_coral_DIV
 
 Filter out samples with low numbers in groups from phyloseq object.  
 ```{r}
-phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Recruit (183 hpf)")
+phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Polyp (183 hpf)")
 phylo_coral_DIV<-ps_arrange(phylo_coral_DIV, lifestage)
 ```
 
@@ -178,7 +178,7 @@ Reorder lifestage.
 ```{r}
 levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
 
-sample_data(phylo_coral_DIV)$lifestage = factor(sample_data(phylo_coral_DIV)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+sample_data(phylo_coral_DIV)$lifestage = factor(sample_data(phylo_coral_DIV)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
 
 levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
 ```
@@ -209,9 +209,17 @@ GP1_rare<-rarefy_even_depth(GP1, sample.size = min(sample_sums(GP1)),
   rngseed = FALSE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
 ```
 
-# **Ordinations: PCoA and NMDS** 
+In rarefication 9 OTUs were removed because they were no longer present in any sample after random subsampling. 
 
-View ordination by OTU.  
+View tree and heatmap after rarefication.  
+```{r}
+plot_tree(GP1_rare, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+plot_heatmap(GP1_rare, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
+```
+
+# **DIV Ordinations: PCoA and NMDS** 
+
+View ordination by OTU using the rarefied dataset.    
 ```{r}
 GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
 p1 = plot_ordination(GP1_rare, GP.ord, type="taxa", title="taxa")
@@ -235,13 +243,13 @@ p1b
 Plot with samples now.  
 ```{r}
 p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage") 
-p2b<- p2b + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("PCoA")
+p2b<- p2b + geom_polygon(aes(fill=lifestage), color="black") + geom_point(aes(color=lifestage), size=4) + ggtitle("PCoA")
 p2b
 ```
 
 Output PCoA plot. 
 ```{r}
-p2b_viz<-p2b + scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + theme_classic()
+p2b_viz<-p2b  + scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + theme_classic()
 p2b_viz
 
 ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=8, w=10)
@@ -258,11 +266,11 @@ perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
 perm1
 ```
 
-Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.088).  
+Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.175).  
 
 # **Plot heat map of ITS2 DIVs**  
 
-Draw with Phyloseq
+Draw with Phyloseq using the top DIV's (16 in this case).  
 
 ```{r}
 GP1_prune = filter_taxa(GP1_rare, function(x) sum(x) > 30, TRUE)
@@ -270,25 +278,19 @@ GP1_prune = filter_taxa(GP1_rare, function(x) sum(x) > 30, TRUE)
 sample_order<-c("WSH053", "WSH054", "WSH055", "WSH056", "WSH061", "WSH062", "WSH063", "WSH064",  "WSH065", "WSH066", "WSH067", "WSH068",  "WSH069", "WSH070", "WSH071", "WSH072", "WSH073", "WSH074", "WSH075", "WSH076", "WSH077", "WSH078", "WSH079", "WSH080", "WSH081", "WSH082", "WSH083", "WSH084", "WSH057", "WSH058", "WSH059", "WSH060", "WSH046", "WSH047", "WSH048", "WSH049", "WSH050", "WSH051", "WSH052")
 #sample_name by lifestage order 
 
-p<-plot_heatmap(GP1_prune, sample.label="lifestage", low="#000033", high="#FF3300", na.value="white", sample.order=sample_order)
+p<-plot_heatmap(GP1_prune, sample.label="lifestage", low="#66CCFF", high="#000033", na.value="white", sample.order=sample_order)
 p$scales$scales[[1]]$name <- "Lifestage"
+
 print(p)
+
+ggplot2::ggsave("Mcap2020/Figures/ITS2/div_heatmap.jpg", p, width = 6, height = 6)
 ```
+Manually save this figure.  
 
 Draw with Complex Heatmap
 ```{r}
 ComplexHeatmap::Heatmap(t(otu_table(GP1_prune)))
 ```
-
-Export data frame and manipulate for complex heatmap.  
-
-```{r}
-data<-as.data.frame(otu_table(GP1_rare))
-data$Sum<-rowSums(data, na.rm=TRUE) 
-
-```
-
-
 
 # **Alpha diversity**  
 
@@ -324,7 +326,7 @@ No difference in ITS2 alpha diversity by lifestage.
 
 # **DESeq2**  
 
-Try DESeq2 to look at drivers of differences.  
+Try DESeq2 to look at any differential taxa.   
 
 Convert phyloseq object to DESeq2 object.  
 
@@ -352,18 +354,7 @@ sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(GP1_rare)[rownames(sigtab)
 sigtab
 ```
 
-There are 10 members of the community that shift by lifestage, 8 in clade C and 2 in clade D.  
-
-```{r}
-sig_taxa<-rownames(sigtab)
-```
-
-Plot the abundance of these taxa over each lifestage using the GP1 object. 
-
-```{r}
-sig_coral_DIV = prune_taxa(sig_taxa, GP1_rare)
-plot_bar(sig_coral_DIV, x="lifestage", fill = "lifestage", facet_grid=~DIV)
-```
+As expected, there are no members of the community that are differentially accumulated/present across development. 
 
 # **Generate VST normalization for DIABLO**  
 
@@ -381,3 +372,101 @@ matrix<-as.data.frame(matrix)
 write.csv(matrix, "Mcap2020/Data/Integration/its2_div.csv")
 ```
 
+# **Plot profile level information** 
+
+View the profile level phyloseq object.   
+```{r}
+coral
+```
+
+Note that taxa 8 is Clade C and taxa 9 is Clade D. 
+
+Create tree.  
+```{r}
+random_tree_profile = rtree(ntaxa(coral), rooted=TRUE, tip.label=taxa_names(coral))
+```
+
+Merge phyloseq data. 
+```{r}
+phylo_coral = merge_phyloseq(coral, Metadata, random_tree_profile)
+phylo_coral
+```
+
+Filter out samples with low numbers in groups from phyloseq object.  
+```{r}
+phylo_coral<-ps_filter(phylo_coral, lifestage != "Metamorphosed Polyp (183 hpf)")
+phylo_coral<-ps_arrange(phylo_coral, lifestage)
+```
+
+Reorder lifestage.  
+```{r}
+levels(as.factor(sample_data(phylo_coral)$lifestage))
+
+sample_data(phylo_coral)$lifestage = factor(sample_data(phylo_coral)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+
+levels(as.factor(sample_data(phylo_coral)$lifestage))
+```
+
+Now build a tree with the combined data.  
+```{r}
+plot_tree(phylo_coral, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+```
+
+Plot a heatmap.  
+
+```{r}
+plot_heatmap(phylo_coral, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
+```
+
+Plot ordinations.  
+
+```{r}
+GP1_profile = phylo_coral
+GP1_profile
+```
+
+Transform to relative abundance.  
+```{r}
+GP1_profile = transform_sample_counts(GP1_profile, function(x) 100 * x/sum(x))
+
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = min(sample_sums(GP1_profile)),
+  rngseed = FALSE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+
+View tree and heatmap after rarefication.  
+```{r}
+plot_tree(GP1_rare_profile, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+plot_heatmap(GP1_rare_profile, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
+```
+
+Plot abundance of each profile across lifestages.  
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+t_plot<-t + scale_fill_manual(name="ITS2 Type Profile", values=c("darkorange", "brown4")) + geom_hline(yintercept=50, linetype="dashed", color = "black", size=1) + facet_grid(~lifestage, scales = "free", space = "free", labeller = label_wrap_gen(width=10)) + theme(strip.text.x = element_text(size = 5, face="bold"))
+
+t_plot
+
+rel_abund_data<-t$data
+
+ggsave("Mcap2020/Figures/ITS2/profile_plot.png", width=11, height=6)
+```
+
+Calculate the average percent abundance for each taxa in each lifestage.  
+```{r}
+means <- rel_abund_data %>%
+  group_by(its2_type_profile, lifestage) %>%
+  # Add abundances within each profile and lifestage
+  summarize_at("Abundance", mean)%>%
+  spread(its2_type_profile, Abundance);means
+```
+
+Use T-test to test for differences in relative abundance of C and D across lifestages.  
+```{r}
+test<-rel_abund_data %>% 
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  spread(its2_type_profile, Abundance)%>%
+  kruskal.test(`C31-C17d-C21-C21ac-C31a`~lifestage, data=.);test
+```
+
+There is no significant change in proportion C over development. 

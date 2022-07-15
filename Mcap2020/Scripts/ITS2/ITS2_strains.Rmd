@@ -13,8 +13,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-RECALCULATE RELATIVE ABUNDANCE 
-
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -46,6 +44,8 @@ library("ape")
 library("DESeq2")
 library("microViz")
 library("vegan")
+library("ComplexHeatmap")
+
 ```
 
 # **Prepare data**  
@@ -204,34 +204,37 @@ GP1
 Transform to relative abundance.  
 ```{r}
 GP1 = transform_sample_counts(GP1, function(x) 100 * x/sum(x))
+
+GP1_rare<-rarefy_even_depth(GP1, sample.size = min(sample_sums(GP1)),
+  rngseed = FALSE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
 ```
 
 # **Ordinations: PCoA and NMDS** 
 
 View ordination by OTU.  
 ```{r}
-GP.ord <- ordinate(GP1, "NMDS", "bray")
-p1 = plot_ordination(GP1, GP.ord, type="taxa", title="taxa")
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p1 = plot_ordination(GP1_rare, GP.ord, type="taxa", title="taxa")
 p1
 ```
 
 Plot with samples now.  
 ```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
+p2 = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
 p2<- p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("samples")
 p2
 ```
 
 View pcoa by OTU.  
 ```{r}
-GP.ordb <- ordinate(GP1, "PCoA", "bray")
-p1b = plot_ordination(GP1, GP.ordb, type="taxa", title="taxa")
+GP.ordb <- ordinate(GP1_rare, "PCoA", "bray")
+p1b = plot_ordination(GP1_rare, GP.ordb, type="taxa", title="taxa")
 p1b
 ```
 
 Plot with samples now.  
 ```{r}
-p2b = plot_ordination(GP1, GP.ordb, type="samples", color="lifestage") 
+p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage") 
 p2b<- p2b + geom_polygon(aes(fill=lifestage)) + geom_point(size=4) + ggtitle("PCoA")
 p2b
 ```
@@ -247,15 +250,45 @@ ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=8, w=10)
 Conduct a permanova in the vegan package.  
 
 ```{r}
-metadata <- as(sample_data(GP1), "data.frame")
+metadata <- as(sample_data(GP1_rare), "data.frame")
 
-perm1<-adonis2(phyloseq::distance(GP1, method="bray") ~ lifestage,
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
        data = metadata)
 
 perm1
 ```
 
-Permanova suggests there is separation by lifestage in ITS2 profiles (p=0.001).  
+Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.088).  
+
+# **Plot heat map of ITS2 DIVs**  
+
+Draw with Phyloseq
+
+```{r}
+GP1_prune = filter_taxa(GP1_rare, function(x) sum(x) > 30, TRUE)
+
+sample_order<-c("WSH053", "WSH054", "WSH055", "WSH056", "WSH061", "WSH062", "WSH063", "WSH064",  "WSH065", "WSH066", "WSH067", "WSH068",  "WSH069", "WSH070", "WSH071", "WSH072", "WSH073", "WSH074", "WSH075", "WSH076", "WSH077", "WSH078", "WSH079", "WSH080", "WSH081", "WSH082", "WSH083", "WSH084", "WSH057", "WSH058", "WSH059", "WSH060", "WSH046", "WSH047", "WSH048", "WSH049", "WSH050", "WSH051", "WSH052")
+#sample_name by lifestage order 
+
+p<-plot_heatmap(GP1_prune, sample.label="lifestage", low="#000033", high="#FF3300", na.value="white", sample.order=sample_order)
+p$scales$scales[[1]]$name <- "Lifestage"
+print(p)
+```
+
+Draw with Complex Heatmap
+```{r}
+ComplexHeatmap::Heatmap(t(otu_table(GP1_prune)))
+```
+
+Export data frame and manipulate for complex heatmap.  
+
+```{r}
+data<-as.data.frame(otu_table(GP1_rare))
+data$Sum<-rowSums(data, na.rm=TRUE) 
+
+```
+
+
 
 # **Alpha diversity**  
 
@@ -263,7 +296,7 @@ Look at alpha diversity.
 
 Remove any OTU that has a count of 0 in all samples. (There are none in this dataset).    
 ```{r}
-GP2f <- prune_taxa(taxa_sums(phylo_coral_DIV) > 0, phylo_coral_DIV)
+GP2f <- prune_taxa(taxa_sums(GP1_rare) > 0, GP1_rare)
 ```
 
 Plot the two most commonly used richness metrics - Shannon and Inverse Simpson.  
@@ -271,7 +304,7 @@ Plot the two most commonly used richness metrics - Shannon and Inverse Simpson.
 plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="lifestage")
 ```
 
-Pretty similar across life stages, maybe a trend for decrease across lifestages.     
+Pretty similar across life stages.      
 
 Test for differences in alpha diversity.  
 ```{r}
@@ -297,7 +330,7 @@ Convert phyloseq object to DESeq2 object.
 
 Construct DESeq2 object looking at differences by lifestage.  
 ```{r}
-diagdds_full = phyloseq_to_deseq2(phylo_coral_DIV, ~ lifestage)
+diagdds_full = phyloseq_to_deseq2(GP1_rare, ~ lifestage)
 
 gm_mean = function(x, na.rm=TRUE){
   exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
@@ -314,12 +347,12 @@ Look at results table.
 res_full = results(diagdds_full, cooksCutoff = FALSE)
 alpha = 0.05
 sigtab = res_full[which(res_full$padj < alpha), ]
-sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(phylo_coral_DIV)[rownames(sigtab), ], "matrix"))
+sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(GP1_rare)[rownames(sigtab), ], "matrix"))
 
 sigtab
 ```
 
-There are 12 members of the community that shift by lifestage, 10 in clade C and 2 in clade D.  
+There are 10 members of the community that shift by lifestage, 8 in clade C and 2 in clade D.  
 
 ```{r}
 sig_taxa<-rownames(sigtab)
@@ -328,7 +361,7 @@ sig_taxa<-rownames(sigtab)
 Plot the abundance of these taxa over each lifestage using the GP1 object. 
 
 ```{r}
-sig_coral_DIV = prune_taxa(sig_taxa, GP1)
+sig_coral_DIV = prune_taxa(sig_taxa, GP1_rare)
 plot_bar(sig_coral_DIV, x="lifestage", fill = "lifestage", facet_grid=~DIV)
 ```
 

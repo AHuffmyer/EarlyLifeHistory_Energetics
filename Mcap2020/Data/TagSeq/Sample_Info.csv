@@ -1,40 +1,40 @@
-﻿sample_id,timepoint,tube_id,lifestage,hpf,code
-AH1,TP1,D1,1_Egg,1,Egg
-AH2,TP3,D10,3_Larvae1,38,Larvae1
-AH3,TP3,D11,3_Larvae1,38,Larvae1
-AH4,TP3,D12,3_Larvae1,38,Larvae1
-AH5,TP4,D13,4_Larvae2,65,Larvae2
-AH6,TP4,D14,4_Larvae2,65,Larvae2
-AH7,TP4,D15,4_Larvae2,65,Larvae2
-AH8,TP4,D16,4_Larvae2,65,Larvae2
-AH9,TP5,D17,5_Larvae3,93,Larvae3
-AH10,TP5,D18,5_Larvae3,93,Larvae3
-AH11,TP5,D19,5_Larvae3,93,Larvae3
-AH12,TP1,D2,1_Egg,1,Egg
-AH13,TP5,D20,5_Larvae3,93,Larvae3
-AH14,TP6,D21,6_Larvae4,163,Larvae4
-AH15,TP6,D22,6_Larvae4,163,Larvae4
-AH16,TP6,D23,6_Larvae4,163,Larvae4
-AH17,TP6,D24,6_Larvae4,163,Larvae4
-AH18,TP9,D29,7_Larvae6,231,Larvae6
-AH19,TP1,D3,1_Egg,1,Egg
-AH20,TP9,D30,7_Larvae6,231,Larvae6
-AH21,TP9,D31,7_Larvae6,231,Larvae6
-AH22,TP9,D32,7_Larvae6,231,Larvae6
-AH23,TP10,D36,8_MetamorposedRecruit1,183,Recruit1
-AH24,TP10,D37,8_MetamorposedRecruit2,231,Recruit2
-AH25,TP10,D38,8_MetamorposedRecruit2,231,Recruit2
-AH26,TP1,D4,1_Egg,1,Egg
-AH27,TP10,D40,8_MetamorposedRecruit2,231,Recruit2
-AH28,TP2,D5,2_Embryo,5,Embryo
-AH29,TP2,D6,2_Embryo,5,Embryo
-AH30,TP2,D7,2_Embryo,5,Embryo
-AH31,TP2,D8,2_Embryo,5,Embryo
-AH32,TP3,D9,3_Larvae1,38,Larvae1
-AH33,TP11-48hps,Plug_10,9_CalcifyingRecruit1,183,Recruit1plug
-AH34,TP12-72hps,Plug_11,10_CalcifyingRecruit2,231,Recruit2plug
-AH35,TP12-72hps,Plug_2,10_CalcifyingRecruit2,231,Recruit2plug
-AH36,TP11-48hps,Plug_4,9_CalcifyingRecruit1,183,Recruit1plug
-AH37,TP11-48hps,Plug_5,9_CalcifyingRecruit1,183,Recruit1plug
-AH38,TP12-72hps,Plug_6,10_CalcifyingRecruit2,231,Recruit2plug
-AH39,TP11-48hps,Plug_9,9_CalcifyingRecruit1,183,Recruit1plug
+﻿sample_id,timepoint,tube_id,time_stage,hpf,code,lifestage
+AH1,TP1,D1,1_Egg,1,Egg,Egg (1 hpf)
+AH2,TP3,D10,3_Larvae1,38,Larvae1,Embryo (38 hpf)
+AH3,TP3,D11,3_Larvae1,38,Larvae1,Embryo (38 hpf)
+AH4,TP3,D12,3_Larvae1,38,Larvae1,Embryo (38 hpf)
+AH5,TP4,D13,4_Larvae2,65,Larvae2,Embryo (65 hpf)
+AH6,TP4,D14,4_Larvae2,65,Larvae2,Embryo (65 hpf)
+AH7,TP4,D15,4_Larvae2,65,Larvae2,Embryo (65 hpf)
+AH8,TP4,D16,4_Larvae2,65,Larvae2,Embryo (65 hpf)
+AH9,TP5,D17,5_Larvae3,93,Larvae3,Larvae (93 hpf)
+AH10,TP5,D18,5_Larvae3,93,Larvae3,Larvae (93 hpf)
+AH11,TP5,D19,5_Larvae3,93,Larvae3,Larvae (93 hpf)
+AH12,TP1,D2,1_Egg,1,Egg,Egg (1 hpf)
+AH13,TP5,D20,5_Larvae3,93,Larvae3,Larvae (93 hpf)
+AH14,TP6,D21,6_Larvae4,163,Larvae4,Larvae (163 hpf)
+AH15,TP6,D22,6_Larvae4,163,Larvae4,Larvae (163 hpf)
+AH16,TP6,D23,6_Larvae4,163,Larvae4,Larvae (163 hpf)
+AH17,TP6,D24,6_Larvae4,163,Larvae4,Larvae (163 hpf)
+AH18,TP9,D29,7_Larvae6,231,Larvae6,Larvae (231 hpf)
+AH19,TP1,D3,1_Egg,1,Egg,Egg (1 hpf)
+AH20,TP9,D30,7_Larvae6,231,Larvae6,Larvae (231 hpf)
+AH21,TP9,D31,7_Larvae6,231,Larvae6,Larvae (231 hpf)
+AH22,TP9,D32,7_Larvae6,231,Larvae6,Larvae (231 hpf)
+AH23,TP10,D36,8_MetamorposedRecruit1,183,Recruit1,Metamorphosed Polyp (183 hpf)
+AH24,TP10,D37,8_MetamorposedRecruit2,231,Recruit2,Metamorphosed Polyp (231 hpf)
+AH25,TP10,D38,8_MetamorposedRecruit2,231,Recruit2,Metamorphosed Polyp (231 hpf)
+AH26,TP1,D4,1_Egg,1,Egg,Egg (1 hpf)
+AH27,TP10,D40,8_MetamorposedRecruit2,231,Recruit2,Metamorphosed Polyp (231 hpf)
+AH28,TP2,D5,2_Embryo,5,Embryo,Embryo (5 hpf)
+AH29,TP2,D6,2_Embryo,5,Embryo,Embryo (5 hpf)
+AH30,TP2,D7,2_Embryo,5,Embryo,Embryo (5 hpf)
+AH31,TP2,D8,2_Embryo,5,Embryo,Embryo (5 hpf)
+AH32,TP3,D9,3_Larvae1,38,Larvae1,Embryo (38 hpf)
+AH33,TP11-48hps,Plug_10,9_CalcifyingRecruit1,183,Recruit1plug,Attached Recruit (183 hpf)
+AH34,TP12-72hps,Plug_11,10_CalcifyingRecruit2,231,Recruit2plug,Attached Recruit (231 hpf)
+AH35,TP12-72hps,Plug_2,10_CalcifyingRecruit2,231,Recruit2plug,Attached Recruit (231 hpf)
+AH36,TP11-48hps,Plug_4,9_CalcifyingRecruit1,183,Recruit1plug,Attached Recruit (183 hpf)
+AH37,TP11-48hps,Plug_5,9_CalcifyingRecruit1,183,Recruit1plug,Attached Recruit (183 hpf)
+AH38,TP12-72hps,Plug_6,10_CalcifyingRecruit2,231,Recruit2plug,Attached Recruit (231 hpf)
+AH39,TP11-48hps,Plug_9,9_CalcifyingRecruit1,183,Recruit1plug,Attached Recruit (183 hpf)

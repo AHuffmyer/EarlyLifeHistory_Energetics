@@ -1,5 +1,5 @@
 ---
-title: "WGCNA - GOMWU"
+title: "WGCNA gene expression"
 author: "Ariana S Huffmyer"
 date: "8/13/2021"
 output: html_document
@@ -80,7 +80,7 @@ gcount<-gcount %>%
     select(!Total)
 nrow(gcount)
 ```
-We had 63,000 genes, which was filtered down to 39,000 by removing genes with row sums of 0.  
+We had 63,000 genes, which was filtered down to 39,495 by removing genes with row sums of 0.  
 
 Conduct data filtering, this includes:  
 
@@ -111,7 +111,7 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had approximately 39,000 genes. After filtering for pOverA, we have approximately 15,000 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
+Before filtering, we had 39,495 genes. After filtering for pOverA, we have approximately 15,797 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
 
 In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
 ```{r}
@@ -150,6 +150,18 @@ metadata_ordered<-metadata_ordered%>%
   select(sample_id, lifestage, hpf, code)
 ```
 
+Reorder the lifestage factor.  
+```{r}
+head(metadata_ordered)
+levels(as.factor(metadata_ordered$lifestage))
+
+metadata_ordered$lifestage<-as.factor(metadata_ordered$lifestage)
+
+metadata_ordered$lifestage<-fct_relevel(metadata_ordered$lifestage, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+
+levels(as.factor(metadata_ordered$lifestage))
+```
+
 Plot the sequence counts after trimming in each sample to confirm that sequence depth is not different between lifestages.  
 ```{r}
 reads<-read.csv("Mcap2020/Output/TagSeq/clean_seqs_stats.csv")
@@ -157,6 +169,11 @@ reads<-read.csv("Mcap2020/Output/TagSeq/clean_seqs_stats.csv")
 #match in lifestage information 
 reads$lifestage<-metadata$lifestage[match(reads$Sample, metadata$sample_id)]
 head(reads)
+
+reads$lifestage<-as.factor(reads$lifestage)
+levels(reads$lifestage)
+
+reads$lifestage<-fct_relevel(reads$lifestage, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
 
 reads %>% ggplot(., aes(x = lifestage, y = M.Seqs)) +
   geom_boxplot()
@@ -231,7 +248,7 @@ allgenesfilt_PCA <- ggplot(gPCAdata, aes(PC1, PC2, shape=lifestage)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  scale_shape_manual(values = c("1_Egg"=17, "10_CalcifyingRecruit2"=1, "2_Embryo"=10, "3_Larvae1"=5, "4_Larvae2"=14, "5_Larvae3"=11, "6_Larvae4"=6, "7_Larvae6"=2, "8_MetamorposedRecruit2"=8, "9_CalcifyingRecruit1"=3)) +
+  scale_shape_manual(values = c("Egg (1 hpf)"=17, "Attached Recruit (231 hpf)"=1, "Embryo (5 hpf)"=10, "Embryo (38 hpf)"=5, "Embryo (65 hpf)"=14, "Larvae (93 hpf)"=11, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=2, "Metamorphosed Polyp (231 hpf)"=8, "Attached Recruit (183 hpf)"=3)) +
   #xlim(-40,40)+ 
   #ylim(-40,40)+
   coord_fixed()+
@@ -250,17 +267,16 @@ Generate a PCA for visualization/presentations.
 
 ```{r}
 levels(gPCAdata$lifestage)
-gPCAdata<-gPCAdata%>%
-   mutate(lifestage = factor(lifestage, levels = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")))
-levels(gPCAdata$lifestage)
 
 allgenesfilt_PCA_visual <- 
   ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  scale_shape_manual(name="Lifestage", values = c("1_Egg"=17, "2_Embryo"=16, "3_Larvae1"=15, "4_Larvae2"=17,"5_Larvae3"=15, "6_Larvae4"=16,"7_Larvae6"=17,"8_MetamorposedRecruit2"=16, "9_CalcifyingRecruit1"=15, "10_CalcifyingRecruit2"=16), labels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")) +
-  scale_colour_manual(name="Lifestage", values = c("1_Egg"="#8C510A", "2_Embryo"="#DFC27D", "3_Larvae1"="#DFC27D", "4_Larvae2"="#DFC27D", "5_Larvae3"="#80CDC1", "6_Larvae4"="#80CDC1", "7_Larvae6"="#80CDC1", "8_MetamorposedRecruit2"="#003C30", "9_CalcifyingRecruit1"="#BA55D3", "10_CalcifyingRecruit2"="#BA55D3"), labels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")) +
+  
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=17, "Embryo (5 hpf)"=16, "Embryo (38 hpf)"=15, "Embryo (65 hpf)"=17, "Larvae (93 hpf)"=15, "Larvae (163 hpf)"=16, "Larvae (231 hpf)"=17, "Metamorphosed Polyp (231 hpf)"=16, "Attached Recruit (183 hpf)"=15, "Attached Recruit (231 hpf)"=16)) +
+  
+  scale_colour_manual(name="Lifestage", values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="#BA55D3")) +
   #xlim(-40,40)+ 
   #ylim(-40,40)+
   coord_fixed()+
@@ -421,7 +437,10 @@ minClusterSize = minModuleSize)
 table(dynamicMods) #list modules and respective sizes
 save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData") #Save to load into RStudio
 ```
-Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest.
+Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest. 
+
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19 
+3954 3662 2934  955  913  765  679  602  591  284   85   74   71   54   51   36   34   29   24 
 
 Load modules calculated from the adjacency matrix.  
 ```{r}
@@ -509,7 +528,7 @@ Display table of module gene counts.
 table(mergedColors)
 ```
 
-We have 12 modules with no modules "unassigned". All genes were assigned to a module.  
+We have 12 modules with no genes "unassigned". All genes were assigned to a module.  
 
 mergedColors
    1    2    4    6    8   11   12   14   15   16   17   18 
@@ -613,7 +632,7 @@ heatmappval <- signif(moduleTraitPvalue, 1)
 htmap.colors <- names(MEs)
 htmap.colors <- gsub("ME", "", htmap.colors)
 
-lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+#lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
 
 library(dendsort)
 row_dend = dendsort(hclust(dist(moduleTraitCor)))
@@ -668,7 +687,7 @@ Strader_MEs<-Strader_MEs%>%
 dim(Strader_MEs)
 head(Strader_MEs)
 
-time_point_order = c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2") #Set time_point order
+
 ```
 
 Plot mean module eigengene for each module.  
@@ -680,13 +699,15 @@ plot_MEs<-Strader_MEs%>%
 
 dev.off() 
 
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
+
 expression_plots<-plot_MEs%>%
   group_by(Module, lifestage) %>%
   ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
   facet_grid(~Module)+
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
-  scale_x_discrete(name="", labels=c("Egg_1hpf", "Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "MetamorphosedPolyp_231hpf", "AttachedRecruit_183hpf", "AttachedRecruit_231hpf"), limits=time_point_order) +
+  scale_x_discrete(name="", limits=time_point_order) +
   #ylim(-0.5,1) +
   ylab("Mean Module Eigenegene") +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
@@ -725,13 +746,18 @@ sapply(expressionProfile_data, class)
 dim(expressionProfile_data)
 head(expressionProfile_data)
 
-lifestage <- as.data.frame(expressionProfile_data$lifestage)
-names(lifestage) = "lifestage_num"
+#need to get number of order of lifestage for this part 
 
-lifestage$lifestage_num <- sub("_[^_]+$", "", lifestage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+expressionProfile_data$time_stage<-metadata$time_stage[match(expressionProfile_data$lifestage, metadata$lifestage)]
+head(expressionProfile_data)
 
-lifestage$lifestage_num<-as.numeric(lifestage$lifestage_num)
-dim(lifestage)
+time_stage <- as.data.frame(expressionProfile_data$time_stage)
+names(time_stage) = "lifestage_num"
+
+time_stage$lifestage_num <- sub("_[^_]+$", "", time_stage$lifestage_num) #only extract the number to turn lifestage into numeric values 
+
+time_stage$lifestage_num<-as.numeric(time_stage$lifestage_num)
+dim(time_stage)
 ```
 
 Generate data frame for module membership for each gene (absolute value of correlation between module eigengene and gene).  
@@ -755,11 +781,11 @@ Generate dataframe with Gene Significance GS as the absolute value of the correl
 - GSPvalue = p-value of correlation between gene and lifestage time point  
 ```{r}
 
-geneTraitSignificance = as.data.frame(cor(datExpr, lifestage, use = "p"));
+geneTraitSignificance = as.data.frame(cor(datExpr, time_stage, use = "p"));
 GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
 
-names(geneTraitSignificance) = paste("GS.", names(lifestage), sep="");
-names(GSPvalue) = paste("p.GS.", names(lifestage), sep="");
+names(geneTraitSignificance) = paste("GS.", names(time_stage), sep="");
+names(GSPvalue) = paste("p.GS.", names(time_stage), sep="");
 ```
 
 View correlation between module membership score and gene significance for each module: 
@@ -977,7 +1003,7 @@ GSPvalue)
 
 Order modules by their significance for time_point
 ```{r}
-modOrder = order(-abs(cor(MEs, lifestage, use = "p")))
+modOrder = order(-abs(cor(MEs, time_stage, use = "p")))
 ```
 
 Add module membership information in the chosen order

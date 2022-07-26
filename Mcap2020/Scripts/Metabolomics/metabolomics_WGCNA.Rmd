@@ -385,7 +385,7 @@ Prepare trait data. Data has to be numeric, so I will substitute time points/dev
  
 ```{r}
 metadata$num <- c("1")
-allTraits <- as.data.frame(pivot_wider(metadata, names_from = Lifestage, values_from = num, id_cols = Sample))
+allTraits <- as.data.frame(pivot_wider(metadata, names_from = HPF, values_from = num, id_cols = Sample))
 allTraits[is.na(allTraits)] <- c("0")
 rownames(allTraits) <- allTraits$Sample
 datTraits <- allTraits[,c(-1)]
@@ -481,7 +481,6 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Group Eige
 draw(ht)
 dev.off()
 ```
-
 
 # 4. Plot mean eigengene values for each module
 

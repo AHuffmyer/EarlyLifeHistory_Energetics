@@ -1,19 +1,21 @@
-class,total,expected,hits,Raw p,Holm p,FDR
-Amino acids and peptides,723,0.299,21,6.88E-33,1.68E-30,1.68E-30
-Pyrimidines,78,0.0322,10,1.01E-22,2.45E-20,1.23E-20
-Purines,89,0.0368,6,2.33E-12,5.65E-10,1.90E-10
-TCA acids,9,0.00372,3,5.70E-09,1.37E-06,3.48E-07
-Monosaccharides,97,0.0401,4,9.11E-08,2.19E-05,4.44E-06
-Glycosyl compounds,19,0.00785,2,2.87E-05,0.00686,0.00117
-Nicotinamides,3,0.00124,1,0.00124,0.295,0.0432
-Cholines,4,0.00165,1,0.00165,0.391,0.0448
-Flavins,4,0.00165,1,0.00165,0.391,0.0448
-Short-chain acids and derivatives,7,0.00289,1,0.00289,0.679,0.0705
-Phosphate esters,9,0.00372,1,0.00371,0.869,0.0824
-Alkaloids,13,0.00537,1,0.00536,1,0.109
-Benzenediols,16,0.00661,1,0.00659,1,0.124
-Pyridines,29,0.012,1,0.0119,1,0.208
-Organooxygen compounds,70,0.0289,1,0.0285,1,0.464
-Benzamides,1470,0.606,2,0.123,1,1
-Fatty esters,1870,0.773,2,0.181,1,1
-Fatty Acids and Conjugates,3090,1.28,1,0.724,1,1
+Metabolite Set,Total,Hits,Expect,P value,Holm P,FDR
+Amino acids and peptides,723,23,0.317,2.98E-36,7.27E-34,7.27E-34
+Pyrimidines,78,10,0.0342,1.88E-22,4.57E-20,2.30E-20
+Purines,89,6,0.039,3.36E-12,8.13E-10,2.73E-10
+TCA acids,9,3,0.00395,6.82E-09,1.64E-06,4.16E-07
+Monosaccharides,97,4,0.0425,1.16E-07,2.78E-05,5.64E-06
+Glycosyl compounds,19,2,0.00833,3.23E-05,0.00773,0.00131
+Nicotinamides,3,1,0.00132,0.00131,0.313,0.0458
+Cholines,4,1,0.00175,0.00175,0.415,0.0475
+Flavins,4,1,0.00175,0.00175,0.415,0.0475
+Short-chain acids and derivatives,7,1,0.00307,0.00306,0.72,0.0748
+Phosphate esters,9,1,0.00395,0.00394,0.922,0.0874
+Alkaloids,13,1,0.0057,0.00568,1,0.116
+Benzenediols,16,1,0.00701,0.00699,1,0.131
+Organic dicarboxylic acids,23,1,0.0101,0.01,1,0.175
+Pyridines,29,1,0.0127,0.0126,1,0.206
+Organooxygen compounds,70,1,0.0307,0.0302,1,0.461
+Fatty esters,1870,3,0.821,0.0496,1,0.711
+Benzamides,1470,2,0.643,0.136,1,1
+Isoprenoids,1420,1,0.622,0.464,1,1
+Fatty Acids and Conjugates,3090,1,1.35,0.744,1,1

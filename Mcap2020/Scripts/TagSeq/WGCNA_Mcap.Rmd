@@ -150,6 +150,19 @@ metadata_ordered<-metadata_ordered%>%
   select(sample_id, lifestage, hpf, code)
 ```
 
+Plot the sequence counts after trimming in each sample to confirm that sequence depth is not different between lifestages.  
+```{r}
+reads<-read.csv("Mcap2020/Output/TagSeq/clean_seqs_stats.csv")
+
+#match in lifestage information 
+reads$lifestage<-metadata$lifestage[match(reads$Sample, metadata$sample_id)]
+head(reads)
+
+reads %>% ggplot(., aes(x = lifestage, y = M.Seqs)) +
+  geom_boxplot()
+```
+No pattern between reads and life stage. Note that "NA" here refers to the one metamorpohsed recruit time point that is removed from analysis.  
+
 # **Construct DESeq2 data set**  
 
 Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.
@@ -1015,51 +1028,51 @@ Use TOM to visualize network. This can take a very long time to run, remove # if
 Plot with a reduced set of genes.  
 
 ```{r}
-nGenes = ncol(datExpr)
-nSamples = nrow(datExpr)
-
-nSelect = 400
-# For reproducibility, we set the random seed
-set.seed(10);
-select = sample(nGenes, size = nSelect);
-selectTOM = dissTOM[select, select];
-# There's no simple way of restricting a clustering tree to a subset of genes, so we must re-cluster.
-selectTree = hclust(as.dist(selectTOM), method = "average")
-selectColors = moduleColors[select];
-# Open a graphical window
-sizeGrWindow(9,9)
-# Taking the dissimilarity to a power, say 10, makes the plot more informative by effectively changing 
-# the color palette; setting the diagonal to NA also improves the clarity of the plot
-plotDiss = selectTOM^7;
-diag(plotDiss) = NA;
-TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
+# nGenes = ncol(datExpr)
+# nSamples = nrow(datExpr)
+# 
+# nSelect = 400
+# # For reproducibility, we set the random seed
+# set.seed(10);
+# select = sample(nGenes, size = nSelect);
+# selectTOM = dissTOM[select, select];
+# # There's no simple way of restricting a clustering tree to a subset of genes, so we must re-cluster.
+# selectTree = hclust(as.dist(selectTOM), method = "average")
+# selectColors = moduleColors[select];
+# # Open a graphical window
+# sizeGrWindow(9,9)
+# # Taking the dissimilarity to a power, say 10, makes the plot more informative by effectively changing 
+# # the color palette; setting the diagonal to NA also improves the clarity of the plot
+# plotDiss = selectTOM^7;
+# diag(plotDiss) = NA;
+# TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
 ```
 
 Other plots from tutorial that are not used, but here for reference.  
 ```{r}
 # Recalculate module eigengenes
-MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
-# Isolate weight from the clinical traits
-lifestage = as.data.frame(lifestage$lifestage_num);
-names(lifestage) = "lifestage"
-# Add the weight to existing module eigengenes
-MET = orderMEs(cbind(MEs, lifestage))
+# MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
+# # Isolate weight from the clinical traits
+# lifestage = as.data.frame(lifestage$lifestage_num);
+# names(lifestage) = "lifestage"
+# # Add the weight to existing module eigengenes
+# MET = orderMEs(cbind(MEs, lifestage))
 ```
 
 ```{r}
 # Plot the dendrogram
-sizeGrWindow(6,6);
-par(cex = 1.0)
-plotEigengeneNetworks(MET, "Eigengene dendrogram", marDendro = c(0,4,2,0),
-                      plotHeatmaps = FALSE)
-# Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
-par(cex = 1.0)
-plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2),
-                      plotDendrograms = FALSE, xLabelsAngle = 90)
+# sizeGrWindow(6,6);
+# par(cex = 1.0)
+# plotEigengeneNetworks(MET, "Eigengene dendrogram", marDendro = c(0,4,2,0),
+#                       plotHeatmaps = FALSE)
+# # Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
+# par(cex = 1.0)
+# plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2),
+#                       plotDendrograms = FALSE, xLabelsAngle = 90)
 ```
 
 
-# **Output files for GOMWU** 
+# **Output files for functional enrichment** 
 
 GOMWU: https://github.com/z0on/GO_MWU  
 
@@ -1076,7 +1089,7 @@ go_mwu_terms<-geneInfo%>%
 
 2. "table of measure of interest for your sequences: two columns of comma-separated values: gene id, continuous measure of change such as log(fold-change). To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module."
 
-Subset genes that are included in each module, substitue 0 for module membership scores for genes included in module. 
+Subset genes that are included in each module, substitute 0 for module membership scores for genes included in module. 
 
 Module list: 1, 2, 4, 6, 8, 11, 12, 14, 15, 16, 17, 18     
 ```{r}
@@ -1186,7 +1199,7 @@ From our Gene Info data frame, extract a list of gene names with specific functi
 
 ### Create lists of genes  
 
-Create list of expression of genes for carbonic anhydrase: 
+1. Create list of expression of genes for carbonic anhydrase: 
 
 ```{r}
 list_ca<-geneInfo%>%
@@ -1206,7 +1219,7 @@ carbanhyd_genes$gene_id<-rownames(carbanhyd_genes)
 rownames(carbanhyd_genes) <- NULL
 ```
 
-Create list of expression of genes for glycogen synthase: 
+2. Create list of expression of genes for glycogen synthase: 
 
 ```{r}
 list_gs<-geneInfo%>%
@@ -1225,7 +1238,7 @@ glycsyn_genes$gene_id<-rownames(glycsyn_genes)
 rownames(glycsyn_genes) <- NULL
 ```
 
-Create list of expression of genes for ammonium transporters: 
+3. Create list of expression of genes for ammonium transporters: 
 
 ```{r}
 list_at<-geneInfo%>%
@@ -1244,7 +1257,7 @@ ammontr_genes$gene_id<-rownames(ammontr_genes)
 rownames(ammontr_genes) <- NULL
 ```
 
-Create list of expression of genes for glutathione peroxidase activity: 
+4. Create list of expression of genes for glutathione peroxidase activity: 
 
 ```{r}
 list_gp<-geneInfo%>%
@@ -1263,7 +1276,7 @@ glutperox_genes$gene_id<-rownames(glutperox_genes)
 rownames(glutperox_genes) <- NULL
 ```
 
-Create list of expression of genes for glucose transporters: 
+5. Create list of expression of genes for glucose transporters: 
 
 ```{r}
 list_gt<-geneInfo%>%
@@ -1282,7 +1295,7 @@ gluctr_genes$gene_id<-rownames(gluctr_genes)
 rownames(gluctr_genes) <- NULL
 ```
 
-Create list of expression of genes for H+ATPase: 
+6. Create list of expression of genes for H+ATPase: 
 
 ```{r}
 list_atp<-geneInfo%>%
@@ -1301,7 +1314,7 @@ atpase_genes$gene_id<-rownames(atpase_genes)
 rownames(atpase_genes) <- NULL
 ```
 
-Create list of expression of genes for glucose homeostasis: 
+7. Create list of expression of genes for glucose homeostasis: 
 
 ```{r}
 list_gh<-geneInfo%>%
@@ -1320,7 +1333,7 @@ glucosehomeo_genes$gene_id<-rownames(glucosehomeo_genes)
 rownames(glucosehomeo_genes) <- NULL
 ```
 
-Create list of expression of genes for apoptosis regulation: 
+8. Create list of expression of genes for apoptosis regulation: 
 
 ```{r}
 list_ar<-geneInfo%>%
@@ -1339,7 +1352,7 @@ apoptosis_genes$gene_id<-rownames(apoptosis_genes)
 rownames(apoptosis_genes) <- NULL
 ```
 
-Create list of expression of genes for cellular communication/signaling: 
+9. Create list of expression of genes for cellular communication/signaling: 
 
 ```{r}
 list_cc<-geneInfo%>%
@@ -1359,7 +1372,7 @@ communication_genes$gene_id<-rownames(communication_genes)
 rownames(communication_genes) <- NULL
 ```
 
-Create list of expression of genes for carbohydrate metabolism: 
+10. Create list of expression of genes for glucose metabolism: 
 
 ```{r}
 list_cm<-geneInfo%>%
@@ -1379,8 +1392,62 @@ carbs_genes$gene_id<-rownames(carbs_genes)
 rownames(carbs_genes) <- NULL
 ```
 
+11. Create list of expression of genes for fatty acid metabolism: 
+
 ```{r}
-specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, ammontr_genes, glutperox_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes)
+list_fa<-geneInfo%>%
+  filter(grepl('fatty acid metabolic process', Annotation.GO.Term))
+
+head(list_fa)
+
+fattyacid<-list_fa$gene_id
+
+fattyacid_genes<-gene_expr[rownames(gene_expr) %in% fattyacid, ]
+fattyacid_genes
+
+fattyacid_genes$Function<-c("Fatty Acid Metabolism")
+fattyacid_genes$gene_id<-rownames(fattyacid_genes)
+rownames(fattyacid_genes) <- NULL
+```
+
+12. Create list of expression of genes for all carbohydrate metabolism: 
+
+```{r}
+list_carbs<-geneInfo%>%
+  filter(grepl('carbohydrate metabolic process', Annotation.GO.Term))
+
+head(list_carbs)
+
+allcarbs<-list_carbs$gene_id
+
+allcarbs_genes<-gene_expr[rownames(gene_expr) %in% allcarbs, ]
+allcarbs_genes
+
+allcarbs_genes$Function<-c("Carbohydrate Metabolism")
+allcarbs_genes$gene_id<-rownames(allcarbs_genes)
+rownames(allcarbs_genes) <- NULL
+```
+
+13. Create list of expression of genes for lipid metabolism: 
+
+```{r}
+list_lipids<-geneInfo%>%
+  filter(grepl('lipid metabolic process', Annotation.GO.Term))
+
+head(list_lipids)
+
+lipids<-list_lipids$gene_id
+
+lipids_genes<-gene_expr[rownames(gene_expr) %in% lipids, ]
+lipids_genes
+
+lipids_genes$Function<-c("Lipid Metabolism")
+lipids_genes$gene_id<-rownames(lipids_genes)
+rownames(lipids_genes) <- NULL
+```
+
+```{r}
+specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, ammontr_genes, glutperox_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes, fattyacid_genes, allcarbs_genes, gluctr_genes, lipids_genes)
 ```
 
 Gather the data set and merge in metadata information.  
@@ -1404,13 +1471,13 @@ Plot the data for each function.
 
 Reorder levels for development.    
 ```{r}
-group_order<-c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit")
+group_order<-c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
 
 specific_genes$group<-factor(specific_genes$group, levels = group_order)
 
 levels(as.factor(specific_genes$lifestage))
 
-lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
 
 specific_genes$lifestage<-factor(specific_genes$lifestage, levels = lifestage_order)
 
@@ -1435,7 +1502,7 @@ atpase_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5.5,6)+
     theme_classic() + 
-    geom_text(x=1.5, y=5.5, label="N=54 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5.5, label="N=54 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1470,7 +1537,7 @@ apoptosis_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5.5,6)+
     theme_classic() + 
-    geom_text(x=1.5, y=5.5, label="N=103 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5.5, label="N=103 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1505,7 +1572,7 @@ anhydrase_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5,7)+
     theme_classic() + 
-    geom_text(x=1.5, y=5, label="N=17 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5, label="N=17 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1540,7 +1607,7 @@ ammonium_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5,7)+
     theme_classic() +
-    geom_text(x=1.5, y=5, label="N=5 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5, label="N=5 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1575,7 +1642,7 @@ glucose_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5.25,6.5)+
     theme_classic() + 
-    geom_text(x=1.5, y=5.25, label="N=3 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5.25, label="N=3 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1610,7 +1677,7 @@ glutathione_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5,8)+
     theme_classic() + 
-    geom_text(x=1.5, y=5, label="N=3 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5, label="N=3 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1645,7 +1712,7 @@ glycogen_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5.25,6.25)+
     theme_classic() + 
-    geom_text(x=1.5, y=5.25, label="N=5 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5.25, label="N=5 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1680,7 +1747,7 @@ communication_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5,6)+
     theme_classic() + 
-    geom_text(x=1.5, y=5, label="N=6 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5, label="N=6 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1699,7 +1766,7 @@ specific_genes%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```
 
-Plot Carb Metabolism
+Plot Glucose Metabolism
 ```{r}
 carb_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -1715,7 +1782,7 @@ carb_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5,6.25)+
     theme_classic() + 
-    geom_text(x=1.5, y=5, label="N=3 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5, label="N=3 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -1734,16 +1801,160 @@ specific_genes%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```
 
-Assemble all plots together.  
+Plot Fatty Acid Metabolism
+```{r}
+fatty_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Fatty Acid Metabolism")%>%
+    
+  ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), color="black", position = position_dodge(0.1)) +
+    geom_point(size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    ylim(5,6.25)+
+    theme_classic() + 
+    geom_text(x=1.7, y=5, label="N=6 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); fatty_plot
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Fatty Acid Metabolism")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+Plot Carbohydrate Metabolism
+```{r}
+allcarbs_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Carbohydrate Metabolism")%>%
+    
+  ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), color="black", position = position_dodge(0.1)) +
+    geom_point(size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    ylim(5,6.25)+
+    theme_classic() + 
+    geom_text(x=1.7, y=5, label="N=95 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); allcarbs_plot
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Carbohydrate Metabolism")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+Plot Glucose Transporters
+```{r}
+gluctrans_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Glucose Transporter")%>%
+    
+  ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), color="black", position = position_dodge(0.1)) +
+    geom_point(size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    ylim(5,7.5)+
+    theme_classic() + 
+    geom_text(x=1.7, y=5, label="N=95 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); gluctrans_plot
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Glucose Transporter")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+Plot Lipid Metabolism  
+```{r}
+lipid_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Lipid Metabolism")%>%
+    
+  ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), color="black", position = position_dodge(0.1)) +
+    geom_point(size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    ylim(5,7)+
+    theme_classic() + 
+    geom_text(x=1.7, y=5, label="N=68 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); lipid_plot
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Lipid Metabolism")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+### Assemble all plots together.  
 ```{r}
 library(cowplot)
 
 carb_plot2<-carb_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
-glucose_plot2<-glucose_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
+allcarbs_plot2<-allcarbs_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
 anhydrase_plot2<-anhydrase_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
 communication_plot2<-communication_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
+fatty_plot2<-fatty_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
+gluctrans_plot2<-gluctrans_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
+ammonium_plot2<-ammonium_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
+lipid_plot2<-lipid_plot+theme(axis.text.x=element_blank(), axis.title.x=element_blank())
 
-gene_plots<-plot_grid(carb_plot2, glucose_plot2, anhydrase_plot2, communication_plot2, ammonium_plot, atpase_plot,  glutathione_plot, apoptosis_plot,  ncol=4, nrow=2, rel_heights = c(0.5,1))
+gene_plots<-plot_grid(allcarbs_plot2, carb_plot2, fatty_plot2, gluctrans_plot2, lipid_plot2, anhydrase_plot, communication_plot, ammonium_plot, atpase_plot,  apoptosis_plot, apoptosis_plot, gluctrans_plot, ncol=5, nrow=2, rel_heights = c(0.5,1))
                       
 ggsave(filename="Mcap2020/Figures/TagSeq/gene_expression_class.jpg", plot=gene_plots, dpi=300, width=22, height=9, units="in")
 ```

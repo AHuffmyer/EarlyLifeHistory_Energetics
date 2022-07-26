@@ -1,38 +1,38 @@
-pathway,total,expected,hits,Raw p,Holm p,FDR
-"Alanine, aspartate and glutamate metabolism",28,0.957,8,1.97E-06,0.000166,0.000166
-Arginine biosynthesis,14,0.478,4,0.000942,0.0782,0.0396
-Citrate cycle (TCA cycle),20,0.683,4,0.00392,0.321,0.11
-Butanoate metabolism,15,0.512,3,0.0128,1,0.22
-D-Glutamine and D-glutamate metabolism,6,0.205,2,0.0157,1,0.22
-Nitrogen metabolism,6,0.205,2,0.0157,1,0.22
-Aminoacyl-tRNA biosynthesis,48,1.64,5,0.0215,1,0.258
-"Valine, leucine and isoleucine biosynthesis",8,0.273,2,0.0281,1,0.295
-Arginine and proline metabolism,38,1.3,4,0.0379,1,0.354
-Purine metabolism,65,2.22,5,0.0671,1,0.516
-Glutathione metabolism,28,0.957,3,0.0675,1,0.516
-Porphyrin and chlorophyll metabolism,30,1.02,3,0.0798,1,0.559
-Glyoxylate and dicarboxylate metabolism,32,1.09,3,0.093,1,0.567
-"Glycine, serine and threonine metabolism",33,1.13,3,0.1,1,0.567
-Histidine metabolism,16,0.547,2,0.101,1,0.567
-Pyruvate metabolism,22,0.752,2,0.172,1,0.901
-Lysine degradation,25,0.854,2,0.209,1,1
-Thiamine metabolism,7,0.239,1,0.216,1,1
-Ascorbate and aldarate metabolism,8,0.273,1,0.243,1,1
-Taurine and hypotaurine metabolism,8,0.273,1,0.243,1,1
-Phenylalanine metabolism,10,0.342,1,0.294,1,1
-Glycerophospholipid metabolism,36,1.23,2,0.35,1,1
-Pyrimidine metabolism,39,1.33,2,0.388,1,1
-Nicotinate and nicotinamide metabolism,15,0.512,1,0.408,1,1
-Glycerolipid metabolism,16,0.547,1,0.428,1,1
-Pentose and glucuronate interconversions,18,0.615,1,0.467,1,1
-Primary bile acid biosynthesis,46,1.57,2,0.472,1,1
-Selenocompound metabolism,20,0.683,1,0.503,1,1
-Ether lipid metabolism,20,0.683,1,0.503,1,1
-Pentose phosphate pathway,22,0.752,1,0.537,1,1
-Propanoate metabolism,23,0.786,1,0.553,1,1
-Glycolysis / Gluconeogenesis,26,0.888,1,0.598,1,1
-Inositol phosphate metabolism,30,1.02,1,0.651,1,1
-"Valine, leucine and isoleucine degradation",40,1.37,1,0.756,1,1
-Tryptophan metabolism,41,1.4,1,0.764,1,1
+Metabolite Set,Total,Hits,Expect,P value,Holm P,FDR
+"Alanine, aspartate and glutamate metabolism",28,7,0.957,2.46E-05,0.00207,0.00207
+Citrate cycle (TCA cycle),20,4,0.683,0.00392,0.325,0.164
+Arginine biosynthesis,14,3,0.478,0.0105,0.861,0.294
+"Valine, leucine and isoleucine biosynthesis",8,2,0.273,0.0281,1,0.59
+Purine metabolism,65,5,2.22,0.0671,1,1
+Aminoacyl-tRNA biosynthesis,48,4,1.64,0.0779,1,1
+Butanoate metabolism,15,2,0.512,0.0905,1,1
+"Glycine, serine and threonine metabolism",33,3,1.13,0.1,1,1
+Arginine and proline metabolism,38,3,1.3,0.137,1,1
+Pyruvate metabolism,22,2,0.752,0.172,1,1
+Nitrogen metabolism,6,1,0.205,0.189,1,1
+Thiamine metabolism,7,1,0.239,0.216,1,1
+Ascorbate and aldarate metabolism,8,1,0.273,0.243,1,1
+Taurine and hypotaurine metabolism,8,1,0.273,0.243,1,1
+Glutathione metabolism,28,2,0.957,0.248,1,1
+Porphyrin and chlorophyll metabolism,30,2,1.02,0.274,1,1
+Phenylalanine metabolism,10,1,0.342,0.294,1,1
+Glyoxylate and dicarboxylate metabolism,32,2,1.09,0.299,1,1
+Glycerophospholipid metabolism,36,2,1.23,0.35,1,1
+Pyrimidine metabolism,39,2,1.33,0.388,1,1
+Nicotinate and nicotinamide metabolism,15,1,0.512,0.408,1,1
+Histidine metabolism,16,1,0.547,0.428,1,1
+Glycerolipid metabolism,16,1,0.547,0.428,1,1
+Pentose and glucuronate interconversions,18,1,0.615,0.467,1,1
+Primary bile acid biosynthesis,46,2,1.57,0.472,1,1
+Selenocompound metabolism,20,1,0.683,0.503,1,1
+Ether lipid metabolism,20,1,0.683,0.503,1,1
+Pentose phosphate pathway,22,1,0.752,0.537,1,1
+Propanoate metabolism,23,1,0.786,0.553,1,1
+Lysine degradation,25,1,0.854,0.584,1,1
+Glycolysis / Gluconeogenesis,26,1,0.888,0.598,1,1
+Inositol phosphate metabolism,30,1,1.02,0.651,1,1
+"Valine, leucine and isoleucine degradation",40,1,1.37,0.756,1,1
+Tyrosine metabolism,42,1,1.43,0.772,1,1
+Fatty acid biosynthesis,47,1,1.61,0.81,1,1
 Tyrosine metabolism,42,1.43,1,0.772,1,1
 Fatty acid biosynthesis,47,1.61,1,0.81,1,1

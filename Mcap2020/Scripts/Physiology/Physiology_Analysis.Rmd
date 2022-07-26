@@ -445,7 +445,7 @@ sym_counts$hpf<-as.factor(sym_counts$hpf)
 corr<-left_join(sym_counts, volume)
 ```
 
-Generate number of symbiont cells per mm^2 area for each tube.    
+Generate number of symbiont cells per mm^3 area for each tube.    
 ```{r}
 corr<-corr%>%
   mutate(mean_volume_2=mean_volume*2)%>%

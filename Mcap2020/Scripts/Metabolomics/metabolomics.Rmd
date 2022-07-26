@@ -220,11 +220,11 @@ data<-data%>%
                                                        if_else(Lifestage == "Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
                                                                if_else(Lifestage == "Larvae6", "Larvae",
-                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Recruit", 
-                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Recruit", 
-                                                                               if_else(Lifestage =="Recruit1plug", "Calcifying Recruit", 
-                                                                                       if_else(Lifestage == "Recruit2plug", "Calcifying Recruit", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA"))))))))))))))
+                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Polyp", 
+                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Polyp", 
+                                                                               if_else(Lifestage =="Recruit1plug", "Attached Recruit", 
+                                                                                       if_else(Lifestage == "Recruit2plug", "Attached Recruit", 
+                                                                                               if_else(Lifestage == "Recruit3plug", "Attached Recruit", "NA"))))))))))))))
 
 data<-data%>%
   mutate(HPF = if_else(Lifestage == "Egg", "1", 
@@ -235,13 +235,13 @@ data<-data%>%
                                                        if_else(Lifestage == "Larvae4", "163",
                                                        if_else(Lifestage == "Larvae5", "183 larvae", 
                                                                if_else(Lifestage == "Larvae6", "231 larvae",
-                                                               if_else(Lifestage == "Recruit1", "183 recruit", 
-                                                                       if_else(Lifestage == "Recruit2", "231 recruit", 
-                                                                               if_else(Lifestage =="Recruit1plug", "183 recruit plug", 
-                                                                                       if_else(Lifestage == "Recruit2plug", "231 recruit plug", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA"))))))))))))))
+                                                               if_else(Lifestage == "Recruit1", "183 polyp", 
+                                                                       if_else(Lifestage == "Recruit2", "231 polyp", 
+                                                                               if_else(Lifestage =="Recruit1plug", "183 recruit", 
+                                                                                       if_else(Lifestage == "Recruit2plug", "231 recruit", 
+                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit", "NA"))))))))))))))
 
-data$HPF<-fct_relevel(data$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 recruit", "183 recruit plug", "231 larvae", "231 recruit", "231 recruit plug", "255 recruit plug")
+data$HPF<-fct_relevel(data$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 polyp", "183 recruit", "231 larvae", "231 polyp", "231 recruit", "255 recruit")
 ```
 
 Create plot showing normalized ion counts (count / sample median) for each lifestage.  
@@ -1125,7 +1125,7 @@ Timepoint_VIP_table <- rownames_to_column(Timepoint_VIP_DF, var = "Metabolite")
 Timepoint_VIP_1 <- Timepoint_VIP_table %>% 
   filter(VIP >= 1)
 
-write_csv(Timepoint_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Timepoint_VIPs.csv")
+#write_csv(Timepoint_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Timepoint_VIPs.csv")
 
 #plot
 Timepoint_VIP_1 %>%
@@ -1167,7 +1167,7 @@ Develop_VIP_table <- rownames_to_column(Develop_VIP_DF, var = "Metabolite")
 Develop_VIP_1 <- Develop_VIP_table %>% 
   filter(VIP >= 1)
 
-write_csv(Develop_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Develop_VIPs.csv")
+#write_csv(Develop_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Develop_VIPs.csv")
 
 #plot
 Develop_VIP_1 %>%
@@ -1295,7 +1295,7 @@ EvE_VIP_plot<-left_join(EvE_VIP_1, EvE_pvalues, by="Metabolite")
 EvE_VIP_plot$direction[is.na(EvE_VIP_plot$direction)] <- c("Nonsig")
 EvE_VIP_plot$direction<-as.factor(EvE_VIP_plot$direction)
 
-write_csv(EvE_VIP_plot, "Mcap2020/Output/Metabolomics/EvE_VIPs.csv")
+#write_csv(EvE_VIP_plot, "Mcap2020/Output/Metabolomics/EvE_VIPs.csv")
 ```
 
 Plot VIP plot. Remove nonsignificant metabolites determined by t test validations.       
@@ -1459,7 +1459,7 @@ EvL_VIP_plot<-left_join(EvL_VIP_1, EvL_pvalues, by="Metabolite")
 EvL_VIP_plot$direction[is.na(EvL_VIP_plot$direction)] <- c("Nonsig")
 EvL_VIP_plot$direction<-as.factor(EvL_VIP_plot$direction)
 
-write_csv(EvL_VIP_plot, "Mcap2020/Output/Metabolomics/EvL_VIPs.csv")
+#write_csv(EvL_VIP_plot, "Mcap2020/Output/Metabolomics/EvL_VIPs.csv")
 
 #plot
 EvL_plota<-EvL_VIP_plot %>%
@@ -1610,7 +1610,7 @@ LvM_pvalues<-LvM_pvalues%>%
  LvM_VIP_plot$direction[is.na(LvM_VIP_plot$direction)] <- c("Nonsig")
  LvM_VIP_plot$direction<-as.factor(LvM_VIP_plot$direction)
  
- write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
+ #write_csv(LvM_VIP_plot, "Mcap2020/Output/Metabolomics/LvM_VIPs.csv")
  
  #plot
  LvM_plota<-LvM_VIP_plot %>%
@@ -1768,7 +1768,7 @@ LvC_VIP_plot<-left_join(LvC_VIP_1, LvC_pvalues, by="Metabolite")
 LvC_VIP_plot$direction[is.na(LvC_VIP_plot$direction)] <- c("Nonsig")
 LvC_VIP_plot$direction<-as.factor(LvC_VIP_plot$direction)
 
-write_csv(LvC_VIP_plot, "Mcap2020/Output/Metabolomics/LvC_VIPs.csv")
+#write_csv(LvC_VIP_plot, "Mcap2020/Output/Metabolomics/LvC_VIPs.csv")
 
 #plot
 LvC_plota<-LvC_VIP_plot %>%
@@ -1926,7 +1926,7 @@ MvC_VIP_plot<-left_join(MvC_VIP_1, MvC_pvalues, by="Metabolite")
 MvC_VIP_plot$direction[is.na(MvC_VIP_plot$direction)] <- c("Nonsig")
 MvC_VIP_plot$direction<-as.factor(MvC_VIP_plot$direction)
 
-write_csv(MvC_VIP_plot, "Mcap2020/Output/Metabolomics/MvC_VIPs.csv")
+#write_csv(MvC_VIP_plot, "Mcap2020/Output/Metabolomics/MvC_VIPs.csv")
 
 #plot
 MvC_plota<-MvC_VIP_plot %>%
@@ -1999,38 +1999,6 @@ VIP_bar_plots2<-plot_grid(LvC_bar, LvM_bar, MvC_bar, ncol=3, nrow=1, rel_widths=
 VIP_bar_plots<-plot_grid(VIP_bar_plots1, VIP_bar_plots2, ncol=1, nrow=2, rel_widths=c(1,1), rel_heights=c(1,1), align="vh")
 
 ggsave(plot=VIP_bar_plots, "Mcap2020/Figures/Metabolomics/VIP_bars.pdf", width=30, height=10, units="in")
-```
-
-### 7. Generate combined file for pathway analysis  
-
-Generate a combined file of all enriched metabolites (based on VIP calculations) for all lifestages and remove non significant metabolites. Export file for each lifestage for separate analysis.    
-
-```{r}
-kegg_file<-rbind(EvE_VIP_plot, EvL_VIP_plot, LvC_VIP_plot, LvM_VIP_plot, MvC_VIP_plot)
-
-kegg_file<-kegg_file%>%
-  filter(!direction=="Nonsig")%>%
-  select(Metabolite, lifestage)
-
-kegg_egg<-kegg_file%>%
-  filter(lifestage=="Egg")%>%
-  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_egg.csv")
-
-kegg_embryo<-kegg_file%>%
-  filter(lifestage=="Embryo")%>%
-  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_embryo.csv")
-
-kegg_larvae<-kegg_file%>%
-  filter(lifestage=="Larvae")%>%
-  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_larvae.csv")
-
-kegg_metamorphosed<-kegg_file%>%
-  filter(lifestage=="MetamorphosedRecruit")%>%
-  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_metamorphosed.csv")
-
-kegg_calcifying<-kegg_file%>%
-  filter(lifestage=="CalcifyingRecruit")%>%
-  write.csv(., "Mcap2020/Output/Metabolomics/KEGG_calcifying.csv")
 ```
 
 # Validation of PLS-DA and generation of sPLS-DA  

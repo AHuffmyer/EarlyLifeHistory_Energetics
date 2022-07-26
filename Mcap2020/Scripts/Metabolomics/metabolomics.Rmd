@@ -227,21 +227,21 @@ data<-data%>%
                                                                                                if_else(Lifestage == "Recruit3plug", "Attached Recruit", "NA"))))))))))))))
 
 data<-data%>%
-  mutate(HPF = if_else(Lifestage == "Egg", "1", 
-                               if_else(Lifestage =="Embryo", "5", 
-                                       if_else(Lifestage == "Larvae1", "38", 
-                                               if_else(Lifestage=="Larvae2", "65", 
-                                               if_else(Lifestage=="Larvae3", "93", 
-                                                       if_else(Lifestage == "Larvae4", "163",
-                                                       if_else(Lifestage == "Larvae5", "183 larvae", 
-                                                               if_else(Lifestage == "Larvae6", "231 larvae",
-                                                               if_else(Lifestage == "Recruit1", "183 polyp", 
-                                                                       if_else(Lifestage == "Recruit2", "231 polyp", 
-                                                                               if_else(Lifestage =="Recruit1plug", "183 recruit", 
-                                                                                       if_else(Lifestage == "Recruit2plug", "231 recruit", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit", "NA"))))))))))))))
+  mutate(HPF = if_else(Lifestage == "Egg", "Egg (1 hpf)", 
+                               if_else(Lifestage =="Embryo", "Embryo (5 hpf)", 
+                                       if_else(Lifestage == "Larvae1", "Embryo (38 hpf)", 
+                                               if_else(Lifestage=="Larvae2", "Embryo (65 hpf)", 
+                                               if_else(Lifestage=="Larvae3", "Larvae (93 hpf)", 
+                                                       if_else(Lifestage == "Larvae4", "Larvae (163 hpf)",
+                                                       if_else(Lifestage == "Larvae5", "Larvae (183 hpf)", 
+                                                               if_else(Lifestage == "Larvae6", "Larvae (231 hpf)",
+                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Polyp (183 hpf)", 
+                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Polyp (231 hpf)", 
+                                                                               if_else(Lifestage =="Recruit1plug", "Attached Recruit (183 hpf)", 
+                                                                                       if_else(Lifestage == "Recruit2plug", "Attached Recruit (231 hpf)", 
+                                                                                               if_else(Lifestage == "Recruit3plug", "Attached Recruit (255 hpf)", "NA"))))))))))))))
 
-data$HPF<-fct_relevel(data$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 polyp", "183 recruit", "231 larvae", "231 polyp", "231 recruit", "255 recruit")
+data$HPF<-fct_relevel(data$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Metamorphosed Polyp (183 hpf)", "Attached Recruit (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
 ```
 
 Create plot showing normalized ion counts (count / sample median) for each lifestage.  
@@ -559,30 +559,31 @@ data_neg<-data_neg%>%
                                                        if_else(Lifestage=="Larvae4", "Larvae", 
                                                        if_else(Lifestage == "Larvae5", "Larvae", 
                                                                 if_else(Lifestage == "Larvae6", "Larvae",
-                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Recruit", 
-                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Recruit", 
-                                                                               if_else(Lifestage =="Recruit1plug", "Calcifying Recruit", 
-                                                                                       if_else(Lifestage == "Recruit2plug", "Calcifying Recruit", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "Calcifying Recruit", "NA"))))))))))))))
+                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Polyp", 
+                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Polyp", 
+                                                                               if_else(Lifestage =="Recruit1plug", "Attached Recruit", 
+                                                                                       if_else(Lifestage == "Recruit2plug", "Attached Recruit", 
+                                                                                               if_else(Lifestage == "Recruit3plug", "Attached Recruit", "NA"))))))))))))))
 
 data_neg<-data_neg%>%
-  mutate(HPF = if_else(Lifestage == "Egg", "1", 
-                               if_else(Lifestage =="Embryo", "5", 
-                                       if_else(Lifestage == "Larvae1", "38", 
-                                                if_else(Lifestage=="Larvae2", "65", 
-                                               if_else(Lifestage=="Larvae3", "93", 
-                                                        if_else(Lifestage == "Larvae4", "163",
-                                                       if_else(Lifestage == "Larvae5", "183 larvae", 
-                                                                if_else(Lifestage == "Larvae6", "231 larvae",
-                                                               if_else(Lifestage == "Recruit1", "183 recruit", 
-                                                                       if_else(Lifestage == "Recruit2", "231 recruit", 
-                                                                               if_else(Lifestage =="Recruit1plug", "183 recruit plug", 
-                                                                                       if_else(Lifestage == "Recruit2plug", "231 recruit plug", 
-                                                                                               if_else(Lifestage == "Recruit3plug", "255 recruit plug", "NA"))))))))))))))
+  mutate(HPF = if_else(Lifestage == "Egg", "Egg (1 hpf)", 
+                               if_else(Lifestage =="Embryo", "Embryo (5 hpf)", 
+                                       if_else(Lifestage == "Larvae1", "Embryo (38 hpf)", 
+                                               if_else(Lifestage=="Larvae2", "Embryo (65 hpf)", 
+                                               if_else(Lifestage=="Larvae3", "Larvae (93 hpf)", 
+                                                       if_else(Lifestage == "Larvae4", "Larvae (163 hpf)",
+                                                       if_else(Lifestage == "Larvae5", "Larvae (183 hpf)", 
+                                                               if_else(Lifestage == "Larvae6", "Larvae (231 hpf)",
+                                                               if_else(Lifestage == "Recruit1", "Metamorphosed Polyp (183 hpf)", 
+                                                                       if_else(Lifestage == "Recruit2", "Metamorphosed Polyp (231 hpf)", 
+                                                                               if_else(Lifestage =="Recruit1plug", "Attached Recruit (183 hpf)", 
+                                                                                       if_else(Lifestage == "Recruit2plug", "Attached Recruit (231 hpf)", 
+                                                                                               if_else(Lifestage == "Recruit3plug", "Attached Recruit (255 hpf)", "NA"))))))))))))))
 
-data_neg$HPF<-fct_relevel(data_neg$HPF, "1", "5", "38", "65", "93", "163", "183 larvae", "183 recruit", "183 recruit plug", "231 larvae", "231 recruit", "231 recruit plug", "255 recruit plug")
+data_neg$HPF<-fct_relevel(data_neg$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Metamorphosed Polyp (183 hpf)", "Attached Recruit (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
 
 data_neg$Development<-as.factor(data_neg$Development)
+
 ```
 
 Create plot showing normalized ion counts (count / sample median) for each lifestage.  
@@ -852,11 +853,6 @@ hist(log(peaks_selected$log_norm_counts))
 
 Remove PosIS and NegIS metabolites - these are internal standards that are not relevant for our samples. Clean any names that have (+HAc) and (+), rename to just include the metabolite name.  
 
-
-
-NEED TO DO REMOVE NON HAC or SIM COMPOUNDS BEFORE THE HAC ONES ARE RENAMED TO KEEP THE "GOOD ONES"
-
-
 ```{r, echo=FALSE, results=FALSE}
 grep("PosIS", levels(peaks_selected$compound)) #5 metabolites with PosIS, need to remove
 grep("NegIS", levels(peaks_selected$compound)) #9 metabolites with NegIS, need to remove
@@ -1003,7 +999,11 @@ X <- metabolites%>%
   dplyr::select(Lifestage, Rep, HPF, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts) #generate spread data frame
 
-#levels(X$HPF) <- list(A_1_Egg  = "1", B_5_Embryo="5", C_38_Embryo="38", D_65_Embryo="65", E_93_Larvae = "93", F_163_Larvae = "163", G_183_Larvae = "183 larvae", H_183_MetRecruit = "183 recruit", I_183_CalcRecruit = "183 recruit plug", J_231_Larvae = "231 larvae", K_231_MetRecruit = "231 recruit", L_231_CalcRecruit = "231 recruit plug", M_255_CalcRecruit = "255 recruit plug")
+levels(as.factor(X$HPF))
+
+X$HPF<-fct_relevel(X$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Metamorphosed Polyp (183 hpf)", "Attached Recruit (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
+
+levels(as.factor(X$HPF))
 
 Y <- as.factor(X$HPF) #select treatment names
 Y
@@ -1020,14 +1020,26 @@ plotVar(MyResult.plsda, cutoff = 0.7)
 #REDO THESE
 lifestage_cols<-c("#8C510A", "#80CDC1", "#5BBFAF", "#003C30", "#BA55D3", "#6EC6B8", "#00231C","#B241CE", "#A632C3", "#DFC27D", "#DAB869", "#E4CC91","#92D4CA")
 
+levels(Y)
+
+lifestage_cols<-c("#8C510A", #eggs
+                  "#DFC27D", "#DAB869", "#E4CC91", #embryos
+                  "#80CDC1", "#5BBFAF", "#6EC6B8", #larvae
+                  "#003C30", #polyp
+                  "#BA55D3", #recruits
+                  "#92D4CA", #larvae
+                  "#00231C", #polyp
+                  "#B241CE", #recruit
+                  "#A632C3") #recruit
+
 #Egg: "#8C510A", 
 #Embryo: "#DFC27D", "#DAB869", "#E4CC91", "#D5AF54"
 #Larvae: "#80CDC1", "#5BBFAF", "#6EC6B8", "#92D4CA"
-#Recruit Metamorphosed: "#003C30", "#00231C", "005644", "006F59"
-#Recruit Calcifying: "#BA55D3", "B241CE", "A632C3"
+#Polyp Metamorphosed: "#003C30", "#00231C", "005644", "006F59"
+#Recruit Attached: "#BA55D3", "B241CE", "A632C3"
 
 pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=7, height=7)
-plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=TRUE,ellipse = TRUE,title="PLS-DA")
+plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=TRUE, legend.title = "Lifestage", ellipse = TRUE,title="PLS-DA")
 dev.off() 
 
 plotIndiv(MyResult.plsda, ind.names = FALSE, col=lifestage_cols, legend=TRUE,ellipse = TRUE, title="PLS-DA")
@@ -1036,13 +1048,8 @@ plotIndiv(MyResult.plsda, ind.names = FALSE, col=lifestage_cols, legend=TRUE,ell
 #plotArrow(MyResult.plsda)
 #auroc(MyResult.plsda)
 
-pdf("Mcap2020/Figures/Metabolomics/CIM_Timepoint.pdf", width=30, height=7)
-cim(MyResult.plsda, mapping="Y", row.names = metabolites$HPF, xlab = "Metabolites", ylab="Hours Post Fertilization", margins=c(10,7), row.cex=0.5)
-dev.off()
-
-
-pdf("Mcap2020/Figures/Metabolomics/CIM_Lifestage.pdf", width=30, height=7)
-cim(MyResult.plsda, mapping="Y", row.names = metabolites$Lifestage, xlab = "Metabolites", ylab="Hours Post Fertilization", margins=c(10,7), row.cex=0.5)
+pdf("Mcap2020/Figures/Metabolomics/CIM_Lifestage.pdf", width=35, height=7)
+cim(MyResult.plsda, mapping="Y", row.names = metabolites$HPF, xlab = "Metabolites", ylab="Lifestage", margins=c(10,10), row.cex=0.5)
 dev.off()
 ```
 
@@ -1053,8 +1060,6 @@ MyResult.plsda_timepoint <- plsda(X,Y, ncomp=9) #number of components is classes
 
 ```
 
-There are some groupings appearing for the following groups: Egg, embryo, larvae, metamorphosed recruits, calcifying recruits. Explore these with plotting.  
-
 ### Plot PLSDA by developmental stage.  
 ```{r}
 #assigning datasets 
@@ -1062,7 +1067,9 @@ X <- metabolites%>%
   dplyr::select(Lifestage, Rep, Development, compound, log_norm_counts)%>%
   spread(compound, log_norm_counts)
 
-levels(X$Development) <- list(A_Egg  = "Egg", B_Embryo = "Embryo", C_Larvae = "Larvae", D_MetamorphosedRecruit = "Metamorphosed Recruit", E_CalcifyingRecruit="Calcifying Recruit")
+X$Development<-fct_relevel(X$Development, "Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+
+levels(X$Development)
 
 Y <- X$Development #select treatment names
 Y
@@ -1075,25 +1082,19 @@ MyResult.plsda.D <- plsda(X,Y) # 1 Run the method
 plotIndiv(MyResult.plsda.D)    # 2 Plot the samples
 plotVar(MyResult.plsda.D, cutoff = 0.7)    
 
-develop_cols<-c("#8C510A", "#DFC27D", "#80CDC1", "#003C30", "#BA55D3")
+develop_cols<-c("#BA55D3", "#8C510A", "#DFC27D", "#80CDC1", "#003C30")
 
 #Egg: "#8C510A"
 #Embryo: "#DFC27D"
 #Larvae: "#80CDC1"
-#Recruit Metamorphosed: "#003C30"
-#Recruit Calcifying: "#BA55D3"
-
+#Polyp Metamorphosed: "#003C30"
+#Recruit Attached: "#BA55D3"
 
 pdf("Mcap2020/Figures/Metabolomics/PLSDA_Development.pdf", width=7, height=7)
 plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, col=develop_cols, title="PLS-DA",legend.title=expression(bold("Developmental Stage")), size.legend=14, size.legend.title=14, style="ggplot2")
 dev.off() 
 
 plotIndiv(MyResult.plsda.D, ind.names = FALSE, legend=TRUE,ellipse = TRUE, col=develop_cols, title="PLS-DA",legend.title=expression(bold("Developmental Stage")), size.legend=14, size.legend.title=14, style="ggplot2")
-#plotVar(MyResult.plsda.D)
-#plotLoadings(MyResult.plsda.D)
-#plotArrow(MyResult.plsda.D)
-#auroc(MyResult.plsda.D)
-
 
 pdf("Mcap2020/Figures/Metabolomics/CIM_Development.pdf", width=15, height=7)
 cim(MyResult.plsda.D, row.names = metabolites$Development, mapping="Y", xlab = "Metabolites", ylab="Developmental Group", margins=c(10,10), row.cex=0.5, col.cex=0.5)
@@ -1134,19 +1135,19 @@ Timepoint_VIP_1 %>%
   geom_point() +
   ylab("Metabolite") +
   xlab("VIP Score") +
-  ggtitle("Timepoint Groupings") +
+  ggtitle("Lifestage VIP") +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
 
-pdf("Mcap2020/Figures/Metabolomics/Timepoint_VIP.pdf", width=6, height=11)
+pdf("Mcap2020/Figures/Metabolomics/Lifestage_VIP.pdf", width=6, height=11)
 Timepoint_VIP_1 %>%
   arrange(VIP) %>%
   ggplot( aes(x = VIP, y = reorder(Metabolite,VIP,sum))) +
   geom_point() +
   ylab("Metabolite") +
   xlab("VIP Score") +
-  ggtitle("Timepoint Groupings") +
+  ggtitle("Lifestage VIP") +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 dev.off() 
@@ -1176,7 +1177,7 @@ Develop_VIP_1 %>%
   geom_point() +
   ylab("Metabolite") +
   xlab("VIP Score") +
-  ggtitle("Developmental Groupings") +
+  ggtitle("Developmental VIP") +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
@@ -1187,11 +1188,13 @@ Develop_VIP_1 %>%
   geom_point() +
   ylab("Metabolite") +
   xlab("VIP Score") +
-  ggtitle("Developmental Groupings") +
+  ggtitle("Developmental VIP") +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 dev.off()
 ```
+
+These lists represent VIPs that drive separation in lifestage. But, this does not provide lists of VIP's between specific life stages or global correlations of metabolites with specific lifestages. In the following section we generate lists of VIPs between subsequent lifestages. In the metabolomics_WGCNA.Rmd script, we use a WGCNA approach to determine metabolites that correlate with lifestage, which we use as the primary analysis.  
 
 ## Generate VIPs for developmental group comparisons 
 
@@ -1313,7 +1316,7 @@ EvE_plota<-EvE_VIP_plot %>%
   xlab("VIP Score") +
   ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); EvE_plota
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 EvE_plotb<-EvE_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1326,7 +1329,7 @@ EvE_plotb<-EvE_VIP_plot %>%
   ggtitle(expression(bold("Eggs > Embryos"))) +
   scale_x_reverse()+
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); EvE_plotb
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 #arrange plots
 EvE_plots<-plot_grid(EvE_plotb, EvE_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
@@ -1354,7 +1357,7 @@ EvE_bar<-EvE_VIP_plot %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5)); EvE_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP_bar.pdf", width=10, height=4, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/EggsEmbryo_VIP_bar.pdf", width=10, height=4, units="in")
 
 ```
 
@@ -1446,7 +1449,7 @@ Group dataframe for use in plotting.
 EvL_pvalues<-rbind(EvL_t.test.sig.up, EvL_t.test.sig.down)
 
 EvL_pvalues<-EvL_pvalues%>%
-  select(compound, direction, lifestage)%>%
+  dplyr::select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1472,7 +1475,7 @@ EvL_plota<-EvL_VIP_plot %>%
   xlab("VIP Score") +
   ggtitle(expression(bold("Embryos < Larvae"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); EvL_plota
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 EvL_plotb<-EvL_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1485,7 +1488,7 @@ EvL_plotb<-EvL_VIP_plot %>%
   ggtitle(expression(bold("Embryos > Larvae"))) +
   scale_x_reverse()+
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); EvL_plotb
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 #arrange plots
 EvL_plots<-plot_grid(EvL_plotb, EvL_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
@@ -1512,7 +1515,7 @@ EvL_bar<-EvL_VIP_plot %>%
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); EvL_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP_bar.pdf", width=18, height=4, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP_bar.pdf", width=18, height=4, units="in")
 
 ```
 
@@ -1521,7 +1524,7 @@ ggsave("Mcap2020/Figures/Metabolomics/EmbryoLarvae_VIP_bar.pdf", width=18, heigh
 Conduct t-tests to validate differences in VIP metabolites.    
 
 ```{r}
-list<-c("Larvae", "Metamorphosed Recruit")
+list<-c("Larvae", "Metamorphosed Polyp")
 #assigning datasets 
 X <- metabolites%>%
   filter(Development %in% list)%>%
@@ -1586,7 +1589,7 @@ LvM_t.test.sig.down <-LvM_t.test.sig %>% filter(estimate1 < estimate2)
 ```{r}
 LvM_t.test.sig.up
 LvM_t.test.sig.up$direction<-c("Increase")
-LvM_t.test.sig.up$lifestage<-c("Metamorphosed Recruit")
+LvM_t.test.sig.up$lifestage<-c("Metamorphosed Polyp")
 ```
 
 
@@ -1600,7 +1603,7 @@ LvM_t.test.sig.down$lifestage<-c("Larvae")
 LvM_pvalues<-rbind(LvM_t.test.sig.up, LvM_t.test.sig.down)
  
 LvM_pvalues<-LvM_pvalues%>%
-   select(compound, direction, lifestage)%>%
+   dplyr::select(compound, direction, lifestage)%>%
    rename(Metabolite=compound)
 ```
 
@@ -1623,7 +1626,7 @@ LvM_pvalues<-LvM_pvalues%>%
    xlab("VIP Score") +
    ggtitle(expression(bold("Larvae < \nMetamorpohsed Recruit"))) +
    theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10)); LvM_plota
+                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.margin=margin(t=15, r=4), plot.title=element_text(hjust=0.5, size=10))
  
  LvM_plotb<-LvM_VIP_plot %>%
    filter(!direction=="Nonsig")%>%
@@ -1636,7 +1639,7 @@ LvM_pvalues<-LvM_pvalues%>%
    ggtitle(expression(bold("Larvae > \nMetamorphosed Recruit"))) +
    scale_x_reverse()+
    theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15)); LvM_plotb
+                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5, size=10), plot.margin=margin(t=15))
  
  #arrange plots
  LvM_plots<-plot_grid(LvM_plotb, LvM_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
@@ -1661,7 +1664,7 @@ LvM_pvalues<-LvM_pvalues%>%
    theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                       panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvM_bar
  
- ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
+ #ggsave("Mcap2020/Figures/Metabolomics/LarvaeMetamorphosed_VIP_bar.pdf", width=8, height=4, units="in")
 
 ```
 
@@ -1671,7 +1674,7 @@ LvM_pvalues<-LvM_pvalues%>%
 Conduct t-tests to validate differences in VIP metabolites.   
  
 ```{r}
-list<-c("Calcifying Recruit", "Larvae")
+list<-c("Attached Recruit", "Larvae")
 
 #assigning datasets 
 X <- metabolites%>%
@@ -1746,7 +1749,7 @@ Display metabolites that are lower in larvae compared to calcifying recruits, no
 ```{r}
 LvC_t.test.sig.down
 LvC_t.test.sig.down$direction<-c("Increase")
-LvC_t.test.sig.down$lifestage<-c("CalcifyingRecruit")
+LvC_t.test.sig.down$lifestage<-c("AttachedRecruit")
 ```
 
 Group dataframe for use in plotting.  
@@ -1755,7 +1758,7 @@ Group dataframe for use in plotting.
 LvC_pvalues<-rbind(LvC_t.test.sig.up, LvC_t.test.sig.down)
 
 LvC_pvalues<-LvC_pvalues%>%
-  select(compound, direction, lifestage)%>%
+  dplyr::select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1779,9 +1782,9 @@ LvC_plota<-LvC_VIP_plot %>%
   scale_colour_manual(values=c("white", "#BA55D3"))+
   ylab("") +
   xlab("VIP Score") +
-  ggtitle(expression(bold("Larvae < Calcifying Recruits"))) +
+  ggtitle(expression(bold("Larvae < Attached Recruits"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); LvC_plota
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 LvC_plotb<-LvC_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1791,10 +1794,10 @@ LvC_plotb<-LvC_VIP_plot %>%
   scale_colour_manual(values=c("#80CDC1", "white"))+
   ylab("") +
   xlab("VIP Score") +
-  ggtitle(expression(bold("Larvae > Calcifying Recruits"))) +
+  ggtitle(expression(bold("Larvae > Attached Recruits"))) +
   scale_x_reverse()+
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5)); LvC_plotb
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5))
 
 #arrange plots
 LvC_plots<-plot_grid(LvC_plotb, LvC_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
@@ -1815,22 +1818,22 @@ LvC_bar<-LvC_VIP_plot %>%
   ylab("VIP Score") +
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
-  annotate("text", x = 10, y = 1.6, label = "Calcifying Recruit > \nLarvae", fontface =2, color="#BA55D3") +
-  annotate("text", x = 60, y = -1.6, label = "Larvae > \nCalcifying Recruit", fontface =2, color="#80CDC1") +
+  annotate("text", x = 10, y = 1.6, label = "Attached Recruit > \nLarvae", fontface =2, color="#BA55D3") +
+  annotate("text", x = 60, y = -1.6, label = "Larvae > \nAttached Recruit", fontface =2, color="#80CDC1") +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); LvC_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/LarvaeCalcifying_VIP_bar.pdf", width=12, height=4, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/LarvaeAttached_VIP_bar.pdf", width=12, height=4, units="in")
 
 ```
 
-### 5. Metamorphosed vs calcifying recruits  
+### 5. Metamorphosed vs attached recruits  
 
 Conduct t-tests to validate differences in VIP metabolites.   
   
 ```{r}
-list<-c("Calcifying Recruit", "Metamorphosed Recruit")
+list<-c("Attached Recruit", "Metamorphosed Polyp")
 #assigning datasets 
 X <- metabolites%>%
   filter(Development %in% list)%>%
@@ -1896,7 +1899,7 @@ Display metabolites that are higher in metamorphosed recruits compared to calcif
 ```{r}
 MvC_t.test.sig.up
 MvC_t.test.sig.up$direction<-c("Decrease")
-MvC_t.test.sig.up$lifestage<-c("MetamorphosedRecruit")
+MvC_t.test.sig.up$lifestage<-c("MetamorphosedPolyp")
 ```
 
 Display metabolites that are lower in metamorphosed recruits compared to calcifying recruits, note that directions are opposite due to order of factors
@@ -1904,7 +1907,7 @@ Display metabolites that are lower in metamorphosed recruits compared to calcify
 ```{r}
 MvC_t.test.sig.down
 MvC_t.test.sig.down$direction<-c("Increase")
-MvC_t.test.sig.down$lifestage<-c("CalcifyingRecruit")
+MvC_t.test.sig.down$lifestage<-c("AttachedRecruit")
 ```
 
 Group dataframe for use in plotting.  
@@ -1913,7 +1916,7 @@ Group dataframe for use in plotting.
 MvC_pvalues<-rbind(MvC_t.test.sig.up, MvC_t.test.sig.down)
 
 MvC_pvalues<-MvC_pvalues%>%
-  select(compound, direction, lifestage)%>%
+  dplyr::select(compound, direction, lifestage)%>%
   rename(Metabolite=compound)
 ```
 
@@ -1937,9 +1940,9 @@ MvC_plota<-MvC_VIP_plot %>%
   scale_colour_manual(values=c("white", "#BA55D3"))+
   ylab("") +
   xlab("VIP Score") +
-  ggtitle(expression(bold("Metamorpohsed Recruits < \nCalcifying Recruits"))) +
+  ggtitle(expression(bold("Metamorpohsed Polyps < \nAttached Recruits"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), plot.margin=margin(t=15)); MvC_plota
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), plot.margin=margin(t=15))
 
 MvC_plotb<-MvC_VIP_plot %>%
   filter(!direction=="Nonsig")%>%
@@ -1949,10 +1952,10 @@ MvC_plotb<-MvC_VIP_plot %>%
   scale_colour_manual(values=c("#003C30", "white"))+
   ylab("") +
   xlab("VIP Score") +
-  ggtitle(expression(bold("Metamorphosed Recruits > \nCalcifying Recruits"))) +
+  ggtitle(expression(bold("Metamorphosed Polyps > \nAttached Recruits"))) +
   scale_x_reverse()+
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), plot.margin=margin(t=15)); MvC_plotb
+                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), plot.margin=margin(t=15))
 
 #arrange plots
 MvC_plots<-plot_grid(MvC_plotb, MvC_plota, ncol=2, rel_widths=c(0.6,1), rel_heights = c(1,1))
@@ -1973,13 +1976,13 @@ MvC_bar<-MvC_VIP_plot %>%
   ylab("VIP Score") +
   scale_y_continuous(limits=c(-2, 2), breaks=c(-1,0,1))+
   xlab("") +
-  annotate("text", x = 10, y = 1.6, label = "Calcifying Recruit > \nMetamorphosed Recruit", fontface =2, color="#BA55D3") +
-  annotate("text", x = 50, y = -1.6, label = "Metamorphosed Recruit > \nCalcifying Recruit", fontface =2, color="#003C30") +
+  annotate("text", x = 10, y = 1.6, label = "Attached Recruits > \nMetamorphosed Polyps", fontface =2, color="#BA55D3") +
+  annotate("text", x = 50, y = -1.6, label = "Metamorphosed Polyps > \nAttached Recruits", fontface =2, color="#003C30") +
   #ggtitle(expression(bold("Eggs < Embryos"))) +
   theme_bw() + theme(panel.border = element_rect(linetype = "solid", color = "black"), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), axis.text.y = element_text(face="bold", hjust=0.5), axis.ticks.y=element_blank(), plot.title=element_text(hjust=0.5), axis.text.x = element_text(angle=45, vjust=.5), plot.margin=margin(4,30,4,4)); MvC_bar
 
-ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", width=11, height=4, units="in")
+#ggsave("Mcap2020/Figures/Metabolomics/MetamorphosedCalcifying_VIP_bar.pdf", width=11, height=4, units="in")
 
 ```
 
@@ -2003,11 +2006,11 @@ ggsave(plot=VIP_bar_plots, "Mcap2020/Figures/Metabolomics/VIP_bars.pdf", width=3
 
 # Validation of PLS-DA and generation of sPLS-DA  
 
-## Timepoint   
+## Lifestage   
 
 Validate PLS-DA.   
 
-Gernerate error plot  
+Generate error plot  
 ```{r}
 set.seed(30) 
 MyPerf.plsda <- perf(MyResult.plsda_timepoint, validation = "Mfold", folds=4, #fold #? 
@@ -2062,11 +2065,11 @@ sPLS-DA from PLS-DA validation using desired number of components (groups) and o
 myResult.splsda.final_T <- splsda(X, Y, ncomp = ncomp, keepX=select.keepX) #use the number of components to keep based on optimization from above  
 
 plotIndiv(myResult.splsda.final_T, ind.names = FALSE,
-          ellipse = TRUE, legend=TRUE, title="sPLS-DA - Timepoint")
+          ellipse = TRUE, legend=TRUE, title="sPLS-DA - Lifestage")
 
-pdf("Mcap2020/Figures/Metabolomics/sPLSDA_Timepoint.pdf")
+pdf("Mcap2020/Figures/Metabolomics/sPLSDA_Lifestage.pdf")
 plotIndiv(myResult.splsda.final_T, ind.names = FALSE,
-          ellipse = TRUE, legend=TRUE, title="sPLS-DA - Timepoint")
+          ellipse = TRUE, legend=TRUE, title="sPLS-DA - Lifestage")
 dev.off()
 
 #selectVar(MyResult.splsda.final, comp=1)$value
@@ -2173,7 +2176,7 @@ Validate PLS-DA.
 Gernerate error plot  
 ```{r}
 set.seed(30) 
-MyPerf.plsda <- perf(MyResult.plsda_develop, validation = "Mfold", folds=4, #fold #? 
+MyPerf.plsda <- perf(MyResult.plsda_develop, validation = "Mfold", folds=4, #fold # 
                      progressBar = TRUE, nrepeat = 50) # we suggest nrepeat = 50
 
 #MyPerf.plsda <- perf(MyResult.plsda2, validation = "loo") #using Loo correction since the number of groups I have is low, once more samples are available I can try using the Mfold validation
@@ -2213,7 +2216,7 @@ plot(tune.splsda.srbct)
 
 ```
 
-For development, we get the most information from 4 of the 5 components (larvae and metamorphosed recruits overlap).   
+For development, we get the most information from 4 of the 5 components (larvae and metamorphosed polyps overlap).   
 
 sPLS-DA from PLS-DA validation using desired number of components (groups) and optimized number of variables to "keep"  
 
@@ -2301,3 +2304,4 @@ head(comp5.select.metabolites)
 
 ```
 
+Analyses are continued in the metabolomics_WGCNA.Rmd script.  

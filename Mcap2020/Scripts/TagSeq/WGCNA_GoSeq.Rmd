@@ -2297,12 +2297,15 @@ GO_all.BP <-  ggplot(go_all, aes(x = Lifestage, y = term)) +
   panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
   strip.text.y = element_text(angle=0, size = 20),
   strip.text.x = element_text(size = 20),
-  axis.text = element_text(size = 10),
-  axis.text.x = element_text(angle=45, vjust=0.5),
+  axis.text = element_text(size = 20),
+  axis.text.x = element_text(angle=90, size=20),
   axis.title.x = element_blank(),
-  axis.title.y = element_blank())
+  axis.title.y = element_blank(), 
+  legend.text = element_text(size=20), 
+  legend.title = element_text(size=20), 
+  legend.key.size = unit(1, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=300, width=16, height=24, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=300, width=20, height=30, units="in")
 ```
 
 Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  

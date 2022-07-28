@@ -32,6 +32,8 @@ if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dp
 if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
 if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
 if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+if ("vegan" %in% rownames(installed.packages()) == 'FALSE') install.packages('vegan') 
+if ("factoextra" %in% rownames(installed.packages()) == 'FALSE') install.packages('factoextra') 
 
 library("tidyverse")
 library("genefilter")
@@ -46,6 +48,8 @@ library("dplyr")
 library("clusterProfiler")
 library("pheatmap")
 library("magrittr")
+library("vegan")
+library("factoextra")
 
 ```
 
@@ -208,6 +212,33 @@ All size factors are less than 4, so we can use VST transformation.
 gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transformation to minimize effects of small counts and normalize wrt library size
 head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
 ```
+
+# **Conduct PERMANOVA by developmental time point**  
+
+Export data for PERMANOVA test.  
+```{r}
+test<-t(assay(gvst)) #export as matrix
+test<-as.data.frame(test)
+
+#add category columns
+test$Sample<-rownames(test)
+test$Lifestage<-metadata$lifestage[match(test$Sample, metadata$sample_id)]
+```
+
+Build PERMANOVA model.  
+```{r}
+scaled_test <-prcomp(test[c(1:15797)], scale=TRUE, center=TRUE)
+fviz_eig(scaled_test)
+
+# scale data
+vegan <- scale(test[c(1:15797)])
+
+# PerMANOVA 
+permanova<-adonis2(vegan ~ Lifestage, data = test, method='eu')
+permanova
+```
+
+Gene expression is significantly different between temperatures and date.  
 
 # **Examine PCA and sample distances**  
 

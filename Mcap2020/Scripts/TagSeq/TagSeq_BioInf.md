@@ -163,9 +163,12 @@ sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/align.sh
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/stringtie.sh
 ```
 
-Obtain fixed GFF file
+Obtain fixed GFF file  
+
 ```
-mv /data/putnamlab/ashuffmyer/mcap-2020-tagseq/Mcap.GFFannotation.fixed.gff /data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences/Mcap.GFFannotation.fixed.gff```
+mv /data/putnamlab/ashuffmyer/mcap-2020-tagseq/Mcap.GFFannotation.fixed.gff /data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences/Mcap.GFFannotation.fixed.gff
+```
+
 
 ```
 #!/bin/bash

@@ -1247,14 +1247,17 @@ Output for other analysis
 write.csv(gene_expr, "Mcap2020/Output/TagSeq/transformed_filtered_genes.csv")
 ```
 
-Load in dataframe with gene annotation information.  
-```{r}
-head(geneInfo)
-```
-
-From our Gene Info data frame, extract a list of gene names with specific functions of interest.  
+Next, from our Gene Info data frame, extract a list of gene names with specific functions of interest.  
 
 ### Create lists of genes  
+
+Read in required data frames.  
+```{r}
+geneInfo<- read.csv("Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for reference/supplement
+head(geneInfo)
+
+gene_expr<-read.csv("Mcap2020/Output/TagSeq/transformed_filtered_genes.csv")
+```
 
 1. Create list of expression of genes for carbonic anhydrase: 
 
@@ -1502,6 +1505,25 @@ lipids_genes$Function<-c("Lipid Metabolism")
 lipids_genes$gene_id<-rownames(lipids_genes)
 rownames(lipids_genes) <- NULL
 ```
+
+14. Create list of expression of genes for glutamine synthase: 
+
+```{r}
+list_glut<-geneInfo%>%
+  filter(grepl('glutamate-ammonia ligase', Annotation.GO.Term))
+
+head(list_glut)
+
+glutamine<-list_glut$gene_id
+
+glutamine_genes<-gene_expr[rownames(gene_expr) %in% glutamine, ]
+glutamine_genes
+
+glutamine_genes$Function<-c("Glutamine Synthase")
+glutamine_genes$gene_id<-rownames(glutamine_genes)
+rownames(glutamine_genes) <- NULL
+```
+Not in expressed genes frame.
 
 ```{r}
 specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, ammontr_genes, glutperox_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes, fattyacid_genes, allcarbs_genes, gluctr_genes, lipids_genes)

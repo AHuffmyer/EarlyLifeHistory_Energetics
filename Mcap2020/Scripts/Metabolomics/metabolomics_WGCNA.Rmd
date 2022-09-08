@@ -669,6 +669,37 @@ N N N-Trimethyllysine                 N6,N6,N6-Trimethyl-L-lysine
 N-acetyl-L-ornithine                  N-Acetylornithine  
 Ophthalmate                           Ophthalmic acid  
 
+
+```{r}
+mSet<-InitDataObjects("conc", "msetora", FALSE)
+cmpd.vec<-c("Methylimidazole acetic acid","Iodotyrosine","Phenylacetylglycine","Arginyl-Valine","Glutamylarginine")
+mSet<-Setup.MapData(mSet, cmpd.vec);
+mSet<-CrossReferencing(mSet, "name");
+mSet<-CreateMappingResultTable(mSet)
+mSet<-PerformDetailMatch(mSet, "Methylimidazole acetic acid");
+mSet<-GetCandidateList(mSet);
+mSet<-SetCandidate(mSet, "Methylimidazole acetic acid", "Methylimidazoleacetic acid");
+mSet<-SetMetabolomeFilter(mSet, F);
+mSet<-SetCurrentMsetLib(mSet, "main_class", 2);
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_0_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_0_", "png", 72, width=NA)
+mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_0_", "png", 72)
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_1_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_1_", "png", 72, width=NA)
+mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_1_", "png", 72)
+mSet<-CalculateHyperScore(mSet)
+mSet<-PlotORA(mSet, "ora_2_", "net", "png", 72, width=NA)
+mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_2_", "png", 72, width=NA)
+mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_2_", "png", 72)
+```
+
+
+
+
+
+
 ## 2. Pathway analysis - what metabolic pathways are enriched?  
 
 https://www.metaboanalyst.ca/MetaboAnalyst/upload/EnrichUploadView.xhtml
@@ -860,9 +891,22 @@ dipep_metab$metabolite_id<-rownames(dipep_metab)
 rownames(dipep_metab) <- NULL
 ```
 
+Create list of expression of metabolites for methylation: 
+
+```{r}
+methylation<-c("Acetyl CoA", "S-adenosyl-L-methionine", "FAD", "NAD+")
+
+methylation<-metab_expr[rownames(metab_expr) %in% methylation, ]
+methylation
+
+methylation$Function<-c("Methylation")
+methylation$metabolite_id<-rownames(methylation)
+rownames(methylation) <- NULL
+```
+
 Combine all lists together.  
 ```{r}
-specific_metab<-rbind(glucose_metab, fructose_metab, pyruvate_metab, starch_metab, galactose_metab, citrate_metab, nitrogen_metab, amino_metab, dipep_metab)
+specific_metab<-rbind(glucose_metab, fructose_metab, pyruvate_metab, starch_metab, galactose_metab, citrate_metab, nitrogen_metab, amino_metab, dipep_metab, methylation)
 ```
 
 Gather the data set and merge in metadata information.  
@@ -1124,6 +1168,32 @@ dipep_plot<-specific_metab%>%
       legend.title=element_text(face="bold", size=14), 
       legend.text=element_text(size=12)
       ); dipep_plot
+```
+
+Plot methylation.  
+```{r}
+methylation_plot<-specific_metab%>%
+    group_by(Function, metabolite_id, lifestage)%>%
+    summarise(mean=mean(normalized_ions), N=length(normalized_ions), sd=sd(normalized_ions), sem=sd/N)%>%
+    filter(Function=="Methylation")%>%
+    ggplot(., aes(x = lifestage, y = mean, color=metabolite_id, group=metabolite_id)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=metabolite_id), position = position_dodge(0.1)) +
+    geom_point(aes(group=metabolite_id), size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(group=metabolite_id, ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("Normalized Ion Count")+
+    #scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylim(0,6)+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); methylation_plot
 ```
 
 Join metabolism plots together.  

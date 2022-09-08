@@ -1257,6 +1257,9 @@ geneInfo<- read.csv("Mcap2020/Output/TagSeq/geneInfo.csv") #gene info for refere
 head(geneInfo)
 
 gene_expr<-read.csv("Mcap2020/Output/TagSeq/transformed_filtered_genes.csv")
+rownames(gene_expr)<-gene_expr$X
+gene_expr<-gene_expr%>%
+  select(!X)
 ```
 
 1. Create list of expression of genes for carbonic anhydrase: 
@@ -1525,8 +1528,26 @@ rownames(glutamine_genes) <- NULL
 ```
 Not in expressed genes frame.
 
+15. Create list of expression of genes for methyltransferase: 
+
 ```{r}
-specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, ammontr_genes, glutperox_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes, fattyacid_genes, allcarbs_genes, gluctr_genes, lipids_genes)
+list_methyl<-geneInfo%>%
+  filter(grepl('methyltransferase', Annotation.GO.Term))
+
+head(list_methyl)
+
+methyl_genes<-list_methyl$gene_id
+
+methyl_genes<-gene_expr[rownames(gene_expr) %in% methyl_genes, ]
+methyl_genes
+
+methyl_genes$Function<-c("Methyltransferases")
+methyl_genes$gene_id<-rownames(methyl_genes)
+rownames(methyl_genes) <- NULL
+```
+
+```{r}
+specific_genes<-rbind(carbanhyd_genes, glycsyn_genes, ammontr_genes, glutperox_genes, atpase_genes, glucosehomeo_genes, apoptosis_genes, communication_genes, carbs_genes, fattyacid_genes, allcarbs_genes, gluctr_genes, lipids_genes, methyl_genes)
 ```
 
 Gather the data set and merge in metadata information.  
@@ -2010,6 +2031,41 @@ lipid_plot<-specific_genes%>%
       legend.title=element_text(face="bold", size=14), 
       legend.text=element_text(size=12)
       ); lipid_plot
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Lipid Metabolism")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+Plot methylation 
+```{r}
+methyl_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Methyltransferases")%>%
+    
+  ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), color="black", position = position_dodge(0.1)) +
+    geom_point(size=2, position = position_dodge(0.1)) + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", position=position_dodge(0.1), size=0.5) + 
+    xlab("Lifestage") + 
+    ylab("VST expression")+
+    ylim(5.5,6.5)+
+    theme_classic() + 
+    geom_text(x=1.7, y=5, label="N=68 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+            axis.text.x=element_text(angle=90),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); methyl_plot
 ```
 
 Display number of genes in this category.  

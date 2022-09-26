@@ -46,6 +46,18 @@ Make md5 file
 
 ```md5sum  sequences/*.fastq.gz > sequences/md5.transferred```
 
+*Checking md5 after Andromeda reboot on 20220925 in sequences folder*  
+
+```md5sum  sequences/AH*.fastq.gz > sequences/md5.20220926
+#make md5
+
+cd sequences
+
+cmp md5.20220926 md5.transferred
+#check against original md5
+```
+Files are the same.  
+
 ```
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/qc.sh
 ```

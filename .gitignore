@@ -15,4 +15,6 @@
 Mcap2020/Data/16S/Sequences/
 Mcap2020/Data/ITS2/Sequences/
 Mcap2020/Data/TagSeq/Sequences/ 
+Mcap2020/Output/TagSeq/*.RData
+
 

@@ -2057,7 +2057,7 @@ methyl_plot<-specific_genes%>%
     ylab("VST expression")+
     ylim(5.5,6.5)+
     theme_classic() + 
-    geom_text(x=1.7, y=5, label="N=68 genes", size=4, fontface="italic")+
+    geom_text(x=1.7, y=5.5, label="N=104 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
       axis.title=element_text(face="bold", size=14),
@@ -2071,7 +2071,7 @@ methyl_plot<-specific_genes%>%
 Display number of genes in this category.  
 ```{r}
 specific_genes%>%
-  filter(Function=="Lipid Metabolism")%>%
+  filter(Function=="Methyltransferases")%>%
   group_by(Function)%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```

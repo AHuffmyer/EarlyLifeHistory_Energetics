@@ -8,4 +8,4 @@ Ahya2020 folder contains data and scripts for Acropora hyacinthus (horizontal sp
 
 Each species folder contains directories for data, scripts, output, and figures.  
  
-
+Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.  

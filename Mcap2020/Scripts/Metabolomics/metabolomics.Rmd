@@ -65,7 +65,7 @@ data<-full_join(dataset1, dataset2)
 
 #rename columns to be useful
 data<- data %>% 
-  rename(
+  dplyr::rename(
     Larvae2_rep1 = Larvae.2_50uL_1,
     Larvae2_rep2 = Larvae.2_50uL_2,
     Larvae4_rep1 = Larvae.4_50uL_1,
@@ -407,7 +407,7 @@ data_neg<-full_join(data_neg1, data_neg2)
 
 #rename columns to be useful
 data_neg<- data_neg %>% 
-  rename(
+  dplyr::rename(
     Larvae2_rep1 = Larvae.2_50uL_1,
     Larvae2_rep2 = Larvae.2_50uL_2,
     Larvae4_rep1 = Larvae.4_50uL_1,
@@ -1001,7 +1001,7 @@ X <- metabolites%>%
 
 levels(as.factor(X$HPF))
 
-X$HPF<-fct_relevel(X$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Metamorphosed Polyp (183 hpf)", "Attached Recruit (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
+X$HPF<-fct_relevel(X$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)","Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
 
 levels(as.factor(X$HPF))
 
@@ -1023,13 +1023,10 @@ levels(Y)
 
 lifestage_cols<-c("#8C510A", #eggs
                   "#DFC27D", "#DAB869", "#E4CC91", #embryos
-                  "#80CDC1", "#5BBFAF", "#6EC6B8", #larvae
-                  "#003C30", #polyp
-                  "#BA55D3", #recruits
-                  "#92D4CA", #larvae
-                  "#00231C", #polyp
-                  "#B241CE", #recruit
-                  "#A632C3") #recruit
+                  "#80CDC1", "#5BBFAF", "#6EC6B8", "#92D4CA", #larvae
+                  "#003C30", "#00231C", #polyp
+                  "#BA55D3","#B241CE", "#A632C3") #recruits
+            
 
 #Egg: "#8C510A", 
 #Embryo: "#DFC27D", "#DAB869", "#E4CC91", "#D5AF54"
@@ -1039,11 +1036,11 @@ lifestage_cols<-c("#8C510A", #eggs
 
 pch.input = c(1, 2, 3, 4, 5, 6, 7 ,8, 9, 10, 11, 12, 13)
 
-pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=8, height=6)
-plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=FALSE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
+pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=9, height=6)
+plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=TRUE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
 dev.off() 
 
-plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=FALSE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
+plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=TRUE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
 #plotVar(MyResult.plsda)
 #plotLoadings(MyResult.plsda)
 #plotArrow(MyResult.plsda)

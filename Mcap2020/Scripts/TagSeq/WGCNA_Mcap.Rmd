@@ -1,7 +1,7 @@
 ---
 title: "WGCNA gene expression"
 author: "Ariana S Huffmyer"
-date: "8/13/2021"
+date: "2022"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -20,16 +20,16 @@ Load required libraries.
 
 ```{r}
 if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
-if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
-if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("genefilter") 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('DESeq2') 
 if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
 if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
 if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
 if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
-if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
-if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('goseq')
 if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
-if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('clusterProfiler') 
 if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
 if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
 if ("vegan" %in% rownames(installed.packages()) == 'FALSE') install.packages('vegan') 
@@ -39,7 +39,10 @@ library("tidyverse")
 library("genefilter")
 library("DESeq2")
 library("RColorBrewer")
+
+#WGCNA not loading, issue with gfortran paths, revisit this
 library("WGCNA")
+
 library("flashClust")
 library("gridExtra")
 library("ComplexHeatmap")
@@ -322,6 +325,43 @@ allgenesfilt_PCA_visual
 
 ggsave("Mcap2020/Figures/TagSeq/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_visual, width=11, height=8)
 ```
+
+Generate a figure for manuscript.  
+```{r}
+genesPCA <- 
+  ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
+  geom_point(size=7) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=10, "Attached Recruit (231 hpf)"=12)) +
+  
+  scale_colour_manual(name="Lifestage", values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="#BA55D3")) +
+  
+  #stat_ellipse() +
+  
+  xlim(-50,75)+ 
+  ylim(-40,30)+
+  #coord_fixed()+
+  theme_classic() + #Set background color
+  theme(panel.border = element_rect(colour = "black", fill=NA), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(), 
+        axis.title=element_text(size=14), 
+        axis.text=element_text(size=10))  + #Set the plot background
+  theme(legend.position = ("none")); genesPCA
+
+ggsave("Mcap2020/Figures/TagSeq/genes_lifestagePCA.png", genesPCA, width=6, height=5, dpi=300)
+```
+
+
+
+
+
+
+
 
 # **WGCNA analysis using Dynamic Tree Cut**  
 

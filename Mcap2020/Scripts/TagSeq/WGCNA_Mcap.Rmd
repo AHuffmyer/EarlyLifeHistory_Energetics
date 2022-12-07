@@ -39,10 +39,7 @@ library("tidyverse")
 library("genefilter")
 library("DESeq2")
 library("RColorBrewer")
-
-#WGCNA not loading, issue with gfortran paths, revisit this
 library("WGCNA")
-
 library("flashClust")
 library("gridExtra")
 library("ComplexHeatmap")

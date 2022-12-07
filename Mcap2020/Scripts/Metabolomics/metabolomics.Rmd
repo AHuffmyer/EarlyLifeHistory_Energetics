@@ -1,7 +1,7 @@
 ---
 title: Montipora capitata 2020 metabolomics analysis
 author: "AS Huffmyer"
-date: '2021'
+date: '2022'
 output:
   html_document:
     code_folding: hide
@@ -1016,9 +1016,8 @@ MyResult.plsda <- plsda(X,Y) # 1 Run the method
 plotIndiv(MyResult.plsda)    # 2 Plot the samples
 plotVar(MyResult.plsda, cutoff = 0.7)    
 
-
 #REDO THESE
-lifestage_cols<-c("#8C510A", "#80CDC1", "#5BBFAF", "#003C30", "#BA55D3", "#6EC6B8", "#00231C","#B241CE", "#A632C3", "#DFC27D", "#DAB869", "#E4CC91","#92D4CA")
+#lifestage_cols<-c("#8C510A", "#80CDC1", "#5BBFAF", "#003C30", "#BA55D3", "#6EC6B8", "#00231C","#B241CE", "#A632C3", "#DFC27D", "#DAB869", "#E4CC91","#92D4CA")
 
 levels(Y)
 
@@ -1038,11 +1037,13 @@ lifestage_cols<-c("#8C510A", #eggs
 #Polyp Metamorphosed: "#003C30", "#00231C", "005644", "006F59"
 #Recruit Attached: "#BA55D3", "B241CE", "A632C3"
 
-pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=7, height=7)
-plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=TRUE, legend.title = "Lifestage", ellipse = TRUE,title="PLS-DA")
+pch.input = c(1, 2, 3, 4, 5, 6, 7 ,8, 9, 10, 11, 12, 13)
+
+pdf("Mcap2020/Figures/Metabolomics/PLSDA_Lifestage.pdf", width=8, height=6)
+plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=FALSE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
 dev.off() 
 
-plotIndiv(MyResult.plsda, ind.names = FALSE, col=lifestage_cols, legend=TRUE,ellipse = TRUE, title="PLS-DA")
+plotIndiv(MyResult.plsda, col=lifestage_cols, ind.names = FALSE, legend=FALSE, legend.title = "Lifestage", ellipse = TRUE, title="", pch=pch.input, style = "graphics", centroid=FALSE, point.lwd = 2, cex=2)
 #plotVar(MyResult.plsda)
 #plotLoadings(MyResult.plsda)
 #plotArrow(MyResult.plsda)

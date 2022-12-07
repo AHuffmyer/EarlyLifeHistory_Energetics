@@ -278,14 +278,27 @@ combined_plot<-PRdf %>%
       legend.text=element_text(size=12)
       ); combined_plot
 
-#EGG: #8C510A
-#EMBRYO: #DFC27D
-#LARVAE: #80CDC1
-#RECRUIT: #003C30
+#create a dummy plot to create a legend for the plot above
 
-#Will need to make a manual legend for this in illustrator 
+Lifestage <- c("Embryo", "Embryo", "Embryo", "Larvae", "Larvae", "Larvae", "Metamorphosed Polyp", "Metamorphosed Polyp", "Metamorphosed Polyp")
+Metric <- c("Respiration", "Photosynthesis", "P:R", "Respiration", "Photosynthesis", "P:R", "Respiration", "Photosynthesis", "P:R")
+Dummy <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+df <- data.frame(Lifestage, Metric, Dummy)
 
-ggsave("Mcap2020/Figures/Respiration/Combined_Metrics.png", combined_plot, dpi=300, w=5, h=5, units="in")
+
+legend_plot<-df %>%
+  
+    ggplot(., aes(x = Lifestage, y = Dummy, colour=Lifestage, shape=Metric)) +
+    geom_point(aes(), alpha=1, size=4)+
+    #scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_colour_manual(name=expression(bold("Lifestage")), values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+  scale_shape_manual(name=expression(bold("Metric")), values=c(19, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
+  theme_classic()
+
+legend<-get_legend(legend_plot)
+
+combined_full<-plot_grid(combined_plot, legend, nrow=1, ncol=2, rel_widths=c(1, 0.3))
+ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.png", combined_full, dpi=300, w=7, h=5, units="in")
 ```
 
 

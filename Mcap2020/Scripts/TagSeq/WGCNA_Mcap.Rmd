@@ -502,7 +502,8 @@ minModuleSize = 20
 dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
 deepSplit = TRUE, pamRespectsDendro = FALSE,
 minClusterSize = minModuleSize)
-table(dynamicMods) #list modules and respective sizes
+table<-as.data.frame(table(dynamicMods)) #list modules and respective sizes
+table
 save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/dyMod_geneTree.RData") #Save to load into RStudio
 ```
 Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest. 
@@ -594,6 +595,8 @@ Display table of module gene counts.
 
 ```{r}
 table(mergedColors)
+table<-as.data.frame(table(mergedColors))
+write_csv(table, "Mcap2020/Output/TagSeq/genes_per_module.csv")
 ```
 
 We have 12 modules with no genes "unassigned". All genes were assigned to a module.  
@@ -764,7 +767,9 @@ Plot mean module eigengene for each module.
 ```{r}
 #convert wide format to long format for plotting  
 plot_MEs<-Strader_MEs%>%
-  gather(., key="Module", value="Mean", 1:11)
+  gather(., key="Module", value="Mean", ME1:ME18)
+
+write_csv(plot_MEs, "Mcap2020/Output/TagSeq/WGCNA_eigengene_expression.csv")
 
 dev.off() 
 

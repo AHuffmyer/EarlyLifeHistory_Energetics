@@ -2400,8 +2400,10 @@ are correlated with each respective lifestage and run GOSeq with those lifestage
 
 ```{r}
 high_early_list<-c("1", "11", "6")
-high_late_list<-c("12", "15", "17", "8")
-high_mid_list<-c("16", "2", "4")
+#high_late_list<-c("12", "15", "17", "8")
+high_late_list<-c("12", "15", "8")
+high_mid_list<-c("16", "2", "4", "18")
+#ME14 and ME 17 don't fit a pattern 
 
 high_early<-module_list%>%filter(Module %in% high_early_list)
 high_late<-module_list%>%filter(Module %in% high_late_list)
@@ -2746,7 +2748,7 @@ ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mi
 
 Combine data frames together in order to generate one GoSeq plot with all terms across patterns  
 
-Plot at Biological Process level.  
+## Plot at Biological Process level.  
 
 ```{r}
 go_all<-rbind(high_early.GO_plot, high_mid.GO_plot, high_late.GO_plot)
@@ -2790,7 +2792,7 @@ GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) +
 ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=30, height=35, units="in")
 ```
 
-Plot at Molecular Function level.  
+## Plot at Molecular Function level.  
 
 ```{r}
 go_all.MF<-rbind(high_early.GO.MF, high_mid.GO.MF, high_late.GO.MF)
@@ -2834,6 +2836,103 @@ GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) +
 ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50 , width=40, height=45, units="in") 
 ```
 
+## Plot trends of eigenegenes for each ontogenetic pattern  
+
+Plot eigengene values for each pattern identified above from the module eigengene expression values.  
+
+```{r}
+pattern_expression<-read_csv("Mcap2020/Output/TagSeq/WGCNA_eigengene_expression.csv")
+
+#add pattern identifier to each module 
+high_early_list_m<-c("ME1", "ME11", "ME6")
+high_late_list_m<-c("ME12", "ME15", "ME8")
+high_mid_list_m<-c("ME16", "ME2", "ME4", "ME18")
+
+pattern_expression<-pattern_expression%>%
+  mutate(Pattern=if_else(Module %in% high_early_list_m, "High Early in Development", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% high_late_list_m, "High Late in Development", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% high_mid_list_m, "High in Mid Development", Pattern))
+
+head(pattern_expression)
+```
+
+Summarize number of modules for each pattern and number of genes in each.  
+```{r}
+pattern_expression%>%
+  group_by(Pattern)%>%
+  summarise(number_module=length(unique(Module)))
+
+#Gene counts from WGCNA_Mcap.Rmd script
+gene_counts<-read_csv("Mcap2020/Output/TagSeq/genes_per_module.csv")
+names(gene_counts)<-c("Module", "Genes")
+
+#add pattern group for each module  
+gene_counts<-gene_counts%>%
+  mutate(Pattern=if_else(Module %in% high_early_list, "High Early in Development", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% high_late_list, "High Late in Development", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% high_mid_list, "High in Mid Development", Pattern))
+
+gene_counts%>%
+  group_by(Pattern)%>%
+  summarise(number_genes=sum(Genes))
+```
+
+There are 3 modules in early development, 4 in mid development, and 3 in late development.  
+
+There are 5159 genes in early, 4682 in mid, and 5844 in late development patterns.  
+
+```{r}
+f_labels <- data.frame(Pattern = c("High Early in Development", "High in Mid Development", "High Late in Development"), label = c("n=3 modules; n=5159 genes", "n=4 modules; n=4682 genes", "n=3 modules; n=5844 genes"))
+f_labels
+```
+
+Plot patterns.  
+
+```{r}
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
+
+#add group to dataframe for scale colour manual 
+pattern_expression<-pattern_expression%>%
+  mutate(group=if_else(grepl("Egg", lifestage), "Fertilized Egg", as.character(lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+pattern_expression$group<-factor(as.character(pattern_expression$group), levels=list_groups)
+
+pattern_plots<-pattern_expression%>%
+  group_by(Pattern, lifestage) %>%
+  filter(!Pattern=="NA")%>%
+  
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  facet_wrap(~Pattern, nrow=3, ncol=1)+
+  geom_point(aes(colour=group), size=2, alpha=0.8) +
+  geom_smooth(aes(group=1), color="black", method='loess')+
+  scale_x_discrete(name="", limits=time_point_order) +
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
+  ylab("Mean Eigengene Expression") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 45, hjust=1, size = 12), #set x-axis label size
+        strip.background=element_rect(fill="white", color="white"),
+        strip.text=element_text(size=12),
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14, colour="black"), #set y-axis label size, 
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        legend.text = element_text(colour="black", size=12),
+        legend.title = element_text(colour="black", size=12, face="bold"),
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)); pattern_plots
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=6, height=10, units="in")
+```
 
 
 

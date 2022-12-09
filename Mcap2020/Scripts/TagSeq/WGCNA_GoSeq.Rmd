@@ -2322,7 +2322,7 @@ GO_all.BP <-  ggplot(go_all, aes(x = Lifestage, y = term)) +
   legend.title = element_text(size=40, face="bold"), 
   legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=300, width=35, height=35, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=80, width=35, height=35, units="in")
 ```
 Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  
 
@@ -2381,7 +2381,7 @@ GO_all.MF <-  ggplot(go_all.MF, aes(x = Lifestage, y = term)) +
   legend.title = element_text(size=40, face="bold"), 
   legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_MF.png", plot=GO_all.MF, dpi=300, width=49, height=49, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_MF.png", plot=GO_all.MF, dpi=50, width=49, height=49, units="in")
 ```
 Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  
 

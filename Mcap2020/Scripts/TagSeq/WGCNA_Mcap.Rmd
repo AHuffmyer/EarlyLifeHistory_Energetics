@@ -700,7 +700,7 @@ heatmappval <- signif(moduleTraitPvalue, 1)
 htmap.colors <- names(MEs)
 htmap.colors <- gsub("ME", "", htmap.colors)
 
-#lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
 
 library(dendsort)
 row_dend = dendsort(hclust(dist(moduleTraitCor)))
@@ -732,6 +732,7 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column
             grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
         }},
         column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        column_names_rot = 35,
         row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
 draw(ht)
 dev.off()

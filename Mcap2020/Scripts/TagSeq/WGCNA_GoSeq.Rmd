@@ -2422,7 +2422,7 @@ ID.vector <- c(high_early$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- high_early%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2533,7 +2533,7 @@ ID.vector <- c(high_late$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- high_late%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2631,7 +2631,6 @@ GO_high_late.plot.MF <-  ggplot(high_late.GO.MF, aes(x = ontology, y = term)) +
 ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_MF.png", plot=GO_high_late.plot.MF, dpi=100, width=12, height=12, units="in")
 ```
 
-
 ## Genes higher in mid development (larvae)  
 
 Assign vectors  
@@ -2645,7 +2644,7 @@ ID.vector <- c(high_mid$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- high_mid%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2743,7 +2742,6 @@ GO_high_mid.plot.MF <-  ggplot(high_mid.GO.MF, aes(x = ontology, y = term)) +
 ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_MF.png", plot=GO_high_mid.plot.MF, dpi=100, width=12, height=12, units="in")
 ```
 
-
 # **Plot all patterns together on one plot**  
 
 Combine data frames together in order to generate one GoSeq plot with all terms across patterns  
@@ -2770,22 +2768,26 @@ go_all$Pattern<-factor(as.character(go_all$Pattern), levels=list_patterns)
 
 #plot significantly enriched GO terms by Slim Category across lifestages
 GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) + 
-  geom_tile(aes(fill =over_represented_pvalue)) + 
-  #geom_point(aes(fill=Pattern,size=over_represented_pvalue)) +
-  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="#DFC27D", "High in Mid Development"="#80CDC1", "High Late in Development"="#BA55D3")) +
+  scale_size(name="Over rep. p-value", range = c(10, 18), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Ontogenetic Pattern")+
+  ylab("Biological Process GO Term")+
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
   panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-  strip.text.y = element_text(angle=0, size = 20),
-  strip.text.x = element_text(size = 20),
-  axis.text = element_text(size = 20),
-  axis.text.x = element_text(angle=90, size=20),
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(), 
-  legend.text = element_text(size=20), 
-  legend.title = element_text(size=20), 
-  legend.key.size = unit(1, 'cm'))
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=20, height=30, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=30, height=35, units="in")
 ```
 
 Plot at Molecular Function level.  
@@ -2810,43 +2812,26 @@ go_all.MF$Pattern<-factor(as.character(go_all.MF$Pattern), levels=list_patterns)
 
 #plot significantly enriched GO terms by Slim Category across lifestages
 GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) + 
-  geom_tile(aes(fill =over_represented_pvalue)) + 
-  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="#DFC27D", "High in Mid Development"="#80CDC1", "High Late in Development"="#BA55D3")) +
+  scale_size(name="Over rep. p-value", range = c(8, 14), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Ontogenetic Pattern")+
+  ylab("Molecular Function GO Term")+
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
   panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-  strip.text.y = element_text(angle=0, size = 14),
-  strip.text.x = element_text(size = 14),
-  axis.text = element_text(size = 16),
-  axis.text.x = element_text(angle=90, size=14),
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(), 
-  legend.text = element_text(size=14), 
-  legend.title = element_text(size=14), 
-  legend.key.size = unit(1, 'cm'))
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50, width=30, height=49, units="in")
-
-#plot "other functions for MF"
-GO_all.MF.other <-  go_all.MF%>%
-  filter(GOSlim_bin=="other molecular function")%>%
-  
-  ggplot(., aes(x = Pattern, y = term)) + 
-  geom_tile(aes(fill =over_represented_pvalue)) + 
-  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
-  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-  strip.text.y = element_text(angle=0, size = 20),
-  strip.text.x = element_text(size = 20),
-  axis.text = element_text(size = 20),
-  axis.text.x = element_text(angle=90, size=20),
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(), 
-  legend.text = element_text(size=20), 
-  legend.title = element_text(size=20), 
-  legend.key.size = unit(1, 'cm')); GO_all.MF.other
-
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF_other.png", plot=GO_all.MF.other, dpi=50, width=30, height=30, units="in")
-
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50 , width=40, height=45, units="in") 
 ```
 
 

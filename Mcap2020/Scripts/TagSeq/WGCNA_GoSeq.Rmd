@@ -2489,7 +2489,7 @@ GO_high_early.plot <-  ggplot(high_early.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_BP.png", plot=GO_high_early.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_BP.png", plot=GO_high_early.plot, dpi=100, width=12, height=12, units="in")
 ```
 
 Plot results by Molecular Function level.    
@@ -2517,7 +2517,7 @@ GO_high_early.plot.MF <-  ggplot(high_early.GO.MF, aes(x = ontology, y = term)) 
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_MF.png", plot=GO_high_early.plot.MF, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_MF.png", plot=GO_high_early.plot.MF, dpi=100, width=12, height=12, units="in")
 ```
 
 ## Genes higher in late development (late larvae, polyps, recruits)  
@@ -2600,7 +2600,7 @@ GO_high_late.plot <-  ggplot(high_late.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_BP.png", plot=GO_high_late.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_BP.png", plot=GO_high_late.plot, dpi=100, width=12, height=12, units="in")
 ```
 
 Plot results by Molecular Function level.    
@@ -2628,7 +2628,7 @@ GO_high_late.plot.MF <-  ggplot(high_late.GO.MF, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_MF.png", plot=GO_high_late.plot.MF, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_MF.png", plot=GO_high_late.plot.MF, dpi=100, width=12, height=12, units="in")
 ```
 
 
@@ -2712,7 +2712,7 @@ GO_high_mid.plot <-  ggplot(high_mid.GO_plot, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_BP.png", plot=GO_high_mid.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_BP.png", plot=GO_high_mid.plot, dpi=100, width=12, height=12, units="in")
 ```
 
 Plot results by Molecular Function level.    
@@ -2740,11 +2740,8 @@ GO_high_mid.plot.MF <-  ggplot(high_mid.GO.MF, aes(x = ontology, y = term)) +
   axis.title.x = element_blank(),
   axis.title.y = element_blank())
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_MF.png", plot=GO_high_mid.plot.MF, dpi=300, width=12, height=12, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_MF.png", plot=GO_high_mid.plot.MF, dpi=100, width=12, height=12, units="in")
 ```
-
-
-
 
 
 # **Plot all patterns together on one plot**  
@@ -2788,7 +2785,7 @@ GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) +
   legend.title = element_text(size=20), 
   legend.key.size = unit(1, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=300, width=20, height=30, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=20, height=30, units="in")
 ```
 
 Plot at Molecular Function level.  
@@ -2827,7 +2824,7 @@ GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) +
   legend.title = element_text(size=14), 
   legend.key.size = unit(1, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=300, width=30, height=49, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50, width=30, height=49, units="in")
 
 #plot "other functions for MF"
 GO_all.MF.other <-  go_all.MF%>%
@@ -2848,7 +2845,7 @@ GO_all.MF.other <-  go_all.MF%>%
   legend.title = element_text(size=20), 
   legend.key.size = unit(1, 'cm')); GO_all.MF.other
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF_other.png", plot=GO_all.MF.other, dpi=300, width=30, height=30, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF_other.png", plot=GO_all.MF.other, dpi=50, width=30, height=30, units="in")
 
 ```
 

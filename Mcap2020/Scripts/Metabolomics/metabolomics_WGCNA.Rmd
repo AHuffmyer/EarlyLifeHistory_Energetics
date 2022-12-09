@@ -1,7 +1,7 @@
 ---
 title: Montipora capitata 2020 metabolomics WGCNA analysis
 author: "AS Huffmyer"
-date: '2021'
+date: '2022'
 output:
   html_document:
     code_folding: hide
@@ -80,7 +80,7 @@ library("clusterProfiler")
 library("pheatmap")
 library("magrittr")
 library("dendsort")
-library("MetaboAnalystR")
+#library("MetaboAnalystR")
 ```
 
 This script uses WGCNA analysis on metabolomics data set to explore whether we can detect "modules" of genes that are correlated with lifestage. PLS-DA analyses and multivariate analyses are conducted in metabolomics.Rmd script. The pipeline in this script is modified from K. Wong script: 
@@ -476,6 +476,7 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Group Eige
         else {
             grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
         }},
+        column_names_rot = 45,
         column_names_gp =  gpar(fontsize = 12, border=FALSE),
         row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
 draw(ht)
@@ -607,9 +608,9 @@ cluster1<-c("2", "5", "0")
 cluster2<-c("7", "6", "3")
 cluster3<-c("1", "8", "4")
 
-module_cluster1 <- module_df %>% filter(Module %in% cluster1)  %>% select(Metabolite)
-module_cluster2 <- module_df %>% filter(Module %in% cluster2)  %>% select(Metabolite)
-module_cluster3 <- module_df %>% filter(Module %in% cluster3)  %>% select(Metabolite)
+module_cluster1 <- module_df %>% filter(Module %in% cluster1)  %>% dplyr::select(Metabolite)
+module_cluster2 <- module_df %>% filter(Module %in% cluster2)  %>% dplyr::select(Metabolite)
+module_cluster3 <- module_df %>% filter(Module %in% cluster3)  %>% dplyr::select(Metabolite)
 
 #output to files for use
 write_csv(module_cluster1, file="Mcap2020/Output/Metabolomics/Metaboanalyst/cluster1_metabolite_list.csv")
@@ -669,37 +670,6 @@ N N N-Trimethyllysine                 N6,N6,N6-Trimethyl-L-lysine
 N-acetyl-L-ornithine                  N-Acetylornithine  
 Ophthalmate                           Ophthalmic acid  
 
-
-```{r}
-mSet<-InitDataObjects("conc", "msetora", FALSE)
-cmpd.vec<-c("Methylimidazole acetic acid","Iodotyrosine","Phenylacetylglycine","Arginyl-Valine","Glutamylarginine")
-mSet<-Setup.MapData(mSet, cmpd.vec);
-mSet<-CrossReferencing(mSet, "name");
-mSet<-CreateMappingResultTable(mSet)
-mSet<-PerformDetailMatch(mSet, "Methylimidazole acetic acid");
-mSet<-GetCandidateList(mSet);
-mSet<-SetCandidate(mSet, "Methylimidazole acetic acid", "Methylimidazoleacetic acid");
-mSet<-SetMetabolomeFilter(mSet, F);
-mSet<-SetCurrentMsetLib(mSet, "main_class", 2);
-mSet<-CalculateHyperScore(mSet)
-mSet<-PlotORA(mSet, "ora_0_", "net", "png", 72, width=NA)
-mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_0_", "png", 72, width=NA)
-mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_0_", "png", 72)
-mSet<-CalculateHyperScore(mSet)
-mSet<-PlotORA(mSet, "ora_1_", "net", "png", 72, width=NA)
-mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_1_", "png", 72, width=NA)
-mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_1_", "png", 72)
-mSet<-CalculateHyperScore(mSet)
-mSet<-PlotORA(mSet, "ora_2_", "net", "png", 72, width=NA)
-mSet<-PlotEnrichDotPlot(mSet, "ora", "ora_dot_2_", "png", 72, width=NA)
-mSet<-PlotEnrichPieChart(mSet, "ora", "ora_pie_2_", "png", 72)
-```
-
-
-
-
-
-
 ## 2. Pathway analysis - what metabolic pathways are enriched?  
 
 https://www.metaboanalyst.ca/MetaboAnalyst/upload/EnrichUploadView.xhtml
@@ -734,9 +704,48 @@ Filter out pathways that are significantly enriched with FDR p value <0.05.
 ```{r}
 sig_pathways<-kegg_pathways%>%
   filter(FDR<0.05)%>%
-  select(pathway, hits, FDR, Cluster)%>%
+  dplyr::select(Metabolite.Set, Total, Hits, FDR, Cluster)%>%
   write.csv("Mcap2020/Output/Metabolomics/Metaboanalyst/KEGG_sign_pathways.csv")
+
+sig_pathways<-kegg_pathways%>%
+  filter(FDR<0.05)%>%
+  dplyr::select(Metabolite.Set, Total, Hits, FDR, Cluster)%>%
+  mutate(Group=if_else(Cluster=="Cluster1", "Larvae & Metamorphosed Polyps", "NA"))%>%
+  mutate(Group=if_else(Cluster=="Cluster2", "Attached Recruits", Group))%>%
+  mutate(Group=if_else(Cluster=="Cluster3", "Eggs & Embryos", Group))
 ```
+
+Plot these pathways with a dot plot across lifestage groupings.    
+
+```{r}
+list_groups<-c("Eggs & Embryos", "Larvae & Metamorphosed Polyps", "Attached Recruits")
+sig_pathways$Group<-factor(as.character(sig_pathways$Group), levels=list_groups)
+  
+#plot significantly enriched GO terms by Slim Category across lifestages
+Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = Group, y = Metabolite.Set)) + 
+  geom_point(aes(colour=Group, size=FDR)) +
+  #facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="#DFC27D", "Larvae & Metamorphosed Polyps"="#80CDC1", "Attached Recruits"="#BA55D3")) +
+  scale_size(name="FDR p-value", range = c(10, 25), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=18)))+
+  xlab("Lifestage Cluster")+
+  ylab("KEGG Pathway")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/pathways_dot_plot.png", plot=Pathways.Dot.Plot, dpi=80, width=25, height=20, units="in")
+
+```
+
 
 ### Compound Classes   
 
@@ -758,12 +767,50 @@ compound_classes<-rbind(cluster1_class, cluster2_class, cluster3_class)
 Filter out pathways that are significantly enriched with FDR p value <0.05.  
 
 ```{r}
-sig_classes<-compound_classes%>%
+sig_classes_comp<-compound_classes%>%
   filter(FDR<0.05)%>%
-  select(class, hits, FDR, Cluster)%>%
+  dplyr::select(Metabolite.Set, Total, Hits, FDR, Cluster)%>%
   write.csv("Mcap2020/Output/Metabolomics/Metaboanalyst/compound_sign_classes.csv")
+
+sig_classes_comp<-compound_classes%>%
+  filter(FDR<0.05)%>%
+  dplyr::select(Metabolite.Set, Total, Hits, FDR, Cluster)%>%
+  mutate(Group=if_else(Cluster=="Cluster1", "Larvae & Metamorphosed Polyps", "NA"))%>%
+  mutate(Group=if_else(Cluster=="Cluster2", "Attached Recruits", Group))%>%
+  mutate(Group=if_else(Cluster=="Cluster3", "Eggs & Embryos", Group))
+  
 ```
 
+Plot these pathways with a dot plot across lifestage groupings.    
+
+```{r}
+list_groups<-c("Eggs & Embryos", "Larvae & Metamorphosed Polyps", "Attached Recruits")
+sig_classes_comp$Group<-factor(as.character(sig_classes_comp$Group), levels=list_groups)
+  
+#plot significantly enriched GO terms by Slim Category across lifestages
+Compounds.Dot.Plot <-  ggplot(sig_classes_comp, aes(x = Group, y = Metabolite.Set)) + 
+  geom_point(aes(colour=Group, size=FDR)) +
+  #facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="#DFC27D", "Larvae & Metamorphosed Polyps"="#80CDC1", "Attached Recruits"="#BA55D3")) +
+  scale_size(name="FDR p-value", range = c(10, 25), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=18)))+
+  xlab("Lifestage Cluster")+
+  ylab("Compound Class")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/compounds_dot_plot.png", plot=Compounds.Dot.Plot, dpi=80, width=25, height=20, units="in")
+
+```
 
 # 6. Plotting specific metabolites  
 

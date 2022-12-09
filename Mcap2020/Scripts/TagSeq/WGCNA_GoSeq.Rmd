@@ -56,7 +56,7 @@ Load in Gene Info data frame generated in WGCNA_Mcap.Rmd script and subset list 
 geneInfo<-read.csv("Mcap2020/Output/TagSeq/geneInfo.csv")
 
 geneInfo<-geneInfo%>%
-  select(gene_id, moduleColor)%>%
+  dplyr::select(gene_id, moduleColor)%>%
   rename(Module=moduleColor)%>%
   mutate(Module=as.factor(Module))
 ```
@@ -74,14 +74,14 @@ Generate a file with all genes
 
 ```{r}
 all<-geneInfo%>%
-  select(gene_id, Length, GO_IDs)
+  dplyr::select(gene_id, Length, GO_IDs)
 ```
 
 Generate a file for genes in modules list  
 
 ```{r}
 module_list<-geneInfo%>%
-  select(gene_id, Length, GO_IDs, Module)
+  dplyr::select(gene_id, Length, GO_IDs, Module)
 
 levels(module_list$Module)
 
@@ -104,7 +104,7 @@ Read in GO Slim file.
 ```{r}
 goslim<-read.csv("Mcap2020/Data/TagSeq/GO-GOslim.csv") 
 
-goslim <- goslim %>% select(-term)
+goslim <- goslim %>% dplyr::select(-term)
 ```
 
 # **Run GoSeq by Module**  
@@ -1158,7 +1158,7 @@ ID.vector <- c(eggs$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- eggs%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1270,7 +1270,7 @@ ID.vector <- c(embryos$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- embryos%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1383,7 +1383,7 @@ ID.vector <- c(larvae1$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- larvae1%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1495,7 +1495,7 @@ ID.vector <- c(larvae2$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- larvae2%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1607,7 +1607,7 @@ ID.vector <- c(larvae3$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- larvae3%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1719,7 +1719,7 @@ ID.vector <- c(larvae4$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- larvae4%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1831,7 +1831,7 @@ ID.vector <- c(larvae6$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- larvae6%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -1943,7 +1943,7 @@ ID.vector <- c(polyps$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- polyps%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2055,7 +2055,7 @@ ID.vector <- c(recruit1$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- recruit1%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2166,7 +2166,7 @@ ID.vector <- c(recruit2$gene_id)
 LENGTH.vector <- c(all$Length)
 
 GO.terms <- recruit2%>%
-  select(gene_id, GO_IDs)
+  dplyr::select(gene_id, GO_IDs)
 
 str(GO.terms) 
 
@@ -2306,7 +2306,7 @@ GO_all.BP <-  ggplot(go_all, aes(x = Lifestage, y = term)) +
   #facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(multi_line = TRUE))+
   facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
   scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
-  scale_size(name="Over rep. p-value", range = c(10, 25))+
+  scale_size(name="Over rep. p-value", range = c(10, 20), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=14)))+
   xlab("Lifestage")+
   ylab("Biological Process GO Term")+
@@ -2365,7 +2365,7 @@ GO_all.MF <-  ggplot(go_all.MF, aes(x = Lifestage, y = term)) +
   #facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(multi_line = TRUE))+
   facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
   scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
-  scale_size(name="Over rep. p-value", range = c(10, 25))+
+  scale_size(name="Over rep. p-value", range = c(10, 20), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=14)))+
   xlab("Lifestage")+
   ylab("Molecular function GO Term")+

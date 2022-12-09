@@ -1,12 +1,11 @@
-,pathway,hits,FDR,Cluster
-1,"Alanine, aspartate and glutamate metabolism",8,0.000166,Cluster1
-2,Arginine biosynthesis,4,0.0396,Cluster1
-3,Starch and sucrose metabolism,5,0.00368,Cluster2
-4,Galactose metabolism,5,0.0148,Cluster2
-5,"Neomycin, kanamycin and gentamicin biosynthesis",2,0.0161,Cluster2
-6,Aminoacyl-tRNA biosynthesis,6,0.0166,Cluster2
-7,Phenylalanine metabolism,3,0.0237,Cluster2
-8,"Phenylalanine, tyrosine and tryptophan biosynthesis",2,0.0469,Cluster2
-9,Purine metabolism,6,0.0472,Cluster2
-10,Arginine biosynthesis,7,0.000217,Cluster3
-11,Nicotinate and nicotinamide metabolism,6,0.0029,Cluster3
+"","Metabolite.Set","Total","Hits","FDR","Cluster"
+"1","Alanine, aspartate and glutamate metabolism",28,7,0.00207,"Cluster1"
+"2","Starch and sucrose metabolism",18,5,0.00368,"Cluster2"
+"3","Galactose metabolism",27,5,0.0148,"Cluster2"
+"4","Neomycin, kanamycin and gentamicin biosynthesis",2,2,0.0161,"Cluster2"
+"5","Aminoacyl-tRNA biosynthesis",48,6,0.0166,"Cluster2"
+"6","Phenylalanine metabolism",10,3,0.0237,"Cluster2"
+"7","Phenylalanine, tyrosine and tryptophan biosynthesis",4,2,0.0469,"Cluster2"
+"8","Purine metabolism",65,6,0.0472,"Cluster2"
+"9","Arginine biosynthesis",14,7,0.000327,"Cluster3"
+"10","Nicotinate and nicotinamide metabolism",15,6,0.00408,"Cluster3"

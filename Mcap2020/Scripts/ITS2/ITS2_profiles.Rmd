@@ -39,7 +39,6 @@ library("kableExtra")
 # Load data  
 
 Load data obtained from SymPortal analysis on URI HPC cluster. Load counts of ITS2 profiles for each sample.  
-
 C profile = C31.C17d.C21.C21ac.C31a
 D profile = D1.D4.D6.D1ab.D17d
 
@@ -160,7 +159,7 @@ plot3<-data%>%
 Create side by side plot.  
 
 ```{r}
-data$group <- factor(data$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Recruit", "Attached Recruit"))
+data$group <- factor(data$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit"))
 
 plot4<-data%>%
   filter(!lifestage=="Recruit1")%>%

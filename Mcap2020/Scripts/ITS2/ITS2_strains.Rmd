@@ -23,9 +23,10 @@ ITS2 strain variation data analysis based on scripts written by Shayle Matsuda, 
 ```{r}
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("readxl")) install.packages("readxl")
-if (!require("phyloseq")) install.packages("phyloseq")
+if (!require("phyloseq")) BiocManager::install("phyloseq")
 if (!require("janitor")) install.packages("janitor")
 if (!require("writexl")) install.packages("writexl")
+#if (!require("microViz")) BiocManager::install("microViz")
 
 library("tidyverse")
 library("readxl")
@@ -201,7 +202,7 @@ GP1 = phylo_coral_DIV
 GP1
 ```
 
-Transform to relative abundance.  
+Transform to relative abundance and subsample to even sampling depth to minimum count in dataset (~10,000).  
 ```{r}
 GP1 = transform_sample_counts(GP1, function(x) 100 * x/sum(x))
 
@@ -209,9 +210,9 @@ GP1_rare<-rarefy_even_depth(GP1, sample.size = min(sample_sums(GP1)),
   rngseed = FALSE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
 ```
 
-In rarefication 9 OTUs were removed because they were no longer present in any sample after random subsampling. 
+In rarefication 14 OTUs were removed because they were no longer present in any sample after random subsampling. 
 
-View tree and heatmap after rarefication.  
+View tree and heatmap after subsampling.   
 ```{r}
 plot_tree(GP1_rare, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
 plot_heatmap(GP1_rare, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
@@ -242,17 +243,23 @@ p1b
 
 Plot with samples now.  
 ```{r}
-p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage") 
-p2b<- p2b + geom_polygon(aes(fill=lifestage), color="black") + geom_point(aes(color=lifestage), size=4) + ggtitle("PCoA")
-p2b
+p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage"); p2b 
 ```
+pch.input = c(1, 2, 3, 4, 5, 6, 7 ,8, 9, 10, 11, 12, 13)
 
-Output PCoA plot. 
+Output PCoA plot for visualization.  
 ```{r}
-p2b_viz<-p2b  + scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + theme_classic()
-p2b_viz
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("PCoA")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
 
-ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=8, w=10)
+ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=6, w=8)
 ```
 
 Conduct a permanova in the vegan package.  
@@ -285,7 +292,6 @@ print(p)
 
 ggplot2::ggsave("Mcap2020/Figures/ITS2/div_heatmap.jpg", p, width = 6, height = 6)
 ```
-Manually save this figure.  
 
 Draw with Complex Heatmap
 ```{r}

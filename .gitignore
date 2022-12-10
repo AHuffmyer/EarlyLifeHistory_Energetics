@@ -17,4 +17,4 @@ Mcap2020/Data/ITS2/Sequences/
 Mcap2020/Data/TagSeq/Sequences/ 
 Mcap2020/Output/TagSeq/*.RData
 Mcap2020/Output/TagSeq/Symbiont/*.RData
-
+Mcap2020/Data/ITS2/*.RData

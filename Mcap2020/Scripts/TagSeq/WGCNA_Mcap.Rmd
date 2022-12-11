@@ -703,7 +703,7 @@ heatmappval <- signif(moduleTraitPvalue, 1)
 htmap.colors <- names(MEs)
 htmap.colors <- gsub("ME", "", htmap.colors)
 
-lifestage_order<-c("1_Egg", "2_Embryo", "3_Larvae1", "4_Larvae2", "5_Larvae3", "6_Larvae4", "7_Larvae6", "8_MetamorposedRecruit2", "9_CalcifyingRecruit1", "10_CalcifyingRecruit2")
+lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
 
 library(dendsort)
 row_dend = dendsort(hclust(dist(moduleTraitCor)))
@@ -713,17 +713,16 @@ pdf(file = "Mcap2020/Figures/TagSeq/Module-trait-relationship-heatmap.pdf", heig
 ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_title = "Module-Lifestage Eigengene Correlation", 
         col = blueWhiteRed(50), 
         row_names_side = "left", 
-        row_dend_side = "left",
+        #row_dend_side = "left",
         width = unit(5, "in"), 
         height = unit(4.5, "in"), 
-        column_dend_reorder = TRUE, 
-        #cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"),
-        cluster_columns = col_dend,
+        #column_dend_reorder = TRUE, 
+        #cluster_columns = col_dend,
         row_dend_reorder = TRUE,
-        column_split = 6,
-        row_split=4,
-        column_dend_height = unit(.5, "in"),
-        #cluster_rows = METree, 
+        #column_split = 6,
+        #row_split=4,
+        #column_dend_height = unit(.5, "in"),
+        column_order = lifestage_order, 
         cluster_rows = row_dend, 
         row_gap = unit(2.5, "mm"), 
         border = TRUE,

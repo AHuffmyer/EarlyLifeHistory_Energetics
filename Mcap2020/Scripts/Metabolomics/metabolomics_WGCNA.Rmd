@@ -448,10 +448,11 @@ htmap.colors <- gsub("ME", "", htmap.colors)
 row_dend = dendsort(hclust(dist(moduleTraitCor)))
 col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
 
-
 #row_ha = rowAnnotation(ModuleSize = anno_text("11", "127", "8", "64", "85"), just = "left", 
 #        location = unit(0.5, "npc"), show_name = TRUE)
 # brown (11), grey (127), yellow (8), blue (64), turqoise (85) #figure out how to do row annotations to add sample sizes
+
+lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
 
 pdf(file = "Mcap2020/Figures/Metabolomics/WGCNA/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
 ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Group Eigengene Correlation", 
@@ -460,13 +461,14 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", column_title = "Module-Group Eige
         row_dend_side = "left",
         width = unit(5, "in"), 
         height = unit(4.5, "in"), 
-        column_dend_reorder = TRUE, 
-        cluster_columns = col_dend,
+        #column_dend_reorder = TRUE, 
+        #cluster_columns = col_dend,
         row_dend_reorder = FALSE,
-        column_split = 4, 
+        #column_split = 4, 
         row_split = 3, 
-        column_dend_height = unit(.5, "in"),
+        #column_dend_height = unit(.5, "in"),
         cluster_rows = row_dend, 
+        column_order = lifestage_order, 
         row_gap = unit(2.5, "mm"), 
         border = TRUE,
         cell_fun = function(j, i, x, y, w, h, col) {

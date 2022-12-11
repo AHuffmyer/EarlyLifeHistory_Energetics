@@ -245,7 +245,6 @@ Plot with samples now.
 ```{r}
 p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage"); p2b 
 ```
-pch.input = c(1, 2, 3, 4, 5, 6, 7 ,8, 9, 10, 11, 12, 13)
 
 Output PCoA plot for visualization.  
 ```{r}
@@ -277,15 +276,21 @@ Permanova suggests there is no significant separation by lifestage in ITS2 profi
 
 # **Plot heat map of ITS2 DIVs**  
 
-Draw with Phyloseq using the top DIV's (16 in this case).  
+Draw with Phyloseq.  
 
+Filter out taxa that comprise <1% mean relative abundance across samples. 
+
+There were 63 OTU's before filtering and 13 after filtering.  
 ```{r}
-GP1_prune = filter_taxa(GP1_rare, function(x) sum(x) > 30, TRUE)
+GP1_rare
+
+GP1_prune = filter_taxa(GP1_rare, function(x) mean(x) > 1, TRUE)
+GP1_prune 
 
 sample_order<-c("WSH053", "WSH054", "WSH055", "WSH056", "WSH061", "WSH062", "WSH063", "WSH064",  "WSH065", "WSH066", "WSH067", "WSH068",  "WSH069", "WSH070", "WSH071", "WSH072", "WSH073", "WSH074", "WSH075", "WSH076", "WSH077", "WSH078", "WSH079", "WSH080", "WSH081", "WSH082", "WSH083", "WSH084", "WSH057", "WSH058", "WSH059", "WSH060", "WSH046", "WSH047", "WSH048", "WSH049", "WSH050", "WSH051", "WSH052")
 #sample_name by lifestage order 
 
-p<-plot_heatmap(GP1_prune, sample.label="lifestage", low="#66CCFF", high="#000033", na.value="white", sample.order=sample_order)
+p<-plot_heatmap(GP1_prune, sample.label="lifestage", low="#66CCFF", high="#000033", na.value="white", sample.order=sample_order, taxa.label="DIV")
 p$scales$scales[[1]]$name <- "Lifestage"
 
 print(p)
@@ -293,10 +298,111 @@ print(p)
 ggplot2::ggsave("Mcap2020/Figures/ITS2/div_heatmap.jpg", p, width = 6, height = 6)
 ```
 
-Draw with Complex Heatmap
+Summarize by lifestage calculating means across replicates of each life stage.  
 ```{r}
-ComplexHeatmap::Heatmap(t(otu_table(GP1_prune)))
+mergedGP = merge_samples(GP1_prune, "lifestage")
+
+lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+
+plot_heatmap(mergedGP)
+
 ```
+
+
+
+
+Draw by lifestage with Complex Heatmap.  
+```{r}
+library(dendsort)
+library(WGCNA)
+library(circlize)
+
+table<-as.matrix(t(otu_table(mergedGP)))
+                 
+row_dend = dendsort(hclust(dist(table)))
+col_dend = dendsort(hclust(dist(t(table))))
+
+col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+
+pdf(file = "Mcap2020/Figures/ITS2/DIV-ComplexHeatmap.pdf", height = 8, width = 8)
+ComplexHeatmap::Heatmap(table, name = "Rel. Abun. (%)", row_title = "DIV", column_title = "ITS2 DIV Relative Abundance", 
+        col = col_fun, 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(4, "in"), 
+        height = unit(4, "in"), 
+        column_dend_height = unit(.5, "in"),
+        row_dend_width = unit(.5, "in"),
+        column_dend_reorder = FALSE,
+        row_dend_reorder = TRUE,
+        row_gap = unit(2.5, "mm"),
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        border = TRUE, 
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        column_names_rot = 35,
+        cluster_rows = row_dend, 
+        #cluster_columns = col_dend,
+        column_order = lifestage_order, 
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+dev.off()
+
+
+
+
+
+
+
+
+
+ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_title = "Module-Lifestage Eigengene Correlation", 
+        col = blueWhiteRed(50), 
+        row_names_side = "left", 
+        row_dend_side = "left",
+        width = unit(5, "in"), 
+        height = unit(4.5, "in"), 
+        column_dend_reorder = TRUE, 
+        #cluster_columns = hclust(dist(t(moduleTraitCor)), method = "average"),
+        cluster_columns = col_dend,
+        row_dend_reorder = TRUE,
+        column_split = 6,
+        row_split=4,
+        column_dend_height = unit(.5, "in"),
+        #cluster_rows = METree, 
+        cluster_rows = row_dend, 
+        row_gap = unit(2.5, "mm"), 
+        border = TRUE,
+        cell_fun = function(j, i, x, y, w, h, col) {
+        if(heatmappval[i, j] < 0.05) {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "bold"))
+        }
+        else {
+            grid.text(sprintf("%s", heatmappval[i, j]), x, y, gp = gpar(fontsize = 10, fontface = "plain"))
+        }},
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        column_names_rot = 35,
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # **Alpha diversity**  
 

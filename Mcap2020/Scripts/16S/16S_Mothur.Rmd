@@ -625,20 +625,6 @@ summary(aov(Chao1~lifestage, data=alpha_rare))
 
 There are significant differences in alpha diversity between lifestages for all metrics.    
 
-## Make plot for alpha diversity across lifestages  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # **Plot unknowns - rare dataset** 
 

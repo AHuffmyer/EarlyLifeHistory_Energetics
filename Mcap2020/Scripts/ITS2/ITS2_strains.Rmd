@@ -322,7 +322,7 @@ col_dend = dendsort(hclust(dist(t(table))))
 col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
 
 pdf(file = "Mcap2020/Figures/ITS2/DIV-ComplexHeatmap.pdf", height = 8, width = 8)
-ComplexHeatmap::Heatmap(table, name = "Rel. Abun. (%)", row_title = "DIV", column_title = "ITS2 DIV Relative Abundance", 
+ComplexHeatmap::Heatmap(table, name = "Rel. Abun. (%)", row_title = "DIV", column_title = "ITS2 DIV Relative Abundance (>1%)", 
         col = col_fun, 
         row_names_side = "left", 
         row_dend_side = "left",

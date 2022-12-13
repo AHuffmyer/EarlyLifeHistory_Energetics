@@ -1,7 +1,7 @@
 ---
-title: "Analysis of 16S data output from Mothur"
+title: "Analysis of 16S data output from mothur bioniformatic pipeline"
 author: "Ariana S Huffmyer"
-date: 'January 2022'
+date: '2022'
 output:
   html_document:
     toc: yes
@@ -44,6 +44,10 @@ library("ape")
 library("DESeq2")
 library("microViz")
 library("vegan")
+library(dendsort)
+library(WGCNA)
+library(circlize)
+library(ComplexHeatmap)
 ```
 
 # **Load data**  
@@ -198,7 +202,9 @@ Plot a heatmap.
 plot_heatmap(physeq1, "NMDS", "bray", "lifestage", "Family", low="#66CCFF", high="#000033", na.value="white")
 ```
 
-# **Tree and heatmap for "rarefied" dataset**   
+# **Analyze "rarefied" dataset**   
+
+## Prepare data  
 
 Prepare the matrix to be all numeric with taxa in rows.  
 ```{r}
@@ -227,13 +233,6 @@ physeq_rare = phyloseq(OTU_rare, TAX)
 physeq_rare
 ```
 
-Filter out least abundant taxa.  
-
-```{r}
-physeq_rare_f  = transform_sample_counts(physeq_rare, function(x) x / sum(x) )
-physeq_rare = filter_taxa(physeq_rare_f, function(x) mean(x) > 1e-3, TRUE)
-```
-
 Plot an abundance table at the different taxonomic levels.    
 ```{r}
 plot_bar(physeq_rare, fill = "Domain")+theme(legend.position="bottom")
@@ -248,6 +247,33 @@ Plot a tree of OTU's.
 ```{r}
 random_tree_rare = rtree(ntaxa(physeq_rare), rooted=TRUE, tip.label=taxa_names(physeq_rare))
 plot(random_tree_rare)
+```
+
+Add metdata 
+```{r}
+list<-sample_names(physeq_rare)
+
+metadata_rare<-read.table("Mcap2020/Data/16S/mcap_metadata.txt", sep='\t', header=TRUE)
+
+rownames(metadata_rare)<-metadata_rare$sample
+
+metadata_rare<-metadata_rare%>%
+  filter(sample %in% list)
+
+metadata_rare<-metadata_rare%>%
+  select(!sample)
+```
+
+Add sample data 
+```{r}
+sampledata = sample_data(data.frame(
+  lifestage = metadata_rare$lifestage,
+  group = metadata_rare$group, 
+  hpf = metadata_rare$hpf,
+  row.names=sample_names(physeq_rare),
+  stringsAsFactors=FALSE
+))
+sampledata
 ```
 
 Merge the tree, sample information, and OTU table.  
@@ -277,7 +303,186 @@ physeq1_rare<-ps_filter(physeq1_rare, lifestage != "Embryo (5 hpf)")
 
 Now build a tree with the combined data.  
 ```{r}
-plot_tree(physeq1_rare, color="group", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+plot_tree(physeq1_rare, color="lifestage", label.tips="taxa_names", ladderize="left", plot.margin=0.3)
+```
+
+Plot relative abundance now with group information.  
+
+```{r}
+bar1<-plot_bar(physeq1_rare, fill = "Class")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x"); bar1
+#ggsave(plot=bar1, file="Mcap2020/Figures/16S/relabund_class_rare.png", h=6, w=18)
+
+bar2<-plot_bar(physeq1_rare, fill = "Phylum")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x"); bar2
+#ggsave(plot=bar2, file="Mcap2020/Figures/16S/relabund_phylum_rare.png", h=6, w=18)
+
+bar3<-plot_bar(physeq1_rare, fill = "Order")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x"); bar3
+#ggsave(plot=bar3, file="Mcap2020/Figures/16S/relabund_order_rare.png", h=9, w=18)
+
+bar4<-plot_bar(physeq1_rare, fill = "Family")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x"); bar4
+#ggsave(plot=bar4, file="Mcap2020/Figures/16S/relabund_family_rare.png", h=12, w=18)
+
+bar5<-plot_bar(physeq1_rare, fill = "Genus")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x"); bar5
+#ggsave(plot=bar5, file="Mcap2020/Figures/16S/relabund_genus_rare.png", h=25, w=18)
+```
+
+Display as % abundance and filter out taxa <1% abundance.    
+
+```{r}
+physeq1_rare_f = transform_sample_counts(physeq1_rare, function(x) 100 * x/sum(x))
+```
+
+## Plot PCoA and conduct PERMANOVA  
+
+Prepare PCoA ordination.  
+```{r}
+ps.ordb <- ordinate(physeq1_rare_f, "PCoA", "bray")
+p2b = plot_ordination(physeq1_rare_f, ps.ordb, type="samples", color="lifestage"); p2b 
+```
+
+Display levels of lifestages.  
+```{r}
+levels(as.factor(metadata_rare$lifestage))
+#Egg: "#8C510A"
+#Embryo: "#DFC27D"
+#Larvae: "#80CDC1"
+#Polyp Metamorphosed: "#003C30"
+#Recruit Attached: "#BA55D3"
+```
+
+Output PCoA plot for visualization.  
+```{r}
+pcoa_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("PCoA")+
+  
+  scale_colour_manual(name="Lifestage", 
+                      values = c("Attached Recruit (231 hpf)"="#BA55D3", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf) "="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf) "="#80CDC1", "Metamorphosed Recruit (231 hpf)"="#003C30", "Attached Recruit (183 hpf) "="#BA55D3"),
+                      breaks = c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
+                     labels = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) + 
+  
+  scale_shape_manual(name="Lifestage", 
+                     values = c("Attached Recruit (231 hpf)"=13, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf) "=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf) "=8, "Metamorphosed Recruit (231 hpf)"=11, "Attached Recruit (183 hpf) "=12), 
+                     breaks = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
+                     labels = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) +
+  
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); pcoa_viz
+
+ggsave(plot=pcoa_viz, "Mcap2020/Figures/16S/pcoa_16S.jpeg", h=6, w=8)
+```
+
+Conduct a permanova in the vegan package.  
+
+```{r}
+samples <- as(sample_data(physeq1_rare_f), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(physeq1_rare_f, method="bray") ~ lifestage,
+       data = samples)
+
+perm1
+```
+
+Permanova suggests there is significant separation by lifestage in 16S profiles (p=0.001). 
+
+
+## Plot Heatmap of relative abundance  
+
+Filter out low frequency taxa <1% relative abundance.  
+```{r}
+physeq1_rare_f
+
+physeq1_rare_prune = filter_taxa(physeq1_rare_f, function(x) mean(x) > 1, TRUE)
+
+taxa_names(physeq1_rare_prune) 
+```
+
+There were 1364 taxa before filtering out taxa <1% and 16 taxa after filtering.  
+
+Summarize by lifestage calculating means across replicates of each life stage.  
+```{r}
+mergedGP = merge_samples(physeq1_rare_prune, "lifestage")
+
+#lifestage_order<-c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")
+
+lifestage_order<-c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Recruit (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")
+```
+
+Replace OTU number with taxa names.  
+
+View current data frame.  
+```{r}
+table<-as.matrix(t(otu_table(mergedGP)))
+table<-as.matrix(as.data.frame(table))
+colnames(table)
+rownames(table)
+```
+
+Extract taxa names at the level of Family.  
+```{r}
+tax_table<-as.matrix(t(tax_table(mergedGP)))
+tax_table<-as.matrix(t(as.data.frame(tax_table)))
+colnames(tax_table)
+rownames(tax_table)
+tax_table<-as.data.frame(tax_table)
+```
+ 
+```{r}
+#replace OTU with name from taxonomy table  
+table_names<-as.data.frame(table)
+table_names$OTU<-rownames(table)
+
+table_names$Family<-tax_table$Family[match(table_names$OTU, tax_table$OTU)]
+table_names$Genus<-tax_table$Genus[match(table_names$OTU, tax_table$OTU)]
+
+#remove non alphabetic characters from Family and Genus columns 
+table_names$Family <- gsub('[^[:alnum:] ]','',table_names$Family)
+
+table_names$Taxa<-paste(table_names$OTU, "-", table_names$Family, ":", table_names$Genus)
+
+#add to data frame 
+rownames(table_names)<-table_names$Taxa
+
+table_names<-table_names%>%
+  select(!Family)%>%
+  select(!Taxa)%>%
+  select(!Genus)%>%
+  select(!OTU)
+
+table_names<-as.matrix(table_names)
+```
+
+Draw by lifestage with Complex Heatmap. 
+```{r}
+row_dend = dendsort(hclust(dist(table)))
+col_dend = dendsort(hclust(dist(t(table))))
+
+col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+
+pdf(file = "Mcap2020/Figures/16S/16S-ComplexHeatmap.pdf", height = 8, width = 18)
+ComplexHeatmap::Heatmap(table_names, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (OTU - Family:Genus)", 
+        col = col_fun, 
+        row_names_side = "left", 
+        row_dend_side = "right",
+        width = unit(4, "in"), 
+        height = unit(4, "in"), 
+        column_dend_height = unit(.5, "in"),
+        row_dend_width = unit(.5, "in"),
+        column_dend_reorder = FALSE,
+        row_dend_reorder = TRUE,
+        row_gap = unit(2.5, "mm"),
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        border = TRUE, 
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        column_names_rot = 35,
+        cluster_rows = row_dend, 
+        #cluster_columns = col_dend,
+        column_order = lifestage_order, 
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+dev.off()
+
 ```
 
 Plot a heatmap.  
@@ -286,24 +491,11 @@ Plot a heatmap.
 plot_heatmap(physeq1_rare, "NMDS", "bray", "lifestage", "Family", low="#66CCFF", high="#000033", na.value="white")
 ```  
 
-Plot relative abundance now with group information.  
 
-```{r}
-bar1<-plot_bar(physeq1_rare, fill = "Class")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar1, file="Mcap2020/Figures/16S/relabund_class_rare.png", h=6, w=18)
 
-bar2<-plot_bar(physeq1_rare, fill = "Phylum")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar2, file="Mcap2020/Figures/16S/relabund_phylum_rare.png", h=6, w=18)
 
-bar3<-plot_bar(physeq1_rare, fill = "Order")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar3, file="Mcap2020/Figures/16S/relabund_order_rare.png", h=9, w=18)
 
-bar4<-plot_bar(physeq1_rare, fill = "Family")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar4, file="Mcap2020/Figures/16S/relabund_family_rare.png", h=12, w=18)
 
-bar5<-plot_bar(physeq1_rare, fill = "Genus")+theme(legend.position="bottom")+facet_grid(~lifestage, scales="free_x")
-ggsave(plot=bar5, file="Mcap2020/Figures/16S/relabund_genus_rare.png", h=25, w=18)
-```
 
 
 # **NMDS of rarefied dataset**  

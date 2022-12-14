@@ -727,7 +727,7 @@ sig_pathways$Group<-factor(as.character(sig_pathways$Group), levels=list_groups)
 Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = Group, y = Metabolite.Set)) + 
   geom_point(aes(colour=Group, size=FDR)) +
   #facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
-  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="#DFC27D", "Larvae & Metamorphosed Polyps"="#80CDC1", "Attached Recruits"="#BA55D3")) +
+  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="lightgray", "Larvae & Metamorphosed Polyps"="darkgray", "Attached Recruits"="black")) +
   scale_size(name="FDR p-value", range = c(10, 25), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=18)))+
   xlab("Lifestage Cluster")+
@@ -793,7 +793,7 @@ sig_classes_comp$Group<-factor(as.character(sig_classes_comp$Group), levels=list
 Compounds.Dot.Plot <-  ggplot(sig_classes_comp, aes(x = Group, y = Metabolite.Set)) + 
   geom_point(aes(colour=Group, size=FDR)) +
   #facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
-  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="#DFC27D", "Larvae & Metamorphosed Polyps"="#80CDC1", "Attached Recruits"="#BA55D3")) +
+  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="lightgray", "Larvae & Metamorphosed Polyps"="darkgray", "Attached Recruits"="black")) +
   scale_size(name="FDR p-value", range = c(10, 25), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=18)))+
   xlab("Lifestage Cluster")+

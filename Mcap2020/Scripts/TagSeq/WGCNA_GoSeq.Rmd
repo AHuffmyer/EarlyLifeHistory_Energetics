@@ -2330,7 +2330,7 @@ Note that there were no enriched categories at 65 hpf so it is not displayed in 
 Plot at Molecular Function level.  
 
 ```{r}
-go_all.MF<-rbind(eggs.GO_plot.MF, embryos.GO_plot.MF, larvae1.GO_plot.MF, larvae2.GO_plot.MF, larvae3.GO_plot.MF, larvae4.GO_plot.MF, larvae6.GO_plot.MF, polyps.GO_plot.MF, recruit1.GO_plot.MF, recruit2.GO_plot.MF)
+go_all.MF<-rbind(eggs.GO_plot.MF, embryos.GO_plot.MF, larvae1.GO_plot.MF,  larvae3.GO_plot.MF, larvae4.GO_plot.MF, larvae6.GO_plot.MF, polyps.GO_plot.MF, recruit1.GO_plot.MF, recruit2.GO_plot.MF)
 
 head(go_all.MF)
 dim(go_all.MF)
@@ -2772,7 +2772,7 @@ go_all$Pattern<-factor(as.character(go_all$Pattern), levels=list_patterns)
 GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) + 
   geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
   facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
-  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="#DFC27D", "High in Mid Development"="#80CDC1", "High Late in Development"="#BA55D3")) +
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="lightgray", "High in Mid Development"="darkgray", "High Late in Development"="black")) +
   scale_size(name="Over rep. p-value", range = c(10, 18), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=14)))+
   xlab("Ontogenetic Pattern")+
@@ -2789,7 +2789,7 @@ GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) +
   legend.title = element_text(size=40, face="bold"), 
   legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=30, height=35, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=30, height=40, units="in")
 ```
 
 ## Plot at Molecular Function level.  
@@ -2816,7 +2816,7 @@ go_all.MF$Pattern<-factor(as.character(go_all.MF$Pattern), levels=list_patterns)
 GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) + 
   geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
   facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
-  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="#DFC27D", "High in Mid Development"="#80CDC1", "High Late in Development"="#BA55D3")) +
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="lightgray", "High in Mid Development"="darkgray", "High Late in Development"="black")) +
   scale_size(name="Over rep. p-value", range = c(8, 14), trans="reverse")+
   guides(colour = guide_legend(override.aes = list(size=14)))+
   xlab("Ontogenetic Pattern")+
@@ -2833,7 +2833,7 @@ GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) +
   legend.title = element_text(size=40, face="bold"), 
   legend.key.size = unit(2, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50 , width=40, height=45, units="in") 
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50 , width=40, height=49, units="in") 
 ```
 
 ## Plot trends of eigenegenes for each ontogenetic pattern  

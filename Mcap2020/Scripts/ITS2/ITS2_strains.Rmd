@@ -218,7 +218,7 @@ plot_tree(GP1_rare, color="lifestage", label.tips="taxa_names", ladderize="left"
 plot_heatmap(GP1_rare, "NMDS", "bray", "lifestage", low="#66CCFF", high="#000033", na.value="white")
 ```
 
-# **DIV Ordinations: PCoA and NMDS** 
+# **DIV Ordinations: NMDS** 
 
 View ordination by OTU using the rarefied dataset.    
 ```{r}
@@ -246,7 +246,7 @@ Plot with samples now.
 p2b = plot_ordination(GP1_rare, GP.ordb, type="samples", color="lifestage"); p2b 
 ```
 
-Output PCoA plot for visualization.  
+Output NMDS plot for visualization.  
 ```{r}
 p2b_viz<-p2b  + 
   geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 

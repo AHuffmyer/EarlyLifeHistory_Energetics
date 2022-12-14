@@ -104,7 +104,7 @@ taxonomy<-as.matrix(taxonomy)
 
 ```
 
-# **Heatmaps and PCoA of rarefied dataset**   
+# **Heatmaps and beta diversity**   
 
 ## Prepare data  
 
@@ -366,6 +366,59 @@ perm1
 
 Permanova suggests there is significant separation by lifestage in 16S profiles (p=0.001). 
 
+## Plot NMDS 
+
+Prepare PCoA ordination.  
+```{r}
+ps.ordb.nmds <- ordinate(physeq1_rare, "NMDS", "bray")
+p2b.nmds = plot_ordination(physeq1_rare, ps.ordb.nmds, type="samples", color="lifestage"); p2b.nmds 
+```
+
+Display levels of lifestages.  
+```{r}
+levels(as.factor(metadata_rare$lifestage))
+#Egg: "#8C510A"
+#Embryo: "#DFC27D"
+#Larvae: "#80CDC1"
+#Polyp Metamorphosed: "#003C30"
+#Recruit Attached: "#BA55D3"
+```
+
+Output PCoA plot for visualization.  
+```{r}
+pcoa_viz.nmds<-p2b.nmds  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  
+  scale_colour_manual(name="Lifestage", 
+                      values = c("Attached Recruit (231 hpf)"="#BA55D3", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf) "="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf) "="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf) "="#BA55D3"),
+                      breaks = c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
+                     labels = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) + 
+  
+  scale_shape_manual(name="Lifestage", 
+                     values = c("Attached Recruit (231 hpf)"=13, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf) "=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf) "=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf) "=12), 
+                     breaks = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
+                     labels = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) +
+  
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); pcoa_viz.nmds
+
+ggsave(plot=pcoa_viz.nmds, "Mcap2020/Figures/16S/nmds_16S.jpeg", h=6, w=8)
+```
+
+Conduct a permanova in the vegan package (same as test in above PCoA section).  
+
+```{r}
+samples <- as(sample_data(physeq1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(physeq1_rare, method="bray") ~ lifestage,
+       data = samples)
+
+perm1
+```
+
 ## Plot Heatmap of relative abundance at the family/genus level   
 
 Filter out low frequency taxa <1% relative abundance.  
@@ -463,116 +516,7 @@ dev.off()
 ```
 
 
-# **NMDS of rarefied dataset**  
-
-```{r}
-GP1 = physeq1_rare
-GP1
-```
-
-View ordinations: PCoA + unifrac.    
-```{r}
-GP.ord <- ordinate(GP1, "PCoA", "unifrac")
-p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
-```
-
-View faceted by Phylum.  
-```{r}
-p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
-```
-
-Plot with samples now.  
-```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset PCoA Unifrac")
-#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
-p2
-
-#ggsave(plot=p2, filename="Mcap2020/Figures/16S/pcoa_unifrac_rare.png")
-```
-
-
-View ordinations: PCoA + bray curtis    
-```{r}
-GP.ord <- ordinate(GP1, "PCoA", "bray")
-p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
-```
-
-View faceted by Phylum.  
-```{r}
-p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
-```
-
-Plot with samples now.  
-```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset PCoA Bray Curtis")
-#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
-p2
-
-#ggsave(plot=p2, filename="Mcap2020/Figures/16S/pcoa_bray_rare.png")
-```
-
-
-View ordinations: NMDS + bray curtis    
-```{r}
-GP.ord <- ordinate(GP1, "NMDS", "bray")
-p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
-```
-
-View faceted by Phylum.  
-```{r}
-p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
-```
-
-Plot with samples now.  
-```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset NMDS Bray Curtis")
-#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
-p2
-
-ggsave(plot=p2, filename="Mcap2020/Figures/16S/NMDS_bray_rare.png")
-```
-
-
-View ordinations: NMDS + unifrac    
-```{r}
-GP.ord <- ordinate(GP1, "NMDS", "unifrac")
-p1 = plot_ordination(GP1, GP.ord, type="taxa", color="Class", title="taxa")
-```
-
-View faceted by Phylum.  
-```{r}
-p1 + facet_wrap(~Class, 3) + theme(legend.position="none")
-```
-
-Plot with samples now.  
-```{r}
-p2 = plot_ordination(GP1, GP.ord, type="samples", color="lifestage") 
-p2<-p2 + geom_polygon(aes(fill=lifestage)) + geom_point(size=5) + ggtitle("subsampled dataset NMDS unifrac")
-#p2<-p2 + geom_point(size=5) + ggtitle("subsampled dataset")
-p2
-
-#ggsave(plot=p2, filename="Mcap2020/Figures/16S/NMDS_unifrac_rare.png")
-```
-
-Conduct a permanova in the vegan package.  
-
-```{r}
-
-metadata <- as(sample_data(GP1), "data.frame")
-
-adonis2(phyloseq::distance(GP1, method="bray") ~ lifestage,
-       data = metadata)
-
-adonis2(phyloseq::distance(GP1, method="unifrac") ~ lifestage,
-       data = metadata)
-```
-
-Separation by lifestage p=0.001, as in PCoA from above.  
-
-# **Alpha Diversity - Rare dataset**  
+# **Alpha Diversity**  
 
 ```{r}
 GP2 <- prune_taxa(taxa_sums(physeq1_rare) > 0, physeq1_rare)
@@ -581,10 +525,6 @@ GP2 <- prune_taxa(taxa_sums(physeq1_rare) > 0, physeq1_rare)
 Plot all richness metrics.  
 ```{r}
 plot_richness(GP2)
-```
-
-```{r}
-
 ```
 
 Plot the two most commonly used - Shannon and Inverse Simpson.  
@@ -626,7 +566,7 @@ summary(aov(Chao1~lifestage, data=alpha_rare))
 There are significant differences in alpha diversity between lifestages for all metrics.    
 
 
-# **Plot unknowns - rare dataset** 
+# **Plot unknowns** 
 
 Plot data at the level of phylum in the rarefied dataset. Bacteria_unclassified are our unknowns.      
 ```{r}
@@ -635,33 +575,9 @@ plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
 
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
 
-# **DESeq2 - Rare dataset**  
 
-Convert phyloseq object to DESeq2 object.  
 
-Construct DESeq2 object looking at differences by lifestage.  
-```{r}
-diagdds_rare = phyloseq_to_deseq2(physeq1_rare, ~ lifestage)
 
-gm_mean = function(x, na.rm=TRUE){
-  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
-}
-geoMeans = apply(counts(diagdds_rare), 1, gm_mean)
-diagdds_rare = estimateSizeFactors(diagdds_rare, geoMeans = geoMeans)
-#diagdds_rare = DESeq(diagdds_rare, fitType="local")
 
-diagdds_rare = DESeq(diagdds_rare, test="Wald", fitType="parametric")
-```
-
-Look at results table.  
-```{r}
-res_rare = results(diagdds_rare, cooksCutoff = FALSE)
-alpha = 0.05
-sigtab = res_rare[which(res_rare$padj < alpha), ]
-sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(physeq1_rare)[rownames(sigtab), ], "matrix"))
-head(sigtab)
-```
-
-DESeq2 analysis is not particularly informative for this dataset, no differential members are identified.  
 
 

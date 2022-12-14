@@ -258,7 +258,7 @@ p2b_viz<-p2b  +
     panel.background=element_blank()
   ); p2b_viz
 
-ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/nmds_its2_div.jpeg", h=6, w=8)
+ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/nmds_its2_div.jpeg", h=5, w=8)
 ```
 
 Conduct a permanova in the vegan package.  

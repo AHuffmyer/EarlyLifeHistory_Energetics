@@ -250,9 +250,10 @@ combined_plot<-PRdf %>%
   
     ggplot(., aes(x = hpf, y = R.nmol.org.min)) +
     geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  geom_hline(yintercept=0.05, linetype="dotted", color="black", size=0.75)+
   
     #add respiration
-    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=0.4, size=4, position = position_jitterdodge(0.1)) + 
+    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 22, alpha=0.4, size=4, position = position_jitterdodge(0.1)) + 
   
    #add photosynthesis mean with error bars 
   geom_point(aes(y=GP.nmol.org.min, colour=Lifestage, group=group), fill="white", pch = 21, size=4, position = position_jitterdodge(0.1)) +
@@ -292,7 +293,7 @@ legend_plot<-df %>%
     geom_point(aes(), alpha=1, size=4)+
     #scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
     scale_colour_manual(name=expression(bold("Lifestage")), values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-  scale_shape_manual(name=expression(bold("Metric")), values=c(19, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
+  scale_shape_manual(name=expression(bold("Metric")), values=c(15, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
   theme_classic()
 
 legend<-get_legend(legend_plot)
@@ -319,7 +320,7 @@ combined_plot_mean<-stats %>%
     geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
   
     #add respiration mean with error bars  
-    geom_point(data = . %>% filter(Metric=="Respiration"), aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=0.4, size=6, position = position_dodge(0.8)) + 
+    geom_point(data = . %>% filter(Metric=="Respiration"), aes(fill=Lifestage, colour=Lifestage, group=group), pch = 22, alpha=0.4, size=6, position = position_dodge(0.8)) + 
     geom_errorbar(data = . %>% filter(Metric=="Respiration"), aes(ymin=ymin, ymax=ymax, colour=Lifestage, group=group), width=0.1, color="black", position=position_dodge(0.8)) +
     
   #add photosynthesis mean with error bars  

@@ -236,7 +236,7 @@ p2
 
 View pcoa by OTU.  
 ```{r}
-GP.ordb <- ordinate(GP1_rare, "PCoA", "bray")
+GP.ordb <- ordinate(GP1_rare, "NMDS", "bray")
 p1b = plot_ordination(GP1_rare, GP.ordb, type="taxa", title="taxa")
 p1b
 ```
@@ -250,7 +250,7 @@ Output PCoA plot for visualization.
 ```{r}
 p2b_viz<-p2b  + 
   geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
-  ggtitle("PCoA")+
+  ggtitle("NMDS")+
   scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
   scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
   theme_classic() + 
@@ -258,7 +258,7 @@ p2b_viz<-p2b  +
     panel.background=element_blank()
   ); p2b_viz
 
-ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/pcoa_its2_div.jpeg", h=6, w=8)
+ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/nmds_its2_div.jpeg", h=6, w=8)
 ```
 
 Conduct a permanova in the vegan package.  

@@ -244,7 +244,7 @@ Plot P, R and PR ratio into one panel
 ```{r}
 stats<-PRdf%>%
   group_by(group, Lifestage, hpf)%>%
-  summarise(meanPR=mean(ratio, na.rm=TRUE), sePR=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)), n=length(ratio), ymin=meanPR-sePR, ymax=meanPR+sePR)
+  summarise(meanPR=mean(ratio, na.rm=TRUE), sePR=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)), nPR=length(ratio), ymin=meanPR-sePR, ymax=meanPR+sePR)
 
 combined_plot<-PRdf %>%
   
@@ -301,6 +301,74 @@ combined_full<-plot_grid(combined_plot, legend, nrow=1, ncol=2, rel_widths=c(1, 
 ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.png", combined_full, dpi=300, w=7, h=5, units="in")
 ```
 
+Plot P R and PR ratio in one plot showing only means and std. error for all metrics.  
+
+```{r}
+stats<-PRdf%>%
+  dplyr::select(Lifestage, group, hpf, R.nmol.org.min, GP.nmol.org.min, ratio)%>%
+  gather(key="Metric", value="Value", R.nmol.org.min:ratio)%>%
+  mutate(Metric=if_else(Metric=="R.nmol.org.min", "Respiration", Metric))%>%
+  mutate(Metric=if_else(Metric=="GP.nmol.org.min", "Gross Photosynthesis", Metric))%>%
+  mutate(Metric=if_else(Metric=="ratio", "P:R Ratio", Metric))%>%
+  group_by(Lifestage, group, hpf, Metric)%>%
+  summarise(mean=mean(Value, na.rm=TRUE), se=sd(Value, na.rm=TRUE)/sqrt(length(Value)), n=length(Value), ymin=mean-se, ymax=mean+se)
+
+combined_plot_mean<-stats %>%
+  
+    ggplot(., aes(x = hpf, y = mean)) +
+    geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  
+    #add respiration mean with error bars  
+    geom_point(data = . %>% filter(Metric=="Respiration"), aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=0.4, size=6, position = position_dodge(0.8)) + 
+    geom_errorbar(data = . %>% filter(Metric=="Respiration"), aes(ymin=ymin, ymax=ymax, colour=Lifestage, group=group), width=0.1, color="black", position=position_dodge(0.8)) +
+    
+  #add photosynthesis mean with error bars  
+    geom_point(data = . %>% filter(Metric=="Gross Photosynthesis"), aes(fill=Lifestage, colour=Lifestage, group=group), fill="white", pch = 21, size=6, position = position_dodge(0.8)) + 
+    geom_errorbar(data = . %>% filter(Metric=="Gross Photosynthesis"), aes(ymin=ymin, ymax=ymax, colour=Lifestage, group=group), width=0.1, color="black", position=position_dodge(0.8)) +
+  
+  #add PR with secondary axis 
+  scale_y_continuous(limits=c(-0.2, 0.2), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'), sec.axis = sec_axis(~.*20, name="P:R"))+
+  geom_point(data = . %>% filter(Metric=="P:R Ratio"), aes(y=mean/20, colour=Lifestage, fill=Lifestage, group=group),  pch = 23, size=6, position = position_dodge(0.8)) +
+     geom_errorbar(data = . %>% filter(Metric=="P:R Ratio"), aes(y=mean/20, x=hpf, ymin=ymin/20, ymax=ymax/20, colour=Lifestage, group=group), width=0.1, color="black", position=position_dodge(0.8)) +
+  
+    #aesthetics 
+    xlab("Hours Post-Fertilization") + 
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  
+    #theme
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12)
+      ); combined_plot_mean
+
+#create a dummy plot to create a legend for the plot above
+
+Lifestage <- c("Embryo", "Embryo", "Embryo", "Larvae", "Larvae", "Larvae", "Metamorphosed Polyp", "Metamorphosed Polyp", "Metamorphosed Polyp")
+Metric <- c("Respiration", "Photosynthesis", "P:R", "Respiration", "Photosynthesis", "P:R", "Respiration", "Photosynthesis", "P:R")
+Dummy <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+df <- data.frame(Lifestage, Metric, Dummy)
+
+
+legend_plot<-df %>%
+  
+    ggplot(., aes(x = Lifestage, y = Dummy, colour=Lifestage, shape=Metric)) +
+    geom_point(aes(), alpha=1, size=4)+
+    #scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
+    scale_colour_manual(name=expression(bold("Lifestage")), values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+  scale_shape_manual(name=expression(bold("Metric")), values=c(19, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
+  theme_classic()
+
+legend<-get_legend(legend_plot)
+
+combined_full_mean<-plot_grid(combined_plot_mean, legend, nrow=1, ncol=2, rel_widths=c(1, 0.3))
+ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_Means_PR.png", combined_full_mean, dpi=300, w=7, h=5, units="in")
+```
 
 ## Analyze data  
 

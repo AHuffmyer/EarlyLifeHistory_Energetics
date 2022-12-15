@@ -275,6 +275,9 @@ df_mat<-t(df_mat)
 
 Plot heatmap of phylum relative abundance.  
 ```{r}
+
+lifestage_order<-c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")
+
 row_dend = dendsort(hclust(dist(df_mat)))
 col_dend = dendsort(hclust(dist(t(df_mat))))
 
@@ -305,7 +308,7 @@ dev.off()
 
 ```
 
-Display as % abundance and filter out taxa <1% abundance.    
+Display as % abundance.    
 
 ```{r}
 physeq1_rare_f = transform_sample_counts(physeq1_rare, function(x) 100 * x/sum(x))
@@ -371,7 +374,7 @@ Permanova suggests there is significant separation by lifestage in 16S profiles 
 Prepare PCoA ordination.  
 ```{r}
 ps.ordb.nmds <- ordinate(physeq1_rare, "NMDS", "bray")
-p2b.nmds = plot_ordination(physeq1_rare, ps.ordb.nmds, type="samples", color="lifestage"); p2b.nmds 
+p2b.nmds = plot_ordination(physeq1_rare, ps.ordb.nmds, type="samples", color="lifestage")
 ```
 
 Display levels of lifestages.  
@@ -425,12 +428,12 @@ Filter out low frequency taxa <1% relative abundance.
 ```{r}
 physeq1_rare_f
 
-physeq1_rare_prune = filter_taxa(physeq1_rare_f, function(x) mean(x) > 1, TRUE)
+physeq1_rare_prune = filter_taxa(physeq1_rare_f, function(x) mean(x) > 0.5, TRUE)
 
 taxa_names(physeq1_rare_prune) 
 ```
 
-There were 1364 taxa before filtering out taxa <1% and 16 taxa after filtering.  
+There were 1364 taxa before filtering out taxa <1% and 36 taxa after filtering.  
 
 Summarize by lifestage calculating means across replicates of each life stage.  
 ```{r}
@@ -490,13 +493,13 @@ col_dend = dendsort(hclust(dist(t(table))))
 
 col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
 
-pdf(file = "Mcap2020/Figures/16S/16S-ComplexHeatmap.pdf", height = 8, width = 18)
-ComplexHeatmap::Heatmap(table_names, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (OTU - Family:Genus) Taxa >1%", 
+pdf(file = "Mcap2020/Figures/16S/16S-ComplexHeatmap.pdf", height = 15, width = 18)
+ComplexHeatmap::Heatmap(table_names, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (OTU - Family:Genus) Taxa >0.5%", 
         col = col_fun, 
         row_names_side = "left", 
         row_dend_side = "right",
         width = unit(4, "in"), 
-        height = unit(4, "in"), 
+        height = unit(6, "in"), 
         column_dend_height = unit(.5, "in"),
         row_dend_width = unit(.5, "in"),
         column_dend_reorder = FALSE,
@@ -514,7 +517,6 @@ ComplexHeatmap::Heatmap(table_names, name = "Rel. Abun. (%)", row_title = "", co
 dev.off()
 
 ```
-
 
 # **Alpha Diversity**  
 
@@ -575,8 +577,78 @@ plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
 
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
 
+# **Export matrix for multi-omic analyses**  +
 
+Export a matrix of the relative abundance of taxa >0.5% relative abundance for multiomic analysis at the level of sample.    
 
+Filter out low frequency taxa <0.5% relative abundance.  
+```{r}
+physeq1_rare_f
+
+physeq1_rare_prune = filter_taxa(physeq1_rare_f, function(x) mean(x) > 0.5, TRUE)
+
+taxa_names(physeq1_rare_prune) 
+```
+
+There were 1364 taxa before filtering out taxa <0.5% and 36 taxa after filtering.  
+
+Replace OTU number with taxa names.  
+
+View current data frame.  
+```{r}
+table<-as.matrix(otu_table(physeq1_rare_prune))
+table<-as.matrix(as.data.frame(table))
+colnames(table)
+rownames(table)
+```
+
+Extract taxa names at the level of Family.  
+```{r}
+tax_table<-as.matrix(t(tax_table(physeq1_rare_prune)))
+tax_table<-as.matrix(t(as.data.frame(tax_table)))
+colnames(tax_table)
+rownames(tax_table)
+tax_table<-as.data.frame(tax_table)
+```
+ 
+```{r}
+#replace OTU with name from taxonomy table  
+table_names<-as.data.frame(table)
+table_names$OTU<-rownames(table)
+
+table_names$Family<-tax_table$Family[match(table_names$OTU, tax_table$OTU)]
+table_names$Genus<-tax_table$Genus[match(table_names$OTU, tax_table$OTU)]
+
+#remove non alphabetic characters from Family and Genus columns 
+table_names$Family <- gsub('[^[:alnum:] ]','',table_names$Family)
+
+table_names$Taxa<-paste(table_names$OTU, "-", table_names$Family, ":", table_names$Genus)
+
+#add to data frame 
+rownames(table_names)<-table_names$Taxa
+
+table_names<-table_names%>%
+  select(!Family)%>%
+  select(!Taxa)%>%
+  select(!Genus)%>%
+  select(!OTU)
+
+table_names<-as.matrix(table_names)
+
+rownames(table_names)
+colnames(table_names)
+
+table_16s<-as.data.frame(table_names)
+table_16s$taxa<-rownames(table_16s)
+```
+
+The dataframe now has OTU with Genus and Family information in rownames and sample name in columns.  
+
+Export for integration analysis.  
+
+```{r}
+write_csv(table_16s, "Mcap2020/Data/Integration/16s_matrix.csv")
+```
 
 
 

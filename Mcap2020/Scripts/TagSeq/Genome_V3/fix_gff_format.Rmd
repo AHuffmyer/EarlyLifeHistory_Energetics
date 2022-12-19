@@ -14,6 +14,7 @@ Load libraries and data.
 ```{r}
 #Load libraries
 library(tidyverse)
+library(R.utils)
 ```
 
 Load  gene gff file
@@ -65,5 +66,16 @@ head(gff)
 
 Save file. Then upload this to Andromeda for use in bioinformatic steps.  
 
-#save file
-write.table(pacu.gff, file="Pacu2021/Data/TagSeq/Pacu.GFFannotations.fixed_transcript.gff3", sep="\t", col.names = FALSE, row.names=FALSE, quote=FALSE)
+```{r}
+write.table(gff, file="Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes_fixed.gff3", sep="\t", col.names = FALSE, row.names=FALSE, quote=FALSE)
+
+#gzip the file 
+gzip("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes_fixed.gff3")
+```
+
+`scp ~/MyProjects/EarlyLifeHistory_Energetics/Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes_fixed.gff3.gz ashuffmyer@ssh3.hac.uri.edu:/data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences`
+
+or 
+
+`wget https://github.com/AHuffmyer/EarlyLifeHistory_Energetics/raw/master/Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes_fixed.gff3.gz`  
+

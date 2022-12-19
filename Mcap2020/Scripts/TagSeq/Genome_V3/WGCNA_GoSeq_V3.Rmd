@@ -1,0 +1,2988 @@
+---
+title: "WGCNA - GoSeq Functional Annotation"
+author: "Ariana S Huffmyer"
+date: "2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Functional enrichment of WGCNA modules produced in `WGCNA_Mcap.Rmd` script for the *Montipora capitata* 2020 developmental time series.  This script uses the V3 genome from Cyanophora Rutgers.  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+Load required libraries.  
+
+```{r}
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+if ("rtracklayer" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rtracklayer")
+if ("GenomicRanges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GenomicRanges")
+if ("plyranges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("plyranges")
+
+library("tidyverse")
+library("genefilter")
+library("DESeq2")
+library("RColorBrewer")
+library("WGCNA")
+library("flashClust")
+library("gridExtra")
+library("ComplexHeatmap")
+library("goseq")
+library("dplyr")
+library("clusterProfiler")
+library("pheatmap")
+library("magrittr")
+library("rtracklayer")
+library("GenomicRanges")
+library("plyranges")
+```
+
+# **Read in data**  
+
+Load in Gene Info data frame generated in WGCNA_Mcap.Rmd script and subset list of genes and module assignment for each gene.   
+
+```{r}
+geneInfo<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/geneInfo.csv")
+dim(geneInfo)
+
+geneInfo<-geneInfo%>%
+  #dplyr::select(gene_id, moduleColor)%>%
+  rename(Module=moduleColor)%>%
+  mutate(Module=as.factor(Module))
+
+dim(geneInfo)
+```
+
+Why am I getting so many STRG genes from my stringtie step????
+
+
+
+
+
+
+
+
+
+Get gene length information.  
+```{r}
+#import file
+gff <- import("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.gff3")
+
+transcripts <- subset(gff, type == "transcript") #keep only transcripts 
+
+transcripts_gr <- makeGRangesFromDataFrame(transcripts, keep.extra.columns=TRUE) #extract length information
+
+transcript_lengths <- width(transcripts_gr) #isolate length of each gene
+
+seqnames<-transcripts_gr$ID #extract list of gene id 
+
+lengths<-cbind(seqnames, transcript_lengths)
+
+lengths<-as.data.frame(lengths) #convert to data frame
+
+```
+
+Add in length to the gene info file .    
+
+```{r}
+geneInfo$Length<-lengths$transcript_lengths[match(geneInfo$gene_id, lengths$seqnames)]
+```
+
+Generate a file with all genes and
+
+```{r}
+all<-geneInfo%>%
+  dplyr::select(gene_id, Length, Annotation.GO.ID)
+```
+
+Generate a file for genes in modules list  
+
+```{r}
+module_list<-geneInfo%>%
+  dplyr::select(gene_id, Length, Annotation.GO.ID, Module)
+
+levels(module_list$Module)
+
+module1<-module_list%>%filter(Module=="1")
+module2<-module_list%>%filter(Module=="2")
+module3<-module_list%>%filter(Module=="3")
+module5<-module_list%>%filter(Module=="5")
+module6<-module_list%>%filter(Module=="6")
+module7<-module_list%>%filter(Module=="7")
+module9<-module_list%>%filter(Module=="9")
+module10<-module_list%>%filter(Module=="10")
+module11<-module_list%>%filter(Module=="11")
+module14<-module_list%>%filter(Module=="14")
+module16<-module_list%>%filter(Module=="16")
+module17<-module_list%>%filter(Module=="17")
+module18<-module_list%>%filter(Module=="18")
+module19<-module_list%>%filter(Module=="19")
+```
+
+Read in GO Slim file.  
+
+```{r}
+#goslim<-read.csv("Mcap2020/Data/TagSeq/GO-GOslim.csv") 
+
+#goslim <- goslim %>% dplyr::select(-term)
+```
+
+# **Run GoSeq by Module**  
+
+## Module 1  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module1$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module1%>%
+  select(gene_id, Annotation.GO.ID)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$Annotation.GO.ID), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "Annotation.GO.ID")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module1$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+
+
+
+
+
+
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+#GO.slim <- left_join(GO, goslim, by = "GO_ID")
+#GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module1.GO <- GO %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module1.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module1.csv")
+```
+
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module1.GO_plot <- module1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module1.GO_plot$GOSlim_bin <- as.factor(module1.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module1.plot <-  ggplot(module1.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module1.png", plot=GO_module1.plot, dpi=300, width=12, height=12, units="in")
+```
+
+## Module 2 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module2$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module2%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module2$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module2.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module2.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module2.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module2.GO_plot <- module2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module2.GO_plot$GOSlim_bin <- as.factor(module2.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module2.plot <-  ggplot(module2.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module2.png", plot=GO_module2.plot, dpi=300, width=12, height=12, units="in")
+```
+
+## Module 4 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module4$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module4%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module4$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module4.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module4.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module4.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module4.GO_plot <- module4.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module4.GO_plot$GOSlim_bin <- as.factor(module4.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module4.plot <-  ggplot(module4.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module4.png", plot=GO_module4.plot, dpi=300, width=12, height=12, units="in")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NEXT STEP: 
+Generate a file for each lifestage 
+
+
+
+
+
+
+Bring in goseq files 
+
+Add length for each gene 
+
+Edit function to do by - function and - lifestage  
+
+
+## Module 6 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module6$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module6%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module6$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module6.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module6.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module6.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module6.GO_plot <- module6.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module6.GO_plot$GOSlim_bin <- as.factor(module6.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module6.plot <-  ggplot(module6.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module6.png", plot=GO_module6.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 8 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module8$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module8%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module8$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module8.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module8.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module8.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module8.GO_plot <- module8.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module8.GO_plot$GOSlim_bin <- as.factor(module8.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module8.plot <-  ggplot(module8.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module8.png", plot=GO_module8.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 11 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module11$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module11%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module11$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module11.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module11.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module11.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module11.GO_plot <- module11.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module11.GO_plot$GOSlim_bin <- as.factor(module11.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module11.plot <-  ggplot(module11.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module11.png", plot=GO_module11.plot, dpi=300, width=12, height=12, units="in")
+```
+
+## Module 12 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module12$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module12%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module12$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module12.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module12.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module12.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module12.GO_plot <- module12.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module12.GO_plot$GOSlim_bin <- as.factor(module12.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module12.plot <-  ggplot(module12.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module12.png", plot=GO_module12.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 14 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module14$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module14%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module14$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module14.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module14.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module14.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module14.GO_plot <- module14.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module14.GO_plot$GOSlim_bin <- as.factor(module14.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module14.plot <-  ggplot(module14.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module14.png", plot=GO_module14.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 15 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module15$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module15%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module15$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module15.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module15.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module15.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module15.GO_plot <- module15.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module15.GO_plot$GOSlim_bin <- as.factor(module15.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module15.plot <-  ggplot(module15.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module15.png", plot=GO_module15.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 16 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module16$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module16%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module16$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module16.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module16.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module16.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module16.GO_plot <- module16.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module16.GO_plot$GOSlim_bin <- as.factor(module16.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module16.plot <-  ggplot(module16.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module16.png", plot=GO_module16.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 17 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module17$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module17%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module17$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module17.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module17.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module17.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module17.GO_plot <- module17.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module17.GO_plot$GOSlim_bin <- as.factor(module17.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module17.plot <-  ggplot(module17.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module17.png", plot=GO_module17.plot, dpi=300, width=12, height=12, units="in")
+```
+## Module 18 
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(module18$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- module18%>%
+  select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(module18$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+module18.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(module18.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_module18.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+module18.GO_plot <- module18.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+module18.GO_plot$GOSlim_bin <- as.factor(module18.GO_plot$GOSlim_bin)
+
+#plot significantly enriched GO terms by Slim Category
+GO_module18.plot <-  ggplot(module18.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_Module18.png", plot=GO_module18.plot, dpi=300, width=12, height=12, units="in")
+```
+
+# **Run GoSeq by Lifestage**  
+
+Assemble a list of genes in the modules that are correlated with each respective lifestage and run GOSeq with those lifestage groupings.  
+
+```{r}
+egg_list<-c("1")
+embryo_list<-c("1")
+larvae1_list<-c("6", "11", "17", "14")
+larvae2_list<-c("16", "18")
+larvae3_list<-c("16", "4", "2")
+larvae4_list<-c("4", "2")
+larvae6_list<-c("12")
+polyp_list<-c("12")
+recruit1_list<-c("15", "8", "14")
+recruit2_list<-c("15", "8", "14")
+
+eggs<-module_list%>%filter(Module %in% egg_list)
+embryos<-module_list%>%filter(Module %in% embryo_list)
+larvae1<-module_list%>%filter(Module %in% larvae1_list)
+larvae2<-module_list%>%filter(Module %in% larvae2_list)
+larvae3<-module_list%>%filter(Module %in% larvae3_list)
+larvae4<-module_list%>%filter(Module %in% larvae4_list)
+larvae6<-module_list%>%filter(Module %in% larvae6_list)
+polyps<-module_list%>%filter(Module %in% polyp_list)
+recruit1<-module_list%>%filter(Module %in% recruit1_list)
+recruit2<-module_list%>%filter(Module %in% recruit2_list)
+```
+
+
+## Eggs  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(eggs$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- eggs%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(eggs$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+eggs.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(eggs.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_eggs.csv")
+```
+
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+eggs.GO_plot <- eggs.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+eggs.GO_plot$GOSlim_bin <- as.factor(eggs.GO_plot$GOSlim_bin)
+eggs.GO_plot$Lifestage <- c("Fertilized Egg (1 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_eggs.plot <-  ggplot(eggs.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_eggs_BP.png", plot=GO_eggs.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+eggs.GO_plot.MF <- eggs.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+eggs.GO_plot.MF$GOSlim_bin <- as.factor(eggs.GO_plot.MF$GOSlim_bin)
+eggs.GO_plot.MF$Lifestage <- c("Fertilized Egg (1 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_eggs.plot.MF <-  ggplot(eggs.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_eggs_MF.png", plot=GO_eggs.plot.MF, dpi=300, width=12, height=12, units="in")
+```
+
+## Embryos  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(embryos$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- embryos%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(embryos$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+embryos.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(embryos.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_embryos.csv")
+```
+
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+embryos.GO_plot <- embryos.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+embryos.GO_plot$GOSlim_bin <- as.factor(embryos.GO_plot$GOSlim_bin)
+embryos.GO_plot$Lifestage <- c("Embryo (5 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_embryos.plot <-  ggplot(embryos.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_embryos_BP.png", plot=GO_embryos.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular level.    
+
+```{r}
+# Plotting by BP function
+embryos.GO_plot.MF <- embryos.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+embryos.GO_plot.MF$GOSlim_bin <- as.factor(embryos.GO_plot.MF$GOSlim_bin)
+embryos.GO_plot.MF$Lifestage <- c("Embryo (5 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_embryos.plot.MF <-  ggplot(embryos.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_embryos_MF.png", plot=GO_embryos.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+
+## Larvae 1  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(larvae1$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- larvae1%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(larvae1$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+larvae1.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(larvae1.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae1.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+larvae1.GO_plot <- larvae1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae1.GO_plot$GOSlim_bin <- as.factor(larvae1.GO_plot$GOSlim_bin)
+larvae1.GO_plot$Lifestage <- c("Embryo (38 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae1.plot <-  ggplot(larvae1.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae1_BP.png", plot=GO_larvae1.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot by Molecular Function level.  
+
+```{r}
+# Plotting by BP function
+larvae1.GO_plot.MF <- larvae1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae1.GO_plot.MF$GOSlim_bin <- as.factor(larvae1.GO_plot.MF$GOSlim_bin)
+larvae1.GO_plot.MF$Lifestage <- c("Embryo (38 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae1.plot.MF <-  ggplot(larvae1.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae1_MF.png", plot=GO_larvae1.plot.MF, dpi=300, width=12, height=12, units="in")
+```
+
+
+## Larvae 2  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(larvae2$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- larvae2%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(larvae2$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+larvae2.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(larvae2.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae2.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+larvae2.GO_plot <- larvae2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae2.GO_plot$GOSlim_bin <- as.factor(larvae2.GO_plot$GOSlim_bin)
+larvae2.GO_plot$Lifestage <- c("Embryo (65 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae2.plot <-  ggplot(larvae2.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae2_BP.png", plot=GO_larvae2.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae2.GO_plot.MF <- larvae2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae2.GO_plot.MF$GOSlim_bin <- as.factor(larvae2.GO_plot.MF$GOSlim_bin)
+larvae2.GO_plot.MF$Lifestage <- c("Embryo (65 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae2.plot.MF <-  ggplot(larvae2.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae2_MF.png", plot=GO_larvae2.plot.MF, dpi=300, width=12, height=12, units="in")
+```
+
+
+## Larvae 3  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(larvae3$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- larvae3%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(larvae3$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+larvae3.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(larvae3.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae3.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+larvae3.GO_plot <- larvae3.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae3.GO_plot$GOSlim_bin <- as.factor(larvae3.GO_plot$GOSlim_bin)
+larvae3.GO_plot$Lifestage <- c("Larvae (93 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae3.plot <-  ggplot(larvae3.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae3_BP.png", plot=GO_larvae3.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae3.GO_plot.MF <- larvae3.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae3.GO_plot.MF$GOSlim_bin <- as.factor(larvae3.GO_plot.MF$GOSlim_bin)
+larvae3.GO_plot.MF$Lifestage <- c("Larvae (93 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae3.plot.MF <-  ggplot(larvae3.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae3_MF.png", plot=GO_larvae3.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+
+## Larvae 4  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(larvae4$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- larvae4%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(larvae4$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+larvae4.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(larvae4.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae4.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+larvae4.GO_plot <- larvae4.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae4.GO_plot$GOSlim_bin <- as.factor(larvae4.GO_plot$GOSlim_bin)
+larvae4.GO_plot$Lifestage <- c("Larvae (163 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae4.plot <-  ggplot(larvae4.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae4_BP.png", plot=GO_larvae4.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae4.GO_plot.MF <- larvae4.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae4.GO_plot.MF$GOSlim_bin <- as.factor(larvae4.GO_plot.MF$GOSlim_bin)
+larvae4.GO_plot.MF$Lifestage <- c("Larvae (163 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae4.plot.MF <-  ggplot(larvae4.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae4_MF.png", plot=GO_larvae4.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+
+## Larvae 6  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(larvae6$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- larvae6%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(larvae6$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+larvae6.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(larvae6.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_larvae6.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+larvae6.GO_plot <- larvae6.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae6.GO_plot$GOSlim_bin <- as.factor(larvae6.GO_plot$GOSlim_bin)
+larvae6.GO_plot$Lifestage <- c("Larvae (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae6.plot <-  ggplot(larvae6.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae6_BP.png", plot=GO_larvae6.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+larvae6.GO_plot.MF <- larvae6.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+larvae6.GO_plot.MF$GOSlim_bin <- as.factor(larvae6.GO_plot.MF$GOSlim_bin)
+larvae6.GO_plot.MF$Lifestage <- c("Larvae (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_larvae6.plot.MF <-  ggplot(larvae6.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_larvae6_MF.png", plot=GO_larvae6.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+
+## Polyps  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(polyps$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- polyps%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(polyps$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+polyps.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(polyps.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_polyps.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+polyps.GO_plot <- polyps.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+polyps.GO_plot$GOSlim_bin <- as.factor(polyps.GO_plot$GOSlim_bin)
+polyps.GO_plot$Lifestage <- c("Metamorphosed Polyp (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_polyps.plot <-  ggplot(polyps.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_polyps_BP.png", plot=GO_polyps.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+polyps.GO_plot.MF <- polyps.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+polyps.GO_plot.MF$GOSlim_bin <- as.factor(polyps.GO_plot.MF$GOSlim_bin)
+polyps.GO_plot.MF$Lifestage <- c("Metamorphosed Polyp (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_polyps.plot.MF <-  ggplot(polyps.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_polyps_MF.png", plot=GO_polyps.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+
+## Recruit 1  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(recruit1$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- recruit1%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(recruit1$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+recruit1.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(recruit1.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_recruit1.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+recruit1.GO_plot <- recruit1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit1.GO_plot$GOSlim_bin <- as.factor(recruit1.GO_plot$GOSlim_bin)
+recruit1.GO_plot$Lifestage <- c("Attached Recruit (183 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit1.plot <-  ggplot(recruit1.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit1_BP.png", plot=GO_recruit1.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+recruit1.GO_plot.MF <- recruit1.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit1.GO_plot.MF$GOSlim_bin <- as.factor(recruit1.GO_plot.MF$GOSlim_bin)
+recruit1.GO_plot.MF$Lifestage <- c("Attached Recruit (183 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit1.plot.MF <-  ggplot(recruit1.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit1_MF.png", plot=GO_recruit1.plot.MF, dpi=300, width=12, height=12, units="in")
+```
+
+## Recruit 2  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(recruit2$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- recruit2%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(recruit2$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+recruit2.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(recruit2.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_recruit2.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+recruit2.GO_plot <- recruit2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit2.GO_plot$GOSlim_bin <- as.factor(recruit2.GO_plot$GOSlim_bin)
+recruit2.GO_plot$Lifestage <- c("Attached Recruit (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit2.plot <-  ggplot(recruit2.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2_BP.png", plot=GO_recruit2.plot, dpi=300, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+recruit2.GO_plot.MF <- recruit2.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+recruit2.GO_plot.MF$GOSlim_bin <- as.factor(recruit2.GO_plot.MF$GOSlim_bin)
+recruit2.GO_plot.MF$Lifestage <- c("Attached Recruit (231 hpf)")
+
+#plot significantly enriched GO terms by Slim Category
+GO_recruit2.plot.MF <-  ggplot(recruit2.GO_plot.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_recruit2_MF.png", plot=GO_recruit2.plot.MF, dpi=300, width=12, height=24, units="in")
+```
+
+# **Plot all lifestages together on one plot**  
+
+Combine data frames together in order to generate one GoSeq plot with all terms across lifestages.  
+
+Plot at Biological Process level.  
+
+```{r}
+go_all<-rbind(eggs.GO_plot, embryos.GO_plot, larvae1.GO_plot, larvae2.GO_plot, larvae3.GO_plot, larvae4.GO_plot, larvae6.GO_plot, polyps.GO_plot, recruit1.GO_plot, recruit2.GO_plot)
+
+head(go_all)
+dim(go_all)
+
+levels(as.factor(go_all$Lifestage))
+```
+
+Files are merged.  
+
+Now plot.  
+
+```{r}
+#reorder x axis lifestages 
+list_lifestages<-c("Fertilized Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+go_all$Lifestage<-factor(as.character(go_all$Lifestage), levels=list_lifestages)
+
+#add group to dataframe for scale colour manual 
+go_all<-go_all%>%
+  mutate(group=if_else(grepl("Egg", Lifestage), "Fertilized Egg", as.character(Lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", Lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", Lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", Lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", Lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+go_all$group<-factor(as.character(go_all$group), levels=list_groups)
+  
+#plot significantly enriched GO terms by Slim Category across lifestages
+GO_all.BP <-  ggplot(go_all, aes(x = Lifestage, y = term)) + 
+  #geom_tile(aes(fill =over_represented_pvalue)) + 
+  geom_point(aes(colour=group, size=over_represented_pvalue)) +
+  #facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(multi_line = TRUE))+
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
+  scale_size(name="Over rep. p-value", range = c(10, 20), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Lifestage")+
+  ylab("Biological Process GO Term")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_BP.png", plot=GO_all.BP, dpi=80, width=35, height=35, units="in")
+```
+Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  
+
+
+Plot at Molecular Function level.  
+
+```{r}
+go_all.MF<-rbind(eggs.GO_plot.MF, embryos.GO_plot.MF, larvae1.GO_plot.MF,  larvae3.GO_plot.MF, larvae4.GO_plot.MF, larvae6.GO_plot.MF, polyps.GO_plot.MF, recruit1.GO_plot.MF, recruit2.GO_plot.MF)
+
+head(go_all.MF)
+dim(go_all.MF)
+
+levels(as.factor(go_all$Lifestage))
+```
+
+Files are merged.  
+
+Now plot.  
+
+```{r}
+#reorder x axis lifestages 
+list_lifestages<-c("Fertilized Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+go_all.MF$Lifestage<-factor(as.character(go_all.MF$Lifestage), levels=list_lifestages)
+
+#add group to dataframe for scale colour manual 
+go_all.MF<-go_all.MF%>%
+  mutate(group=if_else(grepl("Egg", Lifestage), "Fertilized Egg", as.character(Lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", Lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", Lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", Lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", Lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+go_all.MF$group<-factor(as.character(go_all.MF$group), levels=list_groups)
+  
+#plot significantly enriched GO terms by Slim Category across lifestages
+GO_all.MF <-  ggplot(go_all.MF, aes(x = Lifestage, y = term)) + 
+  #geom_tile(aes(fill =over_represented_pvalue)) + 
+  geom_point(aes(colour=group, size=over_represented_pvalue)) +
+  #facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(multi_line = TRUE))+
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
+  scale_size(name="Over rep. p-value", range = c(10, 20), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Lifestage")+
+  ylab("Molecular function GO Term")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/GOenrich_all_MF.png", plot=GO_all.MF, dpi=50, width=49, height=49, units="in")
+```
+Note that there were no enriched categories at 65 hpf so it is not displayed in this plot.  
+
+
+
+# **Run GoSeq by Pattern**  
+
+Assemble a list of genes in the modules that display the following patterns from the `expression_eigengene.pdf` plot:  
+
+- Higher early (i.e., eggs, embryos) in development (ME1, ME11, ME6)
+- Higher later (i.e., larvae, recruits) in development (ME12, ME15, ME17, ME8)
+- Peak in mid development (i.e., larvae) (ME16, ME2, ME4)
+- Lower in mid development (i.e., larvae) (ME15, ME14)
+
+are correlated with each respective lifestage and run GOSeq with those lifestage groupings.  
+
+```{r}
+high_early_list<-c("1", "11", "6")
+#high_late_list<-c("12", "15", "17", "8")
+high_late_list<-c("12", "15", "8")
+high_mid_list<-c("16", "2", "4", "18")
+#ME14 and ME 17 don't fit a pattern 
+
+high_early<-module_list%>%filter(Module %in% high_early_list)
+high_late<-module_list%>%filter(Module %in% high_late_list)
+high_mid<-module_list%>%filter(Module %in% high_mid_list)
+```
+
+
+## Genes higher in early development (embryos, eggs)  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(high_early$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- high_early%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(high_early$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+high_early.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(high_early.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_high_early.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+high_early.GO_plot <- high_early.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_early.GO_plot$GOSlim_bin <- as.factor(high_early.GO_plot$GOSlim_bin)
+high_early.GO_plot$Pattern <- c("High Early in Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_early.plot <-  ggplot(high_early.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_BP.png", plot=GO_high_early.plot, dpi=100, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+high_early.GO.MF <- high_early.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_early.GO.MF$GOSlim_bin <- as.factor(high_early.GO.MF$GOSlim_bin)
+high_early.GO.MF$Pattern <- c("High Early in Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_early.plot.MF <-  ggplot(high_early.GO.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_early_MF.png", plot=GO_high_early.plot.MF, dpi=100, width=12, height=12, units="in")
+```
+
+## Genes higher in late development (late larvae, polyps, recruits)  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(high_late$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- high_late%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(high_late$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+high_late.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(high_late.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_high_late.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+high_late.GO_plot <- high_late.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_late.GO_plot$GOSlim_bin <- as.factor(high_late.GO_plot$GOSlim_bin)
+high_late.GO_plot$Pattern <- c("High Late in Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_late.plot <-  ggplot(high_late.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_BP.png", plot=GO_high_late.plot, dpi=100, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+high_late.GO.MF <- high_late.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_late.GO.MF$GOSlim_bin <- as.factor(high_late.GO.MF$GOSlim_bin)
+high_late.GO.MF$Pattern <- c("High Late in Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_late.plot.MF <-  ggplot(high_late.GO.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_late_MF.png", plot=GO_high_late.plot.MF, dpi=100, width=12, height=12, units="in")
+```
+
+## Genes higher in mid development (larvae)  
+
+Assign vectors  
+
+```{r}
+# Vector with all genes after filtering
+ALL.vector <- c(all$gene_id)
+ID.vector <- c(high_mid$gene_id)
+
+#Length vector for all genes
+LENGTH.vector <- c(all$Length)
+
+GO.terms <- high_mid%>%
+  dplyr::select(gene_id, GO_IDs)
+
+str(GO.terms) 
+
+#Formatting sig gene file with a goterm per row
+split <- strsplit(as.character(GO.terms$GO_IDs), "; ") 
+split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+colnames(split2) <- c("gene", "GO_IDs")
+
+GO.terms<-split2
+
+str(GO.terms)
+```
+
+Run GoSeq  
+
+```{r}
+DEG <- as.character(high_mid$gene_id) #set the enrichment test list
+DEG.vector <-c(DEG) #change to vectors
+  
+gene.vector=as.integer(ALL.vector%in%DEG.vector) #Construct new vector with 1 for DEG and 0 for others
+names(gene.vector)=ALL.vector #set names
+
+DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
+
+#Find enriched GO terms
+GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
+GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+colnames(GO)[1] <- "GO_ID"
+  
+#GOslim 
+GO.slim <- left_join(GO, goslim, by = "GO_ID")
+GO.slim <- GO.slim[!duplicated(GO.slim$GO_ID), ]
+  
+#Filtering for p > 0.05
+high_mid.GO <- GO.slim %>%
+  dplyr::filter(over_represented_pvalue<0.05) %>%
+  arrange(., ontology, term, over_represented_pvalue)
+
+write.csv(high_mid.GO , file = "Mcap2020/Output/TagSeq/GOSeq/goseq_high_mid.csv")
+```
+
+Plot results by Biological Process level.    
+
+```{r}
+# Plotting by BP function
+high_mid.GO_plot <- high_mid.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "BP") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_mid.GO_plot$GOSlim_bin <- as.factor(high_mid.GO_plot$GOSlim_bin)
+high_mid.GO_plot$Pattern <- c("High in Mid Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_mid.plot <-  ggplot(high_mid.GO_plot, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_BP.png", plot=GO_high_mid.plot, dpi=100, width=12, height=12, units="in")
+```
+
+Plot results by Molecular Function level.    
+
+```{r}
+# Plotting by BP function
+high_mid.GO.MF <- high_mid.GO %>%
+  filter(over_represented_pvalue != "NA") %>%
+  filter(numInCat >5) %>%
+  filter(ontology == "MF") %>%
+  arrange(., ontology, GOSlim_bin, over_represented_pvalue)
+
+high_mid.GO.MF$GOSlim_bin <- as.factor(high_mid.GO.MF$GOSlim_bin)
+high_mid.GO.MF$Pattern <- c("High in Mid Development")
+
+#plot significantly enriched GO terms by Slim Category
+GO_high_mid.plot.MF <-  ggplot(high_mid.GO.MF, aes(x = ontology, y = term)) + 
+  geom_tile(aes(fill =over_represented_pvalue)) + 
+  facet_grid(GOSlim_bin ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 10),
+  strip.text.x = element_text(size = 20),
+  axis.text = element_text(size = 8),
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_pattern_high_mid_MF.png", plot=GO_high_mid.plot.MF, dpi=100, width=12, height=12, units="in")
+```
+
+# **Plot all patterns together on one plot**  
+
+Combine data frames together in order to generate one GoSeq plot with all terms across patterns  
+
+## Plot at Biological Process level.  
+
+```{r}
+go_all<-rbind(high_early.GO_plot, high_mid.GO_plot, high_late.GO_plot)
+
+head(go_all)
+dim(go_all)
+
+levels(as.factor(go_all$Pattern))
+```
+
+Files are merged.  
+
+Now plot.  
+
+```{r}
+#reorder x axis lifestages 
+list_patterns<-c("High Early in Development", "High in Mid Development", "High Late in Development")
+go_all$Pattern<-factor(as.character(go_all$Pattern), levels=list_patterns)
+
+#plot significantly enriched GO terms by Slim Category across lifestages
+GO_all.BP <-  ggplot(go_all, aes(x = Pattern, y = term)) + 
+  geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="lightgray", "High in Mid Development"="darkgray", "High Late in Development"="black")) +
+  scale_size(name="Over rep. p-value", range = c(10, 18), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Ontogenetic Pattern")+
+  ylab("Biological Process GO Term")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_BP.png", plot=GO_all.BP, dpi=50, width=30, height=40, units="in")
+```
+
+## Plot at Molecular Function level.  
+
+```{r}
+go_all.MF<-rbind(high_early.GO.MF, high_mid.GO.MF, high_late.GO.MF)
+
+head(go_all.MF)
+dim(go_all.MF)
+
+levels(as.factor(go_all$Pattern))
+```
+
+Files are merged.  
+
+Now plot.  
+
+```{r}
+#reorder x axis lifestages 
+list_patterns<-c("High Early in Development", "High in Mid Development", "High Late in Development")
+go_all.MF$Pattern<-factor(as.character(go_all.MF$Pattern), levels=list_patterns)
+
+#plot significantly enriched GO terms by Slim Category across lifestages
+GO_all.MF <-  ggplot(go_all.MF, aes(x = Pattern, y = term)) + 
+  geom_point(aes(colour=Pattern, size=over_represented_pvalue)) +
+  facet_grid(GOSlim_bin ~ ., scales = "free", space= "free", shrink=TRUE, labeller = label_wrap_gen(width=30, multi_line = TRUE))+
+  scale_colour_manual(name="Ontogenetic Pattern", values = c("High Early in Development"="lightgray", "High in Mid Development"="darkgray", "High Late in Development"="black")) +
+  scale_size(name="Over rep. p-value", range = c(8, 14), trans="reverse")+
+  guides(colour = guide_legend(override.aes = list(size=14)))+
+  xlab("Ontogenetic Pattern")+
+  ylab("Molecular Function GO Term")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 30),
+  axis.text.x = element_text(angle=35, size=30, hjust=1),
+  axis.title.x = element_text(size = 40, face="bold"),
+  axis.title.y = element_text(size = 40, face="bold"), 
+  legend.text = element_text(size=30), 
+  legend.title = element_text(size=40, face="bold"), 
+  legend.key.size = unit(2, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/GOenrich_all_patterns_MF.png", plot=GO_all.MF, dpi=50 , width=40, height=49, units="in") 
+```
+
+## Plot trends of eigenegenes for each ontogenetic pattern  
+
+Plot eigengene values for each pattern identified above from the module eigengene expression values.  
+
+```{r}
+pattern_expression<-read_csv("Mcap2020/Output/TagSeq/WGCNA_eigengene_expression.csv")
+
+#add pattern identifier to each module 
+high_early_list_m<-c("ME1", "ME11", "ME6")
+high_late_list_m<-c("ME12", "ME15", "ME8")
+high_mid_list_m<-c("ME16", "ME2", "ME4", "ME18")
+
+pattern_expression<-pattern_expression%>%
+  mutate(Pattern=if_else(Module %in% high_early_list_m, "High Early in Development", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% high_late_list_m, "High Late in Development", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% high_mid_list_m, "High in Mid Development", Pattern))
+
+head(pattern_expression)
+```
+
+Summarize number of modules for each pattern and number of genes in each.  
+```{r}
+pattern_expression%>%
+  group_by(Pattern)%>%
+  summarise(number_module=length(unique(Module)))
+
+#Gene counts from WGCNA_Mcap.Rmd script
+gene_counts<-read_csv("Mcap2020/Output/TagSeq/genes_per_module.csv")
+names(gene_counts)<-c("Module", "Genes")
+
+#add pattern group for each module  
+gene_counts<-gene_counts%>%
+  mutate(Pattern=if_else(Module %in% high_early_list, "High Early in Development", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% high_late_list, "High Late in Development", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% high_mid_list, "High in Mid Development", Pattern))
+
+gene_counts%>%
+  group_by(Pattern)%>%
+  summarise(number_genes=sum(Genes))
+```
+
+There are 3 modules in early development, 4 in mid development, and 3 in late development.  
+
+There are 5159 genes in early, 4682 in mid, and 5844 in late development patterns.  
+
+```{r}
+f_labels <- data.frame(Pattern = c("High Early in Development", "High in Mid Development", "High Late in Development"), label = c("n=3 modules; n=5159 genes", "n=4 modules; n=4682 genes", "n=3 modules; n=5844 genes"))
+f_labels
+```
+
+Plot patterns.  
+
+```{r}
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
+
+#add group to dataframe for scale colour manual 
+pattern_expression<-pattern_expression%>%
+  mutate(group=if_else(grepl("Egg", lifestage), "Fertilized Egg", as.character(lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+pattern_expression$group<-factor(as.character(pattern_expression$group), levels=list_groups)
+
+pattern_plots<-pattern_expression%>%
+  group_by(Pattern, lifestage) %>%
+  filter(!Pattern=="NA")%>%
+  
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  facet_wrap(~Pattern, nrow=3, ncol=1)+
+  geom_point(aes(colour=group), size=2, alpha=0.8) +
+  geom_smooth(aes(group=1), color="black", method='loess')+
+  scale_x_discrete(name="", limits=time_point_order) +
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
+  ylab("Mean Eigengene Expression") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(axis.text.x=element_text(angle = 45, hjust=1, size = 12), #set x-axis label size
+        strip.background=element_rect(fill="white", color="white"),
+        strip.text=element_text(size=12),
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14, colour="black"), #set y-axis label size, 
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        legend.text = element_text(colour="black", size=12),
+        legend.title = element_text(colour="black", size=12, face="bold"),
+        plot.background=element_blank(),
+        plot.title = element_text(size=22)); pattern_plots
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=6, height=10, units="in")
+```
+
+
+
+
+
+
+
+
+

@@ -84,7 +84,7 @@ gcount<-gcount %>%
     select(!Total)
 nrow(gcount)
 ```
-We had 54,378 genes, which was filtered down to 34,217 by removing genes with row sums of 0 (those not detected in our sequences).  
+We had 54,384 genes, which was filtered down to 34,223 by removing genes with row sums of 0 (those not detected in our sequences).  
  
 Conduct data filtering, this includes:  
 
@@ -115,7 +115,8 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had 34,217 genes. After filtering for pOverA, we have approximately 14,592 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
+Before filtering, we had 34,223 genes. After filtering for pOverA, we have approximately 14,595 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
+
 In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
 ```{r}
 #Checking that all row and column names match. Should return "TRUE"
@@ -226,18 +227,18 @@ test$Lifestage<-metadata$lifestage[match(test$Sample, metadata$sample_id)]
 
 Build PERMANOVA model.  
 ```{r}
-scaled_test <-prcomp(test[c(1:14592)], scale=TRUE, center=TRUE)
+scaled_test <-prcomp(test[c(1:14595)], scale=TRUE, center=TRUE)
 fviz_eig(scaled_test)
 
 # scale data
-vegan <- scale(test[c(1:14592)])
+vegan <- scale(test[c(1:14595)])
 
 # PerMANOVA 
 permanova<-adonis2(vegan ~ Lifestage, data = test, method='eu')
 permanova
 ```
 
-Gene expression is significantly different between temperatures and date (p<0.001).  
+Gene expression is significantly different between lifestages (p<0.001).  
 
 # **Examine PCA and sample distances**  
 
@@ -270,7 +271,7 @@ save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/GenomeV3/pheatmap.pdf")
 Plot a PCA of samples by lifestages  
 
 ```{r}
-gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=14592) #use ntop to specify all genes
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=14595) #use ntop to specify all genes
 
 percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
 
@@ -498,7 +499,7 @@ dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
 deepSplit = TRUE, pamRespectsDendro = FALSE,
 minClusterSize = minModuleSize)
 table<-as.data.frame(table(dynamicMods)) #list modules and respective sizes
-table
+table(dynamicMods)
 save(dynamicMods, geneTree, file = "Mcap2020/Output/TagSeq/GenomeV3/dyMod_geneTree.RData") #Save to load into RStudio
 ```
 Module 0 is reserved for unassigned genes. The are other modules will be listed largest to smallest. 
@@ -508,8 +509,8 @@ From Genome V1:
 3954 3662 2934  955  913  765  679  602  591  284   85   74   71   54   51   36   34   29   24 
 
 From Genome V3: 
-   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19 
-3650 3394 3053 1038  933  699  636  363  263   95   90   83   79   48   47   34   33   32   22 
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15 
+3833 3369 3148 1040 1022  716  556  382  249   73   51   48   40   34   34 
 
 Same number of modules, just with different numbers of genes in each.  
 
@@ -568,7 +569,7 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tre
 dev.off()
 ```
 
-We had 19 modules before merging.  
+We had 15 modules before merging.  
 
 Save new colors
 ```{r}
@@ -580,11 +581,10 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-We have 14 modules after merging with 85% similarity.   
+We have 12 modules after merging with 85% similarity.   
 
-This is two more than with genome V1.  
 
-Plot new tree with 14 modules.  
+Plot new tree with 12 modules.  
 ```{r}
 #Calculate dissimilarity of module eigengenes
 MEDiss = 1-cor(MEs)
@@ -603,11 +603,11 @@ table<-as.data.frame(table(mergedColors))
 write_csv(table, "Mcap2020/Output/TagSeq/GenomeV3/genes_per_module.csv")
 ```
 
-We have 14 modules.   
+We have 12 modules.   
 
 mergedColors
-   1    2    3    5    6    7    9   10   11   14   16   17   18   19 
-3650 3394 3053  933 1062  683  263   95   90 1248   34   33   32   22 
+   1    2    3    5    6    7    9   10   11   12   14   15 
+3833 3369 4188 1062 1098  556  249   73   51   48   34   34 
 
 ##  Relating modules to developmental stage
 
@@ -637,7 +637,7 @@ nGenes
 nSamples
 ```
 
-We have 14,592 genes and 38 samples.  
+We have 14,595 genes and 38 samples.  
 
 Generate labels for module eigengenes as numbers.  
 ```{r}
@@ -647,7 +647,7 @@ names(MEs)
 ```
 Our module names are:  
 
-"ME10" "ME1"  "ME3"  "ME5"  "ME14" "ME17" "ME2"  "ME6"  "ME19" "ME7"  "ME11" "ME16" "ME9" "ME18"
+"ME14" "ME11" "ME1"  "ME3"  "ME5"  "ME10" "ME7"  "ME12" "ME2"  "ME15" "ME6"  "ME9" 
 
 Correlations of traits with eigengenes
 ```{r}
@@ -704,7 +704,7 @@ row_dend = dendsort(hclust(dist(moduleTraitCor)))
 col_dend = dendsort(hclust(dist(t(moduleTraitCor))))
 
 pdf(file = "Mcap2020/Figures/TagSeq/GenomeV3/Module-trait-relationship-heatmap.pdf", height = 8, width = 8)
-ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_title = "Module-Lifestage Eigengene Correlation", 
+Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_title = "Module-Lifestage Eigengene Correlation", 
         col = blueWhiteRed(50), 
         row_names_side = "left", 
         #row_dend_side = "left",
@@ -730,7 +730,7 @@ ht=Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column
         column_names_gp =  gpar(fontsize = 12, border=FALSE),
         column_names_rot = 35,
         row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
-draw(ht)
+#draw(ht)
 dev.off()
 
 ```
@@ -758,7 +758,7 @@ Plot mean module eigengene for each module.
 ```{r}
 #convert wide format to long format for plotting  
 plot_MEs<-Strader_MEs%>%
-  gather(., key="Module", value="Mean", ME10:ME18)
+  gather(., key="Module", value="Mean", ME14:ME9)
 
 write_csv(plot_MEs, "Mcap2020/Output/TagSeq/GenomeV3/WGCNA_eigengene_expression.csv")
 
@@ -803,7 +803,7 @@ expressionProfile_data <- Strader_MEs
 expressionProfile_data<-expressionProfile_data%>%
   droplevels() #drop unused level
 
-cols.num <- c(1:8)
+cols.num <- c(1:12)
 
 expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
 sapply(expressionProfile_data, class)
@@ -856,7 +856,7 @@ names(GSPvalue) = paste("p.GS.", names(time_stage), sep="");
 Generate a list of genes associated with each module. Change the module number in this code to look at respective module.   
 
 ```{r}
-names(datExpr)[moduleColors=="14"]
+names(datExpr)[moduleColors=="1"]
 ```
 
 # **Generate files for Functional Enrichment**  
@@ -882,7 +882,7 @@ names(Mcap.annot)
 
 probes = names(datExpr)
 
-probes2annot = match(probes, Mcap.annot$query) #match genes in datExpr to genes in annotation file
+probes2annot = match(probes, Mcap.annot$query) #match genes in datExpr to genes in annotation file, note I removed the # before query in this file before loading
 
 # The following is the number of probes without annotation... 
 sum(is.na(probes2annot))
@@ -894,7 +894,7 @@ missing<-as.data.frame(probes[row_nas])
 print(missing)
 ```
 
-12,027 genes without annotation, return to this.  
+4846 genes without annotation information. Spot check confirms the annotation file does not contain these genes.     
 
 Create the starting data frame
 ```{r}
@@ -940,6 +940,8 @@ head(geneInfo)
 Save geneInfo as a CSV
 ```{r}
 head(geneInfo)
+dim(geneInfo)
+
 geneInfo$Annotation.GO.ID <- gsub(";NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 geneInfo$Annotation.GO.ID <- gsub("NA", "", geneInfo$Annotation.GO.ID) #Remove NAs
 dim(geneInfo)

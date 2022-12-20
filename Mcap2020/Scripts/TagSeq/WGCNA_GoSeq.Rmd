@@ -147,6 +147,16 @@ names(gene.vector)=ALL.vector #set names
 
 DEG.pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) #weight vector by length of gene
 
+length(gene.vector)
+head(gene.vector)
+length(ID.vector)
+head(ID.vector)
+length(LENGTH.vector)
+head(LENGTH.vector)
+
+
+# THIS HAS A PROBLEM WITH NAS 
+
 #Find enriched GO terms
 GO.wall<-goseq(DEG.pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:CC", "GO:BP", "GO:MF"), method="Wallenius", use_genes_without_cat=TRUE)
 GO <- GO.wall[order(GO.wall$over_represented_pvalue),]

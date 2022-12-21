@@ -74,7 +74,7 @@ library("rrvgo")
 
 Load in Gene Info data frame generated in WGCNA_Mcap_V3.Rmd script and subset list of genes and module assignment for each gene.  
 
-*Important! If geneInfo.csv is not found or already generated, run the WGCNA_Mcap_V3.Rmd in Scripts to generate. It is a large file that cannot be pushed to Git. 
+*Important! Gnereate geneInfo.csv before this step! Run the WGCNA_Mcap_V3.Rmd in Scripts to generate the most up to date file. It is a large file that cannot be pushed/updated to Git. 
 
 ```{r}
 geneInfo<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/geneInfo.csv")

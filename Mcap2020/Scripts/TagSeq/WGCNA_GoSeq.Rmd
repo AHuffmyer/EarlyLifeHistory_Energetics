@@ -2942,6 +2942,8 @@ pattern_plots<-pattern_expression%>%
         plot.title = element_text(size=22)); pattern_plots
 
 ggsave(filename="Mcap2020/Figures/TagSeq/GOSeq/Patterns/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=6, height=10, units="in")
+
+
 ```
 
 

@@ -50,6 +50,7 @@ library("pheatmap")
 library("magrittr")
 library("vegan")
 library("factoextra")
+library("dplyr")
 
 ```
 
@@ -81,7 +82,7 @@ nrow(gcount)
 gcount<-gcount %>%
      mutate(Total = rowSums(.[, 1:38]))%>%
     filter(!Total==0)%>%
-    select(!Total)
+    dplyr::select(!Total)
 nrow(gcount)
 ```
 We had 54,384 genes, which was filtered down to 34,223 by removing genes with row sums of 0 (those not detected in our sequences).  
@@ -93,7 +94,7 @@ Conduct data filtering, this includes:
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 
 ```{r}
-filt <- filterfun(pOverA(0.07,5))
+filt <- filterfun(pOverA(0.07,10))
 
 #create filter for the counts data
 gfilt <- genefilter(gcount, filt)
@@ -151,7 +152,7 @@ metadata_ordered <- metadata[order(metadata$sample_id),]
 metadata_ordered$sample_id
 
 metadata_ordered<-metadata_ordered%>%
-  select(sample_id, lifestage, hpf, code)
+  dplyr::select(sample_id, lifestage, hpf, code)
 ```
 
 Reorder the lifestage factor.  
@@ -227,11 +228,11 @@ test$Lifestage<-metadata$lifestage[match(test$Sample, metadata$sample_id)]
 
 Build PERMANOVA model.  
 ```{r}
-scaled_test <-prcomp(test[c(1:14595)], scale=TRUE, center=TRUE)
+scaled_test <-prcomp(test[c(1:11475)], scale=TRUE, center=TRUE)
 fviz_eig(scaled_test)
 
 # scale data
-vegan <- scale(test[c(1:14595)])
+vegan <- scale(test[c(1:11475)])
 
 # PerMANOVA 
 permanova<-adonis2(vegan ~ Lifestage, data = test, method='eu')
@@ -271,7 +272,7 @@ save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/GenomeV3/pheatmap.pdf")
 Plot a PCA of samples by lifestages  
 
 ```{r}
-gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=14595) #use ntop to specify all genes
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=11475) #use ntop to specify all genes
 
 percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
 
@@ -431,7 +432,7 @@ plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
      main = paste("Mean connectivity"))
  text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 ```
-I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the lowest power before the R^2=0.9 threshold that maximizes with model fit.  
+I used a scale-free topology fit index **R^2 of 0.9**. This lowest recommended R^2 by Langfelder and Horvath is 0.8. I chose 0.9 because we want to use the smallest soft thresholding power that maximizes with model fit. It appears that our **soft thresholding power is 5** because it is the lowest power above the R^2=0.9 threshold that maximizes with model fit.  
 
 ### Co-expression adjacency and topological overlap matrix similarity  
 
@@ -491,10 +492,10 @@ dev.off()
 
 ### Module identification using dynamicTreeCut  
 
-Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 20. 
+Module identification is essentially cutting the branches off the tree in the dendrogram above. We like large modules, so we set the **minimum module size** relatively high, so we will set the minimum size at 30. 
 
 ```{r}
-minModuleSize = 20
+minModuleSize = 30
 dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM,
 deepSplit = TRUE, pamRespectsDendro = FALSE,
 minClusterSize = minModuleSize)
@@ -509,10 +510,9 @@ From Genome V1:
 3954 3662 2934  955  913  765  679  602  591  284   85   74   71   54   51   36   34   29   24 
 
 From Genome V3: 
-   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15 
-3833 3369 3148 1040 1022  716  556  382  249   73   51   48   40   34   34 
-
-Same number of modules, just with different numbers of genes in each.  
+dynamicMods
+   1    2    3    4    5    6    7    8    9   10   11   12 
+3536 3073 2352  737  622  603  299   56   54   52   52   39 
 
 Load modules calculated from the adjacency matrix.  
 ```{r}
@@ -569,7 +569,7 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tre
 dev.off()
 ```
 
-We had 15 modules before merging.  
+We had 12 modules before merging.  
 
 Save new colors
 ```{r}
@@ -581,10 +581,9 @@ MEs = mergedMEs;
 ncol(MEs) #How many modules do we have now?
 ```
 
-We have 12 modules after merging with 85% similarity.   
+We have 9 modules after merging with 85% similarity.   
 
-
-Plot new tree with 12 modules.  
+Plot new tree with 9 modules.  
 ```{r}
 #Calculate dissimilarity of module eigengenes
 MEDiss = 1-cor(MEs)
@@ -606,8 +605,8 @@ write_csv(table, "Mcap2020/Output/TagSeq/GenomeV3/genes_per_module.csv")
 We have 12 modules.   
 
 mergedColors
-   1    2    3    5    6    7    9   10   11   12   14   15 
-3833 3369 4188 1062 1098  556  249   73   51   48   34   34 
+   1    2    3    5    6    7    8    9   12 
+3536 3073 3089  674  603  299  108   54   39  
 
 ##  Relating modules to developmental stage
 
@@ -637,7 +636,7 @@ nGenes
 nSamples
 ```
 
-We have 14,595 genes and 38 samples.  
+We have 11,475 genes and 38 samples.  
 
 Generate labels for module eigengenes as numbers.  
 ```{r}
@@ -647,7 +646,7 @@ names(MEs)
 ```
 Our module names are:  
 
-"ME14" "ME11" "ME1"  "ME3"  "ME5"  "ME10" "ME7"  "ME12" "ME2"  "ME15" "ME6"  "ME9" 
+"ME2"  "ME6"  "ME3"  "ME9"  "ME5"  "ME12" "ME1"  "ME7"  "ME8" 
 
 Correlations of traits with eigengenes
 ```{r}
@@ -690,6 +689,7 @@ Generate a complex heatmap of module-trait relationships.
 #dendrogram with WGCNA MEtree cut-off
 #colored y-axis
 
+
 #Create list of pvalues for eigengene correlation with specific life stages
 heatmappval <- signif(moduleTraitPvalue, 1)
 
@@ -714,7 +714,7 @@ Heatmap(moduleTraitCor, name = "Eigengene", row_title = "Gene Module", column_ti
         #cluster_columns = col_dend,
         row_dend_reorder = TRUE,
         #column_split = 6,
-        #row_split=4,
+        row_split=3,
         #column_dend_height = unit(.5, "in"),
         column_order = lifestage_order, 
         cluster_rows = row_dend, 
@@ -758,23 +758,35 @@ Plot mean module eigengene for each module.
 ```{r}
 #convert wide format to long format for plotting  
 plot_MEs<-Strader_MEs%>%
-  gather(., key="Module", value="Mean", ME14:ME9)
+  gather(., key="Module", value="Mean", ME2:ME8)
 
 write_csv(plot_MEs, "Mcap2020/Output/TagSeq/GenomeV3/WGCNA_eigengene_expression.csv")
 
-dev.off() 
+#dev.off() 
 
 time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
 
+#add group to dataframe for scale colour manual 
+plot_MEs<-plot_MEs%>%
+  mutate(group=if_else(grepl("Egg", lifestage), "Fertilized Egg", as.character(lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+plot_MEs$group<-factor(as.character(plot_MEs$group), levels=list_groups)
+
 expression_plots<-plot_MEs%>%
   group_by(Module, lifestage) %>%
-  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage, colour=group)) +
   facet_grid(~Module)+
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
   scale_x_discrete(name="", limits=time_point_order) +
   #ylim(-0.5,1) +
   ylab("Mean Module Eigenegene") +
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
   theme_bw() + 
   theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 12), #set x-axis label size
@@ -789,7 +801,7 @@ expression_plots<-plot_MEs%>%
         plot.background=element_blank(),
         plot.title = element_text(size=22)); expression_plots
 
-ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.pdf", height=6, width=24)
+ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.png", height=6, width=24)
 ```
 
 # **Calculating gene significance and module membership**  
@@ -803,7 +815,7 @@ expressionProfile_data <- Strader_MEs
 expressionProfile_data<-expressionProfile_data%>%
   droplevels() #drop unused level
 
-cols.num <- c(1:12)
+cols.num <- c(1:9)
 
 expressionProfile_data[cols.num] <- sapply(expressionProfile_data[cols.num],as.numeric)
 sapply(expressionProfile_data, class)
@@ -894,7 +906,7 @@ missing<-as.data.frame(probes[row_nas])
 print(missing)
 ```
 
-4846 genes without annotation information. Spot check confirms the annotation file does not contain these genes.     
+3394 genes without annotation information. Spot check confirms the annotation file does not contain these genes.     
 
 Create the starting data frame
 ```{r}
@@ -905,12 +917,25 @@ Accession = Mcap.annot$seed_ortholog[probes2annot], #add accession number
 Bitscore = Mcap.annot$score[probes2annot], #add bitscore
 eValue = Mcap.annot$evalue[probes2annot], #add e value
 Description = Mcap.annot$Description[probes2annot], #add description of gene
-KEGG_ko = Mcap.annot$KEGG_ko[probes2annot], #add kegg term
-KEGG_pathway = Mcap.annot$KEGG_Pathway[probes2annot], #add kegg pathway
 Annotation.GO.ID = Mcap.annot$GOs[probes2annot], #add GO ID's
 moduleColor = moduleColors, #add module number
 geneTraitSignificance, #add gene significance 
 GSPvalue)
+
+head(geneInfo0)
+```
+
+Add KEGG annotation information.  Downloaded from: http://cyanophora.rutgers.edu/montipora/Montipora_capitata_HIv3.genes.KEGG_results.txt.gz on 20 December 2022. 
+
+```{r}
+kegg<-read.table("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.KEGG_results.txt", sep="", quote="", na.strings=c("","NA"), blank.lines.skip = FALSE, header=FALSE)
+
+head(kegg)
+```
+
+Add KEGG annotations to each gene.  
+```{r}
+geneInfo0$KEGG<-kegg$V2[match(geneInfo0$gene_id, kegg$V1)]
 ```
 
 Order modules by their significance for time_point

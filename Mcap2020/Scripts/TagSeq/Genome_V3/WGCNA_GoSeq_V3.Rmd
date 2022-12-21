@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 options(stringsAsFactors = FALSE) #Set Strings to character
 ```
 
-Load required libraries.  
+# **Load required libraries**    
 
 ```{r}
 if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
@@ -39,6 +39,11 @@ if ("GSEABase" %in% rownames(installed.packages()) == 'FALSE') BiocManager::inst
 if ("GOSim" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GOSim")
 if ("stats" %in% rownames(installed.packages()) == 'FALSE') install.packages("stats")
 if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("ggdendro")
+if ("KEGG.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("KEGG.db")
+if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
+if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
+
+BiocManager::install("org.Ce.eg.db")
 
 library("tidyverse")
 library("genefilter")
@@ -60,6 +65,9 @@ library("GSEABase")
 library("GOSim")
 library("stats")
 library("ggdendro")
+#library("KEGG.db")
+library("GO.db")
+library("rrvgo")
 ```
 
 # **Read in data**  
@@ -78,7 +86,7 @@ geneInfo<-geneInfo%>%
 dim(geneInfo)
 ```
 
-There are 14595 genes in our Gene Info file.  
+There are 11,475 genes in our Gene Info file.  
 
 Get gene length information.  
 ```{r}
@@ -111,137 +119,17 @@ Format GO terms to remove dashes and quotes.
 geneInfo$Annotation.GO.ID <- gsub(",", ";", geneInfo$Annotation.GO.ID)
 geneInfo$Annotation.GO.ID <- gsub('"', "", geneInfo$Annotation.GO.ID)
 geneInfo$Annotation.GO.ID <- gsub("-", NA, geneInfo$Annotation.GO.ID)
-
-geneInfo$KEGG_ko <- gsub(",", ";", geneInfo$KEGG_ko)
-geneInfo$KEGG_ko <- gsub('"', "", geneInfo$KEGG_ko)
-geneInfo$KEGG_ko <- gsub("-", NA, geneInfo$KEGG_ko)
-
-geneInfo$KEGG_pathway <- gsub(",", ";", geneInfo$KEGG_pathway)
-geneInfo$KEGG_pathway <- gsub('"', "", geneInfo$KEGG_pathway)
-geneInfo$KEGG_pathway <- gsub("-", NA, geneInfo$KEGG_pathway)
 ```
 
-# **Download and merge in GoSlim terms**  
+# **Run GoSeq and Plot by Module**  
 
-Create a slim key by pulling out all GO terms in our list of genes.    
+## 1. Run the GOSeq function in a loop by module number to test for GO term enrichment.    
 
-```{r}
-go_list <- geneInfo %>% 
-  dplyr::select(Annotation.GO.ID)%>%
-  filter(complete.cases(Annotation.GO.ID))
+Due to high number of enriched GO terms, I am using an adjusted p-value threshold of <0.001 and using `rrvgo` package to reduce redundancy in list of GO terms.  
 
-#split each row into a separate row for each go term 
-split <- strsplit(as.character(go_list$Annotation.GO.ID), ";") 
-split2 <- data.frame(v1 = unlist(split)) 
-colnames(split2) <- c("GO.Term")
-
-go_list<-split2
-```
-
-Set name of output file
-```{r}
-### Set output filename suffix
-output_suffix=("GOslims.csv")
-```
-
-Make a vector of GOslim ontologies (e.g. Biological Process = BP, Molecular Function = MF, Cellular Component = CC)
-```{r}
-ontologies <- c("BP", "CC", "MF")
-```
-
-Determine GOslims. Script courtesy of Sam White in the UW Roberts Lab. 
-```{r determine-goslims}
-for (slim_ontology in ontologies) {
-  
-    ### Set GOOFFSPRING database, based on ontology group set above
-    go_offspring <- paste("GO", slim_ontology, "OFFSPRING", sep = "")
-    
-    ## Grab just the individual GO terms from the "GO.Term" column)
-    goterms <- as.character(go_list$GO.Term)
-    
-    ### Use GSEA to map GO terms to GOslims
-    
-    ## Store goterms as GSEA object
-    myCollection <- GOCollection(goterms)
-    
-    ## Use generic GOslim file to create a GOslim collection
-    
-    # I downloaded goslim_generic.obo from http://geneontology.org/docs/go-subset-guide/
-    uri <- "http://current.geneontology.org/ontology/subsets/goslim_pir.obo"
-    slim <- getOBOCollection(uri)
-    
-    ## Map GO terms to GOslims and select ontology group
-    slimsdf <- goSlim(myCollection, slim, slim_ontology)
-    
-    ## Need to know the 'offspring' of each term in the ontology, and this is given by the data in:
-    # GO.db::getFromNamespace(go_offspring, "GO.db")
-    
-    ## Create function to parse out GO terms assigned to each GOslim
-    ## Courtesy Bioconductor Support: https://support.bioconductor.org/p/128407/
-    mappedIds <-
-      function(df, collection, OFFSPRING)
-      {
-        map <- as.list(OFFSPRING[rownames(df)])
-        mapped <- lapply(map, intersect, ids(collection))
-        df[["go_terms"]] <- vapply(unname(mapped), paste, collapse = ";", character(1L))
-        df
-      }
-    
-    ## Run the function
-    slimsdf <- mappedIds(slimsdf, myCollection, getFromNamespace(go_offspring, "GO.db"))
-    
-    ## Provide column name for first column
-    slimsdf <- cbind(GOslim = rownames(slimsdf), slimsdf)
-    rownames(slimsdf) <- NULL
-    
-    ## Paste elements together to form output filename
-    outfilename <- paste("goslims", slim_ontology, output_suffix, collapse = ".", sep = ".")
-    
-    ## Set output file destination and name
-    ## Adds proper subdirectory from split_dirs list
-    outfile_dest <- file.path("Mcap2020/Output/TagSeq/GenomeV3", outfilename)
-    
-    ## Write output file
-    write.csv(slimsdf, file = outfile_dest, quote = FALSE, row.names = FALSE)
-    }
-```
-
-The output files now have GO Terms mapped to each GOSlim term.  
-
-Now import the files and make a data frame that can be read to match GO terms to. 
-
-```{r}
-slimMF<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/goslims.MF.GOslims.csv", na=c("NA"))
-slimBP<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/goslims.BP.GOslims.csv", na=c("NA"))
-slimCC<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/goslims.CC.GOslims.csv", na=c("NA"))
-```
-
-```{r}
-slimMF$ontology<-"MF"
-slimBP$ontology<-"BP"
-slimCC$ontology<-"CC"
-
-#join all together
-go_slim_cats<-rbind(slimMF, slimBP, slimCC)
-
-#make single go term for each row with repeating go slim 
-split <- strsplit(as.character(go_slim_cats$go_terms), ";") 
-
-split2 <- data.frame(GOslim = rep.int(go_slim_cats$GOslim, sapply(split, length)), GOterm = unlist(split), SlimTerm = rep.int(go_slim_cats$Term, sapply(split, length)), ontology = rep.int(go_slim_cats$ontology, sapply(split, length))) 
-
-go_slim<-split2
-
-```
-
-# **Run GoSeq by Module**  
-
-## 1. Generate a list of module numbers that we want to run in a loop through the GOSeq function.  
 ```{r}
 module_vector<-c(levels(geneInfo$Module))
-```
 
-## 2. Run the GOSeq function in a loop by module number to test for GO term enrichment .  
-```{r}
 for (module in module_vector) {
   
     ### Generate vector with names of all genes 
@@ -280,12 +168,15 @@ for (module in module_vector) {
 
     GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
     colnames(GO)[1] <- "GOterm"
+    
+    #adjust p-values 
+    GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
   
-    #Filtering for p > 0.05
+    #Filtering for p < 0.0001
     GO <- GO %>%
-        dplyr::filter(over_represented_pvalue<0.05) %>%
-        dplyr::arrange(., ontology, over_represented_pvalue)
-
+        dplyr::filter(bh_adjust<0.001) %>%
+        dplyr::arrange(., ontology, bh_adjust)
+    
     #Write file of results 
     write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_module", module, ".csv"))
     
@@ -295,7 +186,10 @@ for (module in module_vector) {
 Run a loop to plot enrichment for each module at each level of ontology.  
 ```{r}
 module_vector<-c(levels(geneInfo$Module))
-ontologies<-c("BP", "MF", "CC")
+ontologies<-c("BP", "MF")
+
+#add vector for terms of interest to reduce number of GO terms 
+keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
 
 for (module in module_vector) {
   
@@ -306,13 +200,37 @@ for (module in module_vector) {
     
     go_results<-go_results%>%
       filter(ontology==category)%>%
-      filter(over_represented_pvalue != "NA") %>%
-      filter(numInCat >5)%>%
-      arrange(., over_represented_pvalue)
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
     
-    #plot significantly enriched GO terms by Slim Category
+      #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #calculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(keywords, collapse="|"), ParentTerm))
+    
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot <-  ggplot(go_results, aes(x = ontology, y = term)) + 
-    geom_point(aes(fill=over_represented_pvalue)) + 
+    geom_point(aes(size=bh_adjust)) + 
+    scale_size(name="Over rep. p-value", trans="reverse")+
+    facet_grid(ParentTerm ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
     theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
     strip.text.y = element_text(angle=0, size = 10),
@@ -321,7 +239,7 @@ for (module in module_vector) {
     axis.title.x = element_blank(),
     axis.title.y = element_blank())
 
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=300, width=12, height=12, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=300, width=8, height=49, units="in")
     
   }
 }
@@ -329,6 +247,290 @@ ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module",
 ```
 
 
+
+
+Questions for Jill: 
+- Why so many terms enriched? What to do with all of them? 
+- Functional annotation of this genome? 
+- How to do semantic similarity? 
+- Run a loop to calculate semantic similarity between GOTerms for each ontology for each module and plot results. 
+
+This isn't useful right now with the number of terms that we have. 
+```{r}
+# module_vector<-c("12")
+# ontologies<-c("BP")
+# 
+# for (module in module_vector) {
+#   
+#   for (category in ontologies) {
+# 
+#     #Read relevant file of results from goseq analysis  
+#     go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_module", module, ".csv"))
+#     
+#     go_results<-go_results%>%
+#       filter(ontology==category)
+#     
+#     #Calculate semantic similarity between GOTerms for each module 
+#     sem_sim<-getTermSim(go_results$GOterm, method = "relevance", verbose = FALSE)
+#     
+#     #Calculate distance matrix 
+#     hc <- hclust(as.dist(1 - sem_sim))
+#     
+#     ggdendrogram(hc,rotate=TRUE)
+#   }
+# }
+```
+
+# **Run GoSeq and Plot by Pattern** 
+
+## 1. Identify modules associated with ontogenetic patterns 
+
+Generate a list of modules in each pattern and add identifier to dataframe. 
+
+Identified from eigengene plots. "early" indicates eggs, embryos; "mid" indicate late embryos, larvae; "late" indicates polyps, recruits. 
+
+Increase over development = 12, 3, 5, 9
+Decrease over development = 1, 8 
+Peak in mid-development = 2, 6
+
+Module 7 only peaks in one stage so we won't include it here. 
+
+```{r}
+increase<-c("12", "3", "5", "9")
+decrease<-c("1", "8")
+mid<-c("2", "6")
+
+geneInfo<-geneInfo%>%
+  mutate(Pattern=if_else(Module %in% increase, "Increasing", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% decrease, "Decreasing", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% mid, "Mid", Pattern))
+
+pattern_vector<-c("Increasing", "Decreasing", "Mid")
+```
+
+## 2. Run the GOSeq function in a loop by lifestage patterns to test for GO term enrichment.  
+
+Generate dataframes for each pattern 
+```{r}
+for (pattern in pattern_vector) {
+  
+    ### Generate vector with names of all genes 
+    ALL.vector <- c(geneInfo$gene_id)
+    
+    ### Generate length vector for all genes 
+    LENGTH.vector <- as.integer(geneInfo$Length)
+    
+    ### Generate vector with names in just the module we are analyzing
+    ID.vector <- geneInfo%>%
+      filter(Pattern==pattern)%>%
+      #get_rows(.data[[module]]))%>%
+      pull(gene_id)
+    
+    ##Get a list of GO Terms for each module
+    GO.terms <- geneInfo%>%
+      filter(Pattern==pattern)%>%
+      #filter(get_rows(.data[[module]]))%>%
+      dplyr::select(gene_id, Annotation.GO.ID)
+    
+    ##Format to have one goterm per row with gene ID repeated
+    split <- strsplit(as.character(GO.terms$Annotation.GO.ID), ";") 
+    split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+    colnames(split2) <- c("gene", "Annotation.GO.ID")
+    GO.terms<-split2
+
+    ##Construct list of genes with 1 for genes in module and 0 for genes not in the module
+    gene.vector=as.integer(ALL.vector %in% ID.vector) 
+    names(gene.vector)<-ALL.vector#set names
+
+    #weight gene vector by bias for length of gene 
+    pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) 
+    
+    #run goseq using Wallenius method for all categories of GO terms 
+    GO.wall<-goseq(pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:BP", "GO:MF", "GO:CC"), method="Wallenius", use_genes_without_cat=TRUE)
+
+    GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+    colnames(GO)[1] <- "GOterm"
+    
+    #adjust p-values 
+    GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
+  
+    #Filtering for p < 0.01
+    GO <- GO %>%
+        dplyr::filter(bh_adjust<0.0001) %>%
+        dplyr::arrange(., ontology, bh_adjust)
+
+    #Write file of results 
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_", pattern, ".csv"))
+    
+}
+```
+
+Run a loop to plot enrichment for each pattern at each level of ontology.  
+```{r}
+pattern_vector<-c("Increasing", "Decreasing", "Mid")
+ontologies<-c("BP", "MF")
+
+#add vector for terms of interest to reduce number of GO terms 
+keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
+
+for (pattern in pattern_vector) {
+  
+  for (category in ontologies) {
+
+    #Read relevant file of results from goseq analysis  
+    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_", pattern, ".csv"))
+    
+    go_results<-go_results%>%
+      filter(ontology==category)%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(keywords, collapse="|"), ParentTerm))%>%
+      filter(!ParentTerm=="multicellular organismal response to stress") #remove category with only 1 go term not of interest
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot <-  ggplot(go_results, aes(x = ontology, y = term)) + 
+    geom_point(aes(size=bh_adjust)) + 
+    facet_wrap(~ pattern) +
+    scale_size(name="Over rep. p-value", trans="reverse")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+    theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+    strip.text.y = element_text(angle=0, size = 10),
+    strip.text.x = element_text(size = 20),
+    axis.text = element_text(size = 8),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Pattern_", pattern, "_", category, ".png"), plot=GO.plot, dpi=300, width=8, height=49, units="in")
+    
+  }
+}
+
+```
+
+## 3. Run the GOseq function in a loop by pattern to test for KEGG term enrichment   
+
+```{r}
+pattern_vector<-c("Increasing", "Decreasing", "Mid")
+
+for (pattern in pattern_vector) {
+  
+    ### Generate vector with names of all genes 
+    ALL.vector <- c(geneInfo$gene_id)
+    
+    ### Generate length vector for all genes 
+    LENGTH.vector <- as.integer(geneInfo$Length)
+    
+    ### Generate vector with names in just the module we are analyzing
+    ID.vector <- geneInfo%>%
+      filter(Pattern==pattern)%>%
+      #get_rows(.data[[module]]))%>%
+      pull(gene_id)
+    
+    ##Get a list of GO Terms for each module
+    KO.terms <- geneInfo%>%
+      filter(Pattern==pattern)%>%
+      #filter(get_rows(.data[[module]]))%>%
+      dplyr::select(gene_id, KEGG)
+
+    ##Construct list of genes with 1 for genes in module and 0 for genes not in the module
+    gene.vector=as.integer(ALL.vector %in% ID.vector) 
+    names(gene.vector)<-ALL.vector#set names
+
+    #weight gene vector by bias for length of gene 
+    pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) 
+    
+    #run goseq using Wallenius method for all categories of GO terms 
+    KO.wall<-goseq(pwf, ID.vector, gene2cat=KO.terms, test.cats=c("KEGG"), method="Wallenius", use_genes_without_cat=TRUE)
+
+    KO <- KO.wall[order(KO.wall$over_represented_pvalue),]
+    colnames(GO)[1] <- "KEGGterm"
+    
+    #adjust p-values 
+    KO$bh_adjust <-  p.adjust(KO$over_represented_pvalue, method="BH") #add adjusted p-values
+  
+    #Filtering for p < 0.01
+    KO <- KO %>%
+        dplyr::filter(bh_adjust<0.05) %>%
+        dplyr::arrange(., bh_adjust)
+    
+    #Write file of results 
+    write_csv(KO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_KEGG_pattern_", pattern, ".csv"))
+    
+}
+```
+
+Run a loop to plot enrichment for each module at each level of KEGG terms.    
+```{r}
+
+for (pattern in pattern_vector) {
+
+    #Read relevant file of results from goseq analysis  
+    ko_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_KEGG_pattern_", pattern, ".csv"))
+    
+    ko_results<-ko_results%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat >10)%>%
+      arrange(., bh_adjust)
+    
+    #plot significantly enriched KO terms 
+  KO.plot <-  ggplot(ko_results, aes(x = pattern, y = category)) + 
+    geom_point(aes(size=bh_adjust)) + 
+    scale_size(name="Over rep. p-value", trans="reverse")+
+    theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+    strip.text.y = element_text(angle=0, size = 10),
+    strip.text.x = element_text(size = 20),
+    axis.text = element_text(size = 8),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()) 
+    #axis.ticks.x = element_blank(), 
+    #axis.text.x = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_KEGG_Pattern_", pattern, "_", category, ".png"), plot=KO.plot, dpi=300, width=6, height=12, units="in")
+    
+}
+
+```
+
+Fetch KEGG terms from database: https://www.genome.jp/kegg/ko.html 
+
+KEGG Terms from Increasing over Development: 
+ko:K20478    GOLGB1; golgin subfamily B member 1
+ko:K22614    NLRC3, NOD3; NLR family CARD domain-containing protein 3
+ko:K01672    CA; carbonic anhydrase [EC:4.2.1.1]
+ko:K09848    TRAF4; TNF receptor-associated factor 4
+ko:K11150    RDH8; retinol dehydrogenase 8 [EC:1.1.1.-]
+
+KEGG Terms from Decreasing over Development:  
+ko:K09228    KRAB; KRAB domain-containing zinc finger protein
+ko:K11251    H2A; histone H2A
+ko:K11252    H2B; histone H2B
+
+KEGG Terms from Mid Development:  
+ko:K10408    DNAH; dynein axonemal heavy chain
 
 
 
@@ -339,41 +541,332 @@ Questions for Jill:
 - Functional annotation of this genome? 
 - How to map to goslim - are multiple go slim possible for single GO term?
 - How to do semantic similarity? 
+- Why are goslim terms the same as the go terms output by goseq? How do I get true go slim terms or parent terms?
 
+How to reduce set? Maybe subset for things that have "protein", "lipid", "carbohydrate", "metabolism", or other terms of interest? 
 
 Need to repeat for KEGG terms 
 Map to Goslim? 
 
+Run a loop to calculate semantic similarity between GOTerms for each ontology for each module and plot results. 
 
 
 
-Run a loop to calculate semantic similarity between GOTerms for each ontology for each module and plot results.  
 
-THIS ISN'T USEFUL RIGHT NOW, TOO MANY TERMS 
+
+
+
+
+
+
+## 4. Plot all ontogenetic categories together for categories of interest    
+
+Plot enrichment for each pattern together in one plot. Customize first for carbohydrate metabolism related BP ontology.  
 ```{r}
-module_vector<-c("1")
-ontologies<-c("CC")
+#bring in dataframes and bind them together 
+file1<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Increasing.csv")%>%mutate(pattern="Increasing")
+file2<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Decreasing.csv")%>%mutate(pattern="Decreasing")
+file3<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Mid.csv")%>%mutate(pattern="Mid")
+patterns_df<-rbind(file1, file2, file3)
 
-for (module in module_vector) {
+patterns_df$pattern<-factor(patterns_df$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+
+category<-c("BP")
+
+#add vector for terms of interest to reduce number of GO terms 
+carbs<-c("carbohydrate")
   
-  for (category in ontologies) {
-
     #Read relevant file of results from goseq analysis  
-    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_module", module, ".csv"))
+    go_results<-patterns_df
     
     go_results<-go_results%>%
-      filter(ontology==category)
+      filter(ontology==category)%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
     
-    #Calculate semantic similarity between GOTerms for each module 
-    sem_sim<-getTermSim(go_results$GOterm, method = "relevance", verbose = FALSE)
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
     
-    #Calculate distance matrix 
-    hc <- hclust(as.dist(1 - sem_sim))
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
     
-    ggdendrogram(hc)
-  }
-}
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(carbs, collapse="|"), ParentTerm))
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.carb <-  ggplot(go_results, aes(x = pattern, y = term)) + 
+    geom_point(aes(size=bh_adjust, colour=pattern)) + 
+    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
+    xlab("Ontogenetic Pattern")+
+    ggtitle("Carbohydrate Metabolism")+
+    theme_bw() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 18, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 20, angle=45, hjust=1),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 22, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=22, face="bold"),
+          plot.title = element_text(hjust = 0.1),
+          axis.title.y = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Carbohdyrate.png"), plot=GO.plot.carb, dpi=300, width=13, height=18, units="in")
+
 ```
+
+Next plot for lipid metabolism.  
+```{r}
+#add vector for terms of interest to reduce number of GO terms 
+lipids<-c("lipid", "fatty")
+  
+    #Read relevant file of results from goseq analysis  
+    go_results<-patterns_df
+    
+    go_results<-go_results%>%
+      filter(ontology==category)%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(lipids, collapse="|"), ParentTerm))
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.lipid <-  ggplot(go_results, aes(x = pattern, y = term)) + 
+    geom_point(aes(size=bh_adjust, colour=pattern)) + 
+    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
+    xlab("Ontogenetic Pattern")+
+    ggtitle("Lipid Metabolism")+
+    theme_bw() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 18, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 20, angle=45, hjust=1),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 22, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=22, face="bold"),
+          plot.title = element_text(hjust = -0.1),
+          axis.title.y = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Lipids.png"), plot=GO.plot.lipid, dpi=300, width=13, height=18, units="in")
+```
+
+Plot enrichment for each pattern together in one plot. Customize first for transport/communication related BP ontology.  
+```{r}
+category<-c("BP")
+
+#add vector for terms of interest to reduce number of GO terms 
+symbiosis<-c("regulation of cell communication", "transmembrane transport", "transmembrane", "organic substance transport", "antioxidant", "oxygen")
+  
+    #Read relevant file of results from goseq analysis  
+    go_results<-patterns_df
+    
+    go_results<-go_results%>%
+      filter(ontology==category)%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(symbiosis, collapse="|"), ParentTerm))
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.sym <-  ggplot(go_results, aes(x = pattern, y = term)) + 
+    geom_point(aes(size=bh_adjust, colour=pattern)) + 
+    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 15, multi_line = TRUE))+
+    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
+    xlab("Ontogenetic Pattern")+
+    ggtitle("Communication \nand Transport")+
+    theme_bw() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 18, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 20, angle=45, hjust=1),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 22, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=22, face="bold"),
+          plot.title = element_text(hjust = 0),
+          axis.title.y = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.png"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
+
+```
+
+
+
+
+
+## 5. Plot trends of eigenegenes from modules for each ontogenetic pattern  
+
+Plot eigengene values for each pattern identified above from the module eigengene expression values.  
+
+```{r}
+pattern_expression<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/WGCNA_eigengene_expression.csv")
+
+#add pattern identifier to each module 
+increase_list<-c("ME12", "ME3", "ME5", "ME9")
+decrease_list<-c("ME1", "ME8")
+mid_list<-c("ME2", "ME6")
+
+pattern_expression<-pattern_expression%>%
+  mutate(Pattern=if_else(Module %in% increase_list, "Increasing", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% decrease_list, "Decreasing", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% mid_list, "Mid", Pattern))
+
+head(pattern_expression)
+```
+
+Summarize number of modules for each pattern and number of genes in each.  
+```{r}
+pattern_expression%>%
+  group_by(Pattern)%>%
+  summarise(number_module=length(unique(Module)))
+  
+#Gene counts from WGCNA analysis 
+gene_counts<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/genes_per_module.csv")
+names(gene_counts)<-c("Module", "Genes")
+
+#add pattern group for each module  
+gene_counts<-gene_counts%>%
+  mutate(Pattern=if_else(Module %in% c("12", "3", "5", "9"), "Increasing", "NA"))%>%
+  mutate(Pattern=if_else(Module %in% c("1", "8"), "Decreasing", Pattern))%>%
+  mutate(Pattern=if_else(Module %in% c("2", "6"), "Mid", Pattern))
+
+gene_counts%>%
+  group_by(Pattern)%>%
+  summarise(number_genes=sum(Genes))
+```
+
+There are 3644 genes (2 modules) decreasing, 3856 (4 modules) increasing, 3676 (2 modules) in mid development, and 299 unassigned. 
+
+
+```{r}
+f_labels <- data.frame(Pattern = c("Increasing across Development", "Peaking in Mid Development", "Decreasing across Development"), label = c("n=4 modules; n=3856 genes", "n=2 modules; n=3676 genes", "n=2 modules; n=3644 genes"))
+f_labels
+```
+
+Plot patterns.  
+
+```{r}
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
+
+#add group to dataframe for scale colour manual 
+pattern_expression<-pattern_expression%>%
+  mutate(group=if_else(grepl("Egg", lifestage), "Fertilized Egg", as.character(lifestage)))%>%
+  mutate(group=if_else(grepl("Embryo", lifestage), "Embryo", as.character(group)))%>%
+  mutate(group=if_else(grepl("Larvae", lifestage), "Larvae", as.character(group)))%>%
+  mutate(group=if_else(grepl("Polyp", lifestage), "Metamorphosed Polyp", as.character(group)))%>%
+  mutate(group=if_else(grepl("Recruit", lifestage), "Attached Recruit", as.character(group)))
+
+list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+pattern_expression$group<-factor(as.character(pattern_expression$group), levels=list_groups)
+
+pattern_plots<-pattern_expression%>%
+  group_by(Pattern, lifestage) %>%
+  filter(!Pattern=="NA")%>%
+  
+  ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
+  facet_wrap(~Pattern, nrow=1, ncol=3)+
+  geom_point(aes(colour=group), size=6, alpha=0.8) +
+  geom_smooth(aes(group=1), color="black", method='loess')+
+  scale_x_discrete(name="", limits=time_point_order) +
+  scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
+  ylab("Mean Eigengene Expression") +
+  geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
+  theme_bw() + 
+  theme(
+        #axis.text.x=element_text(angle = 45, hjust=1, size = 12, color="black"), #set x-axis label size
+        axis.text.x=element_blank(),
+        strip.background=element_rect(fill="white", color="white"),
+        strip.text=element_text(size=26, face="bold"),
+        axis.title.x=element_text(size = 14), #set x-axis title size
+        axis.ticks.x=element_blank(), #No x-label ticks
+        #axis.title.y=element_blank(), #No y-axis title
+        axis.text.y=element_text(size = 14, colour="black"), #set y-axis label size,
+        panel.border = element_rect(color = "black", fill = NA, size = 1), #set border
+        panel.grid.major = element_blank(), #Set major gridlines
+        panel.grid.minor = element_blank(), #Set minor gridlines
+        axis.line = element_line(colour = "black"), #Set axes color
+        legend.text = element_text(colour="black", size=24),
+        legend.title = element_text(colour="black", size=26, face="bold"),
+        legend.position="bottom",
+        plot.background=element_blank(),
+        plot.title = element_text(size=26)); pattern_plots
+
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
+```
+
+
+
 
 
 

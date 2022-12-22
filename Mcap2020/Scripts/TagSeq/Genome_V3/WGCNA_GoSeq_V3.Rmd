@@ -39,7 +39,7 @@ if ("GSEABase" %in% rownames(installed.packages()) == 'FALSE') BiocManager::inst
 if ("GOSim" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GOSim")
 if ("stats" %in% rownames(installed.packages()) == 'FALSE') install.packages("stats")
 if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("ggdendro")
-if ("KEGG.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("KEGG.db")
+#if ("KEGG.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("KEGG.db")
 if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
 if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
 
@@ -247,15 +247,6 @@ ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module",
 }
 
 ```
-
-
-
-
-Questions for Jill: 
-- Why so many terms enriched? What to do with all of them? 
-- Functional annotation of this genome? 
-- How to do semantic similarity? 
-- Run a loop to calculate semantic similarity between GOTerms for each ontology for each module and plot results. 
 
 This isn't useful right now with the number of terms that we have. 
 ```{r}

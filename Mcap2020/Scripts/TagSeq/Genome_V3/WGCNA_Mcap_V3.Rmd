@@ -116,7 +116,7 @@ nrow(gcount) #Before
 nrow(gcount_filt) #After
 ```
 
-Before filtering, we had 34,223 genes. After filtering for pOverA, we have approximately 14,595 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
+Before filtering, we had 34,223 genes. After filtering for pOverA, we have approximately 11,475 genes. This indicates that there were many genes present in <7% of samples at <5 counts per gene.  
 
 In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
 ```{r}
@@ -441,7 +441,7 @@ Save Rdata necessary for analysis
 save(datExpr, file = "Mcap2020/Output/TagSeq/GenomeV3/datExpr.RData")
 ```
 
-Co-expression similarity and adjacency, using the soft thresholding power 5 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**: https://peterlangfelder.com/2018/11/25/__trashed/
+Co-expression similarity and adjacency, using the soft thresholding power 5 and translate the adjacency into topological overlap matrix to calculate the corresponding dissimilarity. I will use a **signed network**.  
 ```{r, }
 # #Set up workspace
 #getwd() #Display the current working directory
@@ -550,7 +550,7 @@ plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "")
 dev.off()
 ```
 
-**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. It looks like most of our modules are highly related so I will use 85% similarity as my merging threshold.
+**Merge modules with >85% eigengene similarity.** Most studies use somewhere between 80-90% similarity. I will use 85% similarity as my merging threshold.
 ```{r}
 MEDissThres= 0.15 #merge modules that are 85% similar
 

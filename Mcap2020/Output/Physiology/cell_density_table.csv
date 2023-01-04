@@ -1,7 +1,7 @@
 group,HPF,lifestage,n,Mean,SE
-Attached Recruit,183,Attached Recruit (183 hpf),3,"NA","NA"
-Attached Recruit,231,Attached Recruit (231 hpf),2,"NA","NA"
-Attached Recruit,255,Attached Recruit (255 hpf),3,"NA","NA"
+Attached Recruit,183,Attached Recruit (183 hpf),3,NA,NA
+Attached Recruit,231,Attached Recruit (231 hpf),2,NA,NA
+Attached Recruit,255,Attached Recruit (255 hpf),3,NA,NA
 Egg,1,Egg (1 hpf),4,1472,125
 Embryo,5,Embryo (5 hpf),4,1831,124
 Embryo,38,Embryo (38 hpf),4,1371,242

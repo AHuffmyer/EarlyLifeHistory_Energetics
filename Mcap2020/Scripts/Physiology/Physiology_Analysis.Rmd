@@ -1,6 +1,7 @@
 ---
-title: "Physiology Analysis"
+title: "Physiology Analysis: symbiont densities and larval size"
 author: "AS Huffmyer"
+date: "2023" 
 output:
   html_document:
     toc: yes
@@ -12,7 +13,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Script to analyze larval size, symbiont density, and examine correlations between physiological responses.  
+This script analyzes larval size and symbiont density as physiology metrics in the *M. capitata* developmental time series project.    
 
 # **Setup**  
 
@@ -52,12 +53,15 @@ library(cowplot)
 library(Hmisc)
 ```
 
+In this project, physiological assays include symbiont cell density and larval volume.  
 
-# **1. Larval Volume**  
+# **1. Larval Size/Volume**  
 
-Volume is calculated as an elliptical sphere using the length and width measurements of each individual.  
+First, plot and analyze larval size measured as volume. Volume is calculated as an elliptical sphere using the length and width measurements of each individual sampled across the developmental time series.     
 
 ## Import and manipulate data
+
+Load in data, match in metadata about lifestage, and rename levels of lifestage factor. 
 ```{r}
 # Larval size data
 size <- read_csv("Mcap2020/Data/Physiology/Size/larval_volume.csv")
@@ -86,9 +90,12 @@ size$lifestage <- if_else(size$lifestage == "Metamorphosed Recruit (183 hpf)", "
 size$hpf <- as.factor(size$hpf)
 size$group <- as.factor(size$group)
 size$lifestage <- as.factor(size$lifestage)
+
+#reorder lifestage factor 
+size$lifestage <- factor(size$lifestage, levels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)"))
 ```
 
-Prep data frame.   
+Remove na's from data frame.  
 ```{r}
 # Calculate mean counts for each sample
 size <- size %>%
@@ -96,21 +103,21 @@ size <- size %>%
   drop_na()
 ```
 
-## Plotting  
+## Plot larval volume    
 
 Plot data with mean and standard error for each lifestage.  
 ```{r}
 size %>%
-  ggplot(aes(x = hpf, y = volume, color = group)) +
+  ggplot(aes(x = lifestage, y = volume, color = group)) +
   labs(x = "",y = "Mean Larval Volume (mm^3)") +
-geom_jitter(width = 0.1) +                                            # Plot all points
+  geom_jitter(width = 0.1) +                                            # Plot all points
   stat_summary(fun.data = mean_cl_normal, fun.args = list(mult = 1),    # Plot standard error
                geom = "errorbar", color = "black", width = 0.5) +
   stat_summary(fun = mean, geom = "point", color = "black") + # Plot mean
   theme_classic()
 ```
 
-Present means and standard error of each group and save summary table
+Present means and standard error of each group and save summary table.  
 
 ```{r}
 size%>%
@@ -133,84 +140,46 @@ size%>%
   write_csv(., "Mcap2020/Output/Physiology/larval_volume_table.csv")
 ```
 
-
-Plot data as a scatterplot   
+Plot data as a box plot.     
 ```{r}
-size$hpf<-as.factor(size$hpf)
 size_plot<-size %>%
-    ggplot(., aes(x = hpf, y = volume)) +
-    #geom_boxplot(outlier.size = 0) +
-    geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
-    geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
-    xlab("Hours Post-Fertilization") + 
+    ggplot(., aes(x = lifestage, y = volume, colour=group)) +
+    geom_boxplot(aes(colour=group), lwd=1) +
+    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=4, position = position_jitterdodge(0.5), alpha=0.6) + 
+    xlab("") + 
+    scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
-    ylim(0,1)+
     theme_classic() + 
     theme(
       legend.position="right",
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
       legend.title=element_text(face="bold", size=14), 
-      legend.text=element_text(size=12)
+      legend.text=element_text(size=12), 
+      axis.text.x=element_text(angle=45, hjust=1)
       ); size_plot
 
-#EGG: #8C510A
-#EMBRYO: #DFC27D
-#LARVAE: #80CDC1
-#RECRUIT: #003C30
-```
-
-## Plot data as box plot  
-```{r}
-size_plot2<-size %>%
-    ggplot(., aes(x = hpf, y = volume)) +
-    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
-    geom_point(aes(fill=group), pch = 21, size=2, position = position_jitterdodge(0.1)) + 
-    xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
-    ylim(0, 0.6)+
-    theme_classic() + 
-    #geom_text(label="A", x=1, y=2500, size=4, color="black")+ #egg
-    #geom_text(label="A", x=2, y=2500, size=4, color="black")+ #embryo 1
-    #geom_text(label="A", x=3, y=2500, size=4, color="black")+ #larvae 1
-    #geom_text(label="AB", x=4, y=4100, size=4, color="black")+ #larvae 2
-    #geom_text(label="AB", x=5, y=4100, size=4, color="black")+ #larvae 3
-    #geom_text(label="AB", x=6, y=4100, size=4, color="black")+ #larvae 4
-    #geom_text(label="BC", x=6.8, y=4500, size=4, color="black")+ #larvae 5
-    #geom_text(label="CD", x=7.2, y=6500, size=4, color="black")+ #recruit 1
-    #geom_text(label="D", x=7.8, y=6500, size=4, color="black")+ #larvae6
-    #geom_text(label="D", x=8.2, y=8700, size=4, color="black")+ #recruit2
-    theme(
-      legend.position="right",
-      axis.title=element_text(face="bold", size=14),
-      axis.text=element_text(size=12, color="black"), 
-      legend.title=element_text(face="bold", size=14)
-      ); size_plot2
-
-ggsave(plot=size_plot2, "Mcap2020/Figures/Physiology/size.png",height=8, width=8)
+ggsave(plot=size_plot, "Mcap2020/Figures/Physiology/size.png",height=8, width=8)
 ```
 
 ## Statistical analysis  
 
-Run lmer on cells per larvae by sampling point, specified by sequence of samples taken (life stage, hpf). Use tube ID as random effect.       
+Run ANOVA test on larval size. 
 ```{r}
-size_model<-lmer(volume~lifestage + (1|tube.ID), data=size)
+size_model<-aov(volume~lifestage, data=size)
 summary(size_model)
 qqPlot(residuals(size_model))
 leveneTest(residuals(size_model)~lifestage, data=size)
-anova(size_model, type=2)
 ```
 
-Violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  
+There appears to be a V=violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  
 
 ```{r}
 kruskal.test(volume~lifestage, data=size)
 ```
 
-Significant difference in size between lifestages.   
+There is a significant difference in size (larval volume) between lifestages.   
 
 View posthoc comparisons for differences between lifestages.  
 
@@ -220,10 +189,15 @@ cld(emm, Letters=c(LETTERS)) #letter display
 pairs(emm)
 ```
 
+Metamorphosed polyps are smaller in volume than larvae within each respective time point. Size is quite variable between life stages.   
 
 # **2. Symbiont Density**  
 
+Symbiont density was measured across life stages. For egg to metamorphosed polyp stages, this was done by sampling individuals into a tube. We are able to normalize cell densities to both per individual (individual normalized) and per unit individual size (volume normalized). For attached recruit time points, the individuals were scraped from plugs and then homogenized and used for cell density analysis. Prior to scraping, we quanitified surface area of the recruits on plugs. For these timepoints, cell density is only able to be normalized to surface area (surface area normalized). For this reason, we will plot these datasets separately and cannot compare cell densities between attached recruits and other life stages.  
+
 ## Symbiont density per individual  
+
+First, look at symbiont cell densities per individual.  
 
 ### Import and manipulate data  
 ```{r}
@@ -258,7 +232,6 @@ df$group <- if_else(df$group == "Metamorphosed Recruit", "Metamorphosed Polyp", 
 df$lifestage <- if_else(df$lifestage == "Metamorphosed Recruit (231 hpf)", "Metamorphosed Polyp (231 hpf)", df$lifestage)
 df$lifestage <- if_else(df$lifestage == "Metamorphosed Recruit (183 hpf)", "Metamorphosed Polyp (183 hpf)", df$lifestage)
 
-
 # Normalize counts by homogenate volume and surface area
 df <- df %>%
   mutate(cells.mL = mean_count * 10000 / num.squares,
@@ -267,11 +240,16 @@ df <- df %>%
          cells.mm = cells / surface.area)
 
 sym_counts<-df
+
+# order factor 
+sym_counts$lifestage<-factor(sym_counts$lifestage, levels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
 ```
+
+Note that in this dataframe there is a column for individual normalized, volume normalized, and surface area normalized, depending on the lifestage as described above.    
 
 ### Plotting  
 
-Plot data with mean and standard error for larvae through metamorphosis (these counts have cells/individual). Plot attached recruits separately, these values are in cells per mm2. We will plot cells per unit surface area for all stages in later analyses.   
+First, plot mean and standard error for cell density normalized to individual (per larva).  
 
 Display cells per individual.  
 ```{r}
@@ -286,7 +264,7 @@ geom_jitter(width = 0.1) +                                            # Plot all
   theme_classic()
 ```
 
-Display cell density per mm2 in attached recruit plugs. Plug 1 = 48 hps, Plug 2 = 72 hps, Plug 3 = 96 hps   
+Display cell density per mm2 in attached recruit plugs normalized to surface area. 
 ```{r}
 sym_counts %>%
   filter(group=="Attached Recruit")%>%
@@ -332,48 +310,16 @@ sym_counts%>%
   write_csv(., "Mcap2020/Output/Physiology/cell_density_table.csv")
 ```
 
-Plot data as a scatterplot   
-```{r}
-sym_counts$hpf<-as.numeric(as.character(sym_counts$hpf))
-
-symb_plot<-sym_counts %>%
-    filter(!group=="Attached Recruit")%>%
-    droplevels()%>%
-    ggplot(., aes(x = hpf, y = cells.ind)) +
-    #geom_boxplot(outlier.size = 0) +
-    geom_smooth(method="lm", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
-    geom_point(aes(fill=group, group=group), pch = 21, size=4, position = position_jitterdodge(5)) + 
-    xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
-    ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
-    ylim(0,9000)+
-    theme_classic() + 
-    theme(
-      legend.position="right",
-      axis.title=element_text(face="bold", size=14),
-      axis.text=element_text(size=12, color="black"), 
-      legend.title=element_text(face="bold", size=14), 
-      legend.text=element_text(size=12)
-      ); symb_plot
-
-#EGG: #8C510A
-#EMBRYO: #DFC27D
-#LARVAE: #80CDC1
-#RECRUIT: #003C30
-#ATTACHED: #BA55D3
-
-```
-
-Plot data as box plot  
+Plot data as box plot for egg through metamorphosed polyp stages normalized to cells per individual.    
 ```{r}
 symb_plot2<-sym_counts %>%
     filter(!group=="Attached Recruit")%>%
     droplevels()%>%
-    ggplot(., aes(x = as.factor(hpf), y = cells.ind)) +
-    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
+    ggplot(., aes(x = lifestage, y = cells.ind)) +
+    #geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     #geom_smooth(method="loess", se=TRUE, fullrange=TRUE, level=0.95, color="black") +
-    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.2)) + 
-    xlab("Hours Post-Fertilization") + 
+    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.3)) + 
+    xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"), guide="none")+
     ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
@@ -383,14 +329,15 @@ symb_plot2<-sym_counts %>%
       legend.position="right",
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
-      legend.title=element_text(face="bold", size=14)
+      legend.title=element_text(face="bold", size=14), 
+      axis.text.x=element_text(angle=45, hjust=1)
       ); symb_plot2
 
 ```
 
 ### Statistical analysis  
 
-Run ANOVA on cells per larvae by sampling point, specified by sequence of samples taken (life stage, hpf).    
+Run ANOVA for cell density per individual.  
 
 ```{r}
 sym_ind_model_data<-sym_counts%>%
@@ -405,13 +352,15 @@ leveneTest(residuals(sym_ind_model)~lifestage, data=sym_ind_model_data)
 
 Both normality and homogeneity of variance pass.   
 
-There is a significant effect of lifestage on cell densities. View posthoc comparisons for differences between lifestages.  
+There is a significant difference in cell densities bewteen lifestages. View posthoc comparisons for differences between lifestages.  
 
 ```{r}
 emm = emmeans(sym_ind_model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
 pairs(emm)
 ```
+
+Cell densities increase over development with highest densities at 231 hours post fertilization in both larvae and metamorphosed polyps. 
 
 Output data to file.  
 
@@ -426,7 +375,6 @@ sym_counts %>%
 ### Data manipulation and correlation  
 
 First, test for correlation between symbiont cell density and larval volume to see if there is a relationship.  
-
 Generate data frame with summarized size and cell density information for each time point from eggs to metamorphosed recruits, because we have data for volume and counts for each sample. We do not include attached recruits here yet, because we cannot calculate densities per individual.   
 
 ```{r}
@@ -554,6 +502,8 @@ cells_size_plot2<-corr %>%
       ); cells_size_plot2
 ```
 
+There is not a correlation between size and cell density. 
+
 Analyze differences in normalized cell counts by timepoint. 
 
 ```{r}
@@ -572,11 +522,13 @@ corr%>%
 summary(model)
 ```
 
+Cell density normalized to size is significantly different across development.  
+
 View posthoc differences.  
 ```{r}
 emm = emmeans(model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
-pairs(emm)
+
 ```
 
 Generate summary table of descriptive statistics.  
@@ -596,25 +548,26 @@ corr%>%
 
 ### Attached Recruit Plotting  
 
-Plot as box plot.  
+Plot as box plot for cells per mm^2.    
 
 ```{r}
 recruit_size_plot<-corr %>%
     filter(group=="Attached Recruit")%>%
-    ggplot(., aes(x = hpf, y = counts_volume)) +
-    geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
-    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
-    xlab("Hours Post-Fertilization") + 
+    ggplot(., aes(x = lifestage, y = counts_volume)) +
+    #geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
+    geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.8)) + 
+    xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#BA55D3"))+
-    ylab(expression(bold(paste("Surface area-normalized cell density (mm"^-2,")"))))+
-    #ylim(2000, 35000)+
+    ylab(expression(bold(paste("Symbiont cells (mm"^-2,")"))))+
+    ylim(500, 10000)+
     theme_classic() + 
     theme(
       legend.position="top",
       axis.title=element_text(face="bold", size=14),
       axis.text=element_text(size=12, color="black"), 
-      legend.title=element_text(face="bold", size=14)
+      legend.title=element_text(face="bold", size=14), 
+      axis.text.x=element_text(angle=45, hjust=1)
       ); recruit_size_plot
 ```
 
@@ -640,38 +593,14 @@ corr%>%
   group_by(group, hpf, lifestage)%>%
   filter(group=="Attached Recruit")%>%
   droplevels()%>%
-  kruskal.test(counts_volume~hpf, data=.)
+  kruskal.test(counts_volume~lifestage, data=.)
 ```
+
+Cell density is not significantly different by life stage in attached recruits, likely due to low sample size.  
 
 # **3. Generate Figures**  
 
-Generate physiology panel with all variables of interest.    
-
-```{r}
-# extract the legend from one of the plots
-legend <- get_legend(
-  # create some space to the left of the legend
-  cells_size_plot + theme(legend.position="right") + theme(legend.box.margin = margin(1,1,1,1))
-)
-
-#remove legends from plots  
-size_plot2<-size_plot2+theme(legend.position="none")
-symb_plot2<-symb_plot2+theme(legend.position="none")
-cells_size_plot_l<-cells_size_plot+theme(legend.position="none")
-
-#assemble plots
-all_plots<-plot_grid(size_plot2, symb_plot2, cells_size_plot_l, labels = c("A", "B", "C"), label_size=18, ncol=3, nrow=1, rel_heights= c(1,1,1), rel_widths = c(1,1,1), align="h")
-
-all_plots_legend<-plot_grid(all_plots, legend, rel_widths = c(4, 0.5), ncol=2, nrow=1)
-
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_all.png", all_plots_legend, dpi=300, width=24, height=6, units="in")
-
-```
-
-
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_all.png)
-
-Generate a figure that has just the symbiont density metrics of interest: counts per individual. 
+Generate a figure that has the symbiont density metrics of interest: counts per individual and symbionts per mm2 for attached recruits. 
 
 ```{r}
 # extract the legend from one of the plots
@@ -681,51 +610,24 @@ legend <- get_legend(
 )
 
 symb_plot2b<-symb_plot2+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))
-recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=10))+ylim(500,9000)
+recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=14))+ylim(0,10000)
 
-target_plots<- ggdraw(symb_plot2b) +
-  draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
-  draw_plot_label(
-    c("A", "B"),
-    c(0.05, 0.2),
-    c(1, 0.96),
-    size = 16
-  );target_plots
+#target_plots<- ggdraw(symb_plot2b) +
+#  draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
+#  draw_plot_label(
+#    c("A", "B"),
+#    c(0.05, 0.2),
+#    c(1, 0.96),
+#    size = 16
+#  );target_plots
 
-target_plots_legend<-plot_grid(symb_plot2b, legend, rel_widths = c(4, 1.2), ncol=2, nrow=1)
+target_plots_legend<-plot_grid(symb_plot2b, recruit_size_plot2, legend, rel_widths = c(1,0.5,0.5), rel_heights=c(1,0.8,1), ncol=3, nrow=1, align="h", axis = "b", labels=c("A", "B", ""))
 
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=8, height=6, units="in")
-
-```
-
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities.png)  
-
-Generate a figure that has just the symbiont density metrics of interest: volume normalized counts. 
-
-```{r}
-# extract the legend from one of the plots
-legend <- get_legend(
-  # create some space to the left of the legend
-  legend_plot +  theme(legend.box.margin = margin(1,1,1,1))
-)
-
-cells_size_plotb<-cells_size_plot+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))+ylim(2000,85000)
-recruit_size_plot2<-recruit_size_plot+theme(legend.position="none")+theme(axis.title=element_text(size=14))+ylim(0,8000)
-
-#target_plots2<- ggdraw(cells_size_plotb) +
-  #draw_plot(recruit_size_plot2, .16, .6, .35, .35) +
-  #draw_plot_label(
-   # c("A", "B"),
-  #c(0.05, 0.2),
-   # c(1, 0.96),
-    #size = 16
-  #);target_plots2
-
-target_plots_legend2<-plot_grid(cells_size_plotb, recruit_size_plot2, legend, labels=c("A", "B"), rel_widths = c(3,1.3, 1), ncol=3, nrow=1)
-
-ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_volume.png", target_plots_legend2, dpi=300, width=10, height=6, units="in")
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=12, height=6, units="in")
 
 ```
 
 
-![Early life history physiology](../../Figures/Physiology/Physiology_figure_densities_volume.png)  
+
+
+

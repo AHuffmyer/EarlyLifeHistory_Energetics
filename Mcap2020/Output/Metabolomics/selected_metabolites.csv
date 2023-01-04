@@ -449,7 +449,7 @@ Larvae5,rep4,Larvae (183 hpf),Larvae,5-Methylcytosine,1.2029828229879784,0.34301
 Larvae6,rep3,Larvae (231 hpf),Larvae,5-Methylcytosine,1.2110846635217392,0.3446053722468963
 Larvae6,rep4,Larvae (231 hpf),Larvae,5-Methylcytosine,2.0958886846941445,0.49078533686479814
 Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,5-Methylcytosine,1.7558980590324305,0.4402631489327923
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,5-Methylcytosine,0.3653952382588721,0.13525838394007478
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,5-Methylcytosine,0.3653952382588722,0.13525838394007478
 Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,5-Methylcytosine,2.0140190154676287,0.47914598795426366
 Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,5-Methylcytosine,1.5072969502367706,0.3992057724153561
 Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,5-Methylcytosine,2.482468827151746,0.5418872375851398
@@ -543,7 +543,7 @@ Larvae5,rep4,Larvae (183 hpf),Larvae,Acetyl-arginine,0,0
 Larvae6,rep3,Larvae (231 hpf),Larvae,Acetyl-arginine,0.2659051993453999,0.10240118360965401
 Larvae6,rep4,Larvae (231 hpf),Larvae,Acetyl-arginine,0.4705014439485433,0.16746545529570742
 Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Acetyl-arginine,0,0
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Acetyl-arginine,0.123485597874326,0.05056750950655133
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Acetyl-arginine,0.123485597874326,0.050567509506551325
 Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Acetyl-arginine,0.23174684744469848,0.09052145940716716
 Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Acetyl-arginine,0.1774305165395739,0.07093528762783621
 Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,Acetyl-arginine,0.19561583440403219,0.07759165808082458
@@ -1321,7 +1321,7 @@ Egg,rep3,Egg (1 hpf),Egg,CTP,0,0
 Egg,rep4,Egg (1 hpf),Egg,CTP,0,0
 Embryo,rep1,Embryo (5 hpf),Embryo,CTP,0.08209066635378959,0.03426365101776189
 Embryo,rep2,Embryo (5 hpf),Embryo,CTP,0.007479960785363445,0.00323641659290868
-Embryo,rep3,Embryo (5 hpf),Embryo,CTP,0.014284358179603659,0.006159728050091573
+Embryo,rep3,Embryo (5 hpf),Embryo,CTP,0.014284358179603659,0.006159728050091572
 Embryo,rep4,Embryo (5 hpf),Embryo,CTP,0.013534142295854434,0.005838383084221028
 Larvae1,rep1,Embryo (38 hpf),Embryo,CTP,0.017143267476647944,0.007382128824798371
 Larvae1,rep2,Embryo (38 hpf),Embryo,CTP,0.01715786183161576,0.007388360201007404
@@ -1884,13 +1884,13 @@ Egg,rep2,Egg (1 hpf),Egg,GTP,0,0
 Egg,rep3,Egg (1 hpf),Egg,GTP,0.010166040550365251,0.004392764444113661
 Egg,rep4,Egg (1 hpf),Egg,GTP,0.009647068725953023,0.004169588741836859
 Embryo,rep1,Embryo (5 hpf),Embryo,GTP,0.1981347262096804,0.07850565574914799
-Embryo,rep2,Embryo (5 hpf),Embryo,GTP,0.018360916992488402,0.007901723461582457
+Embryo,rep2,Embryo (5 hpf),Embryo,GTP,0.018360916992488402,0.007901723461582456
 Embryo,rep3,Embryo (5 hpf),Embryo,GTP,0.03418143040048518,0.014596735382479133
 Embryo,rep4,Embryo (5 hpf),Embryo,GTP,0.035839073964808024,0.015292289465457057
 Larvae1,rep1,Embryo (38 hpf),Embryo,GTP,0.016117156087260887,0.006943784039352868
 Larvae1,rep2,Embryo (38 hpf),Embryo,GTP,0.017065478429921777,0.007348913596685629
 Larvae1,rep3,Embryo (38 hpf),Embryo,GTP,0.12573046666978108,0.0514344199555337
-Larvae1,rep4,Embryo (38 hpf),Embryo,GTP,0.011605564944788118,0.005011209776920319
+Larvae1,rep4,Embryo (38 hpf),Embryo,GTP,0.011605564944788118,0.00501120977692032
 Larvae2,rep3,Embryo (65 hpf),Embryo,GTP,0.1480247080967203,0.05995123516525594
 Larvae2,rep4,Embryo (65 hpf),Embryo,GTP,0.04225981827547848,0.017975994949957098
 Larvae3,rep1,Larvae (93 hpf),Larvae,GTP,0.11578252682460191,0.0475795560678309
@@ -2348,7 +2348,7 @@ Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,IMP,0.113153179378
 Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,IMP,0,0
 Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,IMP,0,0
 Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,IMP,0,0
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,IMP,0.0350106142897708,0.014944803613071591
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,IMP,0.0350106142897708,0.01494480361307159
 Egg,rep1,Egg (1 hpf),Egg,Indole,11.775388017719369,1.106374099522625
 Egg,rep2,Egg (1 hpf),Egg,Indole,9.227223283751783,1.009757737697135
 Egg,rep3,Egg (1 hpf),Egg,Indole,9.838416602605548,1.0349658402301154
@@ -2400,7 +2400,7 @@ Egg,rep1,Egg (1 hpf),Egg,Inosine,0.2898964353271032,0.11055484256939169
 Egg,rep2,Egg (1 hpf),Egg,Inosine,0.6380380355643328,0.21432398194449814
 Egg,rep3,Egg (1 hpf),Egg,Inosine,0.03173927123673504,0.013569961468126076
 Egg,rep4,Egg (1 hpf),Egg,Inosine,0.17955992950419924,0.07172001083568111
-Embryo,rep1,Embryo (5 hpf),Embryo,Inosine,0.07473210641249227,0.03130022312981447
+Embryo,rep1,Embryo (5 hpf),Embryo,Inosine,0.07473210641249227,0.031300223129814474
 Embryo,rep2,Embryo (5 hpf),Embryo,Inosine,0.032555621445191425,0.013913455423928653
 Embryo,rep3,Embryo (5 hpf),Embryo,Inosine,0,0
 Embryo,rep4,Embryo (5 hpf),Embryo,Inosine,0,0
@@ -2743,7 +2743,7 @@ Larvae3,rep1,Larvae (93 hpf),Larvae,Mannose-6-phosphate,0.30593286601149533,0.11
 Larvae3,rep2,Larvae (93 hpf),Larvae,Mannose-6-phosphate,0.38218144280806443,0.14056505782687348
 Larvae3,rep3,Larvae (93 hpf),Larvae,Mannose-6-phosphate,0.28806883318844395,0.1099390719330701
 Larvae3,rep4,Larvae (93 hpf),Larvae,Mannose-6-phosphate,0.37981845296716216,0.1398219486756761
-Larvae4,rep3,Larvae (163 hpf),Larvae,Mannose-6-phosphate,0.2991520004671881,0.11365996639423309
+Larvae4,rep3,Larvae (163 hpf),Larvae,Mannose-6-phosphate,0.2991520004671881,0.11365996639423308
 Larvae4,rep4,Larvae (163 hpf),Larvae,Mannose-6-phosphate,0.3688961450618809,0.13637050048062738
 Larvae5,rep1,Larvae (183 hpf),Larvae,Mannose-6-phosphate,0.19339646351049514,0.07678474652956996
 Larvae5,rep2,Larvae (183 hpf),Larvae,Mannose-6-phosphate,0.15690699026395336,0.06329844517576799
@@ -3054,194 +3054,194 @@ Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,N6-Acetyl-L-lysine
 Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,N6-Acetyl-L-lysine,4.124187880239674,0.7096250449320298
 Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,N6-Acetyl-L-lysine,4.713324265044113,0.7568888735481889
 Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,N6-Acetyl-L-lysine,4.552466765960195,0.7444859677782254
-Egg,rep1,Egg (1 hpf),Egg,"NAD+",2.290874313344211,0.5173112958272167
-Egg,rep2,Egg (1 hpf),Egg,"NAD+",2.711712902946915,0.569574376628744
-Egg,rep3,Egg (1 hpf),Egg,"NAD+",3.6418086034559236,0.6666872291451841
-Egg,rep4,Egg (1 hpf),Egg,"NAD+",3.6463286895565425,0.6671099293151466
-Embryo,rep1,Embryo (5 hpf),Embryo,"NAD+",3.434018498265529,0.6467975006138067
-Embryo,rep2,Embryo (5 hpf),Embryo,"NAD+",3.1422667072175754,0.6172380582812033
-Embryo,rep3,Embryo (5 hpf),Embryo,"NAD+",3.4509511869942826,0.6484528314572535
-Embryo,rep4,Embryo (5 hpf),Embryo,"NAD+",4.170581210866149,0.7135393636906012
-Larvae1,rep1,Embryo (38 hpf),Embryo,"NAD+",2.121609971060764,0.4943786392780673
-Larvae1,rep2,Embryo (38 hpf),Embryo,"NAD+",3.0291357251820163,0.6052118972480924
-Larvae1,rep3,Embryo (38 hpf),Embryo,"NAD+",3.4141708381479097,0.6448491373052874
-Larvae1,rep4,Embryo (38 hpf),Embryo,"NAD+",3.2799510119836013,0.6314387981377145
-Larvae2,rep3,Embryo (65 hpf),Embryo,"NAD+",3.663769774254815,0.6687371034493773
-Larvae2,rep4,Embryo (65 hpf),Embryo,"NAD+",2.4800273230250744,0.5415826537719934
-Larvae3,rep1,Larvae (93 hpf),Larvae,"NAD+",2.2600256653683997,0.5132210191734592
-Larvae3,rep2,Larvae (93 hpf),Larvae,"NAD+",2.7407529536168056,0.5729590275182361
-Larvae3,rep3,Larvae (93 hpf),Larvae,"NAD+",1.9432785988147938,0.46883137259956054
-Larvae3,rep4,Larvae (93 hpf),Larvae,"NAD+",1.6802467148766118,0.42817477237877566
-Larvae4,rep3,Larvae (163 hpf),Larvae,"NAD+",2.1620204540163113,0.49996467490602137
-Larvae4,rep4,Larvae (163 hpf),Larvae,"NAD+",2.846647002750335,0.5850823340084947
-Larvae5,rep1,Larvae (183 hpf),Larvae,"NAD+",2.375279462755676,0.5283097369027633
-Larvae5,rep2,Larvae (183 hpf),Larvae,"NAD+",2.285958717886965,0.5166621030106339
-Larvae5,rep3,Larvae (183 hpf),Larvae,"NAD+",2.333677900086515,0.5229236359920667
-Larvae5,rep4,Larvae (183 hpf),Larvae,"NAD+",1.1790553120792875,0.338268254305887
-Larvae6,rep3,Larvae (231 hpf),Larvae,"NAD+",1.4685879307928915,0.39244860134611537
-Larvae6,rep4,Larvae (231 hpf),Larvae,"NAD+",0.8332029404043042,0.2632105451690504
-Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAD+",1.8710160929743525,0.4580356268644512
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAD+",2.5419153856695837,0.549238181931491
-Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAD+",1.7971091189464263,0.4467094091072882
-Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAD+",1.957675739843202,0.4709505590739745
-Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,"NAD+",1.4082025861094656,0.38169301843656567
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,"NAD+",0.992520865675144,0.2994028780230449
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,"NAD+",1.4688515187022457,0.39249497144373724
-Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,"NAD+",1.2751638518730464,0.3570126789719737
-Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAD+",2.15970188614869,0.49964610941965765
-Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAD+",1.701092626896784,0.4315394774345429
-Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAD+",1.822914279696042,0.4506976906087618
-Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAD+",2.066411431203781,0.48663042524560113
-Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,"NAD+",0.6796247384813454,0.22521226255248114
-Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,"NAD+",1.0157668810949632,0.30444030549765505
-Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,"NAD+",1.4742737593636905,0.39344774929614335
-Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,"NAD+",0.7621054704204727,0.24603189945103335
-Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,"NAD+",1.632241790687513,0.4203257799032862
-Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,"NAD+",1.4006296250343169,0.38032516121841986
-Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,"NAD+",0.5536500575614802,0.19135320546590248
-Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,"NAD+",0.8062798231881028,0.2567850307243466
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,"NAD+",1.3055267530433678,0.36277016608338014
-Egg,rep1,Egg (1 hpf),Egg,"NADH",0.2692087622686664,0.10353306168853454
-Egg,rep2,Egg (1 hpf),Egg,"NADH",0.5272454687431042,0.18390884527709653
-Egg,rep3,Egg (1 hpf),Egg,"NADH",0.5165615877966947,0.18086005176975847
-Egg,rep4,Egg (1 hpf),Egg,"NADH",0.5312855254550682,0.1850561773527762
-Embryo,rep1,Embryo (5 hpf),Embryo,"NADH",0,0
-Embryo,rep2,Embryo (5 hpf),Embryo,"NADH",0.026178172620228243,0.011222772732729995
-Embryo,rep3,Embryo (5 hpf),Embryo,"NADH",0,0
-Embryo,rep4,Embryo (5 hpf),Embryo,"NADH",0,0
-Larvae1,rep1,Embryo (38 hpf),Embryo,"NADH",0,0
-Larvae1,rep2,Embryo (38 hpf),Embryo,"NADH",0,0
-Larvae1,rep3,Embryo (38 hpf),Embryo,"NADH",0,0
-Larvae1,rep4,Embryo (38 hpf),Embryo,"NADH",0,0
-Larvae2,rep3,Embryo (65 hpf),Embryo,"NADH",0,0
-Larvae2,rep4,Embryo (65 hpf),Embryo,"NADH",0,0
-Larvae3,rep1,Larvae (93 hpf),Larvae,"NADH",0,0
-Larvae3,rep2,Larvae (93 hpf),Larvae,"NADH",0,0
-Larvae3,rep3,Larvae (93 hpf),Larvae,"NADH",0,0
-Larvae3,rep4,Larvae (93 hpf),Larvae,"NADH",0,0
-Larvae4,rep3,Larvae (163 hpf),Larvae,"NADH",0,0
-Larvae4,rep4,Larvae (163 hpf),Larvae,"NADH",0.06178889280810642,0.02603817794865001
-Larvae5,rep1,Larvae (183 hpf),Larvae,"NADH",0,0
-Larvae5,rep2,Larvae (183 hpf),Larvae,"NADH",0,0
-Larvae5,rep3,Larvae (183 hpf),Larvae,"NADH",0,0
-Larvae5,rep4,Larvae (183 hpf),Larvae,"NADH",0,0
-Larvae6,rep3,Larvae (231 hpf),Larvae,"NADH",0,0
-Larvae6,rep4,Larvae (231 hpf),Larvae,"NADH",0,0
-Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,"NADH",0,0
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,"NADH",0,0
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,"NADH",0,0
-Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,"NADH",0,0
-Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADH",0,0
-Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,"NADH",0,0
-Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,"NADH",0,0
-Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,"NADH",0,0
-Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,"NADH",0,0
-Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,"NADH",0,0
-Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,"NADH",0,0
-Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,"NADH",0,0
-Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,"NADH",0,0
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,"NADH",0,0
-Egg,rep1,Egg (1 hpf),Egg,"NADP+",0.054058656646767504,0.022864779329283477
-Egg,rep2,Egg (1 hpf),Egg,"NADP+",0.031121365651840673,0.01330978587595678
-Egg,rep3,Egg (1 hpf),Egg,"NADP+",0.1121907552124722,0.04617928079941748
-Egg,rep4,Egg (1 hpf),Egg,"NADP+",0.16979358256160487,0.06810923451257632
-Embryo,rep1,Embryo (5 hpf),Embryo,"NADP+",0.18875559115451968,0.07509257259686461
-Embryo,rep2,Embryo (5 hpf),Embryo,"NADP+",0.1963338279776209,0.07785238317995255
-Embryo,rep3,Embryo (5 hpf),Embryo,"NADP+",0.22790101288982276,0.08916335761257375
-Embryo,rep4,Embryo (5 hpf),Embryo,"NADP+",0.2629184377945486,0.10137530371482972
-Larvae1,rep1,Embryo (38 hpf),Embryo,"NADP+",0.1420372179041724,0.057680257383586
-Larvae1,rep2,Embryo (38 hpf),Embryo,"NADP+",0.2457535655406946,0.09543213886330938
-Larvae1,rep3,Embryo (38 hpf),Embryo,"NADP+",0.12337198367351378,0.05052358859146897
-Larvae1,rep4,Embryo (38 hpf),Embryo,"NADP+",0.06665779381615845,0.02802511099457963
-Larvae2,rep3,Embryo (65 hpf),Embryo,"NADP+",0.10638856543152697,0.043907678674236374
-Larvae2,rep4,Embryo (65 hpf),Embryo,"NADP+",0.12571053602822457,0.05142673086429069
-Larvae3,rep1,Larvae (93 hpf),Larvae,"NADP+",0.05574314953426558,0.023558272072678813
-Larvae3,rep2,Larvae (93 hpf),Larvae,"NADP+",0.05079455212164667,0.021517812506076643
-Larvae3,rep3,Larvae (93 hpf),Larvae,"NADP+",0.1983439373525853,0.07858148304235826
-Larvae3,rep4,Larvae (93 hpf),Larvae,"NADP+",0.07010979487323785,0.029428339237840762
-Larvae4,rep3,Larvae (163 hpf),Larvae,"NADP+",0.04898680826101622,0.020770026672613268
-Larvae4,rep4,Larvae (163 hpf),Larvae,"NADP+",0.05961661364862828,0.02514875894886255
-Larvae5,rep1,Larvae (183 hpf),Larvae,"NADP+",0.09957807618113484,0.041226072124072394
-Larvae5,rep2,Larvae (183 hpf),Larvae,"NADP+",0.0550642645125401,0.02327891354192307
-Larvae5,rep3,Larvae (183 hpf),Larvae,"NADP+",0.13482731678099014,0.05492978128706891
-Larvae5,rep4,Larvae (183 hpf),Larvae,"NADP+",0.23151967383728075,0.09044135419438333
-Larvae6,rep3,Larvae (231 hpf),Larvae,"NADP+",0.08369942339163462,0.0349088422909761
-Larvae6,rep4,Larvae (231 hpf),Larvae,"NADP+",0.20473877658177986,0.08089288907882357
-Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADP+",0.0741267586247876,0.031055535854103294
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADP+",0.12112283242823585,0.049653197361573295
-Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADP+",0.08495730154821846,0.035412646878665334
-Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADP+",0.08220963851724913,0.03431139758419386
-Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,"NADP+",0.04003450155196,0.017047746592143576
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,"NADP+",0,0
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,"NADP+",0.06432353608423416,0.02707366609588178
-Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,"NADP+",0,0
-Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADP+",0.08271483894211437,0.03451408896030533
-Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADP+",0,0
-Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADP+",0.19330999288297107,0.07675327745946604
-Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADP+",0.06996142984808826,0.029368122445905184
-Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,"NADP+",0,0
-Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,"NADP+",0,0
-Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,"NADP+",0.11164724202221137,0.04596699484660505
-Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,"NADP+",0,0
-Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,"NADP+",0.05380738857312937,0.02276123922186169
-Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,"NADP+",0,0
-Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,"NADP+",0,0
-Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,"NADP+",0,0
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,"NADP+",0.029056451652102164,0.012439199804733151
-Egg,rep1,Egg (1 hpf),Egg,"NADPH",0.029346838414756396,0.012561734946494435
-Egg,rep2,Egg (1 hpf),Egg,"NADPH",0.08799856010125466,0.03662832060067822
-Egg,rep3,Egg (1 hpf),Egg,"NADPH",0.12774012236159546,0.05220903189243486
-Egg,rep4,Egg (1 hpf),Egg,"NADPH",0.1373541453911226,0.05589571485597333
-Embryo,rep1,Embryo (5 hpf),Embryo,"NADPH",0.20670595004771672,0.0816014541653714
-Embryo,rep2,Embryo (5 hpf),Embryo,"NADPH",0.16274759355386795,0.06548544935976772
-Embryo,rep3,Embryo (5 hpf),Embryo,"NADPH",0.08610503318445616,0.035871826290314546
-Embryo,rep4,Embryo (5 hpf),Embryo,"NADPH",0.16347980983587607,0.06575885126439196
-Larvae1,rep1,Embryo (38 hpf),Embryo,"NADPH",0.06924428032771075,0.02907693577826894
-Larvae1,rep2,Embryo (38 hpf),Embryo,"NADPH",0.12705361980561322,0.05194457818608253
-Larvae1,rep3,Embryo (38 hpf),Embryo,"NADPH",0.1810535878576689,0.07226960327218931
-Larvae1,rep4,Embryo (38 hpf),Embryo,"NADPH",0.1787585811632671,0.0714248673473276
-Larvae2,rep3,Embryo (65 hpf),Embryo,"NADPH",0.3000403313668971,0.11395682570559995
-Larvae2,rep4,Embryo (65 hpf),Embryo,"NADPH",0.14435565796073338,0.05856102120936586
-Larvae3,rep1,Larvae (93 hpf),Larvae,"NADPH",0.2496899116889431,0.096802263928896
-Larvae3,rep2,Larvae (93 hpf),Larvae,"NADPH",0.17503955574607652,0.07005248665294384
-Larvae3,rep3,Larvae (93 hpf),Larvae,"NADPH",0.18658672379098606,0.07429948489426266
-Larvae3,rep4,Larvae (93 hpf),Larvae,"NADPH",0.0693732519204255,0.029129316954670647
-Larvae4,rep3,Larvae (163 hpf),Larvae,"NADPH",0.18206413551678005,0.0726410407968319
-Larvae4,rep4,Larvae (163 hpf),Larvae,"NADPH",0.08478576351205477,0.035343976975857665
-Larvae5,rep1,Larvae (183 hpf),Larvae,"NADPH",0.2779518722156674,0.10651449856045996
-Larvae5,rep2,Larvae (183 hpf),Larvae,"NADPH",0.15365461888550527,0.062075809198390515
-Larvae5,rep3,Larvae (183 hpf),Larvae,"NADPH",0.13718242261010352,0.05583013819529916
-Larvae5,rep4,Larvae (183 hpf),Larvae,"NADPH",0,0
-Larvae6,rep3,Larvae (231 hpf),Larvae,"NADPH",0.0689911953321424,0.028974128188747363
-Larvae6,rep4,Larvae (231 hpf),Larvae,"NADPH",0,0
-Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADPH",0.07011215543748013,0.0294292972506529
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADPH",0.2098729531403417,0.0827397681288874
-Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADPH",0.08249353903746316,0.034425312906464216
-Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NADPH",0.08365339683326804,0.03489039667369027
-Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,"NADPH",0,0
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,"NADPH",0,0
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,"NADPH",0,0
-Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,"NADPH",0,0
-Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADPH",0.11827004507659132,0.048546691676466885
-Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADPH",0.13269236863838293,0.05411197452011675
-Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADPH",0,0
-Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NADPH",0.060957984744481865,0.025698185640337535
-Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,"NADPH",0,0
-Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,"NADPH",0,0
-Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,"NADPH",0,0
-Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,"NADPH",0,0
-Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,"NADPH",0,0
-Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,"NADPH",0,0
-Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,"NADPH",0,0
-Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,"NADPH",0,0
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,"NADPH",0,0
+Egg,rep1,Egg (1 hpf),Egg,NAD+,2.290874313344211,0.5173112958272167
+Egg,rep2,Egg (1 hpf),Egg,NAD+,2.711712902946915,0.569574376628744
+Egg,rep3,Egg (1 hpf),Egg,NAD+,3.6418086034559236,0.6666872291451841
+Egg,rep4,Egg (1 hpf),Egg,NAD+,3.6463286895565425,0.6671099293151466
+Embryo,rep1,Embryo (5 hpf),Embryo,NAD+,3.434018498265529,0.6467975006138067
+Embryo,rep2,Embryo (5 hpf),Embryo,NAD+,3.1422667072175754,0.6172380582812033
+Embryo,rep3,Embryo (5 hpf),Embryo,NAD+,3.4509511869942826,0.6484528314572535
+Embryo,rep4,Embryo (5 hpf),Embryo,NAD+,4.170581210866149,0.7135393636906012
+Larvae1,rep1,Embryo (38 hpf),Embryo,NAD+,2.121609971060764,0.4943786392780673
+Larvae1,rep2,Embryo (38 hpf),Embryo,NAD+,3.0291357251820163,0.6052118972480924
+Larvae1,rep3,Embryo (38 hpf),Embryo,NAD+,3.4141708381479097,0.6448491373052874
+Larvae1,rep4,Embryo (38 hpf),Embryo,NAD+,3.2799510119836013,0.6314387981377145
+Larvae2,rep3,Embryo (65 hpf),Embryo,NAD+,3.663769774254815,0.6687371034493773
+Larvae2,rep4,Embryo (65 hpf),Embryo,NAD+,2.4800273230250744,0.5415826537719934
+Larvae3,rep1,Larvae (93 hpf),Larvae,NAD+,2.2600256653683997,0.5132210191734592
+Larvae3,rep2,Larvae (93 hpf),Larvae,NAD+,2.7407529536168056,0.5729590275182361
+Larvae3,rep3,Larvae (93 hpf),Larvae,NAD+,1.9432785988147938,0.46883137259956054
+Larvae3,rep4,Larvae (93 hpf),Larvae,NAD+,1.6802467148766118,0.42817477237877566
+Larvae4,rep3,Larvae (163 hpf),Larvae,NAD+,2.1620204540163113,0.49996467490602137
+Larvae4,rep4,Larvae (163 hpf),Larvae,NAD+,2.846647002750335,0.5850823340084947
+Larvae5,rep1,Larvae (183 hpf),Larvae,NAD+,2.375279462755676,0.5283097369027633
+Larvae5,rep2,Larvae (183 hpf),Larvae,NAD+,2.285958717886965,0.5166621030106339
+Larvae5,rep3,Larvae (183 hpf),Larvae,NAD+,2.333677900086515,0.5229236359920667
+Larvae5,rep4,Larvae (183 hpf),Larvae,NAD+,1.1790553120792875,0.338268254305887
+Larvae6,rep3,Larvae (231 hpf),Larvae,NAD+,1.4685879307928915,0.39244860134611537
+Larvae6,rep4,Larvae (231 hpf),Larvae,NAD+,0.8332029404043042,0.2632105451690504
+Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAD+,1.8710160929743525,0.4580356268644512
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAD+,2.5419153856695837,0.549238181931491
+Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAD+,1.7971091189464263,0.4467094091072882
+Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAD+,1.957675739843202,0.4709505590739745
+Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,NAD+,1.4082025861094656,0.38169301843656567
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,NAD+,0.992520865675144,0.2994028780230449
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,NAD+,1.4688515187022457,0.39249497144373724
+Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,NAD+,1.2751638518730464,0.3570126789719737
+Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAD+,2.15970188614869,0.49964610941965765
+Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAD+,1.701092626896784,0.4315394774345429
+Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAD+,1.822914279696042,0.4506976906087618
+Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAD+,2.066411431203781,0.48663042524560113
+Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,NAD+,0.6796247384813454,0.22521226255248114
+Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,NAD+,1.0157668810949632,0.30444030549765505
+Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,NAD+,1.4742737593636905,0.39344774929614335
+Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,NAD+,0.7621054704204727,0.24603189945103335
+Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,NAD+,1.632241790687513,0.4203257799032862
+Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,NAD+,1.4006296250343169,0.38032516121841986
+Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,NAD+,0.5536500575614802,0.19135320546590248
+Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,NAD+,0.8062798231881028,0.2567850307243466
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,NAD+,1.3055267530433678,0.36277016608338014
+Egg,rep1,Egg (1 hpf),Egg,NADH,0.2692087622686664,0.10353306168853454
+Egg,rep2,Egg (1 hpf),Egg,NADH,0.5272454687431042,0.18390884527709653
+Egg,rep3,Egg (1 hpf),Egg,NADH,0.5165615877966947,0.18086005176975847
+Egg,rep4,Egg (1 hpf),Egg,NADH,0.5312855254550682,0.1850561773527762
+Embryo,rep1,Embryo (5 hpf),Embryo,NADH,0,0
+Embryo,rep2,Embryo (5 hpf),Embryo,NADH,0.026178172620228243,0.011222772732729995
+Embryo,rep3,Embryo (5 hpf),Embryo,NADH,0,0
+Embryo,rep4,Embryo (5 hpf),Embryo,NADH,0,0
+Larvae1,rep1,Embryo (38 hpf),Embryo,NADH,0,0
+Larvae1,rep2,Embryo (38 hpf),Embryo,NADH,0,0
+Larvae1,rep3,Embryo (38 hpf),Embryo,NADH,0,0
+Larvae1,rep4,Embryo (38 hpf),Embryo,NADH,0,0
+Larvae2,rep3,Embryo (65 hpf),Embryo,NADH,0,0
+Larvae2,rep4,Embryo (65 hpf),Embryo,NADH,0,0
+Larvae3,rep1,Larvae (93 hpf),Larvae,NADH,0,0
+Larvae3,rep2,Larvae (93 hpf),Larvae,NADH,0,0
+Larvae3,rep3,Larvae (93 hpf),Larvae,NADH,0,0
+Larvae3,rep4,Larvae (93 hpf),Larvae,NADH,0,0
+Larvae4,rep3,Larvae (163 hpf),Larvae,NADH,0,0
+Larvae4,rep4,Larvae (163 hpf),Larvae,NADH,0.06178889280810642,0.02603817794865001
+Larvae5,rep1,Larvae (183 hpf),Larvae,NADH,0,0
+Larvae5,rep2,Larvae (183 hpf),Larvae,NADH,0,0
+Larvae5,rep3,Larvae (183 hpf),Larvae,NADH,0,0
+Larvae5,rep4,Larvae (183 hpf),Larvae,NADH,0,0
+Larvae6,rep3,Larvae (231 hpf),Larvae,NADH,0,0
+Larvae6,rep4,Larvae (231 hpf),Larvae,NADH,0,0
+Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,NADH,0,0
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,NADH,0,0
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,NADH,0,0
+Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,NADH,0,0
+Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADH,0,0
+Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,NADH,0,0
+Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,NADH,0,0
+Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,NADH,0,0
+Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,NADH,0,0
+Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,NADH,0,0
+Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,NADH,0,0
+Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,NADH,0,0
+Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,NADH,0,0
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,NADH,0,0
+Egg,rep1,Egg (1 hpf),Egg,NADP+,0.054058656646767504,0.022864779329283477
+Egg,rep2,Egg (1 hpf),Egg,NADP+,0.031121365651840673,0.01330978587595678
+Egg,rep3,Egg (1 hpf),Egg,NADP+,0.1121907552124722,0.04617928079941748
+Egg,rep4,Egg (1 hpf),Egg,NADP+,0.16979358256160487,0.06810923451257632
+Embryo,rep1,Embryo (5 hpf),Embryo,NADP+,0.18875559115451968,0.07509257259686461
+Embryo,rep2,Embryo (5 hpf),Embryo,NADP+,0.1963338279776209,0.07785238317995255
+Embryo,rep3,Embryo (5 hpf),Embryo,NADP+,0.22790101288982276,0.08916335761257375
+Embryo,rep4,Embryo (5 hpf),Embryo,NADP+,0.2629184377945486,0.10137530371482972
+Larvae1,rep1,Embryo (38 hpf),Embryo,NADP+,0.1420372179041724,0.057680257383586
+Larvae1,rep2,Embryo (38 hpf),Embryo,NADP+,0.2457535655406946,0.09543213886330938
+Larvae1,rep3,Embryo (38 hpf),Embryo,NADP+,0.12337198367351378,0.05052358859146897
+Larvae1,rep4,Embryo (38 hpf),Embryo,NADP+,0.06665779381615845,0.02802511099457963
+Larvae2,rep3,Embryo (65 hpf),Embryo,NADP+,0.10638856543152697,0.043907678674236374
+Larvae2,rep4,Embryo (65 hpf),Embryo,NADP+,0.12571053602822457,0.05142673086429069
+Larvae3,rep1,Larvae (93 hpf),Larvae,NADP+,0.05574314953426558,0.023558272072678813
+Larvae3,rep2,Larvae (93 hpf),Larvae,NADP+,0.05079455212164667,0.021517812506076643
+Larvae3,rep3,Larvae (93 hpf),Larvae,NADP+,0.1983439373525853,0.07858148304235826
+Larvae3,rep4,Larvae (93 hpf),Larvae,NADP+,0.07010979487323785,0.029428339237840762
+Larvae4,rep3,Larvae (163 hpf),Larvae,NADP+,0.04898680826101622,0.020770026672613268
+Larvae4,rep4,Larvae (163 hpf),Larvae,NADP+,0.05961661364862828,0.02514875894886255
+Larvae5,rep1,Larvae (183 hpf),Larvae,NADP+,0.09957807618113484,0.041226072124072394
+Larvae5,rep2,Larvae (183 hpf),Larvae,NADP+,0.0550642645125401,0.02327891354192307
+Larvae5,rep3,Larvae (183 hpf),Larvae,NADP+,0.13482731678099014,0.05492978128706891
+Larvae5,rep4,Larvae (183 hpf),Larvae,NADP+,0.23151967383728075,0.09044135419438333
+Larvae6,rep3,Larvae (231 hpf),Larvae,NADP+,0.08369942339163462,0.0349088422909761
+Larvae6,rep4,Larvae (231 hpf),Larvae,NADP+,0.20473877658177986,0.08089288907882357
+Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADP+,0.0741267586247876,0.031055535854103294
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADP+,0.12112283242823585,0.049653197361573295
+Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADP+,0.08495730154821846,0.035412646878665334
+Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADP+,0.08220963851724913,0.03431139758419386
+Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,NADP+,0.04003450155196,0.017047746592143576
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,NADP+,0,0
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,NADP+,0.06432353608423416,0.02707366609588178
+Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,NADP+,0,0
+Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADP+,0.08271483894211437,0.03451408896030533
+Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADP+,0,0
+Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADP+,0.19330999288297107,0.07675327745946604
+Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADP+,0.06996142984808826,0.029368122445905184
+Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,NADP+,0,0
+Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,NADP+,0,0
+Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,NADP+,0.11164724202221137,0.04596699484660505
+Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,NADP+,0,0
+Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,NADP+,0.05380738857312937,0.02276123922186169
+Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,NADP+,0,0
+Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,NADP+,0,0
+Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,NADP+,0,0
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,NADP+,0.029056451652102164,0.012439199804733151
+Egg,rep1,Egg (1 hpf),Egg,NADPH,0.029346838414756396,0.012561734946494435
+Egg,rep2,Egg (1 hpf),Egg,NADPH,0.08799856010125466,0.03662832060067822
+Egg,rep3,Egg (1 hpf),Egg,NADPH,0.12774012236159546,0.05220903189243486
+Egg,rep4,Egg (1 hpf),Egg,NADPH,0.1373541453911226,0.05589571485597333
+Embryo,rep1,Embryo (5 hpf),Embryo,NADPH,0.20670595004771672,0.0816014541653714
+Embryo,rep2,Embryo (5 hpf),Embryo,NADPH,0.16274759355386795,0.06548544935976772
+Embryo,rep3,Embryo (5 hpf),Embryo,NADPH,0.08610503318445616,0.035871826290314546
+Embryo,rep4,Embryo (5 hpf),Embryo,NADPH,0.16347980983587607,0.06575885126439196
+Larvae1,rep1,Embryo (38 hpf),Embryo,NADPH,0.06924428032771075,0.02907693577826894
+Larvae1,rep2,Embryo (38 hpf),Embryo,NADPH,0.12705361980561322,0.05194457818608253
+Larvae1,rep3,Embryo (38 hpf),Embryo,NADPH,0.1810535878576689,0.07226960327218931
+Larvae1,rep4,Embryo (38 hpf),Embryo,NADPH,0.1787585811632671,0.0714248673473276
+Larvae2,rep3,Embryo (65 hpf),Embryo,NADPH,0.3000403313668971,0.11395682570559995
+Larvae2,rep4,Embryo (65 hpf),Embryo,NADPH,0.14435565796073338,0.05856102120936586
+Larvae3,rep1,Larvae (93 hpf),Larvae,NADPH,0.2496899116889431,0.096802263928896
+Larvae3,rep2,Larvae (93 hpf),Larvae,NADPH,0.17503955574607652,0.07005248665294384
+Larvae3,rep3,Larvae (93 hpf),Larvae,NADPH,0.18658672379098606,0.07429948489426266
+Larvae3,rep4,Larvae (93 hpf),Larvae,NADPH,0.0693732519204255,0.029129316954670647
+Larvae4,rep3,Larvae (163 hpf),Larvae,NADPH,0.18206413551678005,0.0726410407968319
+Larvae4,rep4,Larvae (163 hpf),Larvae,NADPH,0.08478576351205477,0.035343976975857665
+Larvae5,rep1,Larvae (183 hpf),Larvae,NADPH,0.2779518722156674,0.10651449856045996
+Larvae5,rep2,Larvae (183 hpf),Larvae,NADPH,0.15365461888550527,0.062075809198390515
+Larvae5,rep3,Larvae (183 hpf),Larvae,NADPH,0.13718242261010352,0.05583013819529916
+Larvae5,rep4,Larvae (183 hpf),Larvae,NADPH,0,0
+Larvae6,rep3,Larvae (231 hpf),Larvae,NADPH,0.0689911953321424,0.028974128188747363
+Larvae6,rep4,Larvae (231 hpf),Larvae,NADPH,0,0
+Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADPH,0.07011215543748013,0.0294292972506529
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADPH,0.2098729531403417,0.0827397681288874
+Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADPH,0.08249353903746316,0.034425312906464216
+Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NADPH,0.08365339683326804,0.03489039667369027
+Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,NADPH,0,0
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,NADPH,0,0
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,NADPH,0,0
+Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,NADPH,0,0
+Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADPH,0.11827004507659132,0.048546691676466885
+Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADPH,0.13269236863838293,0.05411197452011675
+Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADPH,0,0
+Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NADPH,0.060957984744481865,0.025698185640337535
+Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,NADPH,0,0
+Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,NADPH,0,0
+Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,NADPH,0,0
+Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,NADPH,0,0
+Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,NADPH,0,0
+Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,NADPH,0,0
+Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,NADPH,0,0
+Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,NADPH,0,0
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,NADPH,0,0
 Egg,rep1,Egg (1 hpf),Egg,NG-dimethyl-L-arginine,4.178814115290864,0.7142303230371564
 Egg,rep2,Egg (1 hpf),Egg,NG-dimethyl-L-arginine,4.589273387531694,0.7473553527350064
 Egg,rep3,Egg (1 hpf),Egg,NG-dimethyl-L-arginine,5.088500329184675,0.784510333853805
@@ -5999,7 +5999,7 @@ Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Glucuronic acid,
 Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Glucuronic acid,1.2270957530078526,0.3477388897367588
 Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Glucuronic acid,8.746124388061276,0.988831949904284
 Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,Glucuronic acid,1.3117895243423272,0.3639482914363411
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,Glucuronic acid,0.24548946395584556,0.09534005803455564
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,Glucuronic acid,0.24548946395584556,0.09534005803455563
 Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,Glucuronic acid,0.43287827497335757,0.15620929803672065
 Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,Glucuronic acid,0.7391472689674584,0.24033635911133674
 Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,Glucuronic acid,25.140795815366697,1.4173188048574334
@@ -6235,7 +6235,7 @@ Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Glycine,1.138589
 Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,Glycine,3.182166921092801,0.621401362643013
 Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,Glycine,1.304079793291928,0.36249751519662465
 Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,Glycine,1.0710173326500336,0.3161837335833449
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,Glycine,1.0495403441697408,0.3116564716048728
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,Glycine,1.0495403441697408,0.31165647160487275
 Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,Glycine,1.2184108100077435,0.3460419728316489
 Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,Glycine,1.549197677720811,0.40640351417253223
 Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,Glycine,1.4986282835256977,0.3977016517162133
@@ -6771,7 +6771,7 @@ Egg,rep1,Egg (1 hpf),Egg,Methionine sulfoxide,0.023208145234340696,0.00996398867
 Egg,rep2,Egg (1 hpf),Egg,Methionine sulfoxide,0.03542926597138438,0.015120435969630853
 Egg,rep3,Egg (1 hpf),Egg,Methionine sulfoxide,0.013082257091825974,0.0056447092800664764
 Egg,rep4,Egg (1 hpf),Egg,Methionine sulfoxide,0.02881467710432173,0.012337151283830573
-Embryo,rep1,Embryo (5 hpf),Embryo,Methionine sulfoxide,0.032823138140704575,0.014025958784185262
+Embryo,rep1,Embryo (5 hpf),Embryo,Methionine sulfoxide,0.032823138140704575,0.01402595878418526
 Embryo,rep2,Embryo (5 hpf),Embryo,Methionine sulfoxide,0.03040216985124335,0.013006764566813463
 Embryo,rep3,Embryo (5 hpf),Embryo,Methionine sulfoxide,0.026168868614193885,0.011218835115554026
 Embryo,rep4,Embryo (5 hpf),Embryo,Methionine sulfoxide,0.029725925105592847,0.0127216469833783
@@ -7190,53 +7190,53 @@ Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,N-octanoylglycine,
 Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,N-octanoylglycine,0.879090224935195,0.2739476333473332
 Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,N-octanoylglycine,3.9182369345720045,0.6918094469115598
 Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,N-octanoylglycine,1.1419824600184045,0.3308159102174016
-Egg,rep1,Egg (1 hpf),Egg,"NAADP",0,0
-Egg,rep2,Egg (1 hpf),Egg,"NAADP",0,0
-Egg,rep3,Egg (1 hpf),Egg,"NAADP",0.5272217108212827,0.1839020893136226
-Egg,rep4,Egg (1 hpf),Egg,"NAADP",0,0
-Embryo,rep1,Embryo (5 hpf),Embryo,"NAADP",0,0
-Embryo,rep2,Embryo (5 hpf),Embryo,"NAADP",0,0
-Embryo,rep3,Embryo (5 hpf),Embryo,"NAADP",0,0
-Embryo,rep4,Embryo (5 hpf),Embryo,"NAADP",0,0
-Larvae1,rep1,Embryo (38 hpf),Embryo,"NAADP",0,0
-Larvae1,rep2,Embryo (38 hpf),Embryo,"NAADP",0,0
-Larvae1,rep3,Embryo (38 hpf),Embryo,"NAADP",0,0
-Larvae1,rep4,Embryo (38 hpf),Embryo,"NAADP",0,0
-Larvae2,rep3,Embryo (65 hpf),Embryo,"NAADP",0.07147410536483137,0.029981679780035967
-Larvae2,rep4,Embryo (65 hpf),Embryo,"NAADP",1.5578937943930353,0.40788250829486333
-Larvae3,rep1,Larvae (93 hpf),Larvae,"NAADP",0.9585556378348108,0.2919359133163233
-Larvae3,rep2,Larvae (93 hpf),Larvae,"NAADP",0,0
-Larvae3,rep3,Larvae (93 hpf),Larvae,"NAADP",2.4093501314862227,0.532671604445097
-Larvae3,rep4,Larvae (93 hpf),Larvae,"NAADP",0,0
-Larvae4,rep3,Larvae (163 hpf),Larvae,"NAADP",0,0
-Larvae4,rep4,Larvae (163 hpf),Larvae,"NAADP",0,0
-Larvae5,rep1,Larvae (183 hpf),Larvae,"NAADP",0,0
-Larvae5,rep2,Larvae (183 hpf),Larvae,"NAADP",0,0
-Larvae5,rep3,Larvae (183 hpf),Larvae,"NAADP",0.2960127163759387,0.11260926281914706
-Larvae5,rep4,Larvae (183 hpf),Larvae,"NAADP",0.33827899259103167,0.12654666075033968
-Larvae6,rep3,Larvae (231 hpf),Larvae,"NAADP",0,0
-Larvae6,rep4,Larvae (231 hpf),Larvae,"NAADP",2.1256376556548098,0.49493863034642693
-Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAADP",4.0185757478285185,0.7005804835551952
-Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,"NAADP",0,0
-Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,"NAADP",0,0
-Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,"NAADP",0,0
-Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,"NAADP",0,0
-Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAADP",2.8684352810745812,0.5875353355073584
-Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,"NAADP",0,0
-Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,"NAADP",0,0
-Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,"NAADP",0.6614197073816295,0.22047935766186103
-Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,"NAADP",0.8467175289709911,0.26640047151449553
-Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,"NAADP",0.17768446681582734,0.07102894692248765
-Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,"NAADP",0,0
-Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,"NAADP",0,0
-Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,"NAADP",0,0
-Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,"NAADP",0,0
-Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,"NAADP",0,0
+Egg,rep1,Egg (1 hpf),Egg,NAADP,0,0
+Egg,rep2,Egg (1 hpf),Egg,NAADP,0,0
+Egg,rep3,Egg (1 hpf),Egg,NAADP,0.5272217108212827,0.1839020893136226
+Egg,rep4,Egg (1 hpf),Egg,NAADP,0,0
+Embryo,rep1,Embryo (5 hpf),Embryo,NAADP,0,0
+Embryo,rep2,Embryo (5 hpf),Embryo,NAADP,0,0
+Embryo,rep3,Embryo (5 hpf),Embryo,NAADP,0,0
+Embryo,rep4,Embryo (5 hpf),Embryo,NAADP,0,0
+Larvae1,rep1,Embryo (38 hpf),Embryo,NAADP,0,0
+Larvae1,rep2,Embryo (38 hpf),Embryo,NAADP,0,0
+Larvae1,rep3,Embryo (38 hpf),Embryo,NAADP,0,0
+Larvae1,rep4,Embryo (38 hpf),Embryo,NAADP,0,0
+Larvae2,rep3,Embryo (65 hpf),Embryo,NAADP,0.07147410536483137,0.029981679780035967
+Larvae2,rep4,Embryo (65 hpf),Embryo,NAADP,1.5578937943930353,0.40788250829486333
+Larvae3,rep1,Larvae (93 hpf),Larvae,NAADP,0.9585556378348108,0.2919359133163233
+Larvae3,rep2,Larvae (93 hpf),Larvae,NAADP,0,0
+Larvae3,rep3,Larvae (93 hpf),Larvae,NAADP,2.4093501314862227,0.532671604445097
+Larvae3,rep4,Larvae (93 hpf),Larvae,NAADP,0,0
+Larvae4,rep3,Larvae (163 hpf),Larvae,NAADP,0,0
+Larvae4,rep4,Larvae (163 hpf),Larvae,NAADP,0,0
+Larvae5,rep1,Larvae (183 hpf),Larvae,NAADP,0,0
+Larvae5,rep2,Larvae (183 hpf),Larvae,NAADP,0,0
+Larvae5,rep3,Larvae (183 hpf),Larvae,NAADP,0.2960127163759387,0.11260926281914706
+Larvae5,rep4,Larvae (183 hpf),Larvae,NAADP,0.33827899259103167,0.12654666075033968
+Larvae6,rep3,Larvae (231 hpf),Larvae,NAADP,0,0
+Larvae6,rep4,Larvae (231 hpf),Larvae,NAADP,2.1256376556548098,0.49493863034642693
+Recruit1,rep1,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit1,rep2,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAADP,4.0185757478285185,0.7005804835551952
+Recruit1,rep3,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit1,rep4,Metamorphosed Polyp (183 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit1plug,rep1,Attached Recruit (183 hpf),Attached Recruit,NAADP,0,0
+Recruit1plug,rep2,Attached Recruit (183 hpf),Attached Recruit,NAADP,0,0
+Recruit1plug,rep3,Attached Recruit (183 hpf),Attached Recruit,NAADP,0,0
+Recruit1plug,rep4,Attached Recruit (183 hpf),Attached Recruit,NAADP,0,0
+Recruit2,rep1,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAADP,2.8684352810745812,0.5875353355073584
+Recruit2,rep2,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit2,rep3,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit2,rep4,Metamorphosed Polyp (231 hpf),Metamorphosed Polyp,NAADP,0,0
+Recruit2plug,rep1,Attached Recruit (231 hpf),Attached Recruit,NAADP,0,0
+Recruit2plug,rep2,Attached Recruit (231 hpf),Attached Recruit,NAADP,0.6614197073816295,0.22047935766186103
+Recruit2plug,rep3,Attached Recruit (231 hpf),Attached Recruit,NAADP,0.8467175289709911,0.26640047151449553
+Recruit2plug,rep4,Attached Recruit (231 hpf),Attached Recruit,NAADP,0.17768446681582734,0.07102894692248765
+Recruit2plug,rep5,Attached Recruit (231 hpf),Attached Recruit,NAADP,0,0
+Recruit3plug,rep1,Attached Recruit (255 hpf),Attached Recruit,NAADP,0,0
+Recruit3plug,rep2,Attached Recruit (255 hpf),Attached Recruit,NAADP,0,0
+Recruit3plug,rep3,Attached Recruit (255 hpf),Attached Recruit,NAADP,0,0
+Recruit3plug,rep4,Attached Recruit (255 hpf),Attached Recruit,NAADP,0,0
 Egg,rep1,Egg (1 hpf),Egg,Nicotinate,4.077679838404068,0.7056653139465447
 Egg,rep2,Egg (1 hpf),Egg,Nicotinate,2.2248489673067438,0.5085093796840838
 Egg,rep3,Egg (1 hpf),Egg,Nicotinate,1.3720619898127049,0.3751260343894471

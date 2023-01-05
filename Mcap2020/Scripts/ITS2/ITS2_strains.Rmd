@@ -344,37 +344,55 @@ dev.off()
 
 ```
 
-# **Alpha diversity**  
+# **Alpha Diversity**  
 
-Look at alpha diversity.  
-
-Remove any OTU that has a count of 0 in all samples. (There are none in this dataset).    
 ```{r}
-GP2f <- prune_taxa(taxa_sums(GP1_rare) > 0, GP1_rare)
+GP2 <- prune_taxa(taxa_sums(GP1_rare) > 0, GP1_rare)
 ```
 
-Plot the two most commonly used richness metrics - Shannon and Inverse Simpson.  
+Plot all richness metrics.  
 ```{r}
-plot_richness(GP2f, measures=c("InvSimpson", "Shannon"), x="lifestage", color="lifestage")
+plot_richness(GP2)
 ```
 
-Pretty similar across life stages.      
+Plot the two most commonly used - Shannon and Inverse Simpson.  
+```{r}
+alpha1<-plot_richness(GP2, measures=c("InvSimpson", "Shannon"), x="lifestage", color="lifestage", nrow=2)
+
+#reorder factors 
+alpha1$data$lifestage <- as.character(alpha1$data$lifestage)
+alpha1$data$lifestage <- factor(alpha1$data$lifestage, levels=lifestage_order)
+
+alpha1_plot <- alpha1 + geom_point(size=3) + theme_classic() + scale_color_manual() + scale_color_manual(name="Lifestage", 
+                      values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Attached Recruit (231 hpf)"="#BA55D3", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3"),
+                      breaks = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
+                     labels = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) + 
+  theme(axis.text.x=element_text(angle=45, hjust=1, color="black")) + 
+  theme(axis.title.x=element_blank())+
+  theme(legend.position="none");alpha1_plot
+
+ggsave(plot=alpha1_plot, file="Mcap2020/Figures/ITS2/alpha_rare.png", width=4, height=7)
+```
+
+Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  
 
 Test for differences in alpha diversity.  
 ```{r}
-metadata <- as(sample_data(GP2f), "data.frame")
+metadata <- as(sample_data(GP2), "data.frame")
 metadata$sample<-rownames(metadata)
 
-alpha_full<-estimate_richness(GP2f, measures=c("InvSimpson", "Shannon"))
-alpha_full$sample<-rownames(alpha_full)
+alpha_rare<-estimate_richness(GP2, measures=c("InvSimpson", "Shannon", "Chao1"))
+alpha_rare$sample<-rownames(alpha_rare)
 
-alpha_full<-full_join(metadata, alpha_full, by="sample")
+alpha_rare<-full_join(metadata, alpha_rare, by="sample")
 
-summary(aov(Shannon~lifestage, data=alpha_full))
-summary(aov(InvSimpson~lifestage, data=alpha_full))
+summary(aov(Shannon~lifestage, data=alpha_rare))
+summary(aov(InvSimpson~lifestage, data=alpha_rare))
+summary(aov(Chao1~lifestage, data=alpha_rare))
 ```
 
-No difference in ITS2 alpha diversity by lifestage.  
+There are significant differences in alpha diversity between lifestages for all metrics.    
+
 
 # **Generate VST normalization for DIABLO**  
 

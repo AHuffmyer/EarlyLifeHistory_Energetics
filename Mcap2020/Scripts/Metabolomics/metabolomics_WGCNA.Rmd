@@ -1,7 +1,7 @@
 ---
 title: Montipora capitata 2020 metabolomics WGCNA analysis
 author: "AS Huffmyer"
-date: '2022'
+date: '2023'
 output:
   html_document:
     code_folding: hide
@@ -65,7 +65,6 @@ if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') BiocManage
 if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
 if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
 if ("dendsort" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install('dendsort') 
-if ("MetaboAnalystR" %in% rownames(installed.packages()) == 'FALSE') devtools::install_github("xia-lab/MetaboAnalystR", build = TRUE, build_vignettes = FALSE) 
 
 library("genefilter")
 library("DESeq2")
@@ -80,10 +79,9 @@ library("clusterProfiler")
 library("pheatmap")
 library("magrittr")
 library("dendsort")
-#library("MetaboAnalystR")
 ```
 
-This script uses WGCNA analysis on metabolomics data set to explore whether we can detect "modules" of genes that are correlated with lifestage. PLS-DA analyses and multivariate analyses are conducted in metabolomics.Rmd script. The pipeline in this script is modified from K. Wong script: 
+This script uses WGCNA analysis on metabolomics data set to explore whether we can detect "modules" of genes that are correlated with lifestage. PLS-DA analyses and multivariate analyses are conducted in metabolomics.Rmd script. This pipeline modified from scripts from Kevin Wong.  
 
 # Pipeline Overview
 
@@ -144,7 +142,7 @@ rowSums(dplyr::count(data)) > 0
 
 Conduct data filtering, this includes:  
 
-*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (as analyzed in metabolomics.Rmd). We are further setting the minimum value of metabolites to 1 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
+*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (as analyzed in metabolomics.Rmd). We are further setting the minimum value of metabolites to 0.01 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
 
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 
@@ -189,7 +187,7 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 dev.off()
 ```
 
-Betaine could be a large outlier, likely due to very high abundance compared to other metabolites. Try analysis with and without Betaine. Proceeding now without removing Betaine because there are no sample outliers including betaine in analysis below.      
+Betaine could be a large outlier, likely due to very high abundance compared to other metabolites. I tried analysis with and without Betaine. Proceeding now without removing Betaine because there are no sample outliers with including betaine in analysis.      
 
 ```{r}
 outlier<-c("Betaine")
@@ -223,7 +221,7 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 dev.off()
 ```
 
-No clear outliers.  
+No clear outliers for samples.   
 
 # 2. Network construction and consensus module detection  
 
@@ -293,7 +291,7 @@ netwk <- blockwiseModules(data_filt,                         # <= input here
                           deepSplit = 2,
                           pamRespectsDendro = F,
                           # detectCutHeight = 0.75,
-                          minModuleSize = 5,                  #consider increasing or decreasing this
+                          minModuleSize = 5,                  
                           maxBlockSize = 4000,
 
                           # == Module Adjustments ==
@@ -561,41 +559,52 @@ Output eigengene values to a data frame.
 write.csv(mME_meta, "Mcap2020/Output/Metabolomics/WGCNA/module_expression.csv")
 ```
 
+Add pattern names to each cluster. Cluster 1 = peaking in mid development; Cluster 2 = increasing; Cluster 3 = decreasing.  
+
+```{r}
+mME_meta<-mME_meta%>%
+  mutate(pattern=if_else(Cluster=="Cluster1", "Mid", 
+                         if_else(Cluster=="Cluster2", "Increasing", 
+                                 if_else(Cluster=="Cluster3", "Decreasing", "NA"))))
+mME_meta$pattern<-factor(mME_meta$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+```
+
 Plot by time point with module clusters.  
 ```{r}
 mME_meta$group <- factor(mME_meta$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit"))
 mME_meta$Cluster <- factor(mME_meta$Cluster, levels = c("Cluster1", "Cluster2", "Cluster3"))
+mME_meta$lifestage <- factor(mME_meta$lifestage, levels = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
 
 expression_plots_cluster<-mME_meta%>%
 #  group_by(Module) %>%
-  ggplot(aes(x=hpf, y=value, fill=group)) +
-  facet_grid(Cluster ~.)+
-  ylab("Mean Module Cluster Eigenegene Value") +
+  ggplot(aes(x=lifestage, y=value)) +
+  facet_grid(~pattern)+
+  ylab("Eigengene Expression") +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
-  geom_boxplot(width=.5, outlier.shape= NA, position = position_dodge(width = 0.5), alpha = 0.7) +
-  stat_summary(fun=mean, geom="line", aes(group=lifestage, color = group), position = position_dodge(width = 0.5))  + 
-  geom_point(pch = 21, position = position_dodge(width = 0.5)) +
+  geom_point(aes(fill=group, color=group), size=3, pch = 21, position = position_dodge(width = 0.5)) +
+  geom_smooth(aes(group=1), se=TRUE, show.legend = NA, color="black")+
   scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) +
-  scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) + 
-  xlab("Hours Post-Fertilization") + #Axis titles
+  scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) +
+  xlab("") + #Axis titles
   theme_bw() + theme(panel.border = element_rect(color="black", fill=NA, size=0.75), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_blank()) +
   theme(axis.text = element_text(size = 11 , color = "black"),
-        axis.title = element_text(size = 16, color = "black"), 
-        axis.text.x = element_text(size=11, color="black"), 
-        legend.position="top", 
-        legend.title=element_blank(), 
+        axis.title = element_text(size = 16, color = "black", face="bold"), 
+        axis.text.x = element_blank(), 
+        legend.position="bottom", 
+        legend.title=element_text(size=12, face="bold"), 
         legend.text=element_text(color="black", size=12), 
-        strip.text.y = element_text(size = 14, color = "black", face = "bold.italic")); expression_plots_cluster
+        strip.text.x = element_text(size = 14, color = "black", face="bold"), 
+        strip.background = element_rect(color="white", fill="white")); expression_plots_cluster
 
-ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=7, height=10, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=10, height=5, units="in")
 
 ``` 
 
 
 # 5. Pathway Analysis  
 
-Conduct pathway analysis for each module cluster - clusters 1, 2, and 3 as determined by WGCNA analysis above.  
+Conduct pathway analysis for each module cluster - clusters 1 (Mid), 2 (Increasing), and 3 (Decreasing) as determined by WGCNA analysis above.  
 
 First, generate a list of metabolites contained within each module cluster.  
 
@@ -717,33 +726,43 @@ sig_pathways<-kegg_pathways%>%
   mutate(Group=if_else(Cluster=="Cluster3", "Eggs & Embryos", Group))
 ```
 
+Add pattern names to each cluster. Cluster 1 = peaking in mid development; Cluster 2 = increasing; Cluster 3 = decreasing.  
+
+```{r}
+sig_pathways<-sig_pathways%>%
+  mutate(pattern=if_else(Cluster=="Cluster1", "Mid", 
+                         if_else(Cluster=="Cluster2", "Increasing", 
+                                 if_else(Cluster=="Cluster3", "Decreasing", "NA"))))
+sig_pathways$pattern<-factor(sig_pathways$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+```
+
 Plot these pathways with a dot plot across lifestage groupings.    
 
 ```{r}
-list_groups<-c("Eggs & Embryos", "Larvae & Metamorphosed Polyps", "Attached Recruits")
-sig_pathways$Group<-factor(as.character(sig_pathways$Group), levels=list_groups)
-  
-#plot significantly enriched GO terms by Slim Category across lifestages
-Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = Group, y = Metabolite.Set)) + 
-  geom_point(aes(colour=Group, size=FDR)) +
-  scale_colour_manual(name="Lifestage Cluster", values = c("Eggs & Embryos"="lightgray", "Larvae & Metamorphosed Polyps"="darkgray", "Attached Recruits"="black")) +
-  scale_size(name="FDR p-value", range = c(10, 25), trans="reverse")+
-  guides(colour = guide_legend(override.aes = list(size=18)))+
-  xlab("Lifestage Cluster")+
+#plot significantly enriched terms by ontogenetic pattern 
+Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = pattern, y = Metabolite.Set)) + 
+  geom_point(aes(colour=FDR, size=Hits)) +
+  #scale_color_continuous(name="FDR p-value", type = "gradient")+
+  scale_color_distiller(type = "seq",
+                        direction = -1,
+                        palette = "Greys")+
+  scale_size(range=c(6,10))+
+  guides(colour = guide_legend(override.aes = list(size=10)))+
+  xlab("Ontogenetic Pattern")+
   ylab("KEGG Pathway")+
   theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
   panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-  strip.text.y = element_text(angle=0, size = 30, face="bold"),
+  strip.text.y = element_text(angle=0, size = 14, face="bold"),
   strip.background = element_rect(fill="white"), 
-  axis.text.y = element_text(size = 30),
-  axis.text.x = element_text(angle=35, size=30, hjust=1),
-  axis.title.x = element_text(size = 40, face="bold"),
-  axis.title.y = element_text(size = 40, face="bold"), 
-  legend.text = element_text(size=30), 
-  legend.title = element_text(size=40, face="bold"), 
-  legend.key.size = unit(2, 'cm'))
+  axis.text.y = element_text(size = 12),
+  axis.text.x = element_text(angle=35, size=12, hjust=1),
+  axis.title.x = element_text(size = 14, face="bold"),
+  axis.title.y = element_text(size = 14, face="bold"), 
+  legend.text = element_text(size=14), 
+  legend.title = element_text(size=14, face="bold"), 
+  legend.key.size = unit(0.5, 'cm'))
 
-ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/pathways_dot_plot.png", plot=Pathways.Dot.Plot, dpi=80, width=25, height=20, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/pathways_dot_plot.png", plot=Pathways.Dot.Plot, dpi=300, width=8, height=6, units="in")
 
 ```
 
@@ -781,6 +800,54 @@ sig_classes_comp<-compound_classes%>%
   mutate(Group=if_else(Cluster=="Cluster3", "Eggs & Embryos", Group))
   
 ```
+
+Add pattern names to each cluster. Cluster 1 = peaking in mid development; Cluster 2 = increasing; Cluster 3 = decreasing.  
+
+```{r}
+sig_classes_comp<-sig_classes_comp%>%
+  mutate(pattern=if_else(Cluster=="Cluster1", "Mid", 
+                         if_else(Cluster=="Cluster2", "Increasing", 
+                                 if_else(Cluster=="Cluster3", "Decreasing", "NA"))))
+sig_classes_comp$pattern<-factor(sig_classes_comp$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+```
+
+Plot these pathways with a dot plot across lifestage groupings.    
+
+```{r}
+#plot significantly enriched terms by ontogenetic pattern 
+Compounds.Dot.Plot <-  ggplot(sig_classes_comp, aes(x = pattern, y = Metabolite.Set)) + 
+  geom_point(aes(colour=FDR, size=Hits)) +
+  #scale_color_continuous(name="FDR p-value", type = "gradient")+
+  scale_color_distiller(type = "seq",
+                        direction = -1,
+                        palette = "Greys")+
+  scale_size(range=c(6,10))+
+  guides(colour = guide_legend(override.aes = list(size=10)))+
+  xlab("Ontogenetic Pattern")+
+  ylab("Compound Class")+
+  theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  strip.text.y = element_text(angle=0, size = 14, face="bold"),
+  strip.background = element_rect(fill="white"), 
+  axis.text.y = element_text(size = 12),
+  axis.text.x = element_text(angle=35, size=12, hjust=1),
+  axis.title.x = element_text(size = 14, face="bold"),
+  axis.title.y = element_text(size = 14, face="bold"), 
+  legend.text = element_text(size=14), 
+  legend.title = element_text(size=14, face="bold"), 
+  legend.key.size = unit(0.5, 'cm'))
+
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/compounds_dot_plot.png", plot=Compounds.Dot.Plot, dpi=300, width=8, height=6, units="in")
+
+```
+
+
+
+
+
+
+
+
 
 Plot these pathways with a dot plot across lifestage groupings.    
 

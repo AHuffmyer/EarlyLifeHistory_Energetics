@@ -374,8 +374,6 @@ alpha1_plot <- alpha1 + geom_point(size=3) + theme_classic() + scale_color_manua
 ggsave(plot=alpha1_plot, file="Mcap2020/Figures/ITS2/alpha_rare.png", width=4, height=7)
 ```
 
-Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  
-
 Test for differences in alpha diversity.  
 ```{r}
 metadata <- as(sample_data(GP2), "data.frame")
@@ -391,7 +389,7 @@ summary(aov(InvSimpson~lifestage, data=alpha_rare))
 summary(aov(Chao1~lifestage, data=alpha_rare))
 ```
 
-There are significant differences in alpha diversity between lifestages for all metrics.    
+There are no changes in alpha diversity of ITS2 in development .  
 
 
 # **Generate VST normalization for DIABLO**  

@@ -1,7 +1,7 @@
 ---
 title: "WGCNA gene expression"
 author: "Ariana S Huffmyer"
-date: "2022"
+date: "2023"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -602,7 +602,7 @@ table<-as.data.frame(table(mergedColors))
 write_csv(table, "Mcap2020/Output/TagSeq/GenomeV3/genes_per_module.csv")
 ```
 
-We have 12 modules.   
+We have 9 modules.   
 
 mergedColors
    1    2    3    5    6    7    8    9   12 

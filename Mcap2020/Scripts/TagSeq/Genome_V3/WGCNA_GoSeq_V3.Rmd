@@ -1,7 +1,7 @@
 ---
-title: "WGCNA - GoSeq Functional Annotation"
+title: "GoSeq Functional Annotation of WGCNA gene expression results"
 author: "Ariana S Huffmyer"
-date: "2022"
+date: "2023"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -43,7 +43,7 @@ if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::inst
 if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
 if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
 
-BiocManager::install("org.Ce.eg.db")
+#BiocManager::install("org.Ce.eg.db", force=TRUE) #install if needed 
 
 library("tidyverse")
 library("genefilter")
@@ -93,7 +93,7 @@ There are 11,475 genes in our Gene Info file.
 Get gene length information.  
 ```{r}
 #import file
-gff <- import("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.gff3")
+gff <- rtracklayer::import("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.gff3") #if this doesn't work, restart R and try again 
 
 transcripts <- subset(gff, type == "transcript") #keep only transcripts 
 
@@ -246,32 +246,6 @@ ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module",
   }
 }
 
-```
-
-This isn't useful right now with the number of terms that we have. 
-```{r}
-# module_vector<-c("12")
-# ontologies<-c("BP")
-# 
-# for (module in module_vector) {
-#   
-#   for (category in ontologies) {
-# 
-#     #Read relevant file of results from goseq analysis  
-#     go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_module", module, ".csv"))
-#     
-#     go_results<-go_results%>%
-#       filter(ontology==category)
-#     
-#     #Calculate semantic similarity between GOTerms for each module 
-#     sem_sim<-getTermSim(go_results$GOterm, method = "relevance", verbose = FALSE)
-#     
-#     #Calculate distance matrix 
-#     hc <- hclust(as.dist(1 - sem_sim))
-#     
-#     ggdendrogram(hc,rotate=TRUE)
-#   }
-# }
 ```
 
 # **Run GoSeq and Plot by Pattern** 
@@ -525,33 +499,6 @@ ko:K11252    H2B; histone H2B
 KEGG Terms from Mid Development:  
 ko:K10408    DNAH; dynein axonemal heavy chain
 
-
-
-
-
-Questions for Jill: 
-- Why so many terms enriched? What to do with all of them? 
-- Functional annotation of this genome? 
-- How to map to goslim - are multiple go slim possible for single GO term?
-- How to do semantic similarity? 
-- Why are goslim terms the same as the go terms output by goseq? How do I get true go slim terms or parent terms?
-
-How to reduce set? Maybe subset for things that have "protein", "lipid", "carbohydrate", "metabolism", or other terms of interest? 
-
-Need to repeat for KEGG terms 
-Map to Goslim? 
-
-Run a loop to calculate semantic similarity between GOTerms for each ontology for each module and plot results. 
-
-
-
-
-
-
-
-
-
-
 ## 4. Plot all ontogenetic categories together for categories of interest    
 
 Plot enrichment for each pattern together in one plot. Customize first for carbohydrate metabolism related BP ontology.  
@@ -602,10 +549,11 @@ carbs<-c("carbohydrate")
       
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.carb <-  ggplot(go_results, aes(x = pattern, y = term)) + 
-    geom_point(aes(size=bh_adjust, colour=pattern)) + 
-    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
+    geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
-    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
     xlab("Ontogenetic Pattern")+
     ggtitle("Carbohydrate Metabolism")+
     theme_bw() + 
@@ -623,7 +571,12 @@ carbs<-c("carbohydrate")
           plot.title = element_text(hjust = 0.1),
           axis.title.y = element_blank())
 
+
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Carbohdyrate.png"), plot=GO.plot.carb, dpi=300, width=13, height=18, units="in")
+
+#save object for merging all plots together for manuscript
+go_results_carbs<-go_results%>%
+  mutate(category="Carbohydrate Metabolism")
 
 ```
 
@@ -665,10 +618,10 @@ lipids<-c("lipid", "fatty")
       
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.lipid <-  ggplot(go_results, aes(x = pattern, y = term)) + 
-    geom_point(aes(size=bh_adjust, colour=pattern)) + 
-    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
-    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
-    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
+    geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
     ggtitle("Lipid Metabolism")+
     theme_bw() + 
@@ -687,6 +640,10 @@ lipids<-c("lipid", "fatty")
           axis.title.y = element_blank())
 
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Lipids.png"), plot=GO.plot.lipid, dpi=300, width=13, height=18, units="in")
+
+#save object for merging all plots together for manuscript
+go_results_lipids<-go_results%>%
+  mutate(category="Lipid Metabolism")
 ```
 
 Plot enrichment for each pattern together in one plot. Customize first for transport/communication related BP ontology.  
@@ -729,10 +686,10 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
       
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.sym <-  ggplot(go_results, aes(x = pattern, y = term)) + 
-    geom_point(aes(size=bh_adjust, colour=pattern)) + 
-    scale_size(name="Over rep. p-value", trans="reverse", range=c(3,6))+
-    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 15, multi_line = TRUE))+
-    scale_colour_manual(values=c("lightgray", "darkgray", "black"), guide=FALSE)+
+    geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
     ggtitle("Communication \nand Transport")+
     theme_bw() + 
@@ -752,11 +709,11 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
 
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.png"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
 
+#save object for merging all plots together for manuscript
+go_results_symbiosis<-go_results%>%
+  mutate(category="Communication and Transport")
+
 ```
-
-
-
-
 
 ## 5. Plot trends of eigenegenes from modules for each ontogenetic pattern  
 
@@ -801,7 +758,6 @@ gene_counts%>%
 
 There are 3644 genes (2 modules) decreasing, 3856 (4 modules) increasing, 3676 (2 modules) in mid development, and 299 unassigned. 
 
-
 ```{r}
 f_labels <- data.frame(Pattern = c("Increasing across Development", "Peaking in Mid Development", "Decreasing across Development"), label = c("n=4 modules; n=3856 genes", "n=2 modules; n=3676 genes", "n=2 modules; n=3644 genes"))
 f_labels
@@ -823,13 +779,15 @@ pattern_expression<-pattern_expression%>%
 list_groups<-c("Fertilized Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
 pattern_expression$group<-factor(as.character(pattern_expression$group), levels=list_groups)
 
+pattern_expression$Pattern<-factor(as.character(pattern_expression$Pattern), levels=c("Decreasing", "Mid", "Increasing"))
+
 pattern_plots<-pattern_expression%>%
   group_by(Pattern, lifestage) %>%
   filter(!Pattern=="NA")%>%
   
   ggplot(aes(x=lifestage, y=Mean, group=lifestage)) +
   facet_wrap(~Pattern, nrow=1, ncol=3)+
-  geom_point(aes(colour=group), size=6, alpha=0.8) +
+  geom_point(aes(colour=group), size=6) +
   geom_smooth(aes(group=1), color="black", method='loess')+
   scale_x_discrete(name="", limits=time_point_order) +
   scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
@@ -857,13 +815,5 @@ pattern_plots<-pattern_expression%>%
 
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
 ```
-
-
-
-
-
-
-
-
 
 

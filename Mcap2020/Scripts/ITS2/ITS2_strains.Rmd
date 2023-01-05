@@ -1,7 +1,7 @@
 ---
 title: Montipora capitata 2020 ITS2 analysis
 author: "AS Huffmyer"
-date: '2021'
+date: '2023'
 output:
   html_document:
     toc: yes
@@ -28,15 +28,12 @@ if (!require("janitor")) install.packages("janitor")
 if (!require("writexl")) install.packages("writexl")
 #if (!require("microViz")) BiocManager::install("microViz")
 
-library("tidyverse")
 library("readxl")
 library("phyloseq")
 library("janitor")
 library("writexl")
-
 library("ggplot2")
 library('cowplot')
-library("tidyverse")
 library("janitor")
 library("car")
 library("phyloseq")
@@ -46,7 +43,8 @@ library("DESeq2")
 library("microViz")
 library("vegan")
 library("ComplexHeatmap")
-
+library("tidyverse")
+library("dplyr")
 ```
 
 # **Prepare data**  
@@ -169,7 +167,7 @@ phylo_coral_DIV = merge_phyloseq(coralDIV, Metadata, random_tree)
 phylo_coral_DIV
 ```
 
-Filter out samples with low numbers in groups from phyloseq object.  
+Filter out samples with low numbers in groups (n=1 per group) from phyloseq object.  
 ```{r}
 phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Polyp (183 hpf)")
 phylo_coral_DIV<-ps_arrange(phylo_coral_DIV, lifestage)
@@ -210,7 +208,7 @@ GP1_rare<-rarefy_even_depth(GP1, sample.size = min(sample_sums(GP1)),
   rngseed = FALSE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
 ```
 
-In rarefication 14 OTUs were removed because they were no longer present in any sample after random subsampling. 
+In rarefication 15 OTUs were removed because they were no longer present in any sample after random subsampling. 
 
 View tree and heatmap after subsampling.   
 ```{r}
@@ -272,7 +270,7 @@ perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
 perm1
 ```
 
-Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.175).  
+Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.877).  
 
 # **Plot heat map of ITS2 DIVs**  
 
@@ -378,38 +376,6 @@ summary(aov(InvSimpson~lifestage, data=alpha_full))
 
 No difference in ITS2 alpha diversity by lifestage.  
 
-# **DESeq2**  
-
-Try DESeq2 to look at any differential taxa.   
-
-Convert phyloseq object to DESeq2 object.  
-
-Construct DESeq2 object looking at differences by lifestage.  
-```{r}
-diagdds_full = phyloseq_to_deseq2(GP1_rare, ~ lifestage)
-
-gm_mean = function(x, na.rm=TRUE){
-  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
-}
-geoMeans = apply(counts(diagdds_full), 1, gm_mean)
-diagdds_full = estimateSizeFactors(diagdds_full, geoMeans = geoMeans)
-#diagdds_full = DESeq(diagdds_full, fitType="local")
-
-diagdds_full = DESeq(diagdds_full, test="Wald", fitType="parametric")
-```
-
-Look at results table.  
-```{r}
-res_full = results(diagdds_full, cooksCutoff = FALSE)
-alpha = 0.05
-sigtab = res_full[which(res_full$padj < alpha), ]
-sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(GP1_rare)[rownames(sigtab), ], "matrix"))
-
-sigtab
-```
-
-As expected, there are no members of the community that are differentially accumulated/present across development. 
-
 # **Generate VST normalization for DIABLO**  
 
 ```{r}
@@ -497,7 +463,7 @@ Plot abundance of each profile across lifestages.
 ```{r}
 t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
 t$data$Sample <- factor(t$data$Sample, levels = sample_order)
-t_plot<-t + scale_fill_manual(name="ITS2 Type Profile", values=c("darkorange", "brown4")) + geom_hline(yintercept=50, linetype="dashed", color = "black", size=1) + facet_grid(~lifestage, scales = "free", space = "free", labeller = label_wrap_gen(width=10)) + theme(strip.text.x = element_text(size = 5, face="bold"))
+t_plot<-t + scale_fill_manual(name="ITS2 Type Profile", values=c("darkorange", "brown4")) + geom_hline(yintercept=50, linetype="dashed", color = "black", size=1) + facet_grid(~lifestage, scales = "free", space = "free", labeller = label_wrap_gen(width=10)) + ylab("Relative Abundance (%)") + theme(strip.text.x = element_text(size = 5, face="bold"))
 
 t_plot
 

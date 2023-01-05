@@ -52,3 +52,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+#knit files 
+Mcap2020/Scripts/Metabolomics/metabolomics_files

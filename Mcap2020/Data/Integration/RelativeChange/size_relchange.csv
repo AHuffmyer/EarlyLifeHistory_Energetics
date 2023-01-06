@@ -1,0 +1,11 @@
+Lifestage,size_change
+Egg (1 hpf),0
+Embryo (5 hpf),-0.10000000000000009
+Embryo (38 hpf),0.21999999999999992
+Embryo (65 hpf),-0.33
+Larvae (93 hpf),-0.43
+Larvae (163 hpf),-0.07000000000000006
+Larvae (183 hpf),0
+Larvae (231 hpf),0.4999999999999999
+Metamorphosed Polyp (183 hpf),-0.18000000000000002
+Metamorphosed Polyp (231 hpf),0.23999999999999994

@@ -616,6 +616,22 @@ ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluste
 
 ``` 
 
+Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    
+```{r}
+
+library(tidyverse)
+
+metab_rel_change<-mME_meta%>%
+  select(lifestage, Sample.ID, pattern, value)%>%
+  group_by(lifestage, pattern)%>%
+  summarise(mean=mean(value))%>% #calculate means
+  group_by(lifestage, pattern)%>%
+  arrange(lifestage, .by_group = TRUE)%>%
+  group_by(pattern)%>%
+  mutate(metabolite_expression=((mean-dplyr::first(mean))/abs(dplyr::first(mean))))%>%
+  select(pattern, lifestage, metabolite_expression)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/metabolites_relchange.csv")
+```
 
 # 5. Pathway Analysis  
 

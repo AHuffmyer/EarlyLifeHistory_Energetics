@@ -70,14 +70,13 @@ metadata<-read.table("Mcap2020/Data/16S/mcap_metadata.txt", sep='\t', header=TRU
 
 rownames(metadata)<-metadata$sample
 
+#Replace metamorphosed "recruit" with "polyp"  
 metadata<-metadata%>%
   select(!sample)%>%
   mutate(lifestage=if_else(lifestage=="Metamorphosed Recruit (183 hpf)", "Metamorphosed Polyp (183 hpf)", lifestage))%>%
   mutate(lifestage=if_else(lifestage=="Metamorphosed Recruit (231 hpf)", "Metamorphosed Polyp (231 hpf)", lifestage))
 
-#Replace metamorphosed "recruit" with "polyp"  
 
-  
 ```
 
 Set default plot theme.  
@@ -537,15 +536,15 @@ alpha1<-plot_richness(GP2, measures=c("InvSimpson", "Shannon"), x="lifestage", c
 alpha1$data$lifestage <- as.character(alpha1$data$lifestage)
 alpha1$data$lifestage <- factor(alpha1$data$lifestage, levels=lifestage_order)
 
-alpha1 <- alpha1 + geom_point(size=3) + geom_boxplot() + theme_classic() + scale_color_manual() + scale_color_manual(name="Lifestage", 
+alpha1_plot <- alpha1 + geom_point(size=3, position=position_jitterdodge(0.6)) + theme_classic() + scale_color_manual() + scale_color_manual(name="Lifestage", 
                       values = c("Attached Recruit (231 hpf)"="#BA55D3", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf) "="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf) "="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf) "="#BA55D3"),
                       breaks = c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)"), 
                      labels = c( "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")) + 
   theme(axis.text.x=element_text(angle=45, hjust=1, color="black")) + 
   theme(axis.title.x=element_blank())+
-  theme(legend.position="none");alpha1
+  theme(legend.position="none");alpha1_plot
 
-ggsave(plot=alpha1, file="Mcap2020/Figures/16S/alpha_rare.png", width=4, height=7)
+ggsave(plot=alpha1_plot, file="Mcap2020/Figures/16S/alpha_rare.png", width=4, height=7)
 ```
 
 Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  

@@ -1,0 +1,40 @@
+pattern,lifestage,metabolite_expression
+Decreasing,Egg (1 hpf),0
+Mid,Egg (1 hpf),0
+Increasing,Egg (1 hpf),0
+Decreasing,Embryo (5 hpf),-0.022532383788684097
+Mid,Embryo (5 hpf),0.2603240128470835
+Increasing,Embryo (5 hpf),-0.1712738481212421
+Decreasing,Embryo (38 hpf),-0.5417907896133558
+Mid,Embryo (38 hpf),0.24407921049193188
+Increasing,Embryo (38 hpf),-0.03230695777872285
+Decreasing,Embryo (65 hpf),-0.5848977007283555
+Mid,Embryo (65 hpf),-0.04630102746075377
+Increasing,Embryo (65 hpf),-0.013582884395016386
+Decreasing,Larvae (93 hpf) ,-1.1262398433610834
+Mid,Larvae (93 hpf) ,1.184138785188529
+Increasing,Larvae (93 hpf) ,0.24395489041152246
+Decreasing,Larvae (163 hpf),-1.0717430284119822
+Mid,Larvae (163 hpf),1.0218199504853827
+Increasing,Larvae (163 hpf),0.24287244795335303
+Decreasing,Larvae (183 hpf),-1.1323065390659772
+Mid,Larvae (183 hpf),2.122139071014143
+Increasing,Larvae (183 hpf),0.5393811223044296
+Decreasing,Larvae (231 hpf) ,-1.3523608036598844
+Mid,Larvae (231 hpf) ,2.2210663734423877
+Increasing,Larvae (231 hpf) ,1.4970394974552637
+Decreasing,Metamorphosed Polyp (183 hpf),-1.2878273922631376
+Mid,Metamorphosed Polyp (183 hpf),1.3000868772277299
+Increasing,Metamorphosed Polyp (183 hpf),0.5076737192726117
+Decreasing,Metamorphosed Polyp (231 hpf),-1.453538682501865
+Mid,Metamorphosed Polyp (231 hpf),1.5498131609208508
+Increasing,Metamorphosed Polyp (231 hpf),1.1023264775398294
+Decreasing,Attached Recruit (183 hpf) ,-1.4508189633742214
+Mid,Attached Recruit (183 hpf) ,0.8324484900507206
+Increasing,Attached Recruit (183 hpf) ,2.6377077832930946
+Decreasing,Attached Recruit (231 hpf),-1.3706554956418253
+Mid,Attached Recruit (231 hpf),1.4473248533375402
+Increasing,Attached Recruit (231 hpf),2.5812188290700537
+Decreasing,Attached Recruit (255 hpf),-1.4879708316015863
+Mid,Attached Recruit (255 hpf),1.0517211648277562
+Increasing,Attached Recruit (255 hpf),2.9359960369222953

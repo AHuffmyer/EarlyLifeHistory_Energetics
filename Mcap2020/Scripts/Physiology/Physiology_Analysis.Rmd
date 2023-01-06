@@ -628,6 +628,58 @@ ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", targe
 ```
 
 
+# **4. Generate relative change dataframe**  
+
+## Symbiont density  
+
+Read in data from calculated densities.  
+
+```{r}
+den_relchange<-read_csv("Mcap2020/Output/Physiology/calculated_densities.csv")
+```
+
+Calculate relative change. Calculate relative change for all lifestages compared to the first time point in this dataset (eggs). Do this for both individual normalized and surface area normalized for all stages. Use NA for stages without this normalization.     
+
+```{r}
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)") #Set time_point order
+den_relchange$lifestage<-factor(den_relchange$lifestage, levels=time_point_order)
+
+cells_rel_change<-den_relchange%>%
+  dplyr::select(lifestage, tube.ID, cells.ind, cells.mm)%>%
+  group_by(lifestage)%>%
+  summarise(mean_cells.in=mean(cells.ind), mean_cells.mm=mean(cells.mm))%>%
+  mutate(group=if_else(grepl("Attached", .$lifestage), "surface area", "individual"))%>%
+  group_by(lifestage, group)%>%
+  arrange(lifestage, .by_group = TRUE)%>%
+  group_by(group)%>%
+  mutate(sym_density_ind=((mean_cells.in-dplyr::first(mean_cells.in))/abs(dplyr::first(mean_cells.in))), 
+         sym_density_mm=((mean_cells.mm-dplyr::first(mean_cells.mm))/abs(dplyr::first(mean_cells.mm))))%>%
+  dplyr::select(lifestage, sym_density_ind, sym_density_mm)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")
+```
+
+
+## Larval size  
+
+Read in data from calculated volume  
+
+```{r}
+size_relchange<-read_csv("Mcap2020/Output/Physiology/larval_volume_table.csv")
+levels(as.factor(size_relchange$Lifestage))
+```
+
+Calculate relative change. Calculate relative change for all lifestages compared to the first time point in this dataset (eggs). 
+
+```{r}
+time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)") #Set time_point order
+size_relchange$Lifestage<-factor(size_relchange$Lifestage, levels=time_point_order)
+
+size_rel_change<-size_relchange%>%
+  dplyr::select(Lifestage, Mean)%>%
+  mutate(size_change=((Mean-dplyr::first(Mean))/dplyr::first(Mean)))%>%
+  dplyr::select(Lifestage, size_change)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/size_relchange.csv")
+```
 
 
 

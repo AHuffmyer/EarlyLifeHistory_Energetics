@@ -1,0 +1,132 @@
+---
+title: Montipora capitata 2020 Integrative Analysis  
+author: "AS Huffmyer"
+date: '2023'
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+This script reads in output files for relative change in response variables across development to plot for visualization of integration.  
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Load packages.  
+
+```{r}
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("cowplot")) install.packages("cowplot")
+if (!require("purrr")) install.packages("purrr")
+if (!require("directlabels")) install.packages("directlabels")
+if (!require("ggrepel")) install.packages("ggrepel")
+
+library("ggplot2")
+library('cowplot')
+library("tidyverse")
+library("purrr")
+library("directlabels")
+library("ggrepel")
+```
+
+# Load data  
+
+Load exported datasets, format them in long format, and merge together.  
+
+Load them manually to manually change column names and formats.  
+```{r}
+file1<-read_csv("Mcap2020/Data/Integration/RelativeChange/16S_alpha_relchange.csv")%>%
+  gather(key="variable", value="value", bacteria_alpha_diversity)%>%
+  mutate(variable="Bacterial Alpha Diversity")
+
+file2<-read_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")%>%
+  dplyr::select(!group)%>%
+  rename("Symbiont Cells per Individual"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
+  gather(2:3, key="variable", value="value")
+  
+file3<-read_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")%>%
+  mutate(Pattern=if_else(Pattern=="Decreasing", "Genes Decreasing", 
+                         if_else(Pattern=="Increasing", "Genes Increasing", 
+                                 if_else(Pattern=="Mid", "Genes Mid", "NA"))))%>%
+  rename("variable"="Pattern", "value"="gene_expression")%>%
+  filter(value<10)
+
+file4<-read_csv("Mcap2020/Data/Integration/RelativeChange/metabolites_relchange.csv")%>%
+  mutate(variable=if_else(pattern=="Decreasing", "Metabolites Decreasing", 
+                         if_else(pattern=="Increasing", "Metabolites Increasing", 
+                                 if_else(pattern=="Mid", "Metabolites Mid", "NA"))))%>%
+  rename("value"="metabolite_expression")%>%
+  dplyr::select(!pattern)
+
+file5<-read_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_alpha_relchange.csv")%>%
+  gather(key="variable", value="value", symbiont_alpha_diversity)%>%
+  mutate(variable="Symbiont Alpha Diversity")
+
+file6<-read_csv("Mcap2020/Data/Integration/RelativeChange/PR_relchange.csv")%>%
+  rename("lifestage"="lifestage_std", "Gross Photosynthesis"="GP_change", "Respiration"="R_change", "P:R"="ratio_change")%>%
+  gather(2:4, key="variable", value="value")
+
+file7<-read_csv("Mcap2020/Data/Integration/RelativeChange/size_relchange.csv")%>%
+  gather(key="variable", value="value", size_change)%>%
+  rename("lifestage"="Lifestage")%>%
+  mutate(variable="Size")
+
+#merge together 
+df<-bind_rows(file1, file2, file3, file4, file5, file6, file7)
+```
+
+View new data frame and order lifestages. 
+```{r}
+str(df)
+df$lifestage<-factor(df$lifestage, levels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
+
+```
+
+Remove variables we are not interested in plotting because they do not change over time.  
+```{r}
+df<-df%>%
+  filter(!variable=="Symbiont Cells per mm2")%>% #remove variables that are not useful for visualization 
+  filter(!variable=="P:R")
+```
+
+
+# Plot data for relative change across development  
+
+Plot with development on the x - axis and values of variables on the y-axis.  
+
+```{r}
+#photosynthetic capacity: cell density, photosynthesis (#f89540)
+#energy demand: respiration, size (#7e03a8)
+#microbiome: bacteria diversity and symbiont diversity (#f0f921)
+#molecular response (#cc4778)
+#metabolomic response (#0d0887)
+
+change_plot<-df%>%
+  
+  ggplot(aes(x=lifestage, y=value, colour=variable))+
+  geom_smooth(aes(group=variable), alpha=0.1, se=FALSE)+
+  geom_dl(label=as.factor(df$variable), method=list("last.bumpup", cex=0.85, hjust=-0.1), inherit.aes=T)+
+  geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
+  scale_colour_manual(values=c("Bacterial Alpha Diversity"="#f0f921", "Genes Decreasing"="#cc4778", "Genes Increasing"="#cc4778", "Genes Mid"="#cc4778", "Metabolites Decreasing"="#0d0887", "Metabolites Increasing"="#0d0887", "Metabolites Mid"="#0d0887", "Gross Photosynthesis"="#f89540", "Respiration"="#7e03a8", "Size"="#7e03a8", "Symbiont Alpha Diversity"="#f0f921", "Symbiont Cells per Individual"="#f89540"))+
+  scale_x_discrete(expand = expansion(add = c(0.5, 4)))+
+  ylim(-6,3.75)+
+  ylab("Relative Change")+
+  xlab("")+
+  theme_classic()+
+  theme(
+    legend.position="none",
+    axis.text.x=element_text(angle=45, hjust=1)
+  );change_plot
+
+ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=8, height=7)
+```
+

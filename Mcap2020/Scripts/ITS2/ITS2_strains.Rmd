@@ -389,8 +389,23 @@ summary(aov(InvSimpson~lifestage, data=alpha_rare))
 summary(aov(Chao1~lifestage, data=alpha_rare))
 ```
 
-There are no changes in alpha diversity of ITS2 in development .  
+There are no changes in alpha diversity of ITS2 in development.  
 
+Export relative change in alpha diversity for integrative analyses. Calculate relative change for all lifestages compared to the first time point in this dataset (eggs). We will use the Shannon Index for this calculation.    
+
+```{r}
+alpha_rel_change<-alpha_rare%>%
+  select(lifestage, sample, Shannon)%>%
+  group_by(lifestage)%>%
+  summarise(mean_alpha=mean(Shannon)) #calculate means
+
+#calculate relative change 
+alpha_rel_change<-alpha_rel_change%>%
+  arrange(lifestage)%>%
+  mutate(symbiont_alpha_diversity=((mean_alpha-dplyr::first(.$mean_alpha))/dplyr::first(.$mean_alpha)))%>%
+  select(lifestage, symbiont_alpha_diversity)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_alpha_relchange.csv")
+```
 
 # **Generate VST normalization for DIABLO**  
 

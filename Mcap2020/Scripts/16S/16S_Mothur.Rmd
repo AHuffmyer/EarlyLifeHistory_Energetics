@@ -566,6 +566,26 @@ summary(aov(Chao1~lifestage, data=alpha_rare))
 
 There are significant differences in alpha diversity between lifestages for all metrics.    
 
+Export relative change in alpha diversity for integrative analyses. Calculate relative change for all lifestages compared to the first time point in this dataset (embryos at 38 hpf). We will use the Shannon Index for this calculation.    
+
+```{r}
+
+alpha_rel_change<-alpha_rare%>%
+  select(lifestage, sample, Shannon)%>%
+  group_by(lifestage)%>%
+  summarise(mean_alpha=mean(Shannon)) #calculate means
+
+alpha_rel_change$lifestage<-str_trim(alpha_rel_change$lifestage, side = c("right")) #remove whitespace at end of strings
+alpha_rel_change$lifestage<-factor(alpha_rel_change$lifestage, levels=c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+
+#calculate relative change to the first time point  
+alpha_rel_change<-alpha_rel_change%>%
+  arrange(lifestage)%>%
+  mutate(bacteria_alpha_diversity=((mean_alpha-dplyr::first(.$mean_alpha))/dplyr::first(.$mean_alpha)))%>%
+  select(lifestage, bacteria_alpha_diversity)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/16S_alpha_relchange.csv")
+```
+
 
 # **Plot unknowns** 
 

@@ -618,7 +618,6 @@ ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluste
 
 Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    
 ```{r}
-
 library(tidyverse)
 
 metab_rel_change<-mME_meta%>%

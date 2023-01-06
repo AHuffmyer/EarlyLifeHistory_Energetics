@@ -816,4 +816,21 @@ pattern_plots<-pattern_expression%>%
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
 ```
 
+Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    
+```{r}
+library(tidyverse)
 
+pattern_expression$lifestage<-factor(pattern_expression$lifestage, levels=time_point_order)
+
+genes_rel_change<-pattern_expression%>%
+  dplyr::select(lifestage, sample_id, Pattern, Mean)%>%
+  filter(!Pattern=="NA")%>%
+  group_by(lifestage, Pattern)%>%
+  summarise(mean=mean(Mean))%>% #calculate means
+  group_by(lifestage, Pattern)%>%
+  arrange(lifestage, .by_group = TRUE)%>%
+  group_by(Pattern)%>%
+  mutate(gene_expression=((mean-dplyr::first(mean))/abs(dplyr::first(mean))))%>%
+  dplyr::select(Pattern, lifestage, gene_expression)%>%
+  write_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")
+```

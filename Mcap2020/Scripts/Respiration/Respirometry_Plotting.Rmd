@@ -380,7 +380,7 @@ combined_full_mean<-plot_grid(combined_plot_mean, legend, nrow=1, ncol=2, rel_wi
 ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_Means_PR.png", combined_full_mean, dpi=300, w=7, h=7, units="in")
 ```
 
-### Export relative change of GP, R, and P:R for integrative analyses  
+## Export relative change of GP, R, and P:R for integrative analyses  
 
 ```{r}
 head(PRdf)
@@ -390,7 +390,7 @@ pr_change<-PRdf%>%
   group_by(lifestage_std)%>%
   summarise(mean_GP=mean(GP.nmol.org.min), mean_R=mean(R.nmol.org.min), mean_ratio=mean(ratio))%>%
   mutate(GP_change=((mean_GP-dplyr::first(mean_GP))/abs(dplyr::first(mean_GP))), 
-         R_change=((mean_R-dplyr::first(mean_R))/abs(dplyr::first(mean_R))), 
+         R_change=((abs(mean_R)-dplyr::first(abs(mean_R)))/abs(dplyr::first(mean_R))), 
          ratio_change=((mean_ratio-dplyr::first(mean_ratio))/abs(dplyr::first(mean_ratio))))%>%
   dplyr::select(lifestage_std, GP_change, R_change, ratio_change)%>%
   write_csv("Mcap2020/Data/Integration/RelativeChange/PR_relchange.csv")

@@ -50,7 +50,7 @@ file1<-read_csv("Mcap2020/Data/Integration/RelativeChange/16S_alpha_relchange.cs
 
 file2<-read_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")%>%
   dplyr::select(!group)%>%
-  rename("Symbiont Cells per Individual"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
+  rename("Symbiont Density"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
   gather(2:3, key="variable", value="value")
   
 #NEED TO ADD FUNCTIONAL INFORMATION TO THESE CATEGORIES 
@@ -121,7 +121,7 @@ df<-df%>%
                                                                   if_else(variable=="Carbohydrate metabolism, amino acid synthesis", "Metabolomic Response",
                                                                           if_else(variable=="Nitrogen metabolism", "Metabolomic Response",
                                                                                   if_else(variable=="Gross Photosynthesis", "Photosynthetic Capacity",
-                                                                                          if_else(variable=="Symbiont Cells per Individual", "Photosynthetic Capacity",
+                                                                                          if_else(variable=="Symbiont Density", "Photosynthetic Capacity",
                                                                                                   if_else(variable=="Respiration", "Energy Demand",
                                                                                                           if_else(variable=="Size", "Energy Demand", "NA"
                                                   )))))))))))))
@@ -145,20 +145,21 @@ change_plot<-df%>%
   
   ggplot(aes(x=lifestage, y=value, colour=category))+
   geom_smooth(aes(group=variable), alpha=0.1, se=FALSE)+
-  geom_dl(label=as.factor(df$variable), method=list("last.bumpup", cex=0.85, hjust=-0.1), inherit.aes=T)+
+  geom_dl(label=as.factor(df$variable), method=list("last.points", cex=0.85, hjust=-0.05), inherit.aes=T)+
   geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
   scale_colour_manual(name="", values=color_keys)+
-  scale_x_discrete(expand = expansion(add = c(0.5, 4)))+
+  scale_x_discrete(expand = expansion(add = c(0.5, 9)))+
   ylim(-6,3.75)+
   ylab("Relative Change")+
   xlab("")+
   theme_classic()+
   theme(
     legend.position="right",
-    axis.text.y=element_text(color="black"),
-    axis.text.x=element_text(angle=45, hjust=1, color="black")
+    axis.text.y=element_text(color="black", size=12),
+    axis.text.x=element_text(angle=45, hjust=1, color="black", size=12), 
+    legend.text=element_text(size=14, color="black")
   );change_plot
 
-ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=10, height=7)
+ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=12, height=7, dpi=300)
 ```
 

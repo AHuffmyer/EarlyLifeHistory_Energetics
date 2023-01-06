@@ -161,5 +161,7 @@ change_plot<-df%>%
   );change_plot
 
 ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=12, height=7, dpi=300)
+
+ggsave("Mcap2020/Figures/Integration/RelativeChange.pdf", change_plot, width=12, height=7, dpi=300)
 ```
 

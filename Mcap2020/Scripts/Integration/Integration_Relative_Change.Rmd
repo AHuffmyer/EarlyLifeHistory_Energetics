@@ -53,6 +53,10 @@ file2<-read_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")%
   rename("Symbiont Cells per Individual"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
   gather(2:3, key="variable", value="value")
   
+
+
+
+#NEED TO ADD FUNCTIONAL INFORMATION TO THESE CATEGORIES 
 file3<-read_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")%>%
   mutate(Pattern=if_else(Pattern=="Decreasing", "Genes Decreasing", 
                          if_else(Pattern=="Increasing", "Genes Increasing", 
@@ -66,6 +70,10 @@ file4<-read_csv("Mcap2020/Data/Integration/RelativeChange/metabolites_relchange.
                                  if_else(pattern=="Mid", "Metabolites Mid", "NA"))))%>%
   rename("value"="metabolite_expression")%>%
   dplyr::select(!pattern)
+
+
+
+
 
 file5<-read_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_alpha_relchange.csv")%>%
   gather(key="variable", value="value", symbiont_alpha_diversity)%>%
@@ -98,6 +106,25 @@ df<-df%>%
   filter(!variable=="P:R")
 ```
 
+Generate a list of categories for variables to belong to. 
+
+```{r}
+df<-df%>%
+  mutate(category=if_else(variable=="Bacterial Alpha Diversity", "Microbiome Diversity", 
+                          if_else(variable=="Symbiont Alpha Diversity", "Microbiome Diversity", 
+                                  if_else(variable=="Genes Decreasing", "Molecular Response", 
+                                          if_else(variable=="Genes Increasing", "Molecular Response",
+                                                  if_else(variable=="Genes Mid", "Molecular Response",
+                                                          if_else(variable=="Metabolites Decreasing", "Metabolomic Response",
+                                                                  if_else(variable=="Metabolites Increasing", "Metabolomic Response",
+                                                                          if_else(variable=="Metabolites Mid", "Metabolomic Response",
+                                                                                  if_else(variable=="Gross Photosynthesis", "Photosynthetic Capacity",
+                                                                                          if_else(variable=="Symbiont Cells per Individual", "Photosynthetic Capacity",
+                                                                                                  if_else(variable=="Respiration", "Energy Demand",
+                                                                                                          if_else(variable=="Size", "Energy Demand", "NA"
+                                                  )))))))))))))
+```
+
 
 # Plot data for relative change across development  
 
@@ -110,23 +137,26 @@ Plot with development on the x - axis and values of variables on the y-axis.
 #molecular response (#cc4778)
 #metabolomic response (#0d0887)
 
+color_keys<-c("Energy Demand"="#7e03a8", "Photosynthetic Capacity"="#f89540", "Microbiome Diversity"="darkgray", "Molecular Response"="#cc4778", "Metabolomic Response"="#0d0887")
+
 change_plot<-df%>%
   
-  ggplot(aes(x=lifestage, y=value, colour=variable))+
+  ggplot(aes(x=lifestage, y=value, colour=category))+
   geom_smooth(aes(group=variable), alpha=0.1, se=FALSE)+
   geom_dl(label=as.factor(df$variable), method=list("last.bumpup", cex=0.85, hjust=-0.1), inherit.aes=T)+
   geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
-  scale_colour_manual(values=c("Bacterial Alpha Diversity"="#f0f921", "Genes Decreasing"="#cc4778", "Genes Increasing"="#cc4778", "Genes Mid"="#cc4778", "Metabolites Decreasing"="#0d0887", "Metabolites Increasing"="#0d0887", "Metabolites Mid"="#0d0887", "Gross Photosynthesis"="#f89540", "Respiration"="#7e03a8", "Size"="#7e03a8", "Symbiont Alpha Diversity"="#f0f921", "Symbiont Cells per Individual"="#f89540"))+
+  scale_colour_manual(name="", values=color_keys)+
   scale_x_discrete(expand = expansion(add = c(0.5, 4)))+
   ylim(-6,3.75)+
   ylab("Relative Change")+
   xlab("")+
   theme_classic()+
   theme(
-    legend.position="none",
-    axis.text.x=element_text(angle=45, hjust=1)
+    legend.position="right",
+    axis.text.y=element_text(color="black"),
+    axis.text.x=element_text(angle=45, hjust=1, color="black")
   );change_plot
 
-ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=8, height=7)
+ggsave("Mcap2020/Figures/Integration/RelativeChange.png", change_plot, width=10, height=7)
 ```
 

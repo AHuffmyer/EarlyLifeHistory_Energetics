@@ -545,6 +545,7 @@ alpha1_plot <- alpha1 + geom_point(size=3, position=position_jitterdodge(0.6)) +
   theme(legend.position="none");alpha1_plot
 
 ggsave(plot=alpha1_plot, file="Mcap2020/Figures/16S/alpha_rare.png", width=4, height=7)
+ggsave(plot=alpha1_plot, file="Mcap2020/Figures/16S/alpha_rare.pdf", width=4, height=7)
 ```
 
 Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  

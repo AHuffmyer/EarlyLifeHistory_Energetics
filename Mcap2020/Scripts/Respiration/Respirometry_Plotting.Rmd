@@ -300,14 +300,15 @@ legend_plot<-df %>%
     ggplot(., aes(x = Lifestage, y = Dummy, colour=Lifestage, shape=Metric)) +
     geom_point(aes(), alpha=1, size=4)+
     #scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"))+
-    scale_colour_manual(name=expression(bold("Lifestage")), values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-  scale_shape_manual(name=expression(bold("Metric")), values=c(15, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
-  theme_classic()
+    scale_colour_manual(name=expression(bold("Lifestage")), values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"), guide="none")+
+  scale_shape_manual(name=expression(bold("")), values=c(15, 21, 18), labels=c("Respiration", "Photosynthesis", "P:R"))+
+  theme_classic()+
+  theme(legend.position="top")
 
 legend<-get_legend(legend_plot)
 
-combined_full<-plot_grid(combined_plot, legend, nrow=1, ncol=2, rel_widths=c(1, 0.3))
-ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.png", combined_full, dpi=300, w=7, h=7, units="in")
+combined_full<-plot_grid(legend, combined_plot, nrow=2, ncol=1, rel_widths=c(1, 1), rel_heights=c(0.3, 1))
+ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.png", combined_full, dpi=300, w=5, h=7, units="in")
 ```
 
 Plot P R and PR ratio in one plot showing only means and std. error for all metrics.  

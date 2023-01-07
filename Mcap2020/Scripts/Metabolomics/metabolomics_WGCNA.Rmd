@@ -776,7 +776,7 @@ Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = pattern, y = Metabolite.Set))
   scale_color_distiller(type = "seq",
                         direction = -1,
                         palette = "Greys")+
-  scale_size(range=c(2,6))+
+  scale_size(range=c(4,10), limits=c(1,25))+
   guides(colour = guide_legend(override.aes = list(size=10)))+
   xlab("Ontogenetic Pattern")+
   ylab("KEGG Pathway")+
@@ -850,7 +850,7 @@ Compounds.Dot.Plot <-  ggplot(sig_classes_comp, aes(x = pattern, y = Metabolite.
   scale_color_distiller(type = "seq",
                         direction = -1,
                         palette = "Greys")+
-  scale_size(range=c(6,10))+
+  scale_size(range=c(4,10), limits=c(1,25))+
   guides(colour = guide_legend(override.aes = list(size=10)))+
   xlab("Ontogenetic Pattern")+
   ylab("Compound Class")+

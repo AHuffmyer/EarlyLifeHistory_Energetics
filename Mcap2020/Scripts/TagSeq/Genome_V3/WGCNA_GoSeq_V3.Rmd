@@ -573,6 +573,7 @@ carbs<-c("carbohydrate")
 
 
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Carbohdyrate.png"), plot=GO.plot.carb, dpi=300, width=13, height=18, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Carbohdyrate.pdf"), plot=GO.plot.carb, dpi=300, width=13, height=18, units="in")
 
 #save object for merging all plots together for manuscript
 go_results_carbs<-go_results%>%
@@ -640,6 +641,7 @@ lipids<-c("lipid", "fatty")
           axis.title.y = element_blank())
 
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Lipids.png"), plot=GO.plot.lipid, dpi=300, width=13, height=18, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Lipids.pdf"), plot=GO.plot.lipid, dpi=300, width=13, height=18, units="in")
 
 #save object for merging all plots together for manuscript
 go_results_lipids<-go_results%>%
@@ -708,6 +710,7 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
           axis.title.y = element_blank())
 
 ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.png"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.pdf"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
 
 #save object for merging all plots together for manuscript
 go_results_symbiosis<-go_results%>%

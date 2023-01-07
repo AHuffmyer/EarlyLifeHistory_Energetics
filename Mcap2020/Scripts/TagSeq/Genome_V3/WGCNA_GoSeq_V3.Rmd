@@ -817,6 +817,7 @@ pattern_plots<-pattern_expression%>%
         plot.title = element_text(size=26)); pattern_plots
 
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
 ```
 
 Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    

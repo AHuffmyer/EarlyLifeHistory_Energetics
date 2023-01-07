@@ -354,6 +354,7 @@ genesPCA <-
   theme(legend.position = ("none")); genesPCA
 
 ggsave("Mcap2020/Figures/TagSeq/GenomeV3/genes_lifestagePCA.png", genesPCA, width=6, height=5, dpi=300)
+ggsave("Mcap2020/Figures/TagSeq/GenomeV3/genes_lifestagePCA.pdf", genesPCA, width=6, height=5, dpi=300)
 ```
 
 

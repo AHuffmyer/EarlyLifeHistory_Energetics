@@ -550,7 +550,7 @@ carbs<-c("carbohydrate")
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.carb <-  ggplot(go_results, aes(x = pattern, y = term)) + 
     geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
-    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_size(name="Number of Genes", range=c(5,12), limits=c(1,500))+
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
@@ -619,7 +619,7 @@ lipids<-c("lipid", "fatty")
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.lipid <-  ggplot(go_results, aes(x = pattern, y = term)) + 
     geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
-    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_size(name="Number of Genes", range=c(5,12), limits=c(1,500))+
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
@@ -687,7 +687,7 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot.sym <-  ggplot(go_results, aes(x = pattern, y = term)) + 
     geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
-    scale_size(name="Number of Genes", range=c(5,12))+
+    scale_size(name="Number of Genes", range=c(5,12), limits=c(1,550))+
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+

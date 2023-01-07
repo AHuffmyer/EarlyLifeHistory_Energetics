@@ -309,6 +309,7 @@ legend<-get_legend(legend_plot)
 
 combined_full<-plot_grid(legend, combined_plot, nrow=2, ncol=1, rel_widths=c(1, 1), rel_heights=c(0.3, 1))
 ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.png", combined_full, dpi=300, w=5, h=7, units="in")
+ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_PR.pdf", combined_full, dpi=300, w=5, h=7, units="in")
 ```
 
 Plot P R and PR ratio in one plot showing only means and std. error for all metrics.  

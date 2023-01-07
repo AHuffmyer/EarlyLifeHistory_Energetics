@@ -408,6 +408,7 @@ pcoa_viz.nmds<-p2b.nmds  +
   ); pcoa_viz.nmds
 
 ggsave(plot=pcoa_viz.nmds, "Mcap2020/Figures/16S/nmds_16S.jpeg", h=6, w=8)
+ggsave(plot=pcoa_viz.nmds, "Mcap2020/Figures/16S/nmds_16S.pdf", h=6, w=8)
 ```
 
 Conduct a permanova in the vegan package (same as test in above PCoA section).  

@@ -257,6 +257,7 @@ p2b_viz<-p2b  +
   ); p2b_viz
 
 ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/nmds_its2_div.jpeg", h=5, w=8)
+ggsave(plot=p2b_viz, "Mcap2020/Figures/ITS2/nmds_its2_div.pdf", h=5, w=8)
 ```
 
 Conduct a permanova in the vegan package.  
@@ -372,6 +373,7 @@ alpha1_plot <- alpha1 + geom_point(size=3) + theme_classic() + scale_color_manua
   theme(legend.position="none");alpha1_plot
 
 ggsave(plot=alpha1_plot, file="Mcap2020/Figures/ITS2/alpha_rare.png", width=4, height=7)
+ggsave(plot=alpha1_plot, file="Mcap2020/Figures/ITS2/alpha_rare.pdf", width=4, height=7)
 ```
 
 Test for differences in alpha diversity.  

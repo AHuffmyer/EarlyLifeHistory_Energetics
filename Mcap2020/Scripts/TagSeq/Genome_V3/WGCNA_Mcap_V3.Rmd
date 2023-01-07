@@ -330,7 +330,7 @@ Generate a figure for manuscript.
 ```{r}
 genesPCA <- 
   ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
-  geom_point(size=7) +
+  geom_point(size=7, stroke=1) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   
@@ -350,7 +350,7 @@ genesPCA <-
                      axis.line = element_line(colour = "black"), #Set axes color
         plot.background=element_blank(), 
         axis.title=element_text(size=14), 
-        axis.text=element_text(size=10))  + #Set the plot background
+        axis.text=element_text(size=12, color="black"))  + #Set the plot background
   theme(legend.position = ("none")); genesPCA
 
 ggsave("Mcap2020/Figures/TagSeq/GenomeV3/genes_lifestagePCA.png", genesPCA, width=6, height=5, dpi=300)

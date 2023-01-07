@@ -125,7 +125,7 @@ size%>%
   summarise(n=length(volume),
             Mean=format(round(mean(volume), 3), 3), 
             SE=format(round(sd(volume)/sqrt(length(volume)),3),3))%>%
-  rename(Lifestage=lifestage, HPF=hpf)%>%
+  dplyr::rename(Lifestage=lifestage, HPF=hpf)%>%
   kbl(caption="Descriptive statistics of larval volume across ontogeny")%>%
   kable_classic(full_width=FALSE, html_font="Arial")%>%
   row_spec(0, bold = TRUE) 
@@ -136,7 +136,7 @@ size%>%
   summarise(n=length(volume),
             Mean=format(round(mean(volume), 3), 3), 
             SE=format(round(sd(volume)/sqrt(length(volume)),3),3))%>%
-  rename(Lifestage=lifestage, HPF=hpf)%>%
+  dplyr::rename(Lifestage=lifestage, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/larval_volume_table.csv")
 ```
 
@@ -161,6 +161,7 @@ size_plot<-size %>%
       ); size_plot
 
 ggsave(plot=size_plot, "Mcap2020/Figures/Physiology/size.png",height=8, width=8)
+ggsave(plot=size_plot, "Mcap2020/Figures/Physiology/size.pdf",height=8, width=8)
 ```
 
 ## Statistical analysis  
@@ -205,7 +206,7 @@ First, look at symbiont cell densities per individual.
 sym_counts <- read_csv("Mcap2020/Data/Physiology/CellDensity/symbiont.counts.csv")
 
 sym_counts<-sym_counts%>%
-  rename(code=lifestage)
+  dplyr::rename(code=lifestage)
 ```
 
 Calculate cells and normalize to either planar size (eggs through metamorphosed recruits) or surface area (attached recruits)   
@@ -285,7 +286,7 @@ sym_counts%>%
   summarise(n=length(cells.ind),
             Mean=format(round(mean(cells.ind), 0), 0), 
             SE=format(round(sd(cells.ind)/sqrt(length(cells.ind)),0),0))%>%
-  rename(Lifestage=group, HPF=hpf)%>%
+  dplyr::rename(Lifestage=group, HPF=hpf)%>%
   kbl(caption="Descriptive statistics of Symbiodiniaceae cell densities per larva across ontogeny")%>%
   kable_classic(full_width=FALSE, html_font="Arial")%>%
   row_spec(0, bold = TRUE) 
@@ -306,7 +307,7 @@ sym_counts%>%
   summarise(n=length(cells.ind),
             Mean=format(round(mean(cells.ind), 0), 0), 
             SE=format(round(sd(cells.ind)/sqrt(length(cells.ind)),0),0))%>%
-  rename(group=group, HPF=hpf)%>%
+  dplyr::rename(group=group, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/cell_density_table.csv")
 ```
 
@@ -542,7 +543,7 @@ corr%>%
   summarise(n=length(counts_volume),
             Mean_sym_mm3=format(round(mean(counts_volume), 0), 0), 
             SE=format(round(sd(counts_volume)/sqrt(length(counts_volume)),0),0))%>%
-  rename(Lifestage=group, HPF=hpf)%>%
+  dplyr::rename(Lifestage=group, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary.csv")
 ```
 
@@ -582,7 +583,7 @@ corr%>%
   summarise(n=length(counts_volume),
             Mean_sym_mm2=format(round(mean(counts_volume), 0), 0), 
             SE=format(round(sd(counts_volume)/sqrt(length(counts_volume)),0),0))%>%
-  rename(Lifestage=group, HPF=hpf)%>%
+  dplyr::rename(Lifestage=group, HPF=hpf)%>%
   write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary_attached.csv")
 ```
 
@@ -625,6 +626,7 @@ target_plots_legend<-plot_grid(symb_plot2b, recruit_size_plot2, legend, rel_widt
 
 ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=12, height=6, units="in")
 
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.pdf", target_plots_legend, dpi=300, width=12, height=6, units="in")
 ```
 
 

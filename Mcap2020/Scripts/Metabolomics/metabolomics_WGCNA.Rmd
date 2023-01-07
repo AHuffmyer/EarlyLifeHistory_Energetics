@@ -613,7 +613,7 @@ expression_plots_cluster<-mME_meta%>%
         strip.background = element_rect(color="white", fill="white")); expression_plots_cluster
 
 ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluster.jpeg", plot=expression_plots_cluster, dpi=300, width=10, height=5, units="in")
-
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene_cluster.pdf", plot=expression_plots_cluster, dpi=300, width=10, height=5, units="in")
 ``` 
 
 Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    

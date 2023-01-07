@@ -794,6 +794,8 @@ Pathways.Dot.Plot <-  ggplot(sig_pathways, aes(x = pattern, y = Metabolite.Set))
 
 ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/pathways_dot_plot.png", plot=Pathways.Dot.Plot, dpi=300, width=8, height=6, units="in")
 
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/pathways_dot_plot.pdf", plot=Pathways.Dot.Plot, dpi=300, width=8, height=6, units="in")
+
 ```
 
 ### Compound Classes   
@@ -867,5 +869,5 @@ Compounds.Dot.Plot <-  ggplot(sig_classes_comp, aes(x = pattern, y = Metabolite.
   legend.key.size = unit(0.2, 'cm'));Compounds.Dot.Plot
 
 ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/compounds_dot_plot.png", plot=Compounds.Dot.Plot, dpi=300, width=8, height=6, units="in")
-
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/compounds_dot_plot.pdf", plot=Compounds.Dot.Plot, dpi=300, width=8, height=6, units="in")
 ```

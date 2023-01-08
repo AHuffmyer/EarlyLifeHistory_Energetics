@@ -1,7 +1,0 @@
-"","delta.rank","pval","level","nseqs","term","name","p.adj"
-"21",0,3.24985000141962e-39,2,120,"GO:0003735","structural constituent of ribosome",0
-"22",0,8.04753982395591e-07,2,33,"GO:0003743","translation initiation factor activity",0
-"42",0,5.63560980417184e-08,3,10,"GO:0004129;GO:0015002;GO:0016676;GO:0016675","heme-copper terminal oxidase activity",0
-"52",0,7.34802743986794e-08,2,12,"GO:0004298;GO:0070003","threonine-type endopeptidase activity",0
-"127",0,3.96203125182148e-09,4,49,"GO:0008135;GO:0090079;GO:0045182","translation regulator activity, nucleic acid binding",0
-"155",0,4.56337222142562e-09,3,17,"GO:0015078","proton transmembrane transporter activity",0

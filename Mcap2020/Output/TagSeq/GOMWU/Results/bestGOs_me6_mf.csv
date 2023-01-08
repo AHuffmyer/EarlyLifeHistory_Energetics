@@ -1,8 +1,0 @@
-"","delta.rank","pval","level","nseqs","term","name","p.adj"
-"9",0,8.66102064529982e-10,2,320,"GO:0003677","DNA binding",0
-"18",0,1.03648755525094e-07,2,245,"GO:0003723","RNA binding",0
-"24",0,1.72124338184888e-05,8,61,"GO:0003777","microtubule motor activity",0
-"71",0,1.2942140283051e-05,2,57,"GO:0004721","phosphoprotein phosphatase activity",0
-"76",0,7.53281193506923e-05,3,44,"GO:0004843;GO:0008242;GO:0101005","omega peptidase activity",0.00357142857142857
-"156",0,1.22284957267896e-05,2,403,"GO:0016301;GO:0016773","kinase activity",0
-"250",0,3.28846530152589e-05,1,183,"GO:0098772","molecular function regulator",0

@@ -54,14 +54,14 @@ file2<-read_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")%
   gather(2:3, key="variable", value="value")
   
 #NEED TO ADD FUNCTIONAL INFORMATION TO THESE CATEGORIES 
-#genes increasing: carb and lipid metabolism, transmembrane transport
-#genes mid: carb and lipid metabolism, signaling
+#genes increasing: carb and lipid metabolism, ROS regulation and organic transport
+#genes mid: carb and lipid metabolism, ROS regulation and organic transport
 #genes decreasing: amino acid and steroid metabolism
 
 file3<-read_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")%>%
   mutate(Pattern=if_else(Pattern=="Decreasing", "Amino acid and steroid metabolism", 
-                         if_else(Pattern=="Increasing", "Carbohydrate and lipid metabolism, transmembrane transport", 
-                                 if_else(Pattern=="Mid", "Carbohydrate and lipid metabolism, signaling", "NA"))))%>%
+                         if_else(Pattern=="Increasing", "Carbohydrate and lipid metabolism, ROS regulation, organic transport", 
+                                 if_else(Pattern=="Mid", "Carbohydrate and lipid metabolism, ROS regulation, transport", "NA"))))%>%
   rename("variable"="Pattern", "value"="gene_expression")%>%
   filter(value<10)
 
@@ -115,8 +115,8 @@ df<-df%>%
   mutate(category=if_else(variable=="Bacterial Alpha Diversity", "Microbiome Diversity", 
                           if_else(variable=="Symbiont Alpha Diversity", "Microbiome Diversity", 
                                   if_else(variable=="Amino acid and steroid metabolism", "Molecular Response", 
-                                          if_else(variable=="Carbohydrate and lipid metabolism, transmembrane transport", "Molecular Response",
-                                                  if_else(variable=="Carbohydrate and lipid metabolism, signaling", "Molecular Response",
+                                          if_else(variable=="Carbohydrate and lipid metabolism, ROS regulation, organic transport", "Molecular Response",
+                                                  if_else(variable=="Carbohydrate and lipid metabolism, ROS regulation, transport", "Molecular Response",
                                                           if_else(variable=="Amino acid metabolism", "Metabolomic Response",
                                                                   if_else(variable=="Carbohydrate metabolism, amino acid synthesis", "Metabolomic Response",
                                                                           if_else(variable=="Nitrogen metabolism", "Metabolomic Response",

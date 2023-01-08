@@ -1,7 +1,0 @@
-"","delta.rank","pval","level","nseqs","term","name","p.adj"
-"16",0,0.000140602830450795,2,48,"GO:0005975","carbohydrate metabolic process",0.00714285714285714
-"36",0,1.70307224772749e-09,3,38,"GO:0006412;GO:0043043;GO:0043604","amide biosynthetic process",0
-"46",0,3.31339439892863e-08,2,46,"GO:0006518;GO:0043603","cellular amide metabolic process",0
-"117",0,6.84653347219238e-09,2,23,"GO:0015074","DNA integration",0
-"222",0,4.15274140320051e-05,2,53,"GO:0065008","regulation of biological quality",0
-"241",0,5.53314810021681e-05,2,74,"GO:1901566","organonitrogen compound biosynthetic process",0

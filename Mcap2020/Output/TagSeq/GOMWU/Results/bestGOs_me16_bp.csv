@@ -1,9 +1,0 @@
-"","delta.rank","pval","level","nseqs","term","name","p.adj"
-"5",0,5.55045160339692e-06,8,32,"GO:0000398;GO:0000377;GO:0000375;GO:0008380","RNA splicing",0
-"25",0,7.66727526064769e-05,4,13,"GO:0006325","chromatin organization",0
-"35",0,1.23593326151595e-12,2,87,"GO:0006396","RNA processing",0
-"36",0,1.84997417537759e-06,2,40,"GO:0006397","mRNA processing",0
-"81",0,4.37976620205092e-05,2,7,"GO:0007059","chromosome segregation",0
-"120",0,3.16462571853544e-06,2,49,"GO:0016071","mRNA metabolic process",0
-"157",0,1.04362772539313e-06,3,44,"GO:0034470;GO:0034660","ncRNA metabolic process",0
-"202",0,7.88268101528608e-05,1,59,"GO:0050896","response to stimulus",0

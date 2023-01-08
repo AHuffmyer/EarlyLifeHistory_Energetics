@@ -606,6 +606,7 @@ expression_plots_cluster<-mME_meta%>%
   theme(axis.text = element_text(size = 11 , color = "black"),
         axis.title = element_text(size = 16, color = "black", face="bold"), 
         axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank(),
         legend.position="bottom", 
         legend.title=element_text(size=12, face="bold"), 
         legend.text=element_text(color="black", size=12), 

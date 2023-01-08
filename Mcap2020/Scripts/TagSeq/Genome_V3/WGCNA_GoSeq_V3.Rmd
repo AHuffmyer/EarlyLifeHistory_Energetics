@@ -624,6 +624,7 @@ lipids<-c("lipid", "fatty")
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
     ggtitle("Lipid Metabolism")+
     theme_bw() + 
     theme(panel.border = element_blank(), 
@@ -693,6 +694,7 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
     ggtitle("Communication \nand Transport")+
     theme_bw() + 
     theme(panel.border = element_blank(), 
@@ -709,8 +711,8 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
           plot.title = element_text(hjust = 0),
           axis.title.y = element_blank())
 
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.png"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.pdf"), plot=GO.plot.sym, dpi=300, width=13, height=18, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.png"), plot=GO.plot.sym, dpi=300, width=14, height=18, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Symbiosis.pdf"), plot=GO.plot.sym, dpi=300, width=14, height=18, units="in")
 
 #save object for merging all plots together for manuscript
 go_results_symbiosis<-go_results%>%
@@ -816,8 +818,8 @@ pattern_plots<-pattern_expression%>%
         plot.background=element_blank(),
         plot.title = element_text(size=26)); pattern_plots
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=16, height=6, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.png", plot=pattern_plots, dpi=50 , width=16, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/ontogeny_patterns_expression.pdf", plot=pattern_plots, dpi=50 , width=16, height=8, units="in")
 ```
 
 Calculate relative change in expression for each of these three patterns relative to the first time point (eggs).    

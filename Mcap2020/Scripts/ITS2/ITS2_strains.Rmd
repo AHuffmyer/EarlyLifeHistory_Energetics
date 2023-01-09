@@ -271,7 +271,18 @@ perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
 perm1
 ```
 
-Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.877).  
+Permanova suggests there is no significant separation by lifestage in ITS2 profiles (p=0.217).  
+
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs     R2      F Pr(>F)
+lifestage  9   0.3599 0.2609 1.0982  0.217
+Residual  28   1.0195 0.7391              
+Total     37   1.3794 1.0000    
 
 # **Plot heat map of ITS2 DIVs**  
 

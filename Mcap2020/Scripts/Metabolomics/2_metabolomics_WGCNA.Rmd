@@ -142,7 +142,7 @@ rowSums(dplyr::count(data)) > 0
 
 Conduct data filtering, this includes:  
 
-*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.07. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (as analyzed in metabolomics.Rmd). We are further setting the minimum value of metabolites to 0.01 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
+*pOverA*: Specifying the minimum count for a proportion of samples for each metabolite. Here, we are using a pOverA of 0.04. This is because we have 46 samples with a minimum of n=2 samples per lifestage. Therefore, we will accept genes that are present in 2/46 = 0.04 of the samples because we expect different metabolites by life stage as demonstrated by PLSDA analysis (as analyzed in metabolomics.Rmd). We are further setting the minimum value of metabolites to 0.01 (median normalized), such that 4% of the samples must have a non-zero normalized metabolite presence in order for the metabolite to remain in the data set.  
 
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 

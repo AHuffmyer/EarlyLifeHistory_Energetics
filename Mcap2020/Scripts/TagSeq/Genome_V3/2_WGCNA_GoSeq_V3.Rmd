@@ -720,6 +720,77 @@ go_results_symbiosis<-go_results%>%
 
 ```
 
+For fun, look at functions related to epigenetics and methylation for E5 meeting discussion. 
+```{r}
+category<-c("BP")
+
+#add vector for terms of interest to reduce number of GO terms 
+epigen<-c("epigenetic", "methylation", "methyl", "histone", "chromatin")
+  
+    #Read relevant file of results from goseq analysis  
+    go_results<-patterns_df
+    
+    go_results<-go_results%>%
+      filter(ontology==category)%>%
+      filter(bh_adjust != "NA") %>%
+      filter(numInCat>10)%>%
+      arrange(., bh_adjust)
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    go_results<-go_results%>%
+      filter(grepl(paste(epigen, collapse="|"), ParentTerm))
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.epi <-  ggplot(go_results, aes(x = pattern, y = term)) + 
+    geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="Number of Genes", range=c(5,12), limits=c(1,550))+
+    scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    xlab("Ontogenetic Pattern")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    ggtitle("Epigenetics")+
+    theme_bw() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 18, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 20, angle=45, hjust=1),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 22, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=22, face="bold"),
+          plot.title = element_text(hjust = 0),
+          axis.title.y = element_blank())
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Epigenetics.png"), plot=GO.plot.epi, dpi=300, width=14, height=14, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Epigenetics.pdf"), plot=GO.plot.epi, dpi=300, width=14, height=14, units="in")
+
+#save object for merging all plots together for manuscript
+go_results_epi<-go_results%>%
+  mutate(category="Epigenetics")
+
+```
+
 ## 5. Plot trends of eigenegenes from modules for each ontogenetic pattern  
 
 Plot eigengene values for each pattern identified above from the module eigengene expression values.  

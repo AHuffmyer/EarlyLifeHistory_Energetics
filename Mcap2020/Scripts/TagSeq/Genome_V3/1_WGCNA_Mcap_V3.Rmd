@@ -239,7 +239,18 @@ permanova<-adonis2(vegan ~ Lifestage, data = test, method='eu')
 permanova
 ```
 
-Gene expression is significantly different between lifestages (p<0.001).  
+Gene expression is significantly different between lifestages (p=0.001).  
+
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = vegan ~ Lifestage, data = test, method = "eu")
+          Df SumOfSqs      R2      F Pr(>F)    
+Lifestage  9   318674 0.75057 9.3618  0.001 ***
+Residual  28   105901 0.24943                  
+Total     37   424575 1.00000    
 
 # **Examine PCA and sample distances**  
 

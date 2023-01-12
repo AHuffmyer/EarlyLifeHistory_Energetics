@@ -725,7 +725,7 @@ For fun, look at functions related to epigenetics and methylation for E5 meeting
 category<-c("BP")
 
 #add vector for terms of interest to reduce number of GO terms 
-epigen<-c("epigenetic", "methylation", "methyl", "histone", "chromatin")
+epigen<-c("epigenetic", "methylation", "methyl", "histone", "chromatin", "transferase")
   
     #Read relevant file of results from goseq analysis  
     go_results<-patterns_df

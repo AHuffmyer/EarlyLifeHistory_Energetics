@@ -1,3 +1,5 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/AHuffmyer/EarlyLifeHistory_Energetics) ![GitHub last commit](https://img.shields.io/github/last-commit/AHuffmyer/EarlyLifeHistory_Energetics) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AHuffmyer/EarlyLifeHistory_Energetics) ![GitHub issues](https://img.shields.io/github/issues/AHuffmyer/EarlyLifeHistory_Energetics) 
+
 # Ontogenetic shifts in symbiotic and metabolic state in coral early life history 
 
 Ariana S. Huffmyer, Kevin H. Wong, Danielle M. Becker-Polinski, Emma Strand, Tali Mass, Hollie M. Putnam  

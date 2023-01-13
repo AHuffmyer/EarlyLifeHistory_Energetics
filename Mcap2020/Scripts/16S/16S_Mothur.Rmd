@@ -280,9 +280,10 @@ lifestage_order<-c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "La
 row_dend = dendsort(hclust(dist(df_mat)))
 col_dend = dendsort(hclust(dist(t(df_mat))))
 
-col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+#col_fun = colorRamp2(c(0, 25, 50, 75, 100), c("purple", "white", "cyan", "white", "darkgreen"))
+col_fun = colorRamp2(c(0, 25, 50, 75, 100), hcl_palette = "Blue-Red 3")
 
-pdf(file = "Mcap2020/Figures/16S/16S-Phylum-Heatmap.pdf", height = 8, width = 18)
+pdf(file = "Mcap2020/Figures/16S/16S-Phylum-Heatmap.pdf", height = 8, width = 8)
 ComplexHeatmap::Heatmap(df_mat, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (Phylum)", 
         col = col_fun, 
         row_names_side = "left", 
@@ -312,6 +313,88 @@ Display as % abundance.
 ```{r}
 physeq1_rare_f = transform_sample_counts(physeq1_rare, function(x) 100 * x/sum(x))
 ```
+
+
+Plot relative abundance at the family level.  
+```{r}
+dat_fam <- physeq1_rare %>% tax_glom(taxrank = "Family") %>% psmelt()
+head(dat_fam)
+```
+
+```{r}
+df_fam<-dat_fam %>% 
+  group_by(lifestage, Family) %>% 
+  summarise(TotalAbundance=sum(Abundance))%>% #calculate total abundance of each phylum
+  group_by(lifestage) %>%
+  mutate(PercRelAbundance=TotalAbundance/sum(TotalAbundance)*100)%>% #calculate relative abundance
+  select(!TotalAbundance)%>%
+  filter(PercRelAbundance>5)
+
+df_fam$Family <- gsub('[^[:alnum:] ]','',df_fam$Family)
+
+#change to a matrix with phylum in rows and lifestage in columns
+df_fam<-df_fam%>%
+  spread(key=Family, value=PercRelAbundance)
+
+#replace na with 0, since 0 abundance was calculated as na in step above b/c dividing by 0
+df_fam[is.na(df_fam)] <- 0
+
+rownames(df_fam)<-df_fam$lifestage
+lifestage_list<-df_fam$lifestage
+
+dim(df_fam)
+
+df_fam<-as.matrix(df_fam)
+
+df_fam<-df_fam[,-1]
+
+taxa_list<-colnames(df_fam)
+
+df_mat_fam <- matrix(as.numeric(df_fam),    # Convert to numeric matrix
+                  ncol = ncol(df_fam))                                   # Print numeric matrix
+
+colnames(df_mat_fam)<-taxa_list
+rownames(df_mat_fam)<-lifestage_list
+
+df_mat_fam<-t(df_mat_fam)
+```
+
+Plot heatmap of family relative abundance.  
+```{r}
+
+lifestage_order<-c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)")
+
+row_dend = dendsort(hclust(dist(df_mat_fam)))
+col_dend = dendsort(hclust(dist(t(df_mat_fam))))
+
+#col_fun = colorRamp2(c(0, 50, 100), c("blue", "white", "red"))
+col_fun = colorRamp2(c(0, 25, 50), hcl_palette = "Blue-Red 3")
+
+pdf(file = "Mcap2020/Figures/16S/16S-Family-Heatmap.pdf", height = 10, width = 10)
+ComplexHeatmap::Heatmap(df_mat_fam, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (Family)", 
+        col = col_fun, 
+        row_names_side = "left", 
+        row_dend_side = "right",
+        width = unit(5, "in"), 
+        height = unit(5, "in"), 
+        column_dend_height = unit(.5, "in"),
+        row_dend_width = unit(.5, "in"),
+        column_dend_reorder = FALSE,
+        row_dend_reorder = TRUE,
+        row_gap = unit(2.5, "mm"),
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        border = TRUE, 
+        column_names_gp =  gpar(fontsize = 12, border=FALSE),
+        column_names_rot = 35,
+        cluster_rows = row_dend, 
+        #cluster_columns = col_dend,
+        column_order = lifestage_order, 
+        row_names_gp = gpar(fontsize = 12, alpha = 0.75, border = FALSE))
+dev.off()
+
+```
+
 
 ## Plot PCoA and conduct PERMANOVA  
 
@@ -491,15 +574,16 @@ Draw by lifestage with Complex Heatmap.
 row_dend = dendsort(hclust(dist(table)))
 col_dend = dendsort(hclust(dist(t(table))))
 
-col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+#col_fun = colorRamp2(c(0, 50, 100), c("blue", "white", "red"))
+col_fun = colorRamp2(c(0, 25, 50, 100), hcl_palette = "Blue-Red 3")
 
-pdf(file = "Mcap2020/Figures/16S/16S-ComplexHeatmap.pdf", height = 15, width = 18)
+pdf(file = "Mcap2020/Figures/16S/16S-ComplexHeatmap.pdf", height = 10, width = 18)
 ComplexHeatmap::Heatmap(table_names, name = "Rel. Abun. (%)", row_title = "", column_title = "16S Relative Abundance (OTU - Family:Genus) Taxa >0.5%", 
         col = col_fun, 
         row_names_side = "left", 
         row_dend_side = "right",
-        width = unit(4, "in"), 
-        height = unit(6, "in"), 
+        width = unit(6, "in"), 
+        height = unit(8, "in"), 
         column_dend_height = unit(.5, "in"),
         row_dend_width = unit(.5, "in"),
         column_dend_reorder = FALSE,

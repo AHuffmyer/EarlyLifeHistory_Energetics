@@ -50,6 +50,8 @@ Sequences were also aligned to the symbiont genome (*Cladocopium sp.* and *Durus
 
 Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235. 
 
+[![SRA](https://img.shields.io/badge/SRA-PRJNA900235-brightgreen)](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA900235)  
+
 #### Metabolomics  
 
 Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `1_metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a WCNA approach in the `2_metabolomics_WGCNA.Rmd` script. 
@@ -60,11 +62,15 @@ Symbiont ITS2 sequences were analyzed using the [SymPortal pipeline](https://sym
 
 Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235. 
 
+[![SRA](https://img.shields.io/badge/SRA-PRJNA900235-brightgreen)](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA900235)  
+
 #### Bacterial 16S  
 
 Bacterial 16S sequences were analyzed using the [Mothur MiSeq SOP pipeline](https://mothur.org/wiki/miseq_sop/) detailed in the `Mothur_bioinformatics.md` file. Bacterial communities were analyzed in the `16S_Mothur.Rmd` file. Due to low DNA extraction and bacterial sequence abundance, samples from the earliest lifestages are not included in analysis.  
  
-Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.  
+Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235. 
+
+[![SRA](https://img.shields.io/badge/SRA-PRJNA900235-brightgreen)](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA900235)  
 
 #### Integration  
 

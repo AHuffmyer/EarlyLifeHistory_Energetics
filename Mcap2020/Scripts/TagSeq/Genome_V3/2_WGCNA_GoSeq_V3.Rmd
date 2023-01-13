@@ -190,7 +190,7 @@ Run a loop to plot enrichment for each module at each level of ontology.
 module_vector<-c(levels(geneInfo$Module))
 ontologies<-c("BP", "MF")
 
-#add vector for terms of interest to reduce number of GO terms 
+#add vector for terms of interest to reduce number of GO terms - NOT using this to look at individual modules for exploratory purposes
 keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
 
 for (module in module_vector) {
@@ -225,14 +225,14 @@ for (module in module_vector) {
     #add in parent terms to list of go terms 
     go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
 
-    go_results<-go_results%>%
-      filter(grepl(paste(keywords, collapse="|"), ParentTerm))
+    #go_results<-go_results%>%
+      #filter(grepl(paste(keywords, collapse="|"), ParentTerm))
     
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
   GO.plot <-  ggplot(go_results, aes(x = ontology, y = term)) + 
     geom_point(aes(size=bh_adjust)) + 
-    scale_size(name="Over rep. p-value", trans="reverse")+
-    facet_grid(ParentTerm ~ ., scales = "free_y", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
+    scale_size(name="Over rep. p-value", trans="reverse", range=c(1,3))+
+    facet_grid(ParentTerm ~ ., scales = "free", labeller = label_wrap_gen(width = 5, multi_line = TRUE))+
     theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
     strip.text.y = element_text(angle=0, size = 10),
@@ -241,7 +241,7 @@ for (module in module_vector) {
     axis.title.x = element_blank(),
     axis.title.y = element_blank())
 
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=300, width=8, height=49, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=100, width=12, height=100, units="in", limitsize=FALSE)
     
   }
 }
@@ -501,7 +501,7 @@ ko:K10408    DNAH; dynein axonemal heavy chain
 
 ## 4. Plot all ontogenetic categories together for categories of interest    
 
-Plot enrichment for each pattern together in one plot. Customize first for carbohydrate metabolism related BP ontology.  
+Plot enrichment for each pattern together in one plot. Read in files.  
 ```{r}
 #bring in dataframes and bind them together 
 file1<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Increasing.csv")%>%mutate(pattern="Increasing")
@@ -510,7 +510,10 @@ file3<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Mid.csv")%>
 patterns_df<-rbind(file1, file2, file3)
 
 patterns_df$pattern<-factor(patterns_df$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+```
 
+Customize first for carbohydrate metabolism related BP ontology. 
+```{r}
 category<-c("BP")
 
 #add vector for terms of interest to reduce number of GO terms 
@@ -654,7 +657,7 @@ Plot enrichment for each pattern together in one plot. Customize first for trans
 category<-c("BP")
 
 #add vector for terms of interest to reduce number of GO terms 
-symbiosis<-c("regulation of cell communication", "transmembrane transport", "transmembrane", "organic substance transport", "antioxidant", "oxygen")
+symbiosis<-c("regulation of cell communication", "transmembrane transport", "transmembrane", "organic substance transport", "antioxidant", "oxygen", "involved in interspecies interaction")
   
     #Read relevant file of results from goseq analysis  
     go_results<-patterns_df
@@ -694,7 +697,7 @@ symbiosis<-c("regulation of cell communication", "transmembrane transport", "tra
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
-    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 7, multi_line = TRUE))+
     ggtitle("Communication \nand Transport")+
     theme_bw() + 
     theme(panel.border = element_blank(), 
@@ -791,12 +794,12 @@ go_results_epi<-go_results%>%
 
 ```
 
-For fun, look at functions related to calcification. 
+Look at functions related to nitrogen metabolism.  
 ```{r}
 category<-c("BP")
 
 #add vector for terms of interest to reduce number of GO terms 
-calcification<-c("pH", "calcium", "calcification", "skeleton", "cation", "mineral")
+nitrogen<-c("nitrogen", "ammonium", "nitrification", "nitrate", "nitrite")
   
     #Read relevant file of results from goseq analysis  
     go_results<-patterns_df
@@ -827,17 +830,17 @@ calcification<-c("pH", "calcium", "calcification", "skeleton", "cation", "minera
     go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
 
     go_results<-go_results%>%
-      filter(grepl(paste(calcification, collapse="|"), ParentTerm))
+      filter(grepl(paste(nitrogen, collapse="|"), ParentTerm))
       
     #plot significantly enriched GO terms by Slim Category faceted by slim term 
-  GO.plot.calc <-  ggplot(go_results, aes(x = pattern, y = term)) + 
+  GO.plot.nitrogen <-  ggplot(go_results, aes(x = pattern, y = term)) + 
     geom_point(aes(size=numInCat, fill=bh_adjust, colour=bh_adjust)) + 
     scale_size(name="Number of Genes", range=c(5,12), limits=c(1,550))+
     scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
     scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
     xlab("Ontogenetic Pattern")+
     facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
-    ggtitle("Calcification")+
+    ggtitle("Nitrogen Metabolism")+
     theme_bw() + 
     theme(panel.border = element_blank(), 
           panel.grid.major = element_blank(),
@@ -853,12 +856,12 @@ calcification<-c("pH", "calcium", "calcification", "skeleton", "cation", "minera
           plot.title = element_text(hjust = 0),
           axis.title.y = element_blank())
 
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Calcification.png"), plot=GO.plot.calc, dpi=300, width=20, height=28, units="in")
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Calcification.pdf"), plot=GO.plot.calc, dpi=300, width=20, height=28, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Nitrogen.png"), plot=GO.plot.nitrogen, dpi=300, width=14, height=28, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_AllPatterns_Nitrogen.pdf"), plot=GO.plot.nitrogen, dpi=300, width=14, height=28, units="in")
 
 #save object for merging all plots together for manuscript
 go_results_calc<-go_results%>%
-  mutate(category="Calcification")
+  mutate(category="Nitrogen")
 
 ```
 

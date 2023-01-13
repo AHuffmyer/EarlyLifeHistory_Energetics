@@ -305,7 +305,7 @@ p$scales$scales[[1]]$name <- "Lifestage"
 
 print(p)
 
-ggplot2::ggsave("Mcap2020/Figures/ITS2/div_heatmap.jpg", p, width = 6, height = 6)
+#ggplot2::ggsave("Mcap2020/Figures/ITS2/div_heatmap.jpg", p, width = 6, height = 6)
 ```
 
 Summarize by lifestage calculating means across replicates of each life stage.  
@@ -329,9 +329,10 @@ table<-as.matrix(t(otu_table(mergedGP)))
 row_dend = dendsort(hclust(dist(table)))
 col_dend = dendsort(hclust(dist(t(table))))
 
-col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+#col_fun = colorRamp2(c(0, 50, 100), c("white", "darkgray", "black"))
+col_fun = colorRamp2(c(0, 25, 50, 75, 100), hcl_palette = "Blue-Red 3")
 
-pdf(file = "Mcap2020/Figures/ITS2/DIV-ComplexHeatmap.pdf", height = 8, width = 8)
+pdf(file = "Mcap2020/Figures/ITS2/DIV-ComplexHeatmap.pdf", height = 7, width = 7)
 ComplexHeatmap::Heatmap(table, name = "Rel. Abun. (%)", row_title = "DIV", column_title = "ITS2 DIV Relative Abundance (>1%)", 
         col = col_fun, 
         row_names_side = "left", 

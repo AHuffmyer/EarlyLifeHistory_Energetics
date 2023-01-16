@@ -451,6 +451,18 @@ perm1
 
 Permanova suggests there is significant separation by lifestage in 16S profiles (p=0.001). 
 
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = phyloseq::distance(physeq1_rare, method = "bray") ~ lifestage, data = samples)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  7   4.8793 0.64321 4.3781  0.001 ***
+Residual  17   2.7066 0.35679                  
+Total     24   7.5859 1.00000     
+
+
 ## Plot NMDS 
 
 Prepare PCoA ordination.  

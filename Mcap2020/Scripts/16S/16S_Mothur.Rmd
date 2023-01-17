@@ -664,6 +664,17 @@ summary(aov(Chao1~lifestage, data=alpha_rare))
 
 There are significant differences in alpha diversity between lifestages for all metrics.    
 
+summary(aov(Shannon~lifestage, data=alpha_rare))
+            Df Sum Sq Mean Sq F value   Pr(>F)    
+lifestage    7 20.247  2.8925   22.31 2.16e-07 ***
+Residuals   17  2.204  0.1296                     
+
+summary(aov(InvSimpson~lifestage, data=alpha_rare))
+            Df Sum Sq Mean Sq F value  Pr(>F)    
+lifestage    7  16906  2415.1   17.46 1.3e-06 ***
+Residuals   17   2351   138.3   
+
+
 Export relative change in alpha diversity for integrative analyses. Calculate relative change for all lifestages compared to the first time point in this dataset (embryos at 38 hpf). We will use the Shannon Index for this calculation.    
 
 ```{r}

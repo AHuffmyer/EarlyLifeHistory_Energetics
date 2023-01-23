@@ -1,15 +1,137 @@
 # Mcap Early Life Gene Expression
 
-Genome version V3
+## Obtain raw sequences and conduct QC  
+
+University of Texas Austin
+UTGSAF JA 21284
+Project ID: 286942669
+
+### Data download from UTGSAF 
+
+```
+nano /data/putnamlab/KITT/hputnam/20210804_McapTagSeq/BaseSpaceDownload.sh
+```
+
+```
+#!/bin/bash
+#SBATCH -t 24:00:00
+#SBATCH --nodes=1 --ntasks-per-node=1
+#SBATCH --export=NONE
+#SBATCH --mem=100GB
+#SBATCH --account=putnamlab
+#SBATCH -D /data/putnamlab/KITT/hputnam/20210804_McapTagSeq
+
+module load IlluminaUtils/2.11-GCCcore-9.3.0-Python-3.8.2
+
+bs download project -i 286942669 -o /data/putnamlab/KITT/hputnam/20210804_McapTagSeq
+
+```
+
+```
+sbatch /data/putnamlab/KITT/hputnam/20210804_McapTagSeq/BaseSpaceDownload.sh
+```
+
+### Data QC
+
+Enter working directory.  
+
+```cd /data/putnamlab/ashuffmyer/mcap-2020-tagseq/```
+
+```mkdir scripts```
+
+Make md5 file to check file integrity 
+
+```md5sum  sequences/*.fastq.gz > sequences/md5.transferred```
+
+*Checking md5 after Andromeda reboot on 20220925 in sequences folder*  
+
+```md5sum  sequences/AH*.fastq.gz > sequences/md5.20220926
+#make md5
+
+cd sequences
+
+cmp md5.20220926 md5.transferred
+#check against original md5
+```
+Files are the same.  
+
+Write a script to generate FastQC and MultiQC reports.  
+
+In this script, generate FastQC/MultiQC for raw sequences, conduct trimming and cleaning, then generate reports for cleaned sequences. 
+
+MultiQC reports (.html formats) can be found in the GitHub repository Outputs folder for this [project here for "raw" and "clean" reads](https://github.com/AHuffmyer/EarlyLifeHistory_Energetics/tree/master/Mcap2020/Output/TagSeq). 
+
+In this script, we are trimming and cleaning with the following settings:  
+
+- remove adapter sequences `--adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA` 
+-  enable polyX trimming on 3' end at length of 6 `--trim_poly_x 6`
+-  filter by minimum phred quality score of >30 ` -q 30`
+-  enable low complexity filter `-y`
+-  set complexity filter threshold of 50% required `-Y 50`
+
+
+```
+nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/qc.sh
+```
+
+```
+#!/bin/bash
+#SBATCH -t 120:00:00
+#SBATCH --nodes=1 --ntasks-per-node=20
+#SBATCH --mem=100GB
+#SBATCH --account=putnamlab
+#SBATCH --export=NONE
+#SBATCH --output="%x_out.%j"
+#SBATCH --error="%x_err.%j"
+#SBATCH -D /data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences
+
+# load modules needed
+module load fastp/0.19.7-foss-2018b
+module load FastQC/0.11.8-Java-1.8
+module load MultiQC/1.9-intel-2020a-Python-3.8.2
+
+# fastqc of raw reads
+
+# run fastqc
+fastqc *.fastq.gz
+
+#combine all results - need to rename output file to "raw"
+multiqc ./
+
+# Make an array of sequences to trim
+array1=($(ls *.fastq.gz)) 
+
+# fastp loop; trim the Read 1 TruSeq adapter sequence; trim poly x default 10 (to trim polyA) 
+for i in ${array1[@]}; do
+	fastp --in1 ${i} --out1 clean.${i} --adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --trim_poly_x 6 -q 30 -y -Y 50 
+# fastqc the cleaned reads
+        fastqc clean.${i}
+done 
+
+echo "Read trimming of adapters complete." $(date)
+
+# Quality Assessment of Trimmed Reads
+
+multiqc clean* #Compile MultiQC report from FastQC files - need to rename output file to "clean"
+
+echo "Cleaned MultiQC report generated." $(date)
+
+```
+
+```
+sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/qc.sh
+``` 
+
+Clean sequences are now ready for alignment and analysis.  
+
+## Set up and download reference genome  
+
+*Montipora capitata* Genome version V3, Rutgers University
 
 Genome publication:  
-https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giac098/6815755   
+https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giac098/6815755  
 
-Download, QC, filtering/cleaning done previously. Starting at the alignment step.  
-
-# Set up and download data  
-
-Obtain reference genome assembly and gff annotation file 
+Obtain reference genome assembly and gff annotation file.  
 
 ```
 cd sequences/ 
@@ -35,7 +157,7 @@ gunzip Montipora_capitata_HIv3.genes_fixed.gff3.gz
 gunzip Montipora_capitata_HIv3.assembly.fasta.gz
 ```
 
-# 1. HISAT2  
+## 1. Alignment with HISAT2  
 
 
 ```
@@ -86,10 +208,10 @@ sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/align_v3.sh
 
 This creates a .bam file for each sample.  
 
-Alignment rates were similar between V1, V2, and V3 (68-72%).  
+Alignment rates were similar between V1, V2, and V3 (68-72% for each sample file).  
 
 
-# 2. Stringtie 2  
+## 2. Assembly with Stringtie 2  
 
 ```
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/stringtie_v3.sh
@@ -138,7 +260,7 @@ sbatch /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/stringtie_v3.sh
 This will make a .gtf file for each sample.  
 
 
-# 3. Prep DE  
+## 3. Generate gene count matrix Prep DE  
 
 ```
 nano /data/putnamlab/ashuffmyer/mcap-2020-tagseq/scripts/prepDE_v3.sh
@@ -192,7 +314,7 @@ Move gene count matrix off of server
 scp ashuffmyer@ssh3.hac.uri.edu:/data/putnamlab/ashuffmyer/mcap-2020-tagseq/sequences/Mcapitata_gene_count_matrix_V3.csv ~/MyProjects/EarlyLifeHistory_Energetics/Mcap2020/Output/TagSeq
 ```
 
-
+Gene count matrix is now ready for analysis. 
 
 
 

@@ -520,30 +520,30 @@ mME_meta<-mME_meta%>%
 mME_meta$Cluster<-as.factor(mME_meta$Cluster)
 ```
 
-
 Plot by time point with individual modules.  
 ```{r}
 
 mME_meta$group <- factor(mME_meta$group, levels = c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit"))
 mME_meta$Module <- factor(mME_meta$Module, levels = c("0", "1", "2", "3", "4", "5", "6", "7", "8"))
+mME_meta$lifestage <- factor(mME_meta$lifestage, levels = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf) ", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf) ", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf) ", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
 
 expression_plots<-mME_meta%>%
 #  group_by(Module) %>%
-  ggplot(aes(x=hpf, y=value, fill=group)) +
+  ggplot(aes(x=lifestage, y=value, colour=group)) +
   facet_wrap(~ Module)+
-  ylab("Mean Module Eigenegene Value") +
+  ylab("Mean Module Eigenegene") +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
   geom_boxplot(width=.5, outlier.shape= NA, position = position_dodge(width = 0.5), alpha = 0.7) +
   stat_summary(fun=mean, geom="line", aes(group=lifestage, color = group), position = position_dodge(width = 0.5))  + 
   geom_point(pch = 21, position = position_dodge(width = 0.5)) +
   scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) +
-  scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) + 
-  xlab("Hours Post-Fertilization") + #Axis titles
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3")) + 
+  xlab("") + #Axis titles
   theme_bw() + theme(panel.border = element_rect(color="black", fill=NA, size=0.75), panel.grid.major = element_blank(), #Makes background theme white
                      panel.grid.minor = element_blank(), axis.line = element_blank()) +
   theme(axis.text = element_text(size = 11 , color = "black"),
         axis.title = element_text(size = 16, color = "black"), 
-        axis.text.x = element_text(size=11, color="black"), 
+        axis.text.x = element_text(size=11, color="black", angle=45, hjust=1), 
         legend.title=element_blank(), 
         legend.text=element_text(color="black", size=12)); expression_plots
 

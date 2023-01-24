@@ -510,11 +510,13 @@ file3<-read_csv("Mcap2020/Output/TagSeq/GenomeV3/GOSeq/goseq_pattern_Mid.csv")%>
 patterns_df<-rbind(file1, file2, file3)
 
 patterns_df$pattern<-factor(patterns_df$pattern, levels=c("Decreasing", "Mid", "Increasing"))
+
+category<-c("BP")
 ```
 
 Customize first for carbohydrate metabolism related BP ontology. 
 ```{r}
-category<-c("BP")
+
 
 #add vector for terms of interest to reduce number of GO terms 
 carbs<-c("carbohydrate")
@@ -603,7 +605,7 @@ lipids<-c("lipid", "fatty")
                                 orgdb="org.Ce.eg.db", #c. elegans database
                                 ont=category,
                                 method="Rel")
-    #claculate similarity 
+    #calculate similarity 
     scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
     reducedTerms <- reduceSimMatrix(simMatrix,
                                 scores,

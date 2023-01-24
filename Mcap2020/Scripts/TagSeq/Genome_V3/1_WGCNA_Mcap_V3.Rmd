@@ -774,6 +774,7 @@ plot_MEs<-Strader_MEs%>%
 
 write_csv(plot_MEs, "Mcap2020/Output/TagSeq/GenomeV3/WGCNA_eigengene_expression.csv")
 
+plot_MEs<- read_csv("Mcap2020/Output/TagSeq/GenomeV3/WGCNA_eigengene_expression.csv")
 #dev.off() 
 
 time_point_order = c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)") #Set time_point order
@@ -792,7 +793,7 @@ plot_MEs$group<-factor(as.character(plot_MEs$group), levels=list_groups)
 expression_plots<-plot_MEs%>%
   group_by(Module, lifestage) %>%
   ggplot(aes(x=lifestage, y=Mean, group=lifestage, colour=group)) +
-  facet_grid(~Module)+
+  facet_wrap(~ Module)+
   geom_jitter(alpha = 0.5) +
   geom_boxplot(alpha=0) +
   scale_x_discrete(name="", limits=time_point_order) +
@@ -801,7 +802,7 @@ expression_plots<-plot_MEs%>%
   scale_colour_manual(name="Lifestage", values = c("Fertilized Egg"="#8C510A", "Embryo"="#DFC27D", "Larvae"="#80CDC1", "Metamorphosed Polyp"="#003C30", "Attached Recruit"="#BA55D3")) +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
   theme_bw() + 
-  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 12), #set x-axis label size
+  theme(axis.text.x=element_text(angle = 45, hjust=1, size = 12), #set x-axis label size
         axis.title.x=element_text(size = 14), #set x-axis title size
         axis.ticks.x=element_blank(), #No x-label ticks
         #axis.title.y=element_blank(), #No y-axis title
@@ -813,7 +814,7 @@ expression_plots<-plot_MEs%>%
         plot.background=element_blank(),
         plot.title = element_text(size=22)); expression_plots
 
-ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.png", height=6, width=24)
+ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.jpeg", height=8, width=10)
 ```
 
 # **Calculating gene significance and module membership**  

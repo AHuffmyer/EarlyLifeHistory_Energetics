@@ -741,7 +741,7 @@ peaks_selected_clean%>%
   write_csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
 ```
 
-# Preliminary PCA of combined polarities  
+# PCA of combined polarities  
 
 Run PCA to view differences in life stages with combined data frame after normalization and polarity selection.   
 
@@ -790,6 +790,31 @@ ggsave(filename="Mcap2020/Figures/Metabolomics/All_PCAs.pdf", plot=pcaplots, dpi
 ```  
 
 There are groupings by lifestage that we will explore with PLS-DA analyses.  
+
+## Conduct PERMANOVA by developmental time point  
+
+Build PERMANOVA model.  
+```{r}
+fviz_eig(scaled.pca)
+
+# scale data
+vegan <- scale(data_pca_full[c(5:186)])
+
+# PerMANOVA 
+permanova<-adonis2(vegan ~ HPF, data = data_pca_full, method='eu')
+permanova
+```
+
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = vegan ~ HPF, data = data_pca_full, method = "eu")
+         Df SumOfSqs      R2     F Pr(>F)    
+HPF      12   5390.3 0.64384 5.122  0.001 ***
+Residual 34   2981.7 0.35616                 
+Total    46   8372.0 1.00000                 
 
 # PLS-DA analysis  
 

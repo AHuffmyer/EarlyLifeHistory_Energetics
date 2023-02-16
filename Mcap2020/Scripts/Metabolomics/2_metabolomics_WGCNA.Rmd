@@ -493,7 +493,7 @@ row_mod_num <- data.frame(table(module_df$colors))
 
 # Bring in additional metadata
 
-sample_metadata <- read.csv("Mcap2020/Data/Metabolomics/metabolomics_meta_wgcna.csv") 
+sample_metadata <- read.csv("Mcap2020/Data/Metabolomics/metabolomics_sample_metadata.csv") 
 
 sample_metadata$Sample.ID <- as.factor(sample_metadata$Sample.ID)
 sample_metadata$lifestage <- as.factor(sample_metadata$lifestage)

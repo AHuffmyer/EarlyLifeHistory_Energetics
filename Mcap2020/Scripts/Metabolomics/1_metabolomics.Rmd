@@ -70,7 +70,7 @@ dataset2<-read.csv("Mcap2020/Data/Metabolomics/Peaks_Pos_Normalized_20210524_Rut
 #join together by compound
 data<-full_join(dataset1, dataset2)
 
-#rename columns to be useful
+#rename columns  
 data<- data %>% 
   dplyr::rename(
     Larvae2_rep1 = Larvae.2_50uL_1,

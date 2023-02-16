@@ -202,6 +202,7 @@ data <- data[c(9, 71,72)]
 
 Add lifestage column for categorizing samples by lifestage.   
 
+Here we are also removing samples extracted from 20201020. These samples were used for optimization of extractions and are not analyzed here due to differences in methods and batch effects. 
 ```{r}
 data<-data%>%
   separate(Sample, sep="_", c("Lifestage", "Rep"), remove=FALSE)

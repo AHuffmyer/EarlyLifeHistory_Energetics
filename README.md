@@ -2,6 +2,8 @@
 
 [![SRA](https://img.shields.io/badge/SRA-PRJNA900235-brightgreen)](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA900235)  
 
+[![OSF](https://img.shields.io/badge/OSF-10.17605%2FOSF.IO%2FKMU7H-brightgreen)](https://doi.org/10.17605/OSF.IO/KMU7H)  
+
 # Ontogenetic shifts in symbiotic and metabolic state in coral early life history 
 
 Ariana S. Huffmyer, Kevin H. Wong, Danielle M. Becker-Polinski, Emma Strand, Tali Mass, Hollie M. Putnam  
@@ -57,6 +59,10 @@ Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.
 #### Metabolomics  
 
 Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `1_metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a WCNA approach in the `2_metabolomics_WGCNA.Rmd` script. 
+
+Raw metabolomics files can be found on the Open Science Framework project.  
+
+[![OSF](https://img.shields.io/badge/OSF-10.17605%2FOSF.IO%2FKMU7H-brightgreen)](https://doi.org/10.17605/OSF.IO/KMU7H) 
 
 #### Symbiont ITS2  
 

@@ -526,6 +526,15 @@ means <- rel_abund_data %>%
   spread(its2_type_profile, Abundance);means
 ```
 
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  # Add abundances within each profile and lifestage
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+
+```
+
 Use T-test to test for differences in relative abundance of C and D across lifestages.  
 ```{r}
 test<-rel_abund_data %>% 

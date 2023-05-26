@@ -57,7 +57,7 @@ In this project, physiological assays include symbiont cell density and larval v
 
 # **1. Larval Size/Volume**  
 
-First, plot and analyze larval size measured as volume. Volume is calculated as an elliptical sphere using the length and width measurements of each individual sampled across the developmental time series.     
+First, plot and analyze larval size measured as volume. Volume is calculated as a prolate spheroid using the length and width measurements of each individual sampled across the developmental time series.     
 
 ## Import and manipulate data
 
@@ -71,7 +71,8 @@ metadata <- read_csv("Mcap2020/Data/lifestage_metadata.csv")
 
 # select columns
 size <- size %>%
-  dplyr::select(tube.ID, code, replicate, volume)%>%
+  dplyr::select(tube.ID, code, replicate, `width (mm)`, `length (mm)`)%>%
+  rename(width=`width (mm)`, length = `length (mm)`)%>%
   drop_na() #remove na's that could not be measured
 
 size$replicate<-as.factor(size$replicate)
@@ -99,8 +100,15 @@ Remove na's from data frame.
 ```{r}
 # Calculate mean counts for each sample
 size <- size %>%
-  dplyr::select(tube.ID, lifestage, replicate, volume, hpf, group, code)%>%
+  dplyr::select(tube.ID, lifestage, replicate, width, length, hpf, group, code, group)%>%
   drop_na()
+```
+
+## Calculate larval volume  
+
+Calculate the volume for each individual as a prolate spheroid. Using this equation: V = 4/3 * pi * a^2 * b where a is 1/2 the width and b is 1/2 the length  
+```{r}
+size$volume <- (4/3) * pi * (0.5*size$width)^2 * (0.5*size$length)
 ```
 
 ## Plot larval volume    
@@ -164,6 +172,36 @@ ggsave(plot=size_plot, "Mcap2020/Figures/Physiology/size.png",height=8, width=8)
 ggsave(plot=size_plot, "Mcap2020/Figures/Physiology/size.pdf",height=8, width=8)
 ```
 
+Plot data as a mean and standard error plot.     
+```{r}
+size_plot_mean<-size %>%
+  group_by(lifestage, group, hpf)%>%
+  summarise(mean=mean(volume, na.rm=TRUE), 
+            n=length(volume),
+            se=sd(volume, na.rm=TRUE)/sqrt(length(volume)))%>%
+
+    ggplot(., aes(x = lifestage, y = mean, colour=group)) +
+    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=6, alpha=1) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=group), colour="black", width=0) + 
+    xlab("") + 
+    scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
+    theme_classic() + 
+    ylim(0,0.1)+
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x=element_text(angle=45, hjust=1)
+      ); size_plot_mean
+
+ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.png",height=8, width=8)
+ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.pdf",height=8, width=8)
+```
+
 ## Statistical analysis  
 
 Run ANOVA test on larval size. 
@@ -174,7 +212,7 @@ qqPlot(residuals(size_model))
 leveneTest(residuals(size_model)~lifestage, data=size)
 ```
 
-There appears to be a V=violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  
+There appears to be a violation in normality and variance assumptions. Conduct non-parametric test (Kruskal Wallis).  
 
 ```{r}
 kruskal.test(volume~lifestage, data=size)
@@ -333,6 +371,37 @@ symb_plot2<-sym_counts %>%
       legend.title=element_text(face="bold", size=14), 
       axis.text.x=element_text(angle=45, hjust=1)
       ); symb_plot2
+
+```
+
+
+Plot data as mean and standard error for egg through metamorphosed polyp stages normalized to cells per individual.    
+```{r}
+
+symb_plot3<-sym_counts %>%
+  filter(!group=="Attached Recruit")%>%
+  group_by(lifestage, group, hpf)%>%
+  summarise(mean=mean(cells.ind, na.rm=TRUE), 
+            n=length(cells.ind),
+            se=sd(cells.ind, na.rm=TRUE)/sqrt(length(cells.ind)))%>%
+  droplevels()%>%
+  
+    ggplot(., aes(x = lifestage, y = mean, colour=group)) +
+    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=6, alpha=1) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=group), colour="black", width=0) + 
+    xlab("") + 
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"), guide="none")+
+    ylab(expression(bold(paste("Symbiont cells individual"^-1))))+
+    ylim(0,9000)+
+    theme_classic() + 
+    theme(
+      legend.position="right",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      axis.text.x=element_text(angle=45, hjust=1)
+      ); symb_plot3
 
 ```
 
@@ -572,6 +641,36 @@ recruit_size_plot<-corr %>%
       ); recruit_size_plot
 ```
 
+Plot as mean and standard error.  
+
+```{r}
+
+recruit_size_plot_mean<-corr %>%
+  filter(group=="Attached Recruit")%>%
+  group_by(lifestage, group, hpf)%>%
+  summarise(mean=mean(counts_volume, na.rm=TRUE), 
+            n=length(counts_volume),
+            se=sd(counts_volume, na.rm=TRUE)/sqrt(length(counts_volume)))%>%
+  droplevels()%>%
+
+    ggplot(., aes(x = lifestage, y = mean)) +
+    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=6, alpha=1) + 
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=group), colour="black", width=0) + 
+    xlab("") + 
+    scale_fill_manual(name="Lifestage", values=c("#BA55D3"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#BA55D3"))+
+    ylab(expression(bold(paste("Symbiont cells (mm"^-2,")"))))+
+    ylim(0, 8000)+
+    theme_classic() + 
+    theme(
+      legend.position="top",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      axis.text.x=element_text(angle=45, hjust=1)
+      ); recruit_size_plot_mean
+```
+
 View summary of symbiont densities per unit surface area.  
 
 ```{r}
@@ -627,6 +726,20 @@ target_plots_legend<-plot_grid(symb_plot2b, recruit_size_plot2, legend, rel_widt
 ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.png", target_plots_legend, dpi=300, width=12, height=6, units="in")
 
 ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities.pdf", target_plots_legend, dpi=300, width=12, height=6, units="in")
+```
+
+Generate a plot with mean and standard devation plots.  
+
+```{r}
+symb_plot3b<-symb_plot3+theme(legend.position="none")+ theme(axis.title=element_text(size=14, face="bold"))
+recruit_size_plot_mean2<-recruit_size_plot_mean+theme(legend.position="none")+theme(axis.title=element_text(size=14))
+
+
+target_plots_legend<-plot_grid(symb_plot3b, recruit_size_plot_mean2, legend, rel_widths = c(1,0.5,0.5), rel_heights=c(1,0.8,1), ncol=3, nrow=1, align="h", axis = "b", labels=c("A", "B", ""))
+
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_mean.png", target_plots_legend, dpi=300, width=12, height=6, units="in")
+
+ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_mean.pdf", target_plots_legend, dpi=300, width=12, height=6, units="in")
 ```
 
 

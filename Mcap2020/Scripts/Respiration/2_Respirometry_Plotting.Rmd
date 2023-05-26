@@ -382,6 +382,41 @@ combined_full_mean<-plot_grid(combined_plot_mean, legend, nrow=1, ncol=2, rel_wi
 ggsave("Mcap2020/Figures/Respiration/Combined_Metrics_Means_PR.png", combined_full_mean, dpi=300, w=7, h=7, units="in")
 ```
 
+Generate plot with means faceted vertically by each metric.  
+```{r}
+stats$Metric<-factor(stats$Metric, levels=c("Respiration", "Gross Photosynthesis", "P:R Ratio"))
+
+facet_plot_mean<-stats %>%
+  
+    ggplot(., aes(x = lifestage_std, y = abs(mean))) +
+    facet_wrap(~Metric, scales="free", nrow = 3)+
+    geom_hline(yintercept=0, linetype="dashed", color="white", size=0.75)+
+    geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
+  
+    #add mean with error bars  
+    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
+    
+    #aesthetics 
+    xlab("") + 
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  
+    #theme
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x=element_blank() #element_text(angle=45, hjust=1)
+      ); facet_plot_mean
+
+ggsave("Mcap2020/Figures/Respiration/Facet_Metrics_Means_PR.png", facet_plot_mean, dpi=300, w=5, h=7, units="in")
+```
+
 ## Export relative change of GP, R, and P:R for integrative analyses  
 
 ```{r}

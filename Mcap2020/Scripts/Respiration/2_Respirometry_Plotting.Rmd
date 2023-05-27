@@ -417,6 +417,110 @@ facet_plot_mean<-stats %>%
 ggsave("Mcap2020/Figures/Respiration/Facet_Metrics_Means_PR.png", facet_plot_mean, dpi=300, w=5, h=7, units="in")
 ```
 
+Generate individual plots with mean and standard error for generating a publication figure.  
+
+```{r}
+resp_plot_mean<-stats %>%
+    filter(Metric=="Respiration")%>%
+  
+    ggplot(., aes(x = lifestage_std, y = abs(mean))) +
+    geom_hline(yintercept=0, linetype="dashed", color="white", size=0.75)+
+    geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
+  
+    #add mean with error bars  
+    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
+    
+    #aesthetics 
+    xlab("") + 
+    ylim(0,0.08)+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    ylab(expression(bold(paste("Respiration (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  
+    #theme
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=12),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x=element_text(angle=45, hjust=1)
+      ); resp_plot_mean
+
+ggsave("Mcap2020/Figures/Respiration/Respiration_Means.png", resp_plot_mean, dpi=300, w=4, h=5, units="in")
+
+gross_plot_mean<-stats %>%
+    filter(Metric=="Gross Photosynthesis")%>%
+  
+    ggplot(., aes(x = lifestage_std, y = abs(mean))) +
+    geom_hline(yintercept=0, linetype="dashed", color="white", size=0.75)+
+    geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
+  
+    #add mean with error bars  
+    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
+    
+    #aesthetics 
+    xlab("") + 
+    ylim(0,0.08)+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    ylab(expression(bold(paste("Photosynthesis (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  
+    #theme
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=12),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x=element_text(angle=45, hjust=1),
+      plot.margin = margin(t = 10, r = 1, l = 1, b = 1)
+      ); gross_plot_mean
+
+ggsave("Mcap2020/Figures/Respiration/Gross_Photosynthesis_Means.png", gross_plot_mean, dpi=300, w=4, h=5, units="in")
+
+ratio_plot_mean<-stats %>%
+    filter(Metric=="P:R Ratio")%>%
+  
+    ggplot(., aes(x = lifestage_std, y = abs(mean))) +
+    geom_hline(yintercept=0, linetype="dashed", color="white", size=0.75)+
+    geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
+  
+    #add mean with error bars  
+    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
+    
+    #aesthetics 
+    xlab("") + 
+    ylim(0,3.5)+
+    scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
+    ylab(expression(bold(paste("P:R")))) +
+    geom_hline(yintercept=1, linetype="dashed", color="black")+
+  
+    #theme
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=12),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      axis.text.x=element_text(angle=45, hjust=1), 
+      plot.margin = margin(t = 1, r = 1, l = 15, b = 1)
+      ); ratio_plot_mean
+
+ggsave("Mcap2020/Figures/Respiration/PR_Ratio_Means.png", ratio_plot_mean, dpi=300, w=4, h=5, units="in")
+
+
+```
+
+
+
 ## Export relative change of GP, R, and P:R for integrative analyses  
 
 ```{r}

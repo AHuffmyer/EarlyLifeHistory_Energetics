@@ -139,7 +139,7 @@ Plot with development on the x - axis and values of variables on the y-axis.
 #molecular response (#cc4778)
 #metabolomic response (#0d0887)
 
-color_keys<-c("Energy Demand"="#7e03a8", "Photosynthetic Capacity"="#f89540", "Microbiome Diversity"="darkgray", "Molecular Response"="#cc4778", "Metabolomic Response"="#0d0887")
+color_keys<-c("Energy Demand"="black", "Photosynthetic Capacity"="orange", "Microbiome Diversity"="darkgray", "Molecular Response"="red", "Metabolomic Response"="blue")
 
 change_plot<-df%>%
   

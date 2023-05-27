@@ -536,8 +536,8 @@ legend_plot<-corr %>%
     geom_boxplot(aes(color=group), outlier.size = 0, lwd=1) +
     geom_point(aes(fill=group), pch = 21, size=4, position = position_jitterdodge(0.4)) + 
     xlab("Hours Post-Fertilization") + 
-    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
-    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
     ylab(expression(bold(paste("Symbiont cells mm"^-3))))+
     #ylim(2000, 35000)+
     theme_classic() + 
@@ -659,7 +659,7 @@ recruit_size_plot_mean<-corr %>%
     xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#BA55D3"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#BA55D3"))+
-    ylab(expression(bold(paste("Symbiont cells (mm"^-2,")"))))+
+    ylab(expression(bold(paste("Symbiont cells mm"^-2))))+
     ylim(0, 8000)+
     theme_classic() + 
     theme(
@@ -735,7 +735,7 @@ symb_plot3b<-symb_plot3+theme(legend.position="none")+ theme(axis.title=element_
 recruit_size_plot_mean2<-recruit_size_plot_mean+theme(legend.position="none")+theme(axis.title=element_text(size=14))
 
 
-target_plots_legend<-plot_grid(symb_plot3b, recruit_size_plot_mean2, legend, rel_widths = c(1,0.5,0.5), rel_heights=c(1,0.8,1), ncol=3, nrow=1, align="h", axis = "b", labels=c("A", "B", ""))
+target_plots_legend<-plot_grid(symb_plot3b, recruit_size_plot_mean2, legend, rel_widths = c(1,0.5,0.5), rel_heights=c(1,0.8,1), ncol=3, nrow=1, align="h", axis = "b", labels=c("", "", ""))
 
 ggsave(file="Mcap2020/Figures/Physiology/Physiology_figure_densities_mean.png", target_plots_legend, dpi=300, width=12, height=6, units="in")
 

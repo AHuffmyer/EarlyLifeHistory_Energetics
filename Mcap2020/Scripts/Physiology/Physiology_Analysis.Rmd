@@ -104,11 +104,31 @@ size <- size %>%
   drop_na()
 ```
 
-## Calculate larval volume  
+## Calculate volume  
+
+Calculate the volume of each lifestage. For eggs and developing embryos, we will use a spheroid equation, for larvae we will use prolate spheroid, and for polyps we will use an oblate spheroid equation. This best approximates the shape of each life stage.  
+
+Spheroid: V = 4/3 * pi * a^3 where a is 1/2 the width (radius)
+Prolate spheroid: V = 4/3 * pi * a^2 * b where a is 1/2 the width and b is 1/2 the length 
+Oblate spheroid:V = 4/3 * pi * a * b^2 where a is 1/2 the width and b is 1/2 the length 
 
 Calculate the volume for each individual as a prolate spheroid. Using this equation: V = 4/3 * pi * a^2 * b where a is 1/2 the width and b is 1/2 the length  
 ```{r}
-size$volume <- (4/3) * pi * (0.5*size$width)^2 * (0.5*size$length)
+# Define a function to calculate the volume based on life stage
+calculate_volume <- function(group, length, width) {
+  case_when(
+    group %in% c("Egg", "Embryo") ~ (4/3) * pi * (length/2)^3,
+    group == "Larvae" ~ (4/3) * pi * (length/2) * (width/2)^2,
+    group == "Metamorphosed Polyp" ~ (4/3) * pi * (length/2)^2 * (width/2),
+    TRUE ~ NA_real_
+  )
+}
+
+# Use mutate function to calculate volume based on life stage
+size <- size %>% mutate(volume = calculate_volume(group, length, width))
+
+# Print the updated dataframe
+print(size)
 ```
 
 ## Plot larval volume    
@@ -123,6 +143,12 @@ size %>%
                geom = "errorbar", color = "black", width = 0.5) +
   stat_summary(fun = mean, geom = "point", color = "black") + # Plot mean
   theme_classic()
+```
+
+Remove the outlier in the metamorphosed polyp group. 
+```{r}
+size<-size%>%
+  filter(volume<0.3)
 ```
 
 Present means and standard error of each group and save summary table.  
@@ -188,7 +214,7 @@ size_plot_mean<-size %>%
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
     theme_classic() + 
-    ylim(0,0.1)+
+    ylim(0,0.15)+
     theme(
       legend.position="right",
       axis.title=element_text(face="bold", size=14),
@@ -500,7 +526,7 @@ Test relationship with a spearman correlation.
 cor.test(corr$mean_volume, corr$cells.ind, method=c("spearman"))
 ```
 
-There is not a significant correlation between volume and symbiont density.   
+There is not a significant correlation between volume and symbiont density. But we can see that there are low cell densities in embryos and eggs and there is a positive relationship between size and cell density in larvae and metamorphosed polyps. This indicates that cell population growth increases in these life stages.    
 
 ### Plotting  
 

@@ -1,11 +1,11 @@
 Lifestage,HPF,lifestage,n,Mean_sym_mm3,SE
-Egg,1,Egg (1 hpf),4,37660,3168
-Embryo,5,Embryo (5 hpf),4,52190,4692
-Embryo,38,Embryo (38 hpf),4,26558,4130
-Embryo,65,Embryo (65 hpf),4,117838,11234
+Egg,1,Egg (1 hpf),4,22128,1983
+Embryo,5,Embryo (5 hpf),4,40044,4662
+Embryo,38,Embryo (38 hpf),4,13651,1786
+Embryo,65,Embryo (65 hpf),4,76606,7038
 Larvae,93,Larvae (93 hpf),4,152846,9315
 Larvae,163,Larvae (163 hpf),4,86779,5616
 Larvae,183,Larvae (183 hpf),4,99936,9748
 Larvae,231,Larvae (231 hpf),4,69520,6782
-Metamorphosed Polyp,183,Metamorphosed Polyp (183 hpf),4,192820,10715
-Metamorphosed Polyp,231,Metamorphosed Polyp (231 hpf),4,112792,11995
+Metamorphosed Polyp,183,Metamorphosed Polyp (183 hpf),4,103039,9063
+Metamorphosed Polyp,231,Metamorphosed Polyp (231 hpf),4,97671,7362

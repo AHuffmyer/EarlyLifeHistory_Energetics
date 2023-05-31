@@ -104,6 +104,12 @@ size <- size %>%
   drop_na()
 ```
 
+Remove 38 hpf group (prawn chip). There is not a reliable volume measurement approximation for this group that we are confident in.  
+```{r}
+size <- size %>%
+  filter(!lifestage=="Embryo (38 hpf)")
+```
+
 ## Calculate volume  
 
 Calculate the volume of each lifestage. For eggs and developing embryos, we will use a spheroid equation, for larvae we will use prolate spheroid, and for polyps we will use an oblate spheroid equation. This best approximates the shape of each life stage.  
@@ -207,25 +213,25 @@ size_plot_mean<-size %>%
             se=sd(volume, na.rm=TRUE)/sqrt(length(volume)))%>%
 
     ggplot(., aes(x = lifestage, y = mean, colour=group)) +
-    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=6, alpha=1) + 
+    geom_point(aes(fill=group, group=group), colour="black", pch = 21, size=8, alpha=1) + 
     geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=group), colour="black", width=0) + 
     xlab("") + 
     scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30"))+
     ylab(expression(bold(paste("Volume (mm"^3, ")"))))+
     theme_classic() + 
-    ylim(0,0.15)+
+    ylim(0,0.12)+
     theme(
-      legend.position="right",
-      axis.title=element_text(face="bold", size=14),
-      axis.text=element_text(size=12, color="black"), 
+      legend.position="none",
+      axis.title=element_text(face="bold", size=16, color="black"),
+      axis.text=element_text(size=14, color="black"), 
       legend.title=element_text(face="bold", size=14), 
-      legend.text=element_text(size=12), 
-      axis.text.x=element_text(angle=45, hjust=1)
+      legend.text=element_text(size=14), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black")
       ); size_plot_mean
 
-ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.png",height=8, width=8)
-ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.pdf",height=8, width=8)
+ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.png",height=6, width=6)
+ggsave(plot=size_plot_mean, "Mcap2020/Figures/Physiology/size_mean.pdf",height=6, width=6)
 ```
 
 ## Statistical analysis  

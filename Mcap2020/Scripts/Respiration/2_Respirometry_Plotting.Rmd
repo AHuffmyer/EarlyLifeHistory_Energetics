@@ -428,7 +428,7 @@ resp_plot_mean<-stats %>%
     geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
   
     #add mean with error bars  
-    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, alpha=1, size=6, color="black") + 
     geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
     
     #aesthetics 
@@ -459,7 +459,7 @@ gross_plot_mean<-stats %>%
     geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
   
     #add mean with error bars  
-    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, alpha=1, size=6, color="black") + 
     geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
     
     #aesthetics 
@@ -491,7 +491,7 @@ ratio_plot_mean<-stats %>%
     geom_hline(yintercept=0.07, linetype="dashed", color="white", size=0.75)+
   
     #add mean with error bars  
-    geom_point(aes(fill=Lifestage, colour=Lifestage, group=group), pch = 21, alpha=1, size=6) + 
+    geom_point(aes(fill=Lifestage, group=group), pch = 21, alpha=1, size=6, color="black") + 
     geom_errorbar(aes(ymin=abs(ymin), ymax=abs(ymax), colour=Lifestage, group=group), width=0, color="black") +
     
     #aesthetics 

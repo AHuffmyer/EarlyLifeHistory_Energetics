@@ -818,6 +818,57 @@ HPF      12   5390.3 0.64384 5.122  0.001 ***
 Residual 34   2981.7 0.35616                 
 Total    46   8372.0 1.00000                 
 
+# Pool size plots of individual metabolites across development 
+
+peaks_selected_clean
+
+```{r}
+compound_list<-peaks_selected_clean%>%
+  select(compound)%>%
+  unique()
+
+compound_list<-c(levels(as.factor(compound_list$compound)))  
+
+pool_size_plotting<-plyr::ddply(peaks_selected_clean, c("HPF", "compound"), summarise,
+                N    = length(log_norm_counts[!is.na(log_norm_counts)]),
+                mean = mean(log_norm_counts, na.rm=TRUE),
+                sd   = sd(log_norm_counts, na.rm=TRUE),
+                se   = sd / sqrt(N)
+)
+
+pool_size_plotting$HPF<-factor(pool_size_plotting$HPF, levels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)","Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
+  
+# loop through each compound in the list and create a plot
+for (metabolite in compound_list) {
+  
+  # subset the fractions dataset for the current compound
+  compound_data <- subset(pool_size_plotting, compound == metabolite)
+  
+  abundance.plot <-  ggplot(compound_data, aes(x = HPF, y = mean)) + 
+    geom_point(aes(), fill="black", color="black", pch=21, size=4) + 
+    geom_line(group=1, color="black")+
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.0)+
+    theme_classic()+
+    ggtitle(metabolite)+
+    ylab("Pool Size (log intensity)")+
+    xlab("Lifestage")+
+    theme(
+      axis.text=element_text(color="black", size=12), 
+      axis.text.x=element_text(color="black", size=12, hjust=1, angle=45),
+      axis.title=element_text(color="black", size=14, face="bold"), 
+      legend.text=element_text(color="black", size=12), 
+      legend.title=element_text(color="black", size=14, face="bold"), 
+      legend.position="none"
+    )
+  
+ggsave(filename=paste0("Mcap2020/Figures/Metabolomics/abundance_plots/", metabolite, ".jpeg"), plot=abundance.plot, width=6, height=6, units="in")
+
+}
+```
+
+
+
+
 # PLS-DA analysis  
 
 Load data if starting from this point in the script.    

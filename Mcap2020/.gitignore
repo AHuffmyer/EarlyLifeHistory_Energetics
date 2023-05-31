@@ -55,3 +55,6 @@ rsconnect/
 
 #knit files 
 Mcap2020/Scripts/Metabolomics/metabolomics_files
+
+#output plots
+Mcap2020/Scripts/Metabolomics/abundance_plots

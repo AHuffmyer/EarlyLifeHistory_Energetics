@@ -1058,3 +1058,5 @@ genes_rel_change<-pattern_expression%>%
   dplyr::select(Pattern, lifestage, gene_expression)%>%
   write_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")
 ```
+
+

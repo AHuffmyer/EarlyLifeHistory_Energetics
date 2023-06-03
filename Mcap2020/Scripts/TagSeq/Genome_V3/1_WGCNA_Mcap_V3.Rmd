@@ -165,6 +165,9 @@ metadata_ordered$lifestage<-as.factor(metadata_ordered$lifestage)
 metadata_ordered$lifestage<-fct_relevel(metadata_ordered$lifestage, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
 
 levels(as.factor(metadata_ordered$lifestage))
+
+#output metadata for other analyses 
+write_csv(metadata_ordered, "Mcap2020/Data/TagSeq/metadata_ordered.csv")
 ```
 
 Plot the sequence counts after trimming in each sample to confirm that sequence depth is not different between lifestages.  
@@ -987,3 +990,19 @@ dim(geneInfo)
 write.csv(geneInfo, file = "Mcap2020/Output/TagSeq/GenomeV3/geneInfo.csv") #gene info for reference/supplement
 
 ```
+
+Format our gene vst data frame for plotting.  
+```{r}
+gene_expr<-as.matrix(datExpr)
+gene_expr<-t(gene_expr)
+gene_expr<-as.data.frame(gene_expr, row.names = rownames(gene_expr), make.names=TRUE)
+```
+
+Output for other analysis
+```{r}
+write.csv(gene_expr, "Mcap2020/Output/TagSeq/GenomeV3/transformed_filtered_gene_counts.csv")
+```
+
+
+
+

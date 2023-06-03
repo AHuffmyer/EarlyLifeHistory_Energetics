@@ -1,0 +1,518 @@
+---
+title: "Gene expression indicators"
+author: "Ariana S Huffmyer"
+date: "2023"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Plotting gene expression of genes in categories of interest.  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+Load required libraries.  
+
+```{r}
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("ggplot2" %in% rownames(installed.packages()) == 'FALSE') install.packages('ggplot2') 
+if ("cowplot" %in% rownames(installed.packages()) == 'FALSE') install.packages('cowplot') 
+if ("directlabels" %in% rownames(installed.packages()) == 'FALSE') install.packages('directlabels')
+
+library("tidyverse")
+library("RColorBrewer")
+library("ggplot2")
+library("cowplot")
+library("dplyr")
+library("directlabels")
+
+```
+
+# Load data frames 
+
+Load the selected metabolites dataframe, which contains metadata as well as log transformed median normalized metabolite pool sizes.   
+
+```{r}
+metabolites<-read_csv("Mcap2020/Output/Metabolomics/selected_metabolites.csv")
+head(metabolites)
+```
+
+# List metabolites of interest  
+
+Next, extract a list of metabolites for metabolic pathways of interest for individual plotting.  
+
+## Glycolysis
+
+Create list of expression of metabolites for glycolysis of the metabolites that we observed in our dataset.  
+
+For glycolysis, we have data for glucose, two intermediates (G6P and Phosphoenolpyruvate) and two end products (pyruvate and acetyl CoA). 
+```{r}
+glycolysis<-c("Glucose", "Glucose-6-phosphate", "Phosphoenolpyruvate", "Pyruvate", "Acetyl CoA")
+              
+list_glycolysis<-metabolites%>%
+    filter(compound %in% glycolysis)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="Glycolysis")
+```
+
+## TCA cycle 
+
+Create list of expression of metabolites for the TCA of the metabolites that we observed in our dataset.  
+
+For the TCA cycle, we have data for citrate, isocitrate, malate, acetyl coA, a-ketoglutarate, fumarate, and succinate.  
+```{r}
+tca<-c("Citrate", "Isocitrate", "Malate", "Acetyl CoA", "a-ketoglutarate", "Fumarate", "Succinate")
+              
+list_tca<-metabolites%>%
+    filter(compound %in% tca)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="TCA Cycle")
+```
+
+## GS-GOGAT Pathway
+
+Create list of expression of metabolites for ammonium assimilation and metabolism through the GS-GOGAT pathway. 
+
+We have data for glutamine, glutamate, and a-ketoglutarate. 
+```{r}
+gogat<-c("Glutamine", "Glutamate", "a-ketoglutarate")
+              
+list_gogat<-metabolites%>%
+    filter(compound %in% gogat)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="GS-GOGAT")
+```
+
+## Urea cycle 
+
+Create list of expression of metabolites for the urea cycle of the metabolites that we observed in our dataset.  
+
+For the urea cycle, we have data for Citrulline, Aspartate, Carbamoyl phosphate, Arginine, and Ornithine.  
+```{r}
+urea<-c("Citrulline", "Aspartate", "Carbamoyl phosphate", "Arginine", "Ornithine")
+              
+list_urea<-metabolites%>%
+    filter(compound %in% urea)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="Urea Cycle")
+```
+
+## Cofactors  
+
+Create list of expression of cofactors that we observed in our dataset.  
+
+We have data for NAD+, NADH, NADP+, NADPH.   
+```{r}
+cofactors<-c("NAD+", "NADH", "NADP+", "NADPH")
+              
+list_cofactors<-metabolites%>%
+    filter(compound %in% cofactors)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="Cofactors")
+```
+
+## ATP/ADP 
+
+Create list of expression of atp/adp that we observed in our dataset.  
+
+We have data for ATP and ADP.   
+```{r}
+atp<-c("ATP", "ADP")
+              
+list_atp<-metabolites%>%
+    filter(compound %in% atp)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="ATP")
+```
+
+## Antioxidants 
+
+Create list of expression of antioxidants that we observed in our dataset.  
+
+We have data for methionine sulfoxide.   
+```{r}
+antiox<-c("Methionine sulfoxide")
+              
+list_antiox<-metabolites%>%
+    filter(compound %in% antiox)%>%
+    dplyr::select(HPF, Development, compound, log_norm_counts)%>%
+    mutate(Pathway="Antioxidants")
+```
+
+## Merge all data frames together  
+
+```{r}
+# Find data frames that start with "genes_"
+matching_df_names <- ls(pattern = "list_")
+
+# Initialize an empty dataframe to store the combined result
+specific_metabolites <- data.frame()
+
+# Bind the matching data frames together row-wise
+for (df_name in matching_df_names) {
+  df <- get(df_name)  # Access the data frame
+  specific_metabolites <- rbind(specific_metabolites, df)  # Bind the data frame
+}
+```
+
+Reorder levels for development.    
+```{r}
+group_order<-c("Egg", "Embryo", "Larvae", "Metamorphosed Polyp", "Attached Recruit")
+
+specific_metabolites$Development<-factor(specific_metabolites$Development, levels = group_order)
+
+levels(as.factor(specific_metabolites$Development))
+
+levels(as.factor(specific_metabolites$HPF))
+
+lifestage_order<-c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
+
+specific_metabolites$HPF<-factor(specific_metabolites$HPF, levels = lifestage_order)
+
+levels(as.factor(specific_metabolites$HPF))
+```
+
+# Plot expression for each pathway 
+
+## Glycolysis   
+
+```{r}
+glycolysis_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="Glycolysis")
+
+
+glycolysis_plot<-glycolysis_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=glycolysis_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); glycolysis_plot
+
+ggsave(glycolysis_plot, file="Mcap2020/Figures/Metabolomics/Pathways/glycolysis_pathway.png", width=8, height=6)
+```
+
+```{r}
+glycolysis_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="Glycolysis")
+
+glycolysis_plot_line<-glycolysis_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_smooth(aes(group=compound), color="black", method="loess")+
+    geom_dl(aes(label=glycolysis_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); glycolysis_plot_line
+
+ggsave(glycolysis_plot_line, file="Mcap2020/Figures/Metabolomics/Pathways/glycolysis_pathway_trendline.png", width=8, height=6)
+```
+
+
+## GS-GOGAT 
+
+```{r}
+gogat_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="GS-GOGAT")
+
+gogat_plot<-gogat_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=gogat_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); gogat_plot
+
+ggsave(gogat_plot, file="Mcap2020/Figures/Metabolomics/Pathways/gogat_pathway.png", width=8, height=6)
+```
+
+
+```{r}
+gogat_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="GS-GOGAT")
+
+gogat_plot_line<-gogat_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+  geom_smooth(aes(group=compound), color="black", method="loess")+
+    geom_dl(aes(label=gogat_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); gogat_plot_line
+
+ggsave(gogat_plot_line, file="Mcap2020/Figures/Metabolomics/Pathways/gogat_pathway_trendline.png", width=8, height=6)
+```
+
+## TCA Cycle
+
+```{r}
+tca_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="TCA Cycle")
+
+tca_plot<-tca_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=tca_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); tca_plot
+
+ggsave(tca_plot, file="Mcap2020/Figures/Metabolomics/Pathways/tca_pathway.png", width=8, height=6)
+```
+
+
+
+
+
+
+
+## Urea Cycle 
+
+```{r}
+urea_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="Urea Cycle")
+
+urea_plot<-urea_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=urea_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); urea_plot
+
+ggsave(urea_plot, file="Mcap2020/Figures/Metabolomics/Pathways/urea_pathway.png", width=8, height=6)
+```
+
+## Cofactors 
+
+```{r}
+cofactor_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="Cofactors")
+
+cofactor_plot<-cofactor_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=cofactor_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); cofactor_plot
+
+ggsave(cofactor_plot, file="Mcap2020/Figures/Metabolomics/Pathways/cofactors.png", width=8, height=6)
+```
+
+
+
+## ATP/ADP 
+
+```{r}
+atp_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="ATP")
+
+atp_plot<-atp_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=atp_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); atp_plot
+
+ggsave(atp_plot, file="Mcap2020/Figures/Metabolomics/Pathways/atp.png", width=8, height=6)
+```
+
+## Antioxidants 
+
+```{r}
+antiox_df<-specific_metabolites%>%
+    group_by(Pathway, HPF, compound)%>%
+    summarise(mean=mean(log_norm_counts), N=length(log_norm_counts), sd=sd(log_norm_counts), sem=sd/N)%>%
+    filter(Pathway=="Antioxidants")
+
+antiox_plot<-antiox_df%>%
+    ggplot(., aes(x = HPF, y = mean)) +
+    facet_wrap(~Pathway)+
+    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
+    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
+    geom_dl(aes(label=antiox_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    xlab("") + 
+    ylab("log(normalized pool size)")+
+    #ylim(0,0.8) + 
+    expand_limits(x = 18) + 
+    theme_classic() + 
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold"), 
+      plot.margin = margin(0.2, 0.2, 0.2, 0.2, "cm")
+      ); antiox_plot
+
+ggsave(antiox_plot, file="Mcap2020/Figures/Metabolomics/Pathways/antioxidants.png", width=8, height=6)
+```
+
+# Assemble all plots together  
+```{r}
+glycolysis_plot2<-glycolysis_plot+theme(axis.text.x=element_blank())
+gogat_plot2<-gogat_plot+theme(axis.text.x=element_blank(), axis.title.y=element_blank())
+urea_plot2<-urea_plot+theme(axis.text.x=element_blank(), axis.title.y=element_blank())
+
+antiox_plot2<-antiox_plot
+atp_plot2<-atp_plot+theme(axis.title.y=element_blank())
+cofactor_plot2<-cofactor_plot+theme(axis.title.y=element_blank())
+
+metabolite_plots<-plot_grid(glycolysis_plot2, gogat_plot2, urea_plot2, antiox_plot2, atp_plot2, cofactor_plot2, ncol=3, nrow=2, rel_heights = c(0.7,1))
+                      
+ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.jpg", plot=metabolite_plots, dpi=300, width=26, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.pdf", plot=metabolite_plots, dpi=300, width=26, height=8, units="in")
+```
+
+
+
+
+
+

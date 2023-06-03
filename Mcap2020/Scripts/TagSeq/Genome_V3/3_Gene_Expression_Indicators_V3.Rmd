@@ -657,6 +657,7 @@ oxidative_plot2<-oxidative_plot+theme(axis.title.y=element_blank())
 gene_plots<-plot_grid(carb_plot2, glucose_plot2, glucose_transport_plot2, lipid_plot2, bicarb_plot2, fattyacid_plot2, ammonium_plot2, oxidative_plot2, ncol=4, nrow=2, rel_heights = c(0.7,1))
                       
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/gene_expression_class.jpg", plot=gene_plots, dpi=300, width=22, height=9, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=22, height=9, units="in")
 ```
 
 

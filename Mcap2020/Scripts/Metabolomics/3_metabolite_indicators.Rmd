@@ -227,7 +227,7 @@ glycolysis_plot_line<-glycolysis_df%>%
     #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
     #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
     #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
-    geom_smooth(aes(group=compound), color="black", method="loess")+
+    geom_smooth(aes(group=compound), color="black", method="loess", alpha=0.2)+
     geom_dl(aes(label=glycolysis_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
@@ -296,7 +296,7 @@ gogat_plot_line<-gogat_df%>%
     #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
     #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
     #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
-  geom_smooth(aes(group=compound), color="black", method="loess")+
+  geom_smooth(aes(group=compound), color="black", method="loess", alpha=0.2)+
     geom_dl(aes(label=gogat_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+

@@ -1,0 +1,39 @@
+sample_id,lifestage,hpf,code
+AH10,Larvae (93 hpf),93,Larvae3
+AH11,Larvae (93 hpf),93,Larvae3
+AH12,Egg (1 hpf),1,Egg
+AH13,Larvae (93 hpf),93,Larvae3
+AH14,Larvae (163 hpf),163,Larvae4
+AH15,Larvae (163 hpf),163,Larvae4
+AH16,Larvae (163 hpf),163,Larvae4
+AH17,Larvae (163 hpf),163,Larvae4
+AH18,Larvae (231 hpf),231,Larvae6
+AH19,Egg (1 hpf),1,Egg
+AH1,Egg (1 hpf),1,Egg
+AH20,Larvae (231 hpf),231,Larvae6
+AH21,Larvae (231 hpf),231,Larvae6
+AH22,Larvae (231 hpf),231,Larvae6
+AH24,Metamorphosed Polyp (231 hpf),231,Recruit2
+AH25,Metamorphosed Polyp (231 hpf),231,Recruit2
+AH26,Egg (1 hpf),1,Egg
+AH27,Metamorphosed Polyp (231 hpf),231,Recruit2
+AH28,Embryo (5 hpf),5,Embryo
+AH29,Embryo (5 hpf),5,Embryo
+AH2,Embryo (38 hpf),38,Larvae1
+AH30,Embryo (5 hpf),5,Embryo
+AH31,Embryo (5 hpf),5,Embryo
+AH32,Embryo (38 hpf),38,Larvae1
+AH33,Attached Recruit (183 hpf),183,Recruit1plug
+AH34,Attached Recruit (231 hpf),231,Recruit2plug
+AH35,Attached Recruit (231 hpf),231,Recruit2plug
+AH36,Attached Recruit (183 hpf),183,Recruit1plug
+AH37,Attached Recruit (183 hpf),183,Recruit1plug
+AH38,Attached Recruit (231 hpf),231,Recruit2plug
+AH39,Attached Recruit (183 hpf),183,Recruit1plug
+AH3,Embryo (38 hpf),38,Larvae1
+AH4,Embryo (38 hpf),38,Larvae1
+AH5,Embryo (65 hpf),65,Larvae2
+AH6,Embryo (65 hpf),65,Larvae2
+AH7,Embryo (65 hpf),65,Larvae2
+AH8,Embryo (65 hpf),65,Larvae2
+AH9,Larvae (93 hpf),93,Larvae3

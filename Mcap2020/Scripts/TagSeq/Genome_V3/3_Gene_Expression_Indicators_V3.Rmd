@@ -304,6 +304,15 @@ levels(as.factor(specific_genes$lifestage))
 
 ## Carbohydrate metabolism  
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Carbohydrate Metabolism")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 carb_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -318,6 +327,7 @@ carb_plot<-specific_genes%>%
     ylab("Gene expression (vst)")+
     ylim(5.9,6.7)+
     theme_classic() + 
+    geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     geom_text(x=1.5, y=5.9, label="N=725 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
@@ -342,6 +352,15 @@ specific_genes%>%
 
 ## Glucose Metabolism 
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Glucose Metabolism")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 glucose_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -354,6 +373,7 @@ glucose_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+    geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     ylim(5.9,6.7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.9, label="N=232 genes", size=4, fontface="italic")+
@@ -380,6 +400,15 @@ specific_genes%>%
 
 ## Glucose Transport 
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Glucose Transport")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 glucose_transport_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -392,6 +421,7 @@ glucose_transport_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+    geom_text(x=2, y=6.7, label="p=0.682", color="darkgray", size=4)+
     ylim(5.9,6.7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.9, label="N=44 genes", size=4, fontface="italic")+
@@ -418,6 +448,15 @@ specific_genes%>%
 
 ## Lipid Metabolism 
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Lipid Metabolism")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 lipid_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -432,6 +471,7 @@ lipid_plot<-specific_genes%>%
     ylab("Gene expression (vst)")+
     ylim(5.9,6.7)+
     theme_classic() + 
+    geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     geom_text(x=1.5, y=5.9, label="N=519 genes", size=4, fontface="italic")+
     theme(
       legend.position="none",
@@ -456,6 +496,15 @@ specific_genes%>%
 
 ## Fatty Acid Metabolism  
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Fatty Acid Metabolism")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 fattyacid_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -468,6 +517,7 @@ fattyacid_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+    geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     ylim(5.9,6.7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.9, label="N=159 genes", size=4, fontface="italic")+
@@ -494,6 +544,15 @@ specific_genes%>%
 
 ## Ammonium Metabolism  
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Ammonium Metabolism")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 ammonium_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -506,6 +565,7 @@ ammonium_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+    geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     ylim(5.9,6.7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.9, label="N=142 genes", size=4, fontface="italic")+
@@ -532,6 +592,15 @@ specific_genes%>%
 
 ## Oxidative Stress 
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Oxidative Stress")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 oxidative_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -544,6 +613,7 @@ oxidative_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+  geom_text(x=2, y=6.7, label="p<0.001", color="black", size=4)+
     ylim(5.9,6.7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.9, label="N=295 genes", size=4, fontface="italic")+
@@ -570,6 +640,15 @@ specific_genes%>%
 
 ## Bicarbonate Transport 
 
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Bicarbonate Transport")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
 ```{r}
 bicarb_plot<-specific_genes%>%
     group_by(Function, lifestage)%>%
@@ -582,6 +661,7 @@ bicarb_plot<-specific_genes%>%
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
     xlab("") + 
     ylab("Gene expression (vst)")+
+  geom_text(x=2, y=7, label="p<0.001", color="black", size=4)+
     ylim(5.7,7)+
     theme_classic() + 
     geom_text(x=1.5, y=5.7, label="N=295 genes", size=4, fontface="italic")+
@@ -633,8 +713,8 @@ oxidative_plot2<-oxidative_plot+theme(axis.title.y=element_blank())
 
 gene_plots<-plot_grid(carb_plot2, glucose_plot2, glucose_transport_plot2, lipid_plot2, bicarb_plot2, fattyacid_plot2, ammonium_plot2, oxidative_plot2, ncol=4, nrow=2, rel_heights = c(0.7,1))
                       
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/gene_expression_class.jpg", plot=gene_plots, dpi=300, width=22, height=9, units="in")
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=22, height=9, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/SpecificGenes/gene_expression_class.jpg", plot=gene_plots, dpi=300, width=22, height=9, units="in")
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/SpecificGenes/gene_expression_class.pdf", plot=gene_plots, dpi=300, width=22, height=9, units="in")
 ```
 
 

@@ -53,7 +53,7 @@ Create list of expression of metabolites for glycolysis of the metabolites that 
 
 For glycolysis, we have data for glucose, two intermediates (G6P and Phosphoenolpyruvate) and two end products (pyruvate and acetyl CoA). 
 ```{r}
-glycolysis<-c("Glucose", "Glucose-6-phosphate", "Phosphoenolpyruvate", "Pyruvate", "Acetyl CoA")
+glycolysis<-c("Glucose", "Glucose-6-phosphate", "Pyruvate")
               
 list_glycolysis<-metabolites%>%
     filter(compound %in% glycolysis)%>%
@@ -67,7 +67,7 @@ Create list of expression of metabolites for the TCA of the metabolites that we 
 
 For the TCA cycle, we have data for citrate, isocitrate, malate, acetyl coA, a-ketoglutarate, fumarate, and succinate.  
 ```{r}
-tca<-c("Citrate", "Isocitrate", "Malate", "Acetyl CoA", "a-ketoglutarate", "Fumarate", "Succinate")
+tca<-c("Citrate", "Isocitrate", "Malate", "a-ketoglutarate", "Fumarate", "Succinate")
               
 list_tca<-metabolites%>%
     filter(compound %in% tca)%>%
@@ -202,11 +202,12 @@ glycolysis_df<-specific_metabolites%>%
 glycolysis_plot<-glycolysis_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=glycolysis_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
+    scale_colour_brewer(palette="Dark2")+
     ylab("log(normalized pool size)")+
     geom_text(x=1.5, y=0.8, label="p<0.001", color="black", size=4)+
     ylim(0,0.8) + 
@@ -235,13 +236,11 @@ glycolysis_df<-specific_metabolites%>%
 glycolysis_plot_line<-glycolysis_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
-    #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
-    geom_smooth(aes(group=compound), color="black", method="loess", alpha=0.2)+
+    geom_smooth(aes(group=compound, colour=compound), method="loess", alpha=0.2)+
     geom_dl(aes(label=glycolysis_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
-    ylab("log(normalized pool size)")+
+    ylab("log(normalized pool size)")+    
+    scale_colour_brewer(palette="Dark2")+
     ylim(-0.05,0.8) + 
     geom_text(x=2, y=0.8, label="p<0.001", color="black", size=4)+
     expand_limits(x = 18) + 
@@ -280,10 +279,11 @@ gogat_df<-specific_metabolites%>%
 gogat_plot<-gogat_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=gogat_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
+    scale_colour_brewer(palette="Dark2")+
     xlab("") + 
     ylab("log(normalized pool size)")+
     geom_text(x=2, y=2.1, label="p<0.001", color="black", size=4)+
@@ -314,14 +314,12 @@ gogat_df<-specific_metabolites%>%
 gogat_plot_line<-gogat_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    #geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    #geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
-    #geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
-  geom_smooth(aes(group=compound), color="black", method="loess", alpha=0.2)+
+    geom_smooth(aes(group=compound, colour=compound), method="loess", alpha=0.2)+
     geom_dl(aes(label=gogat_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
     #ylim(0,0.8) + 
+    scale_colour_brewer(palette="Dark2")+
     expand_limits(x = 18) + 
     geom_text(x=2, y=2.2, label="p<0.001", color="black", size=4)+
     theme_classic() + 
@@ -359,11 +357,12 @@ tca_df<-specific_metabolites%>%
 tca_plot<-tca_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=tca_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
+    scale_colour_brewer(palette="Dark2")+
     ylab("log(normalized pool size)")+
     geom_text(x=2, y=2.1, label="p<0.001", color="black", size=4)+
     #ylim(0,0.8) + 
@@ -403,12 +402,13 @@ urea_df<-specific_metabolites%>%
 urea_plot<-urea_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=urea_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
+    scale_colour_brewer(palette="Dark2")+
     #ylim(0,0.8) + 
     geom_text(x=2, y=1.4, label="p<0.001", color="black", size=4)+
     expand_limits(x = 18) + 
@@ -447,12 +447,13 @@ cofactor_df<-specific_metabolites%>%
 cofactor_plot<-cofactor_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=cofactor_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
+    scale_colour_brewer(palette="Dark2")+
     geom_text(x=2, y=0.8, label="p<0.001", color="black", size=4)+
     ylim(0,0.8) + 
     expand_limits(x = 18) + 
@@ -491,12 +492,13 @@ atp_df<-specific_metabolites%>%
 atp_plot<-atp_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=atp_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
+    scale_colour_brewer(palette="Dark2")+
     geom_text(x=2, y=0.5, label="p<0.001", color="black", size=4)+
     ylim(0,0.5) + 
     expand_limits(x = 18) + 
@@ -535,12 +537,13 @@ antiox_df<-specific_metabolites%>%
 antiox_plot<-antiox_df%>%
     ggplot(., aes(x = HPF, y = mean)) +
     facet_wrap(~Pathway)+
-    geom_line(aes(group=compound, linetype=compound), size=1, color="black") +
-    geom_point(aes(group=compound), size=4, colour="black", fill="white") + 
+    geom_line(aes(group=compound, colour=compound), size=1) +
+    geom_point(aes(group=compound, colour=compound), size=4) + 
     geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0, linetype="solid", color="black", size=0.5) + 
     geom_dl(aes(label=antiox_df$compound), method=list("last.qp", cex=1, hjust=-0.15))+
     xlab("") + 
     ylab("log(normalized pool size)")+
+    scale_colour_brewer(palette="Dark2")+
     geom_text(x=2, y=0.15, label="p<0.001", color="black", size=4)+
     ylim(0,0.15) + 
     expand_limits(x = 18) + 
@@ -563,16 +566,16 @@ ggsave(antiox_plot, file="Mcap2020/Figures/Metabolomics/Pathways/antioxidants.pn
 ```{r}
 glycolysis_plot2<-glycolysis_plot+theme(axis.text.x=element_blank())
 gogat_plot2<-gogat_plot+theme(axis.text.x=element_blank(), axis.title.y=element_blank())
-urea_plot2<-urea_plot+theme(axis.text.x=element_blank(), axis.title.y=element_blank())
+tca_plot2<-tca_plot+theme(axis.text.x=element_blank(), axis.title.y=element_blank())
 
 antiox_plot2<-antiox_plot
 atp_plot2<-atp_plot+theme(axis.title.y=element_blank())
 cofactor_plot2<-cofactor_plot+theme(axis.title.y=element_blank())
 
-metabolite_plots<-plot_grid(glycolysis_plot2, gogat_plot2, urea_plot2, antiox_plot2, atp_plot2, cofactor_plot2, ncol=3, nrow=2, rel_heights = c(0.7,1))
+metabolite_plots<-plot_grid(glycolysis_plot2, tca_plot2, gogat_plot2, antiox_plot2, atp_plot2, cofactor_plot2, ncol=3, nrow=2, rel_heights = c(0.7,1))
                       
-ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.jpg", plot=metabolite_plots, dpi=300, width=26, height=8, units="in")
-ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.pdf", plot=metabolite_plots, dpi=300, width=26, height=8, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.jpg", plot=metabolite_plots, dpi=300, width=24, height=10, units="in")
+ggsave(filename="Mcap2020/Figures/Metabolomics/Pathways/metabolic_pathways.pdf", plot=metabolite_plots, dpi=300, width=24, height=10, units="in")
 ```
 
 

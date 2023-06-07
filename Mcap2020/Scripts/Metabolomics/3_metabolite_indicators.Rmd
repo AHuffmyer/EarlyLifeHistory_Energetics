@@ -1,5 +1,5 @@
 ---
-title: "Gene expression indicators"
+title: "Metabolite indicators"
 author: "Ariana S Huffmyer"
 date: "2023"
 output: html_document
@@ -562,6 +562,16 @@ antiox_plot<-antiox_df%>%
 ggsave(antiox_plot, file="Mcap2020/Figures/Metabolomics/Pathways/antioxidants.png", width=8, height=6)
 ```
 
+## Other tests 
+
+Run a one way anova to test variation in glycerol-3-phosphate (plot produced in script step 1 and generated to abundance plot).  
+```{r}
+metabolites%>%
+  filter(compound=="Glycerol-3-phosphate")%>%
+  
+  aov(log_norm_counts~HPF, data=.)%>%
+  summary()
+```
 # Assemble all plots together  
 ```{r}
 glycolysis_plot2<-glycolysis_plot+theme(axis.text.x=element_blank())

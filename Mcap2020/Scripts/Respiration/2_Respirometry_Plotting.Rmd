@@ -13,7 +13,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-This script analyzes and plots data for Symbiont Integration 2020 respirometry data. Plots are displayed in Plotting section. Results are provided in Analysis section. 
+This script analyzes and plots data for M. capitata 2020 life history time series project. Plots are displayed in Plotting section. Results are provided in Analysis section. 
 
 # **Setup**  
 
@@ -68,27 +68,11 @@ fused_oxygen <- PRdata[which(PRdata$Lifestage=='Juvenile'),]
 fused_oxygen <- droplevels(fused_oxygen)
 ```
 
-Calculate a gross photosynthesis : respiration (P:R) ratio. This calculation will provide a ratio that will show the amount of oxygen produced compared to consumed, which is an indicator of energy availability. A ratio >1 indicates more photosynthesis than respiration and a ratio <1 indicates less photosynthesis than respiration.   
-
-Examine plot of data to look for outliers.  
-```{r, warning=FALSE, message=FALSE}
-PRdata$ratio<-abs(PRdata$GP.nmol.org.min)/abs(PRdata$R.nmol.org.min) #calculate ratio with absolute values of gross photosynthesis and respiration
-
-#remove outliers detected by values of P:R ratio data
-plot(PRdata$ratio)
-```
-There are outliers at high P:R ratio values. Filter and view data again.  
-```{r}
-PRdata<-PRdata%>%filter(ratio < 8)
-plot(PRdata$ratio)
-```
-Outliers are removed.  
-
 Examine outliers for respiration data. 
 ```{r}
 #remove any respiration values that were above 0 (respiration is oxygen consumption, so we expect values less than 0 for negative rates)
 plot(PRdata$R.nmol.org.min)
-PRdata<-PRdata%>%filter(R.nmol.org.min < 0)
+#PRdata<-PRdata%>%filter(R.nmol.org.min < 0)
 
 #remove any respiration values that were outliers
 PRdata<-PRdata%>%filter(R.nmol.org.min > -0.15)
@@ -96,9 +80,41 @@ plot(PRdata$R.nmol.org.min)
 ```
 Outliers are removed and values are removed where respiration is >0. Respiration is oxygen consumption, so we expect values less than 0 for negative rates.  
 
+Replace net negative oxygen values for photosynthesis measurements with 0, indicating no photosynthesis. Replace net positive oxygen values with 0 for respiration, indicating no respiration. Calculate respiration as the inverse to display positive values for oxygen production. 
+```{r}
+PRdata<-PRdata%>%
+  mutate(R.nmol.org.min=if_else(R.nmol.org.min>0, 0, R.nmol.org.min))%>%
+  mutate(P.nmol.org.min=if_else(P.nmol.org.min<0, 0, P.nmol.org.min))%>%
+  mutate(GP.nmol.org.min=if_else(GP.nmol.org.min<0, 0, GP.nmol.org.min))%>%
+  mutate(R.nmol.org.min=R.nmol.org.min*-1)
+```
+
+Plot. 
+```{r}
+boxplot(PRdata$R.nmol.org.min)
+boxplot(PRdata$P.nmol.org.min)
+boxplot(PRdata$GP.nmol.org.min)
+```
+
+Calculate a gross photosynthesis : respiration (P:R) ratio. This calculation will provide a ratio that will show the amount of oxygen produced compared to consumed, which is an indicator of energy availability. A ratio >1 indicates more photosynthesis than respiration and a ratio <1 indicates less photosynthesis than respiration.   
+
+Examine plot of data to look for outliers.  
+```{r, warning=FALSE, message=FALSE}
+PRdata$ratio<-PRdata$GP.nmol.org.min/PRdata$R.nmol.org.min #calculate ratio with absolute values of gross photosynthesis and respiration
+
+#remove outliers detected by values of P:R ratio data
+plot(PRdata$ratio)
+```
+There are outliers at high P:R ratio values. Filter and view data again.  
+```{r}
+PRdata<-PRdata%>%filter(ratio > 0)
+plot(PRdata$ratio)
+```
+Outliers are removed.  
+
 Calculate PR ratio.  
 ```{r}
-fused_oxygen$ratio<-abs(fused_oxygen$GP.nmol.org.min)/abs(fused_oxygen$R.nmol.org.min) #calculate P:R ratio 
+fused_oxygen$ratio<-fused_oxygen$GP.nmol.org.min/(fused_oxygen$R.nmol.org.min*-1) #calculate P:R ratio 
 ```
 
 # **Analysis and plotting of P and R**  
@@ -136,14 +152,14 @@ PRdf$lifestage_std<-factor(PRdf$lifestage_std, levels=c("Embryo (65 hpf)", "Larv
 Plot respiration data as a boxplot.    
 ```{r}
 r_plot<-PRdf %>%
-    ggplot(., aes(x = lifestage_std, y = abs(R.nmol.org.min))) +
+    ggplot(., aes(x = lifestage_std, y = (R.nmol.org.min))) +
     geom_hline(yintercept=0, linetype="dashed", color="black", size=0.75)+
     geom_boxplot(aes(color=Lifestage, group=group), outlier.size = 0, position = position_dodge(0.8), lwd=1) +
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     xlab("") + 
     scale_fill_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("R (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste("R (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
     theme(
@@ -167,7 +183,7 @@ p_plot<-PRdf %>%
     geom_point(aes(fill=Lifestage, group=group), pch = 21, size=4, position = position_jitterdodge(0.1)) + 
     scale_fill_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Net P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste(P[Net], " (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     xlab("")+
     theme_classic() + 
@@ -193,7 +209,7 @@ gp_plot<-PRdf %>%
     xlab("") + 
     scale_fill_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Gross P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste(P[Gross], " (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
     scale_y_continuous(limits=c(-0.07, 0.11), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
     theme_classic() + 
     theme(
@@ -274,7 +290,7 @@ combined_plot<-PRdf %>%
     xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   
     #theme
     theme_classic() + 
@@ -346,7 +362,7 @@ combined_plot_mean<-stats %>%
     xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   
     #theme
     theme_classic() + 
@@ -401,7 +417,7 @@ facet_plot_mean<-stats %>%
     xlab("") + 
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste("Metabolic Rate (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   
     #theme
     theme_classic() + 
@@ -436,7 +452,7 @@ resp_plot_mean<-stats %>%
     ylim(0,0.08)+
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Respiration (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste("R (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   
     #theme
     theme_classic() + 
@@ -467,7 +483,7 @@ gross_plot_mean<-stats %>%
     ylim(0,0.08)+
     scale_fill_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), guide="none")+
     scale_color_manual(name="Lifestage", values=c("#DFC27D", "#80CDC1","#003C30"), labels=c("Embryo", "Larvae", "Metamorphosed \nPolyp"))+
-    ylab(expression(bold(paste("Photosynthesis (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+    ylab(expression(bold(paste(P[Gross], " (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   
     #theme
     theme_classic() + 
@@ -548,14 +564,13 @@ Rmodel1<-aov(R.nmol.org.min~lifestage_std, data=PRdf)
 summary(Rmodel1)
 ```
 
-Check assumptions of model for residual normality and variance.    
+Check assumptions of model for residual normality and variance.
 
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 qqPlot(residuals(Rmodel1)) #check normality assumption
 
 leveneTest(residuals(Rmodel1)~lifestage_std, data=PRdf) #check for homogeneity of variance 
 ```
-Data meets the normality assumption, but does not pass homogeneity of variance. 
 
 Test with a non parametric test.  
 ```{r}
@@ -581,14 +596,12 @@ Pmodel1<-aov(P.nmol.org.min~lifestage_std, data=PRdf)
 summary(Pmodel1)
 ```
 
-Check assumptions of model for residual normality and variance.    
+Check assumptions of model for residual normality and variance.
 
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 qqPlot(residuals(Pmodel1))
 leveneTest(residuals(Pmodel1)~lifestage_std, data=PRdf)
 ```
-
-Assumption of homogeneity of variance is violated.  
 
 Test with a non parametric test.  
 ```{r}
@@ -614,20 +627,17 @@ GPmodel1<-aov(GP.nmol.org.min~lifestage_std, data=PRdf) #gross P by lifestage wi
 summary(GPmodel1)
 ```
 
-Check assumptions of model for residual normality and variance.      
+Check assumptions of model for residual normality and variance.
 
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 qqPlot(residuals(GPmodel1))
 leveneTest(residuals(GPmodel1)~lifestage_std, data=PRdf)
 ```
 
-Variance assumption is violated. 
-
 Test with a non parametric test.  
 ```{r}
 kruskal.test(GP.nmol.org.min~lifestage_std, data=PRdf)
 ```
-
 Results of a non-parametric test are also significant. Gross photosynthesis varies by life stage.  
 
 Conduct post hoc test.  
@@ -647,14 +657,11 @@ PRmodel1<-aov(ratio~lifestage_std, data=PRdf)
 summary(PRmodel1)
 ```
 
-Check assumptions of model for residual normality and variance. 
-
+Check assumptions of model for residual normality and variance.
 ```{r, results=TRUE, warning=FALSE, message=FALSE}
 qqPlot(residuals(PRmodel1))
 leveneTest(residuals(PRmodel1)~lifestage_std, data=PRdf)
 ```
-
-Variance assumption is violated. 
 
 Test with a non parametric test.  
 ```{r}
@@ -670,7 +677,7 @@ emm<-emmeans(PRmodel1, ~lifestage_std)
 cld(emm)
 ```
 
-PR ratios are lower in metamorphosed polyp stages than larvae.  
+PR ratios are lower in metamorphosed polyp stages than larvae.
 
 ### Generate summary tables 
 
@@ -720,7 +727,7 @@ Rplot1<-ggplot(data=PRdata, aes(x=dpf, y=R.nmol.org.min, colour=Lifestage, group
   scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
   scale_y_continuous(limits=c(-0.1, 0.1), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
   xlab("Days post fertilization")+
-  ylab(expression(bold(paste("R (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  ylab(expression(bold(paste("R (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   theme_classic() +
   theme(text = element_text(size = 18, color="black"),
         axis.text = element_text(size = 18, color="black"), 
@@ -745,7 +752,7 @@ Pplot1<-ggplot(data=PRdata, aes(x=dpf, y=P.nmol.org.min, colour=Lifestage, group
   scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
   scale_y_continuous(limits=c(-0.1, 0.3), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
   xlab("Days post fertilization")+
-  ylab(expression(bold(paste("Net P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  ylab(expression(bold(paste("Net P (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   theme_classic() +
   theme(text = element_text(size = 18, color="black"),
         axis.text = element_text(size = 18, color="black"), 
@@ -770,7 +777,7 @@ GPplot1<-ggplot(data=PRdata, aes(x=dpf, y=GP.nmol.org.min, colour=Lifestage, gro
   scale_color_brewer(palette = "Dark2", breaks=c("Larvae", "Recruit", "Juvenile"))+
   scale_y_continuous(limits=c(-0.1, 0.3), labels = scales::number_format(accuracy = 0.01, decimal.mark = '.'))+
   xlab("Days post fertilization")+
-  ylab(expression(bold(paste("Gross P (nmol ", O[2], " larva"^-1, "min"^-1, ")")))) +
+  ylab(expression(bold(paste("Gross P (nmol ", O[2], " individual"^-1, "min"^-1, ")")))) +
   theme_classic() +
   theme(text = element_text(size = 18, color="black"),
         axis.text = element_text(size = 18, color="black"), 

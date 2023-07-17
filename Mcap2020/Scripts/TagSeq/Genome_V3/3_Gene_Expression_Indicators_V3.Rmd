@@ -250,6 +250,29 @@ data_bicarb$Function<-c("Bicarbonate Transport")
 ```
 There are 17 genes that match bicarbonate transport key words. 
 
+## For Jill - germ line genes
+
+Create list of expression of genes for germ line development: 
+
+```{r}
+germ_terms<-c("formation of primary germ layer", "germ cell development")
+              
+list_germ<-goterms%>%
+    filter(grepl(paste(germ_terms, collapse = "|"), term))%>%
+    dplyr::select(GOterm)
+
+#pull out any genes that have a GO term in the above list 
+genes_germ<-geneInfo%>%
+  filter(grepl(paste(list_germ$GOterm, collapse = "|"), Annotation.GO.ID))%>%
+  dplyr::select(gene_id)
+
+data_germ<-gene_expr[gene_expr$gene_id %in% genes_germ$gene_id, ]
+data_germ
+
+data_germ$Function<-c("Germ Development")
+```
+There are 613 genes that match germ line development key words. 
+
 ## Merge all data frames together  
 
 ```{r}
@@ -682,6 +705,54 @@ Display number of genes in this category.
 ```{r}
 specific_genes%>%
   filter(Function=="Bicarbonate Transport")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
+## For Jill - Germ layer development 
+
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Germ Development")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
+```{r}
+germ_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Germ Development")%>%
+    ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), size=1, color="black") +
+    geom_point(size=4, colour="black", fill="white") + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
+    xlab("") + 
+    ylab("Gene expression (vst)")+
+  geom_text(x=2, y=7, label="p=0.218", color="darkgray", size=4)+
+    ylim(5.7,7)+
+    theme_classic() + 
+    geom_text(x=1.5, y=5.7, label="N=613 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold")
+      ); germ_plot
+
+#ggsave(bicarb_plot, file="Mcap2020/Figures/TagSeq/GenomeV3/SpecificGenes/bicarb_transport.png", width=6, height=6)
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Germ Development")%>%
   group_by(Function)%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```

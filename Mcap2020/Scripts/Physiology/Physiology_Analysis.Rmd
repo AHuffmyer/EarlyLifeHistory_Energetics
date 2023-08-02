@@ -123,7 +123,7 @@ Calculate the volume for each individual as a prolate spheroid. Using this equat
 # Define a function to calculate the volume based on life stage
 calculate_volume <- function(group, length, width) {
   case_when(
-    group %in% c("Egg", "Embryo") ~ (4/3) * pi * (length/2)^3,
+    group %in% c("Egg", "Embryo") ~ (4/3) * pi * (width/2)^3,
     group == "Larvae" ~ (4/3) * pi * (length/2) * (width/2)^2,
     group == "Metamorphosed Polyp" ~ (4/3) * pi * (length/2)^2 * (width/2),
     TRUE ~ NA_real_

@@ -584,6 +584,7 @@ Conduct post hoc test.
 ```{r}
 emm<-emmeans(Rmodel1, ~lifestage_std)
 cld(emm)
+pairs(emm)
 ```
 
 Metamorphosed polyp stages are different than other stages. 

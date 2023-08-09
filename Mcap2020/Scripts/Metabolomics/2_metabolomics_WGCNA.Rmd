@@ -531,7 +531,7 @@ expression_plots<-mME_meta%>%
 #  group_by(Module) %>%
   ggplot(aes(x=lifestage, y=value, colour=group)) +
   facet_wrap(~ Module)+
-  ylab("Mean Module Eigenegene") +
+  ylab("Module Expression") +
   geom_hline(yintercept = 0, linetype="dashed", color = "grey")+
   geom_boxplot(width=.5, outlier.shape= NA, position = position_dodge(width = 0.5), alpha = 0.7) +
   stat_summary(fun=mean, geom="line", aes(group=lifestage, color = group), position = position_dodge(width = 0.5))  + 
@@ -548,6 +548,8 @@ expression_plots<-mME_meta%>%
         legend.text=element_text(color="black", size=12)); expression_plots
 
 ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene.jpeg", plot=expression_plots, dpi=300, width=12, height=8, units="in")
+
+ggsave(filename="Mcap2020/Figures/Metabolomics/WGCNA/expression_eigengene.pdf", plot=expression_plots, dpi=300, width=12, height=8, units="in")
 
 head(mME_meta)
 

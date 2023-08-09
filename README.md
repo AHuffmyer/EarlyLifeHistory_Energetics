@@ -46,9 +46,9 @@ Respirometry data is analyzed by first extracting metabolic rates using the `LoL
 
 #### Gene Expression
 
-Gene expression was characterized across life stages with TagSeq sequencing at the University of Texas Austin. Sequences were trimmed and underwent QC followed by alignment to the latest (version 3) *Montipora capitata* genome available through [Rutgers University](http://cyanophora.rutgers.edu/montipora/). Sequences were aligned and a gene count matrix was calculated using bioinformatics pipelines detailed in the `TagSeq_BioInf_genomeV3.md` file in the `Scripts/TagSeq` folder. 
+Gene expression was characterized across life stages with TagSeq sequencing at the University of Texas Austin. Sequences were trimmed and underwent QC followed by alignment to the latest (version 3) *Montipora capitata* genome available through [Rutgers University](http://cyanophora.rutgers.edu/montipora/). Sequences were aligned and a gene count matrix was calculated using bioinformatics pipelines detailed in the `TagSeq_BioInf_genomeV3.md` file in the `Scripts/TagSeq/Genome_V3/` folder. 
 
-The gene count matrix was then imported into R with multivariate visualizations and WGCNA analysis in the `1_WGCNA_Mcap_V3.Rmd` script. Results of WGCNA were then functionally annotated using the reference genome with accompanying functional annotation. Functional annotation of genes was conducted using GO-Seq in the `2_WGCNA_GoSeq_V3.Rmd` script. 
+The gene count matrix was then imported into R with multivariate visualizations and WGCNA analysis in the `1_WGCNA_Mcap_V3.Rmd` script. Results of WGCNA were then functionally annotated using the reference genome with accompanying functional annotation. Functional annotation of genes was conducted using GO-Seq in the `2_WGCNA_GoSeq_V3.Rmd` script. Expression of genes with specific GO terms were examined with the `3_Gene_Expression_Indicators_V3.Rmd`. 
 
 Sequences were also aligned to the symbiont genome (*Cladocopium sp.* and *Durusdinium sp.*) for exploratory purposes. This data is not included in the manuscript due to low symbiont sequences and alignment. Scripts for this exploratory analysis are found in the `Symbiont` folder in the `Scripts/TagSeq` folder. 
 
@@ -58,7 +58,7 @@ Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.
 
 #### Metabolomics  
 
-Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `1_metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a WCNA approach in the `2_metabolomics_WGCNA.Rmd` script. 
+Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `1_metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a WCNA approach in the `2_metabolomics_WGCNA.Rmd` script. Specific metabolites were examined in the `3_metabolite_indicators.Rmd` script. 
 
 Raw metabolomics files can be found on the Open Science Framework project.  
 

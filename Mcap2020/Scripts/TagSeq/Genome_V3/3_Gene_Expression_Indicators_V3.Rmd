@@ -250,7 +250,7 @@ data_bicarb$Function<-c("Bicarbonate Transport")
 ```
 There are 17 genes that match bicarbonate transport key words. 
 
-## For Jill - germ line genes
+## Germ line genes
 
 Create list of expression of genes for germ line development: 
 
@@ -273,7 +273,7 @@ data_germ$Function<-c("Germ Development")
 ```
 There are 613 genes that match germ line development key words. 
 
-## For E5 - epigenetics
+## Epigenetics
 
 Create list of expression of genes for germ line development: 
 
@@ -732,7 +732,7 @@ specific_genes%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```
 
-## For Jill - Germ layer development 
+## Germ layer development 
 
 Run a one way anova to test variation in expression across life stages. 
 ```{r}
@@ -781,7 +781,7 @@ specific_genes%>%
 ```
 
 
-## For E5 - epigenetic modifications 
+## Epigenetic modifications 
 
 Run a one way anova to test variation in expression across life stages. 
 ```{r}

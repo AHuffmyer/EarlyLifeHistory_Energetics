@@ -273,6 +273,29 @@ data_germ$Function<-c("Germ Development")
 ```
 There are 613 genes that match germ line development key words. 
 
+## For E5 - epigenetics
+
+Create list of expression of genes for germ line development: 
+
+```{r}
+epi_terms<-c("epigenetic", "DNA methylation", "histone", "histone methylation", "demethylation")
+              
+list_epi<-goterms%>%
+    filter(grepl(paste(epi_terms, collapse = "|"), term))%>%
+    dplyr::select(GOterm)
+
+#pull out any genes that have a GO term in the above list 
+genes_epi<-geneInfo%>%
+  filter(grepl(paste(list_epi$GOterm, collapse = "|"), Annotation.GO.ID))%>%
+  dplyr::select(gene_id)
+
+data_epi<-gene_expr[gene_expr$gene_id %in% genes_epi$gene_id, ]
+data_epi
+
+data_epi$Function<-c("Epigenetics")
+```
+There are 529 genes that match epigenetic key words. 
+
 ## Merge all data frames together  
 
 ```{r}
@@ -756,6 +779,55 @@ specific_genes%>%
   group_by(Function)%>%
   summarise(Unique_Elements = n_distinct(gene_id))
 ```
+
+
+## For E5 - epigenetic modifications 
+
+Run a one way anova to test variation in expression across life stages. 
+```{r}
+specific_genes%>%
+  filter(Function=="Epigenetics")%>%
+  
+  aov(vst~lifestage, data=.)%>%
+  summary()
+```
+
+```{r}
+epi_plot<-specific_genes%>%
+    group_by(Function, lifestage)%>%
+    summarise(mean=mean(vst), N=length(vst), sd=sd(vst), sem=sd/N)%>%
+    filter(Function=="Epigenetics")%>%
+    ggplot(., aes(x = lifestage, y = mean)) +
+    facet_wrap(~Function)+
+    geom_line(aes(group=1), size=1, color="black") +
+    geom_point(size=4, colour="black", fill="white") + 
+  geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem), width=0.1, linetype="solid", color="black", size=0.5) + 
+    xlab("") + 
+    ylab("Gene expression (vst)")+
+  geom_text(x=2, y=7, label="p<0.001", color="black", size=4)+
+    ylim(5.7,7)+
+    theme_classic() + 
+    geom_text(x=1.5, y=5.7, label="N=529 genes", size=4, fontface="italic")+
+    theme(
+      legend.position="none",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      axis.text.x=element_text(angle=45, hjust=1, color="black"),
+      legend.title=element_text(face="bold", size=14), 
+      legend.text=element_text(size=12), 
+      strip.text=element_text(size=12, face="bold")
+      ); epi_plot
+
+```
+
+Display number of genes in this category.  
+```{r}
+specific_genes%>%
+  filter(Function=="Germ Development")%>%
+  group_by(Function)%>%
+  summarise(Unique_Elements = n_distinct(gene_id))
+```
+
 
 # Assemble all plots together  
 ```{r}

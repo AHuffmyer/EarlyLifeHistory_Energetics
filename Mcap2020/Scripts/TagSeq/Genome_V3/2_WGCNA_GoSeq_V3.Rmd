@@ -88,7 +88,7 @@ geneInfo<-geneInfo%>%
 dim(geneInfo)
 ```
 
-There are 11,475 genes in our Gene Info file.  
+There are 11,475 genes in our Gene Info file from genes detected in our dataset.   
 
 Get gene length information.  
 ```{r}

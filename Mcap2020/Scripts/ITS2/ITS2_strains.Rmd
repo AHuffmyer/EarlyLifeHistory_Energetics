@@ -152,8 +152,9 @@ Samps<-read_tsv(file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.tx
 
 hist(Samps$post_taxa_id_absolute_symbiodiniaceae_seqs, breaks=30)
 
+Samps$post_taxa_id_absolute_symbiodiniaceae_seqs
 ```
-We have >10,000 sequences for all of our samples. This is a high number and we can keep all samples. We will subsample to even sampling depth below.    
+We have >10,000 sequences for all of our samples. This is a high number and we can keep all samples. We will subsample to even sampling depth below. The lowest value is 11,265.
 
 Plot tree.  
 ```{r}

@@ -1,0 +1,1501 @@
+---
+title: Montipora capitata 2020 ITS2 downsampling test
+author: "AS Huffmyer"
+date: '2024'
+output:
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ITS2 downsampling test. What sequencing depth is required to accurately characterize symbiont communities?  
+
+```{r}
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("readxl")) install.packages("readxl")
+if (!require("phyloseq")) BiocManager::install("phyloseq")
+if (!require("janitor")) install.packages("janitor")
+if (!require("writexl")) install.packages("writexl")
+#if (!require("microViz")) BiocManager::install("microViz")
+
+library("readxl")
+library("phyloseq")
+library("janitor")
+library("writexl")
+library("ggplot2")
+library('cowplot')
+library("janitor")
+library("car")
+library("phyloseq")
+library("stringr")
+library("ape")
+library("DESeq2")
+library("microViz")
+library("vegan")
+library("ComplexHeatmap")
+library("tidyverse")
+library("dplyr")
+```
+
+# Prepare data  
+
+Load metadata.  
+```{r}
+#create metadata and load
+Metadata<-read.csv("Mcap2020/Data/ITS2/ITS2_Metadata.csv")
+rownames(Metadata) <- Metadata$sample_name
+Metadata <- Metadata %>%
+  select(code, hpf, group, lifestage)
+Metadata <- as.matrix(Metadata)
+Metadata <- sample_data(data.frame(Metadata))
+```
+
+Load profile level data.  
+```{r}
+#load data for taxonomy
+tax0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.profiles.absolute.abund_and_meta.txt",
+  n_max = 6) %>%
+  dplyr::select(-2) %>% 
+  gather(UID, value, -1) %>% 
+  spread(1, value) %>%
+  clean_names()
+
+tax1 <- as.matrix(tax0[, -1], dimnames = list(tax0$uid, colnames(tax0[-1])))
+rownames(tax1) <- tax0$uid
+tax <- tax_table(tax1)
+
+#load data for count matrix 
+otu0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.profiles.absolute.abund_and_meta.txt", col_names = TRUE) 
+
+list<-c("UID", "sample_name", "8", "9")
+colnames(otu0)<-list
+
+otu0<-otu0%>%
+  select(-1) %>%
+  dplyr::slice(7:n()) %>%
+  mutate_at(2:ncol(.), as.numeric)
+
+otu1 <- as.matrix(otu0[, -1])
+rownames(otu1) <- otu0$sample_name
+otu <- otu_table(otu1, taxa_are_rows = FALSE)
+
+#combine to phyloseq object
+coral <- phyloseq(otu, tax, Metadata)
+coral
+```
+
+Note that taxa 8 is Clade C and taxa 9 is Clade D.  
+
+Next load the data for coral strain level information.  
+
+```{r}
+#gather the taxonomy names  
+taxnames <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_only.txt",
+  n_max = 0) %>%
+  select(-1) %>%
+  names(.)
+
+#extract clade letter  
+tax0 <- data_frame(
+  DIV = taxnames,
+  clade = str_extract(DIV, "[A-Z]")
+)
+
+tax1 <- as.matrix(tax0)
+rownames(tax1) <- tax0$DIV
+tax <- tax_table(tax1)
+
+otu0 <- read_tsv(
+  file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.txt") %>%
+  select(-1, )
+
+otu1 <- as.matrix(otu0[, 37:113])
+rownames(otu1) <- otu0$sample_name
+otu <- otu_table(otu1, taxa_are_rows = FALSE)
+
+coralDIV <- phyloseq(otu, tax, Metadata)
+coralDIV
+```
+
+Now save the object.  
+```{r} 
+save(coral, coralDIV, file = "Mcap2020/Data/ITS2/ITS2_phyloseq.RData")
+```
+
+Build DIV Data  
+
+Load the data.  
+```{r}
+load("Mcap2020/Data/ITS2/ITS2_phyloseq.RData")
+```
+
+```{r}
+coralDIV
+```
+
+View the number of sequence counts in our dataset.   
+```{r}
+Samps<-read_tsv(file  = "Mcap2020/Data/ITS2/mcap.seqs.absolute.abund_and_meta.txt")
+
+hist(Samps$post_taxa_id_absolute_symbiodiniaceae_seqs, breaks=30)
+
+Samps$post_taxa_id_absolute_symbiodiniaceae_seqs
+```
+We have >10,551 sequences for all of our samples.
+
+Generate tree.  
+```{r}
+random_tree = rtree(ntaxa(coralDIV), rooted=TRUE, tip.label=taxa_names(coralDIV))
+```
+
+Merge phyloseq data. 
+```{r}
+phylo_coral_DIV = merge_phyloseq(coralDIV, Metadata, random_tree)
+phylo_coral_DIV
+```
+
+Filter out samples with low numbers in groups (n=1 per group) from phyloseq object.  
+```{r}
+phylo_coral_DIV<-ps_filter(phylo_coral_DIV, lifestage != "Metamorphosed Polyp (183 hpf)")
+phylo_coral_DIV<-ps_arrange(phylo_coral_DIV, lifestage)
+```
+
+Reorder lifestage.  
+```{r}
+levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
+
+sample_data(phylo_coral_DIV)$lifestage = factor(sample_data(phylo_coral_DIV)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+
+levels(as.factor(sample_data(phylo_coral_DIV)$lifestage))
+```
+
+Assign object to a shorter name. 
+
+```{r}
+GP1 = phylo_coral_DIV
+GP1
+```
+
+Display sample sequencing depth. 
+```{r}
+min(sample_sums(GP1))
+```
+
+We will attempt subsampling at the minimum count (10,551 sequences) and in steps decreasing from 10551, 8000, 6000, 4000, 2000, 1000, 500. 
+
+# DIV level analysis: Does multivariate community composition change across development? 
+
+## Subsample at 10551
+
+Subsample to even sampling depth to minimum count in dataset (10,551).  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = min(sample_sums(GP1)),
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 10,551 sequences. No OTU's removed. 
+
+Now transform counts to relative abundance expressed as a proportion.    
+
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  9 0.089599 0.48785 2.9635  0.001 ***
+Residual  28 0.094062 0.51215                  
+Total     37 0.183662 1.00000 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample at 8000
+
+Subsample to even sampling depth of 8000.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 8000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+10 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 8000 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  9 0.092260 0.49173 3.0099  0.001 ***
+Residual  28 0.095362 0.50827                  
+Total     37 0.187622 1.00000   
+
+Results are the same as 10551 subsampling.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample at 6000
+
+Subsample to even sampling depth of 6000.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 6000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+10 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 6000 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs     R2      F Pr(>F)    
+lifestage  9 0.091519 0.4901 2.9903  0.001 ***
+Residual  28 0.095217 0.5099                  
+Total     37 0.186736 1.0000  
+
+Results are the same as 10551 subsampling.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample at 4000
+
+Subsample to even sampling depth of 4000.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 4000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+20 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 4000 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  9 0.092875 0.45599 2.6077  0.001 ***
+Residual  28 0.110804 0.54401                  
+Total     37 0.203679 1.00000  
+
+Results are the same as 10551 subsampling. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample at 2000
+
+Subsample to even sampling depth of 2000.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 2000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+10 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 2000 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  9  0.11029 0.43532 2.3984  0.001 ***
+Residual  28  0.14306 0.56468                  
+Total     37  0.25336 1.00000  
+
+Results are the same as 10551 subsampling. Note F statistics are decreasing.  
+
+
+
+
+
+
+
+
+
+
+## Subsample at 1000
+
+Subsample to even sampling depth of 1000.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 1000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+20 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 1000 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  9  0.13350 0.39988 2.0731  0.001 ***
+Residual  28  0.20034 0.60012                  
+Total     37  0.33384 1.00000   
+
+Results are the same as 10551 subsampling. Note F statistics are decreasing.
+
+## Subsample at 500
+
+Subsample to even sampling depth of 500.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 500,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+80 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 500 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs      R2     F Pr(>F)    
+lifestage  9  0.18356 0.35294 1.697  0.001 ***
+Residual  28  0.33652 0.64706                 
+Total     37  0.52008 1.00000  
+
+Results are the same as 10551 subsampling. Note F statistics are decreasing and we lost more OTUs this time.
+
+## Subsample at 100
+
+Subsample to even sampling depth of 100.  
+```{r}
+GP1_rare<-rarefy_even_depth(GP1, sample.size = 100,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+```
+140 OTUs were removed.  
+
+View sample sequencing depth again after subsampling. 
+```{r}
+sample_sums(GP1_rare)
+```
+
+All samples are now at 100 sequences.  
+
+Now transform counts to relative abundance expressed as a proportion.    
+```{r}
+GP1_rare = transform_sample_counts(GP1_rare, function(x) x/sum(x))
+```
+
+### Plot NMDS 
+
+```{r}
+GP.ord <- ordinate(GP1_rare, "NMDS", "bray")
+p2b = plot_ordination(GP1_rare, GP.ord, type="samples", color="lifestage") 
+
+p2b_viz<-p2b  + 
+  geom_point(aes(colour=lifestage, shape=lifestage), size=4) + 
+  ggtitle("NMDS")+
+  scale_colour_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#DFC27D", "#DFC27D", "#80CDC1", "#80CDC1", "#80CDC1","#003C30", "#BA55D3", "#BA55D3")) + 
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Attached Recruit (231 hpf)"=13, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=12)) +
+  theme_classic() + 
+  theme(
+    panel.background=element_blank()
+  ); p2b_viz
+```
+
+### Run PERMANOVA.  
+```{r}
+metadata <- as(sample_data(GP1_rare), "data.frame")
+
+perm1<-adonis2(phyloseq::distance(GP1_rare, method="bray") ~ lifestage,
+       data = metadata)
+
+perm1
+```
+
+adonis2(formula = phyloseq::distance(GP1_rare, method = "bray") ~ lifestage, data = metadata)
+          Df SumOfSqs     R2    F Pr(>F)  
+lifestage  9  0.41772 0.2931 1.29   0.03 *
+Residual  28  1.00744 0.7069              
+Total     37  1.42516 1.0000    
+
+Results show lower P values than from 10551 subsampling. We lost many OTUs. 
+
+## Conclusions
+
+We saw that subsampling between 4000-8000 sequences per sample resulted in the same result as the highest subsampling (10,551) that symbiont community is significantly affected by lifestage (P=0.001). For subsampling between 4000-8000, only 10-20 OTUs are lost from the data set, whereas none are lost in the 10551 subsampling setting. Once subsampling is below 1000, the number of OTUs lost increases to over 100 lost and P-values increase (to P=0.03). 
+
+Based on these results, to be able to confidently detect changes in community across development, we need a minimum sequencing depth of 4000. We will next see if this threshold also applies to analyses at the profile level to accurately detect abundance of specific profiles.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Profile level analysis: What is the relative abundance of major profiles?  
+
+## Prepare data 
+
+Create tree.  
+```{r}
+random_tree_profile = rtree(ntaxa(coral), rooted=TRUE, tip.label=taxa_names(coral))
+```
+
+Merge phyloseq data. 
+```{r}
+phylo_coral = merge_phyloseq(coral, Metadata, random_tree_profile)
+phylo_coral
+```
+
+Filter out samples with low numbers in groups from phyloseq object.  
+```{r}
+phylo_coral<-ps_filter(phylo_coral, lifestage != "Metamorphosed Polyp (183 hpf)")
+phylo_coral<-ps_arrange(phylo_coral, lifestage)
+```
+
+Reorder lifestage.  
+```{r}
+sample_data(phylo_coral)$lifestage = factor(sample_data(phylo_coral)$lifestage, levels = c("Egg (1 hpf)","Embryo (5 hpf)","Embryo (38 hpf)","Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
+```
+
+Rename data frame.    
+
+```{r}
+GP1_profile = phylo_coral
+GP1_profile
+```
+
+Minimum depth from all samples is 8657. We will try subsampling at 6000, 4000, 2000, 1000, 500, 100.  
+
+## Subsample to 8657 
+
+Subsample to the minimum sampling depth of 8,657.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = min(sample_sums(GP1_profile)),
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 8657 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+sample_order<-c("WSH053", "WSH054", "WSH055", "WSH056", "WSH061", "WSH062", "WSH063", "WSH064",  "WSH065", "WSH066", "WSH067", "WSH068",  "WSH069", "WSH070", "WSH071", "WSH072", "WSH073", "WSH074", "WSH075", "WSH076", "WSH077", "WSH078", "WSH079", "WSH080", "WSH081", "WSH082", "WSH083", "WSH084", "WSH057", "WSH058", "WSH059", "WSH060", "WSH046", "WSH047", "WSH048", "WSH049", "WSH050", "WSH051", "WSH052")
+
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+lifestage    9 0.3829 0.04254   3.056 0.0112 *
+Residuals   28 0.3897 0.01392                 
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+Egg (1 hpf) - Larvae (231 hpf)                              -0.3104 0.0834 28  -3.721  0.0254
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample to 6000 
+
+Subsample to the minimum sampling depth of 6000.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 6000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 6000 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+6000 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.559 0.0274    38 0.00445
+2 D1-D4-D6-D1ab-D17d      0.441 0.0274    38 0.00445
+
+Mean values are the same. 
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+lifestage    9 0.4081 0.04535   2.842 0.0164 *
+Residuals   28 0.4467 0.01595  
+
+Results are the same as original subsampling, but F value decreased.  
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+Egg (1 hpf) - Larvae (231 hpf)                             -0.31767 0.0893 28  -3.557  0.0374
+
+This comparison is still significant as in original subsampling, but P value has increased slightly.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsample to 4000 
+
+Subsample to the minimum sampling depth of 4000.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 4000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 4000 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+4000 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0298    38 0.00484
+2 D1-D4-D6-D1ab-D17d      0.440 0.0298    38 0.00484
+
+Mean values are the same. 
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value  Pr(>F)   
+lifestage    9 0.5366 0.05962   3.633 0.00412 **
+Residuals   28 0.4595 0.01641 
+
+Results are the same as original subsampling, but P value actually decreased.  
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+ Egg (1 hpf) - Larvae (231 hpf)                              -0.3359 0.0906 28  -3.708  0.0262
+Egg (1 hpf) - Larvae (93 hpf)                               -0.3157 0.0906 28  -3.486  0.0440
+
+This comparison is still significant as in original subsampling, and one other egg to larvae comparison is also significant.  
+
+## Subsample to 2000 
+
+Subsample to the minimum sampling depth of 2000.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 2000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 2000 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+2000 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.559 0.0266    38 0.00431
+2 D1-D4-D6-D1ab-D17d      0.441 0.0266    38 0.00431
+
+Mean values are the same. 
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+lifestage    9 0.3762 0.04180   2.934 0.0139 *
+Residuals   28 0.3989 0.01425  
+
+Results are the same as original subsampling, but F value decreased slightly from original.  
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+Egg (1 hpf) - Larvae (93 hpf)                               -0.3015 0.0844 28  -3.572  0.0361
+
+One posthoc result is significant from egg to larvae. 
+
+## Subsample to 1000 
+
+Subsample to the minimum sampling depth of 1000.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 1000,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 2000 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+1000 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.561 0.0286    38 0.00464
+2 D1-D4-D6-D1ab-D17d      0.439 0.0286    38 0.00464
+
+Mean values are the same. 
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+lifestage    9 0.4007 0.04452   2.695 0.0214 *
+Residuals   28 0.4625 0.01652   
+
+Results are the same as original subsampling, but P value increased slightly from original.  
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+Egg (1 hpf) - Larvae (231 hpf)                             -0.33634 0.0909 28  -3.701  0.0267
+
+Comparison is still significant from original subsampling.
+
+## Subsample to 500 
+
+Subsample to the minimum sampling depth of 500.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 500,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 500 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+500 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.563 0.0384    38 0.00623
+2 D1-D4-D6-D1ab-D17d      0.437 0.0384    38 0.00623
+
+Mean values are just slightly different from original by about 0.003.   
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+There is a significant change in C:D ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+lifestage    9 0.6824 0.07583   2.277 0.0463 *
+Residuals   28 0.9325 0.03330   
+
+Results are the same as original subsampling, but P value greatly increased slightly from original and error bars on plot are larger.    
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+No significant post hoc comparisons.  
+
+## Subsample to 100 
+
+Subsample to the minimum sampling depth of 100.  
+```{r}
+GP1_rare_profile<-rarefy_even_depth(GP1_profile, sample.size = 100,
+  rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+sample_sums(GP1_rare_profile)
+```
+All samples now have 100 sequences. 
+
+Transform to relative abundance as a proportion. 
+```{r}
+GP1_rare_profile = transform_sample_counts(GP1_rare_profile, function(x) x/sum(x))
+```
+
+Prepare relative abundance data. 
+```{r}
+t<-plot_bar(GP1_rare_profile, fill="its2_type_profile")
+t$data$Sample <- factor(t$data$Sample, levels = sample_order)
+rel_abund_data<-t$data
+```
+
+Calculate the average percent abundance for each taxa across all stages.  
+```{r}
+means_all <- rel_abund_data %>%
+  group_by(its2_type_profile) %>%
+  summarise(mean=mean(Abundance), sd=sd(Abundance), n=length(Abundance), se=sd/sqrt(n));means_all
+```
+
+Original: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.560 0.0260    38 0.00422
+2 D1-D4-D6-D1ab-D17d      0.440 0.0260    38 0.00422
+
+100 subsample: 
+  its2_type_profile        mean     sd     n      se
+  <chr>                   <dbl>  <dbl> <int>   <dbl>
+1 C31-C17d-C21-C21ac-C31a 0.572 0.0519    38 0.00842
+2 D1-D4-D6-D1ab-D17d      0.428 0.0519    38 0.00842
+
+Mean values are different from original by about 0.02.   
+
+Plot ratio of C:D  
+```{r}
+ratio_plot<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(ratio, na.rm=TRUE), se=sd(ratio, na.rm=TRUE)/sqrt(length(ratio)))%>%
+  
+  ggplot(aes(x=lifestage, y=mean))+
+  geom_point()+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.2)+
+  ylab("C:D Ratio")+
+  ylim(0,2)+
+  xlab("Life Stage")+
+  theme_classic()+
+  theme(
+    text=element_text(color="black", size=12), 
+    axis.text=element_text(color="black", size=11), 
+    axis.text.x=element_text(angle=45, hjust=1, vjust=1), 
+    axis.title=element_text(face="bold")
+  );ratio_plot
+```
+
+Run ANOVA on ratios. 
+```{r}
+model<-rel_abund_data%>%
+  select(its2_type_profile, Abundance, lifestage, Sample)%>%
+  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
+  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
+  aov(ratio~lifestage, data=.);summary(model)
+```
+
+No significant change in CD ratio across development. 
+
+            Df Sum Sq Mean Sq F value Pr(>F)
+lifestage    9 0.9716 0.10796   1.093  0.399
+Residuals   28 2.7645 0.09873    
+
+Change in CD ratio could no longer be detected.  
+
+Conduct posthoc testing by lifestage. 
+```{r}
+emm<-emmeans(model, ~lifestage)
+pairs(emm)
+```
+
+No significant post hoc comparisons. 
+
+## Conclusions 
+
+Detection of changes in CD ratio across development were lost at <1000 sequencing depth. However, significance decreased and variability increased at <4000 sequencing depth.  
+
+# Overall conclusions 
+
+Overall, we found no loss in capacity to detect DIV community composition changes across development at >4000 sequencing depth. We also found no loss in capacity to detect changes in profile level shifts across development at sequencing depth of >4000. 
+
+For this application in this species, the minimum sequencing depth should be 4000. 
+
+
+

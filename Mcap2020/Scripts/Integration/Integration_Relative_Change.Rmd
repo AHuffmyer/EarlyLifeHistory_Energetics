@@ -50,7 +50,7 @@ file1<-read_csv("Mcap2020/Data/Integration/RelativeChange/16S_alpha_relchange.cs
 
 file2<-read_csv("Mcap2020/Data/Integration/RelativeChange/cells_relchange.csv")%>%
   dplyr::select(!group)%>%
-  rename("Symbiont Density"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
+   dplyr::rename("Symbiont Density"="sym_density_ind", "Symbiont Cells per mm2"="sym_density_mm")%>%
   gather(2:3, key="variable", value="value")
   
 #NEED TO ADD FUNCTIONAL INFORMATION TO THESE CATEGORIES 
@@ -62,7 +62,7 @@ file3<-read_csv("Mcap2020/Data/Integration/RelativeChange/genes_relchange.csv")%
   mutate(Pattern=if_else(Pattern=="Decreasing", "Amino acid and steroid metabolism", 
                          if_else(Pattern=="Increasing", "Carbohydrate and lipid metabolism, ROS regulation, organic transport", 
                                  if_else(Pattern=="Mid", "Carbohydrate and lipid metabolism, ROS regulation, transport", "NA"))))%>%
-  rename("variable"="Pattern", "value"="gene_expression")%>%
+   dplyr::rename("variable"="Pattern", "value"="gene_expression")%>%
   filter(value<10)
 
 #NEED TO ADD FUNCTIONAL INFORMATION TO THESE CATEGORIES 
@@ -74,20 +74,20 @@ file4<-read_csv("Mcap2020/Data/Integration/RelativeChange/metabolites_relchange.
   mutate(variable=if_else(pattern=="Decreasing", "Amino acid metabolism", 
                          if_else(pattern=="Increasing", "Carbohydrate metabolism, amino acid synthesis", 
                                  if_else(pattern=="Mid", "Nitrogen metabolism", "NA"))))%>%
-  rename("value"="metabolite_expression")%>%
+   dplyr::rename("value"="metabolite_expression")%>%
   dplyr::select(!pattern)
 
-file5<-read_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_alpha_relchange.csv")%>%
-  gather(key="variable", value="value", symbiont_alpha_diversity)%>%
-  mutate(variable="Symbiont Alpha Diversity")
+file5<-read_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_CD_relchange.csv")%>%
+  gather(key="variable", value="value", symbiont_CD_ratio)%>%
+  mutate(variable="Symbiont C:D Ratio")
 
 file6<-read_csv("Mcap2020/Data/Integration/RelativeChange/PR_relchange.csv")%>%
-  rename("lifestage"="lifestage_std", "Gross Photosynthesis"="GP_change", "Respiration"="R_change", "P:R"="ratio_change")%>%
+   dplyr::rename("lifestage"="lifestage_std", "Gross Photosynthesis"="GP_change", "Respiration"="R_change", "P:R"="ratio_change")%>%
   gather(2:4, key="variable", value="value")
 
 file7<-read_csv("Mcap2020/Data/Integration/RelativeChange/size_relchange.csv")%>%
   gather(key="variable", value="value", size_change)%>%
-  rename("lifestage"="Lifestage")%>%
+  dplyr::rename("lifestage"="Lifestage")%>%
   mutate(variable="Size")
 
 #merge together 
@@ -113,7 +113,7 @@ Generate a list of categories for variables to belong to.
 ```{r}
 df<-df%>%
   mutate(category=if_else(variable=="Bacterial Alpha Diversity", "Microbiome Diversity", 
-                          if_else(variable=="Symbiont Alpha Diversity", "Microbiome Diversity", 
+                          if_else(variable=="Symbiont C:D Ratio", "Symbiont Community", 
                                   if_else(variable=="Amino acid and steroid metabolism", "Molecular Response", 
                                           if_else(variable=="Carbohydrate and lipid metabolism, ROS regulation, organic transport", "Molecular Response",
                                                   if_else(variable=="Carbohydrate and lipid metabolism, ROS regulation, transport", "Molecular Response",
@@ -135,11 +135,12 @@ Plot with development on the x - axis and values of variables on the y-axis.
 ```{r}
 #photosynthetic capacity: cell density, photosynthesis (#f89540)
 #energy demand: respiration, size (#7e03a8)
-#microbiome: bacteria diversity and symbiont diversity (#f0f921)
+#microbiome: bacteria diversity(#f0f921)
 #molecular response (#cc4778)
 #metabolomic response (#0d0887)
+#symbiont: XXX
 
-color_keys<-c("Energy Demand"="black", "Photosynthetic Capacity"="orange", "Microbiome Diversity"="darkgray", "Molecular Response"="red", "Metabolomic Response"="blue")
+color_keys<-c("Energy Demand"="black", "Photosynthetic Capacity"="orange", "Microbiome Diversity"="darkgray", "Molecular Response"="red", "Metabolomic Response"="blue", "Symbiont Community"="darkgreen")
 
 change_plot<-df%>%
   

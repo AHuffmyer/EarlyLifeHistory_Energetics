@@ -566,12 +566,13 @@ ggsave(antiox_plot, file="Mcap2020/Figures/Metabolomics/Pathways/antioxidants.pn
 
 Run a one way anova to test variation in glycerol-3-phosphate (plot produced in script step 1 and generated to abundance plot) between 1 and 5 hpf.   
 ```{r}
-metabolites%>%
+model<-metabolites%>%
   filter(compound=="Glycerol-3-phosphate")%>%
-  filter(HPF %in% c("Egg (1 hpf)", "Embryo (5 hpf)"))%>%
+  #filter(HPF %in% c("Egg (1 hpf)", "Embryo (5 hpf)"))%>%
   
-  aov(log_norm_counts~HPF, data=.)%>%
-  summary()
+  aov(log_norm_counts~HPF, data=.)
+
+summary(model)
 ```
 
 # Assemble all plots together  

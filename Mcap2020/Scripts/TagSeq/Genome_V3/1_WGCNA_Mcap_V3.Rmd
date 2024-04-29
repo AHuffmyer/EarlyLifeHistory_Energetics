@@ -818,6 +818,7 @@ expression_plots<-plot_MEs%>%
         plot.title = element_text(size=22)); expression_plots
 
 ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.jpeg", height=8, width=10)
+ggsave(expression_plots, file="Mcap2020/Figures/TagSeq/GenomeV3/expression_eigengene.pdf", height=8, width=10)
 ```
 
 # **Calculating gene significance and module membership**  

@@ -7,6 +7,16 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+REDO ANALYSES
+REDO BY TIMEPOINT OF DEVELOPMENT 
+
+THEN GO BACK TO METABOLITES 
+
+
+
+
+
 Functional enrichment of WGCNA modules produced in `WGCNA_Mcap.Rmd` script for the *Montipora capitata* 2020 developmental time series.  This script uses the V3 genome from Cyanophora Rutgers.  
 
 ```{r setup, include=FALSE}
@@ -123,6 +133,10 @@ geneInfo$Annotation.GO.ID <- gsub('"', "", geneInfo$Annotation.GO.ID)
 geneInfo$Annotation.GO.ID <- gsub("-", NA, geneInfo$Annotation.GO.ID)
 ```
 
+```{r}
+dim(geneInfo)
+```
+
 # **Run GoSeq and Plot by Module**  
 
 ## 1. Run the GOSeq function in a loop by module number to test for GO term enrichment.    
@@ -146,10 +160,8 @@ for (module in module_vector) {
       #get_rows(.data[[module]]))%>%
       pull(gene_id)
     
-    ##Get a list of GO Terms for each module
+    ##Get a list of GO Terms
     GO.terms <- geneInfo%>%
-      filter(Module==module)%>%
-      #filter(get_rows(.data[[module]]))%>%
       dplyr::select(gene_id, Annotation.GO.ID)
     
     ##Format to have one goterm per row with gene ID repeated
@@ -174,9 +186,9 @@ for (module in module_vector) {
     #adjust p-values 
     GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
   
-    #Filtering for p < 0.0001
+    #Filtering for p < 0.05
     GO <- GO %>%
-        dplyr::filter(bh_adjust<0.001) %>%
+        dplyr::filter(bh_adjust<0.05) %>%
         dplyr::arrange(., ontology, bh_adjust)
     
     #Write file of results 
@@ -185,13 +197,16 @@ for (module in module_vector) {
 }
 ```
 
-Run a loop to plot enrichment for each module at each level of ontology.  
+Run a loop to plot enrichment for each module at each level of ontology. Use only levels with enriched GO terms. Modules 12, 9, 6 and 5 had no enriched terms and 7 had too few.  
+
 ```{r}
-module_vector<-c(levels(geneInfo$Module))
+#module_vector<-c("1", "2", "3", "7", "8")
+#module_vector<-c("7", "8")
+module_vector<-c("8")
 ontologies<-c("BP", "MF")
 
 #add vector for terms of interest to reduce number of GO terms - NOT using this to look at individual modules for exploratory purposes
-keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
+#keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
 
 for (module in module_vector) {
   
@@ -203,7 +218,7 @@ for (module in module_vector) {
     go_results<-go_results%>%
       filter(ontology==category)%>%
       filter(bh_adjust != "NA") %>%
-      filter(numInCat>10)%>%
+      #filter(numInCat>10)%>%
       arrange(., bh_adjust)
     
       #Reduce/collapse GO term set with the rrvgo package 
@@ -241,7 +256,7 @@ for (module in module_vector) {
     axis.title.x = element_blank(),
     axis.title.y = element_blank())
 
-ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=100, width=12, height=100, units="in", limitsize=FALSE)
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Module", module, "_", category, ".png"), plot=GO.plot, dpi=100, width=12, height=40, units="in", limitsize=FALSE)
     
   }
 }
@@ -295,7 +310,6 @@ for (pattern in pattern_vector) {
     
     ##Get a list of GO Terms for each module
     GO.terms <- geneInfo%>%
-      filter(Pattern==pattern)%>%
       #filter(get_rows(.data[[module]]))%>%
       dplyr::select(gene_id, Annotation.GO.ID)
     
@@ -323,7 +337,7 @@ for (pattern in pattern_vector) {
   
     #Filtering for p < 0.01
     GO <- GO %>%
-        dplyr::filter(bh_adjust<0.0001) %>%
+        dplyr::filter(bh_adjust<0.05) %>%
         dplyr::arrange(., ontology, bh_adjust)
 
     #Write file of results 
@@ -334,11 +348,12 @@ for (pattern in pattern_vector) {
 
 Run a loop to plot enrichment for each pattern at each level of ontology.  
 ```{r}
-pattern_vector<-c("Increasing", "Decreasing", "Mid")
+#pattern_vector<-c("Increasing", "Decreasing", "Mid")
+pattern_vector<-c("Decreasing", "Mid")
 ontologies<-c("BP", "MF")
 
 #add vector for terms of interest to reduce number of GO terms 
-keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
+#keywords<-c("metabolism", "carbon", "carbohydrate", "lipid", "fatty", "apoptosis", "death", "symbiosis", "regulation of cell communication", "trans membrane transport", "transmembrane", "glucose", "organic substance transport", "response to stress", "antioxidant")
 
 for (pattern in pattern_vector) {
   
@@ -350,7 +365,6 @@ for (pattern in pattern_vector) {
     go_results<-go_results%>%
       filter(ontology==category)%>%
       filter(bh_adjust != "NA") %>%
-      filter(numInCat>10)%>%
       arrange(., bh_adjust)
     
     #Reduce/collapse GO term set with the rrvgo package 
@@ -418,8 +432,6 @@ for (pattern in pattern_vector) {
     
     ##Get a list of GO Terms for each module
     KO.terms <- geneInfo%>%
-      filter(Pattern==pattern)%>%
-      #filter(get_rows(.data[[module]]))%>%
       dplyr::select(gene_id, KEGG)
 
     ##Construct list of genes with 1 for genes in module and 0 for genes not in the module
@@ -459,7 +471,6 @@ for (pattern in pattern_vector) {
     
     ko_results<-ko_results%>%
       filter(bh_adjust != "NA") %>%
-      filter(numInCat >10)%>%
       arrange(., bh_adjust)
     
     #plot significantly enriched KO terms 
@@ -487,19 +498,14 @@ Fetch KEGG terms from database: https://www.genome.jp/kegg/ko.html
 KEGG Terms from Increasing over Development: 
 ko:K20478    GOLGB1; golgin subfamily B member 1
 ko:K22614    NLRC3, NOD3; NLR family CARD domain-containing protein 3
-ko:K01672    CA; carbonic anhydrase [EC:4.2.1.1]
-ko:K09848    TRAF4; TNF receptor-associated factor 4
-ko:K11150    RDH8; retinol dehydrogenase 8 [EC:1.1.1.-]
 
 KEGG Terms from Decreasing over Development:  
 ko:K09228    KRAB; KRAB domain-containing zinc finger protein
-ko:K11251    H2A; histone H2A
-ko:K11252    H2B; histone H2B
 
 KEGG Terms from Mid Development:  
 ko:K10408    DNAH; dynein axonemal heavy chain
 
-## 4. Plot all ontogenetic categories together for categories of interest    
+## 4. Plot enrichment for each ontogenetic pattern     
 
 Plot enrichment for each pattern together in one plot. Read in files.  
 ```{r}
@@ -513,6 +519,181 @@ patterns_df$pattern<-factor(patterns_df$pattern, levels=c("Decreasing", "Mid", "
 
 category<-c("BP")
 ```
+
+Plot all together for increasing. 
+```{r}
+#add vector for terms of interest to reduce number of GO terms 
+    #Read relevant file of results from goseq analysis  
+    go_results<-patterns_df
+    
+    go_results<-go_results%>%
+      filter(ontology=="BP")%>%
+      filter(bh_adjust != "NA") %>%
+      arrange(., bh_adjust)
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=category,
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+
+    #go_results<-go_results%>%
+      #filter(grepl(paste(carbs, collapse="|"), ParentTerm))
+      
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.increasing <-  go_results%>%
+    filter(pattern=="Increasing")%>%
+    mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+    ggplot(aes(x = percHits, y = term, colour=bh_adjust)) + 
+    geom_point(aes(size=percHits, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="% Hits", range=c(3,6))+
+    #scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    #scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    xlab("Hits (%)")+
+    ggtitle("Increasing across development")+
+    geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+   scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+   scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+    theme_classic() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 18, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 16),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 16, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=16, face="bold"),
+          plot.title = element_text(),
+          axis.title.y = element_blank());GO.plot.increasing
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Increasing_REVISED.jpeg"), plot=GO.plot.increasing, dpi=300, width=12, height=12, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Increasing_REVISED.pdf"), plot=GO.plot.increasing, dpi=300, width=12, height=12, units="in")
+```
+
+Plot all together for mid development. 
+```{r}
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.mid <-  go_results%>%
+    filter(pattern=="Mid")%>%
+    mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+    ggplot(aes(x = percHits, y = term, colour=bh_adjust)) + 
+    geom_point(aes(size=percHits, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="% Hits", range=c(3,6))+
+    #scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    #scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    xlab("Hits (%)")+
+    ggtitle("Peaking in mid-development")+
+    geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+   scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+   scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+    theme_classic() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 14, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 16),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 16, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=16, face="bold"),
+          plot.title = element_text(),
+          axis.title.y = element_blank());GO.plot.mid
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Mid_REVISED.jpeg"), plot=GO.plot.mid, dpi=300, width=16, height=40, units="in")
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Mid_REVISED.pdf"), plot=GO.plot.mid, dpi=300, width=16, height=40, units="in")
+```
+
+
+Plot all together for decreasing development. 
+```{r}
+    #plot significantly enriched GO terms by Slim Category faceted by slim term 
+  GO.plot.decreasing <-  go_results%>%
+    filter(pattern=="Decreasing")%>%
+    mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+    ggplot(aes(x = percHits, y = term, colour=bh_adjust)) + 
+    geom_point(aes(size=percHits, fill=bh_adjust, colour=bh_adjust)) + 
+    scale_size(name="% Hits", range=c(3,6))+
+    #scale_fill_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    #scale_colour_gradient(name = "Adjusted p-value", low="black", high="gray")+
+    facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+    xlab("Hits (%)")+
+    ggtitle("Decreasing across development")+
+    geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+   scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+   scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+    theme_classic() + 
+    theme(panel.border = element_blank(), 
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          strip.background =element_rect(fill="white"),
+          strip.text.y = element_text(angle=0, size = 14, face="bold"),
+          strip.text.x = element_text(size = 16),
+          axis.text.x = element_text(size = 16),
+          axis.text.y = element_text(size = 16),
+          axis.title.x = element_text(size = 16, face="bold"),
+          legend.text=element_text(size=16),
+          title=element_text(size=16, face="bold"),
+          plot.title = element_text(),
+          axis.title.y = element_blank());GO.plot.decreasing
+
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Decreasing_REVISED.jpeg"), plot=GO.plot.decreasing, dpi=300, width=16, height=80, units="in", limitsize=FALSE)
+ggsave(filename=paste0("Mcap2020/Figures/TagSeq/GenomeV3/GOSeq/GOenrich_Decreasing_REVISED.pdf"), plot=GO.plot.decreasing, dpi=300, width=16, height=80, units="in", limitsize=FALSE)
+```
+
+
+
+NEXT
+- Make gene tables and look at gene lists 
+- Frame patterns as time periods of HPF rather than patterns 
+- Make final figures of interest 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Customize first for carbohydrate metabolism related BP ontology. 
 ```{r}

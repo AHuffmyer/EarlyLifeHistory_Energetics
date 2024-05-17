@@ -14,8 +14,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Set up 
-
 Set up workspace, set options, and load required packages.    
 ```{r}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -869,6 +867,8 @@ ggsave(filename=paste0("Mcap2020/Figures/Metabolomics/abundance_plots/", metabol
 ```
 
 
+
+
 # PLS-DA analysis  
 
 Load data if starting from this point in the script.    
@@ -960,7 +960,7 @@ Timepoint_VIP_table <- rownames_to_column(Timepoint_VIP_DF, var = "Metabolite")
 Timepoint_VIP_1 <- Timepoint_VIP_table %>% 
   filter(VIP >= 1)
 
-write_csv(Timepoint_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Timepoint_VIPs.csv")
+#write_csv(Timepoint_VIP_1, "Mcap2020/Output/Metabolomics/Overall_Timepoint_VIPs.csv")
 
 #plot
 Timepoint_VIP_1 %>%
@@ -987,142 +987,7 @@ Timepoint_VIP_1 %>%
 dev.off() 
 ```
 
-These lists represent VIPs that drive separation in lifestage. 
-
-## Plot VIPs concentration across lifestages 
-
-```{r}
-vip_list<-c(levels(as.factor(Timepoint_VIP_1$Metabolite)))
-
-metabolites$HPF<-fct_relevel(metabolites$HPF, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)",  "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)",  "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)")
-
-timepoint_plot1<- metabolites %>%
- filter(compound %in% vip_list)%>%
-  filter(compound %in% c("Lumichrome", "Hypoxanthine", "Hypotaurine", "GTP"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean_count = mean(log_norm_counts))%>%
-  arrange(HPF, compound)%>%
-  group_by(compound)%>%
-  mutate(rel_change=((mean_count-dplyr::first(mean_count))/dplyr::first(mean_count)))%>%
-  arrange(compound)%>%
-  #filter(rel_change<0)%>%
-  
-  ggplot(aes(x = HPF, y = reorder(compound,rel_change))) +
-  geom_point(aes(colour=rel_change), size=3) +
-  scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
-  ylab("Metabolite") +
-  xlab("Lifestage") +
-  geom_vline(xintercept=1.5, linetype="dashed")+
-  geom_vline(xintercept=4.5, linetype="dashed")+
-  geom_vline(xintercept=10.5, linetype="dashed")+
-  theme_bw() + 
-  theme(panel.border = element_rect(linetype = "solid", color = "black"), 
-        panel.grid.major = element_blank(), #Makes background theme white
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        axis.text.x = element_text(angle = 45, hjust=1)); timepoint_plot1
-
-timepoint_plot2<- metabolites %>%
-  filter(compound %in% c("N-octanoylglycine", "Nicotinamide riboside", "Methionine", "Pterin", "Phenylalanine", "ATP", "Tryptophan", "Thiamine", "5-Methylcytosine"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean_count = mean(log_norm_counts))%>%
-  arrange(HPF, compound)%>%
-  group_by(compound)%>%
-  mutate(rel_change=((mean_count-dplyr::first(mean_count))/dplyr::first(mean_count)))%>%
-  arrange(compound)%>%
-  
-  
-  ggplot(aes(x = HPF, y = reorder(compound,rel_change))) +
-  geom_point(aes(colour=rel_change), size=3) +
-  scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
-  ylab("Metabolite") +
-  xlab("Lifestage") +
-  geom_vline(xintercept=1.5, linetype="dashed")+
-  geom_vline(xintercept=4.5, linetype="dashed")+
-  geom_vline(xintercept=10.5, linetype="dashed")+
-  theme_bw() + 
-  theme(panel.border = element_rect(linetype = "solid", color = "black"), 
-        panel.grid.major = element_blank(), #Makes background theme white
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        axis.text.x = element_text(angle = 45, hjust=1)); timepoint_plot2
-
-timepoint_plot3<- metabolites %>%
-  filter(compound %in% vip_list)%>%
-  filter(compound %in% c("Norvaline", "Guanine", "GMP", "Carbamoyl phosphate", "Glutaryl-carnitine", "Hippuric acid", "Glucuronic acid", "L-Octanoylcarnitine", "Glutamine", "Coenzyme A", "1-Methylimidazole acetic acid", "5- Methylthioadenosine", "Porphobilinogen", "4-Aminobutyrate", "5-methylthioadenosine"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean_count = mean(log_norm_counts))%>%
-  arrange(HPF, compound)%>%
-  group_by(compound)%>%
-  mutate(rel_change=((mean_count-dplyr::first(mean_count))/dplyr::first(mean_count)))%>%
-  arrange(compound)%>%
-  
-  
-  ggplot(aes(x = HPF, y = reorder(compound,rel_change))) +
-  geom_point(aes(colour=rel_change), size=3) +
-  scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
-  ylab("Metabolite") +
-  xlab("Lifestage") +
-  geom_vline(xintercept=1.5, linetype="dashed")+
-  geom_vline(xintercept=4.5, linetype="dashed")+
-  geom_vline(xintercept=10.5, linetype="dashed")+
-  theme_bw() + 
-  theme(panel.border = element_rect(linetype = "solid", color = "black"), 
-        panel.grid.major = element_blank(), #Makes background theme white
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        axis.text.x = element_text(angle = 45, hjust=1)); timepoint_plot3
-
-
-timepoint_plot4<- metabolites %>%
-  filter(compound %in% vip_list)%>%
-  filter(!compound %in% c("Norvaline", "Guanine", "GMP", "Carbamoyl phosphate", "Glutaryl-carnitine", "Hippuric acid", "Glucuronic acid", "L-Octanoylcarnitine", "Glutamine", "Coenzyme A", "1-Methylimidazole acetic acid", "5- Methylthioadenosine", "Porphobilinogen", "4-Aminobutyrate", "5-methylthioadenosine", "N-octanoylglycine", "Nicotinamide riboside", "Methionine", "Pterin", "Phenylalanine", "ATP", "Tryptophan", "Thiamine", "5-Methylcytosine","Lumichrome", "Hypoxanthine", "Hypotaurine", "GTP"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean_count = mean(log_norm_counts))%>%
-  arrange(HPF, compound)%>%
-  group_by(compound)%>%
-  mutate(rel_change=((mean_count-dplyr::first(mean_count))/dplyr::first(mean_count)))%>%
-  arrange(compound)%>%
-  
-  
-  ggplot(aes(x = HPF, y = reorder(compound,rel_change))) +
-  geom_point(aes(colour=rel_change), size=3) +
-  scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
-  ylab("Metabolite") +
-  xlab("Lifestage") +
-  geom_vline(xintercept=1.5, linetype="dashed")+
-  geom_vline(xintercept=4.5, linetype="dashed")+
-  geom_vline(xintercept=10.5, linetype="dashed")+
-  theme_bw() + 
-  theme(panel.border = element_rect(linetype = "solid", color = "black"), 
-        panel.grid.major = element_blank(), #Makes background theme white
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        axis.text.x = element_text(angle = 45, hjust=1)); timepoint_plot4
-
-#save plots
-ggsave("Mcap2020/Figures/Metabolomics/VIPs/vip_change_1.png", timepoint_plot1, width=6, height=3)
-ggsave("Mcap2020/Figures/Metabolomics/VIPs/vip_change_2.png", timepoint_plot2, width=6, height=4)
-ggsave("Mcap2020/Figures/Metabolomics/VIPs/vip_change_3.png", timepoint_plot3, width=6, height=4)
-ggsave("Mcap2020/Figures/Metabolomics/VIPs/vip_change_4.png", timepoint_plot4, width=6, height=8)
-```
-
-Plot a heatmap next. 
-
-Fix 5-methylthioadenosine - duplicate? 
-
-Take VIP list and input for metaboanalyst? See what pathways are enriched for things that change across development? 
-
-Correlation network between DEG genes and VIP metabolites? Then annotate correlated things? 
-
-
-
-
-
+These lists represent VIPs that drive separation in lifestage. But, this does not provide lists of VIP's between specific life stages or global correlations of metabolites with specific lifestages. In the following section we generate lists of VIPs between subsequent lifestages. In the metabolomics_WGCNA.Rmd script, we use a WGCNA approach to determine metabolites that correlate with lifestage, which we use as the primary analysis.  
 
 ## Generate VIPs for developmental group comparisons 
 

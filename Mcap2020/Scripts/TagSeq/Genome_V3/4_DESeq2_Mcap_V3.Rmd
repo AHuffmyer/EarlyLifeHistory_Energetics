@@ -1,0 +1,1338 @@
+---
+title: "DESeq2 analysis of M. capitata TagSeq"
+author: "Ariana S Huffmyer"
+date: "2024"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+REDO ANALYSES
+REDO BY TIMEPOINT OF DEVELOPMENT 
+
+THEN GO BACK TO METABOLITES 
+
+This script uses the V3 genome from Cyanophora Rutgers.  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The following setting is important, do not omit.
+options(stringsAsFactors = FALSE) #Set Strings to character
+```
+
+# Load required libraries    
+
+```{r}
+if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+if ("rtracklayer" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rtracklayer")
+if ("GenomicRanges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GenomicRanges")
+if ("plyranges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("plyranges")
+if ("GSEABase" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GSEABase")
+if ("GOSim" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GOSim")
+if ("stats" %in% rownames(installed.packages()) == 'FALSE') install.packages("stats")
+if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("ggdendro")
+#if ("KEGG.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("KEGG.db")
+if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
+if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
+
+#BiocManager::install("org.Ce.eg.db", force=TRUE) #install if needed 
+
+library("tidyverse")
+library("genefilter")
+library("DESeq2")
+library("RColorBrewer")
+library("WGCNA")
+library("flashClust")
+library("gridExtra")
+library("ComplexHeatmap")
+library("goseq")
+library("dplyr")
+library("clusterProfiler")
+library("pheatmap")
+library("magrittr")
+library("rtracklayer")
+library("GenomicRanges")
+library("plyranges")
+library("GSEABase")
+library("GOSim")
+library("stats")
+library("ggdendro")
+#library("KEGG.db")
+library("GO.db")
+library("rrvgo")
+library("DESeq2")
+library("genefilter")
+library("factoextra")
+library("vegan")
+library("EnhancedVolcano")
+library("VennDetail")
+library(viridis) 
+library(cowplot)
+```
+
+# Data input and filtering 
+ 
+Import the data files.  
+
+```{r}
+#load metadata sheet with sample name and developmental stage information
+metadata <- read.csv("Mcap2020/Data/TagSeq/Sample_Info.csv", header = TRUE, sep = ",")
+head(metadata)
+
+#load gene count matrix generated from cluster computation
+gcount <- as.data.frame(read.csv("Mcap2020/Output/TagSeq/Mcapitata_gene_count_matrix_V3.csv", row.names="gene_id"), colClasses = double)
+head(gcount)
+
+#remove metamorphosed recruit 1 because this was the timepoint that we only had one sample for: D36, AH23
+#gcount<-gcount[ , !(names(gcount) %in% c("AH23"))]
+gcount<-gcount[ , !(names(gcount) %in% c("AH23_S54_L002.gtf"))]
+
+metadata <- metadata%>%
+  filter(!sample_id=="AH23")
+```
+
+Check that there are no genes with 0 counts across all samples.
+
+```{r}
+nrow(gcount)
+gcount<-gcount %>%
+     mutate(Total = rowSums(.[, 1:38]))%>%
+    filter(!Total==0)%>%
+    dplyr::select(!Total)
+nrow(gcount)
+```
+We had 54,384 genes, which was filtered down to 34,223 by removing genes with row sums of 0 (those not detected in our data).  
+ 
+Conduct data filtering, this includes:  
+
+*pOverA*: Specifying the minimum count for a proportion of samples for each gene. Here, we are using a pOverA of 0.07. This is because we have 38 samples with a minimum of n=3 samples per lifestage. Therefore, we will accept genes that are present in 3/38 = 0.07 of the samples because we expect different expression by life stage. We are further setting the minimum count of genes to 10, such that 7% of the samples must have a gene count of >10 in order for the gene to remain in the data set.  
+
+Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
+
+```{r}
+filt <- filterfun(pOverA(0.07,10))
+
+#create filter for the counts data
+gfilt <- genefilter(gcount, filt)
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify genes to keep by count filter
+gkeep <- gcount[gfilt,]
+
+#identify gene lists
+gn.keep <- rownames(gkeep)
+
+#gene count data filtered in PoverA, P percent of the samples have counts over A
+gcount_filt <- as.data.frame(gcount[which(rownames(gcount) %in% gn.keep),])
+
+#How many rows do we have before and after filtering?
+nrow(gcount) #Before
+nrow(gcount_filt) #After
+```
+
+Before filtering, we had 34,223 genes. After filtering for pOverA, we have approximately 11,475 genes. This indicates that there were many genes present in <7% of samples at <10 counts per gene.  
+
+In order for the DESeq2 algorithms to work, the SampleIDs on the metadta file and count matrices have to match exactly and in the same order. The following R clump will check to make sure that these match. Should return TRUE.  
+```{r}
+#Checking that all row and column names match. Should return "TRUE"
+all(rownames(metadata$sample_id) %in% colnames(gcount_filt))
+all(rownames(metadata$sample_id) == colnames(gcount_filt)) 
+```
+
+Match metadata sample id's.  
+```{r}
+result<-sub("_.*", "", colnames(gcount_filt)) #keep characters before _
+#result2<-sub(".*AH", "", result) #keep characters after X
+colnames(gcount_filt)<-result #keep just sample number 
+```
+
+Display current order of metadata and gene count matrix.  
+```{r}
+metadata$sample_id
+colnames(gcount_filt)
+```
+
+Order metadata the same as the column order in the gene matrix.  
+```{r}
+list<-colnames(gcount_filt)
+list<-as.factor(list)
+
+metadata$sample_id<-as.factor(metadata$sample_id)
+
+# Re-order the levels
+metadata$sample_id <- factor(as.character(metadata$sample_id), levels=list)
+# Re-order the data.frame
+metadata_ordered <- metadata[order(metadata$sample_id),]
+metadata_ordered$sample_id
+
+metadata_ordered<-metadata_ordered%>%
+  dplyr::select(sample_id, lifestage, hpf, code)
+```
+
+Reorder the lifestage factor.  
+```{r}
+head(metadata_ordered)
+levels(as.factor(metadata_ordered$lifestage))
+
+metadata_ordered$lifestage<-as.factor(metadata_ordered$lifestage)
+
+metadata_ordered$lifestage<-fct_relevel(metadata_ordered$lifestage, "Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)")
+
+levels(as.factor(metadata_ordered$lifestage))
+
+#output metadata for other analyses 
+#write_csv(metadata_ordered, "Mcap2020/Data/TagSeq/metadata_ordered.csv")
+```
+
+# Construct DESeq2 data set  
+
+Create a DESeqDataSet design from gene count matrix and labels. Here we set the design to look at lifestage to test for any differences in gene expression across timepoints.
+```{r}
+#Set DESeq2 design
+gdds <- DESeqDataSetFromMatrix(countData = gcount_filt,
+                              colData = metadata_ordered,
+                              design = ~lifestage)
+```
+
+First we are going to log-transform the data using a variance stabilizing transforamtion (VST). This is only for visualization purposes. Essentially, this is roughly similar to putting the data on the log2 scale. It will deal with the sampling variability of low counts by calculating within-group variability (if blind=FALSE). Importantly, it does not use the design to remove variation in the data, and so can be used to examine if there may be any variability do to technical factors such as extraction batch effects.
+
+To do this we first need to calculate the size factors of our samples. This is a rough estimate of how many reads each sample contains compared to the others. In order to use VST (the faster log2 transforming process) to log-transform our data, the size factors need to be less than 4.
+
+Chunk should return TRUE if <4.  
+```{r}
+SF.gdds <- estimateSizeFactors(gdds) #estimate size factors to determine if we can use vst  to transform our data. Size factors should be less than 4 for us to use vst
+print(sizeFactors(SF.gdds)) #View size factors
+
+all(sizeFactors(SF.gdds)) < 4
+```
+
+All size factors are less than 4, so we can use VST transformation.  
+
+```{r}
+gvst <- vst(gdds, blind=FALSE) #apply a variance stabilizing transformation to minimize effects of small counts and normalize wrt library size
+head(assay(gvst), 3) #view transformed gene count data for the first three genes in the dataset.  
+```
+
+# Conduct PERMANOVA for all genes  
+
+Export data for PERMANOVA test.  
+```{r}
+test<-t(assay(gvst)) #export as matrix
+test<-as.data.frame(test)
+
+#add category columns
+test$Sample<-rownames(test)
+test$Lifestage<-metadata$lifestage[match(test$Sample, metadata$sample_id)]
+```
+
+Build PERMANOVA model.  
+```{r}
+scaled_test <-prcomp(test[c(1:11475)], scale=TRUE, center=TRUE)
+fviz_eig(scaled_test)
+
+# scale data
+vegan <- scale(test[c(1:11475)])
+
+# PerMANOVA 
+permanova<-adonis2(vegan ~ Lifestage, data = test, method='eu')
+permanova
+```
+40% variance explained on PC1, with 10% or less by remaining PCs.  
+
+Gene expression is significantly different between lifestages (p=0.001).  
+
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = vegan ~ Lifestage, data = test, method = "eu")
+          Df SumOfSqs      R2      F Pr(>F)    
+Lifestage  9   318674 0.75057 9.3618  0.001 ***
+Residual  28   105901 0.24943                  
+Total     37   424575 1.00000     
+
+# PCA and sample distances of all genes  
+
+Plot a heatmap to sample to sample distances  
+
+```{r}
+gsampleDists <- dist(t(assay(gvst))) #calculate distance matix
+gsampleDistMatrix <- as.matrix(gsampleDists) #distance matrix
+rownames(gsampleDistMatrix) <- colnames(gvst) #assign row names
+colnames(gsampleDistMatrix) <- NULL #assign col names
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255) #assign colors
+
+save_pheatmap_pdf <- function(x, filename, width=7, height=7) {
+   stopifnot(!missing(x))
+   stopifnot(!missing(filename))
+   pdf(filename, width=width, height=height)
+   grid::grid.newpage()
+   grid::grid.draw(x$gtable)
+   dev.off()
+}
+
+pht<-pheatmap(gsampleDistMatrix, #plot matrix
+         clustering_distance_rows=gsampleDists, #cluster rows
+         clustering_distance_cols=gsampleDists, #cluster columns
+         col=colors) #set colors
+
+#save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/GenomeV3/pheatmap.pdf")
+```
+
+Generate a PCA for visualization/presentations.  
+
+```{r}
+gPCAdata <- plotPCA(gvst, intgroup = c("lifestage"), returnData=TRUE, ntop=11475) #use ntop to specify all genes
+percentVar <- round(100*attr(gPCAdata, "percentVar")) #plot PCA of samples with all data
+
+levels(gPCAdata$lifestage)
+
+allgenesfilt_PCA_visual <- 
+  ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
+  geom_point(size=5) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=17, "Embryo (5 hpf)"=16, "Embryo (38 hpf)"=15, "Embryo (65 hpf)"=17, "Larvae (93 hpf)"=15, "Larvae (163 hpf)"=16, "Larvae (231 hpf)"=17, "Metamorphosed Polyp (231 hpf)"=16, "Attached Recruit (183 hpf)"=15, "Attached Recruit (231 hpf)"=16)) +
+  
+  scale_colour_manual(name="Lifestage", values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="#BA55D3")) +
+  #xlim(-40,40)+ 
+  #ylim(-40,40)+
+  coord_fixed()+
+  theme_classic() + #Set background color
+  theme(panel.border = element_blank(), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank()) # + #Set the plot background
+  #theme(legend.position = ("none")) #set title attributes
+allgenesfilt_PCA_visual
+
+#ggsave("Mcap2020/Figures/TagSeq/GenomeV3/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_visual, width=11, height=8)
+```
+
+# Run DESeq Results Tests 
+
+Run test using the LRT to look for effect of lifestage as a whole across our experiment. There is only one main effect, so the reduced model is just the intercept.    
+```{r, message = FALSE}
+DEG <- DESeq(gdds, test="LRT", reduced=~1)
+```
+
+From this, we are going to filter by adjusted p value <0.05, this is generated by the LRT test statistic. I am also going to keep genes that show a log2 fold change >1 between the respective stage and the reference time point (Eggs).  
+
+View results by temperature effects. Create dataframe for each comparison and add a column for the specific contrast.  
+
+Each comparison is between Eggs and subsequent stages (how LRT looks at total time effects). 
+
+Look at intercept first (eggs). 
+```{r}
+resultsNames(DEG)
+
+res0<-results(DEG, name="Intercept")
+res0 <- as.data.frame(subset(res0, padj<0.05))
+res0 <- as.data.frame(subset(res0, abs(log2FoldChange)>1))
+res0$contrast <- c("Background")
+res0$gene <- rownames(res0)
+rownames(res0) <- NULL
+
+dim(res0)
+```
+8515 DEGs.  
+
+```{r}
+resultsNames(DEG)
+
+res1<-results(DEG, name="lifestage_Embryo..5.hpf._vs_Egg..1.hpf.")
+res1 <- as.data.frame(subset(res1, padj<0.05))
+res1 <- as.data.frame(subset(res1, abs(log2FoldChange)>1))
+res1$contrast <- c("Embryo_5hpf")
+res1$gene <- rownames(res1)
+rownames(res1) <- NULL
+
+dim(res1)
+```
+1243 DEGs. 
+
+```{r}
+resultsNames(DEG)
+
+res2<-results(DEG, name="lifestage_Embryo..38.hpf._vs_Egg..1.hpf.")
+res2 <- as.data.frame(subset(res2, padj<0.05))
+res2 <- as.data.frame(subset(res2, abs(log2FoldChange)>1))
+res2$contrast <- c("Embryo_38hpf")
+res2$gene <- rownames(res2)
+rownames(res2) <- NULL
+
+dim(res2)
+```
+3515 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res3<-results(DEG, name="lifestage_Embryo..65.hpf._vs_Egg..1.hpf.")
+res3 <- as.data.frame(subset(res3, padj<0.05))
+res3 <- as.data.frame(subset(res3, abs(log2FoldChange)>1))
+res3$contrast <- c("Embryo_65hpf")
+res3$gene <- rownames(res3)
+rownames(res3) <- NULL
+
+dim(res3)
+```
+6431 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res4<-results(DEG, name="lifestage_Larvae..93.hpf._vs_Egg..1.hpf.")
+res4 <- as.data.frame(subset(res4, padj<0.05))
+res4 <- as.data.frame(subset(res4, abs(log2FoldChange)>1))
+res4$contrast <- c("Larvae_93hpf")
+res4$gene <- rownames(res4)
+rownames(res4) <- NULL
+
+dim(res4)
+```
+6800 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res5<-results(DEG, name="lifestage_Larvae..163.hpf._vs_Egg..1.hpf.")
+res5 <- as.data.frame(subset(res5, padj<0.05))
+res5 <- as.data.frame(subset(res5, abs(log2FoldChange)>1))
+res5$contrast <- c("Larvae_163hpf")
+res5$gene <- rownames(res5)
+rownames(res5) <- NULL
+
+dim(res5)
+```
+6921 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res6<-results(DEG, name="lifestage_Larvae..231.hpf._vs_Egg..1.hpf.")
+res6 <- as.data.frame(subset(res6, padj<0.05))
+res6 <- as.data.frame(subset(res6, abs(log2FoldChange)>1))
+res6$contrast <- c("Larvae_231hpf")
+res6$gene <- rownames(res6)
+rownames(res6) <- NULL
+
+dim(res6)
+```
+7053 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res7<-results(DEG, name="lifestage_Metamorphosed.Polyp..231.hpf._vs_Egg..1.hpf.")
+res7 <- as.data.frame(subset(res7, padj<0.05))
+res7 <- as.data.frame(subset(res7, abs(log2FoldChange)>1))
+res7$contrast <- c("Polyp_231hpf")
+res7$gene <- rownames(res7)
+rownames(res7) <- NULL
+
+dim(res7)
+```
+7074 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res8<-results(DEG, name="lifestage_Attached.Recruit..183.hpf._vs_Egg..1.hpf.")
+res8 <- as.data.frame(subset(res8, padj<0.05))
+res8 <- as.data.frame(subset(res8, abs(log2FoldChange)>1))
+res8$contrast <- c("Recruit_183hpf")
+res8$gene <- rownames(res8)
+rownames(res8) <- NULL
+
+dim(res8)
+```
+6821 DEGs
+
+```{r}
+resultsNames(DEG)
+
+res9<-results(DEG, name="lifestage_Attached.Recruit..231.hpf._vs_Egg..1.hpf.")
+res9 <- as.data.frame(subset(res9, padj<0.05))
+res9 <- as.data.frame(subset(res9, abs(log2FoldChange)>1))
+res9$contrast <- c("Recruit_231hpf")
+res9$gene <- rownames(res9)
+rownames(res9) <- NULL
+
+dim(res9)
+```
+6694 DEGs
+
+Combine this list of DEGs.  
+```{r}
+DEG_results<-rbind(res1, res2, res3, res4, res5, res6, res7, res8, res9)
+dim(DEG_results)
+length(unique(DEG_results$gene))
+```
+There are 8510 unique DEGs.  
+
+```{r}
+DEG_results_vst <- gdds[unique(DEG_results$gene)]
+dim(DEG_results_vst)
+
+DEG_results_vst <- varianceStabilizingTransformation(DEG_results_vst) 
+```
+
+# Draw an upset plot of DEGs
+
+Include background genes. 
+```{r}
+ven <- venndetail(list("Background" = res0$gene, 
+                       "Embryo_5hpf" = res1$gene,
+                       "Embryo_38hpf" = res2$gene, 
+                       "Embryo_65hpf" = res3$gene, 
+                       "Larvae_93hpf" = res4$gene, 
+                       "Larvae_163hpf" = res5$gene, 
+                       "Larvae_231hpf" = res6$gene, 
+                       "Polyp_231hpf" = res7$gene, 
+                       "Recruit_183hpf" = res8$gene, 
+                       "Recruit_231hpf" = res9$gene))
+
+upset<-plot(ven, type = "upset");upset
+
+
+pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/upset_background.pdf", width=10, height=8)
+plot(ven, type = "upset")
+dev.off()
+```
+
+Exclude background genes. 
+```{r}
+ven <- venndetail(list(#"Background" = res0$gene, 
+                       "Embryo_5hpf" = res1$gene,
+                       "Embryo_38hpf" = res2$gene, 
+                       "Embryo_65hpf" = res3$gene, 
+                       "Larvae_93hpf" = res4$gene, 
+                       "Larvae_163hpf" = res5$gene, 
+                       "Larvae_231hpf" = res6$gene, 
+                       "Polyp_231hpf" = res7$gene, 
+                       "Recruit_183hpf" = res8$gene, 
+                       "Recruit_231hpf" = res9$gene))
+
+upset<-plot(ven, type = "upset");upset
+
+pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/upset_development.pdf", width=10, height=8)
+plot(ven, type = "upset")
+dev.off()
+```
+    
+# Plot heatmap of DEGs 
+
+Set themes and metadata.  
+```{r}
+legend_names_col = colnames(assay(DEG_results_vst))
+
+df <- as.data.frame(colData(gdds)[,c("lifestage")])
+names(df)<-"lifestage"
+rownames(df) <- legend_names_col
+
+levels(df$lifestage)
+
+df$lifestage <- factor(as.character(df$lifestage))
+
+ann_colors = list( 
+    lifestage = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="tan2", "Embryo (38 hpf)"="tan3",  "Embryo (65 hpf)"="tan", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="cyan2", "Larvae (231 hpf)"="cyan", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="pink3")
+)
+```
+
+Plot heatmap.  
+```{r}
+pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=15, height=20)
+pheatmap(assay(DEG_results_vst), cluster_rows=TRUE, show_rownames=FALSE, color=inferno(10), show_colnames=TRUE, fontsize_row=3, scale="row", cluster_cols=TRUE, annotation_col=df, annotation_colors = ann_colors, labels_col=legend_names_col)
+dev.off()
+```
+
+Eggs through 38 hpf group together; 65-163 hpf group together, attached recruits group together, and larvae and polyps at 231 hpf group together. 
+
+# PERMANOVA and PCA of DEGs 
+
+Conduct PERMANOVA by parent and temperature 
+
+Export data for PERMANOVA test.  
+```{r}
+test_DEG<-t(assay(DEG_results_vst)) #export as matrix
+test_DEG<-as.data.frame(test_DEG)
+
+#add category columns
+test_DEG$sample<-rownames(test_DEG)
+test_DEG$lifestage<-metadata$lifestage[match(test_DEG$sample, metadata$sample)]
+```
+
+Build PERMANOVA model for DEG's that are different between temperatures.  
+```{r}
+dim(test_DEG)
+
+scaled_test_DEG <-prcomp(test_DEG[c(1:8510)], scale=TRUE, center=TRUE)
+fviz_eig(scaled_test_DEG)
+
+# scale data
+vegan_DEG <- scale(test_DEG[c(1:8510)])
+
+# PerMANOVA 
+permanova_DEG<-adonis2(vegan_DEG ~ lifestage, data = test_DEG, method='eu')
+permanova_DEG
+```
+About 50% of variance is explained by first PC followed by 10% or less on following PCs. 
+
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = vegan_DEG ~ lifestage, data = test_DEG, method = "eu")
+          Df SumOfSqs      R2     F Pr(>F)    
+lifestage  9   254406 0.80797 13.09  0.001 ***
+Residual  28    60464 0.19203                 
+Total     37   314870 1.00000  
+
+Plot PCA.  
+```{r}
+gPCAdata_DEG <- plotPCA(DEG_results_vst, intgroup = c("lifestage"), returnData=TRUE, ntop=8510) #use ntop to specify all genes
+percentVar_DEG <- round(100*attr(gPCAdata_DEG, "percentVar")) #plot PCA of samples with all data
+
+levels(gPCAdata$lifestage)
+
+DEG_PCA <- 
+  ggplot(data=gPCAdata_DEG, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
+  geom_point(size=6, stroke=1) +
+  xlab(paste0("PC1: ",percentVar_DEG[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar_DEG[2],"% variance")) +
+  
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=10, "Attached Recruit (231 hpf)"=12)) +
+  
+  scale_colour_manual(name="Lifestage", values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="#BA55D3")) +
+
+  #coord_fixed()+
+  theme_classic() + #Set background color
+  theme(panel.border = element_rect(colour = "black", fill=NA), # Set border
+                     #panel.grid.major = element_blank(), #Set major gridlines 
+                     #panel.grid.minor = element_blank(), #Set minor gridlines
+                     axis.line = element_line(colour = "black"), #Set axes color
+        plot.background=element_blank(), 
+        axis.title=element_text(size=14), 
+        axis.text=element_text(size=12, color="black"))  + #Set the plot background
+  theme(legend.position = ("right")); DEG_PCA
+
+ggsave("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/PCA_DEG.pdf", DEG_PCA, width=11, height=8)
+```
+
+
+
+# TRY DOING CLUSTERS OF LRT OUTPUT HERE 
+
+https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/08a_DGE_LRT_results.html 
+
+
+
+
+# Save gene lists for functional enrichment 
+
+## lifestage genes
+
+DEG_results: List of DEG's and fold change/pvalues
+DEG_results_vst: Count matrix of genes from DEG list 
+
+```{r}
+dim(DEG_results)
+deg_results_list<-DEG_results%>%
+  dplyr::select(gene, everything())
+write_csv(deg_results_list, "Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_list.csv")
+
+dim(DEG_results_vst)
+deg_counts<-t(assay(DEG_results_vst))
+deg_counts<-as.data.frame(deg_counts)
+dim(deg_counts)
+deg_counts$sample<-rownames(deg_counts)
+deg_counts<-deg_counts%>%
+  dplyr::select(sample, everything())
+write_csv(deg_counts, "Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_counts.csv")
+```
+
+## All genes detected 
+
+List of all genes in the dataset (gvst) = 11475 genes which will serve as a reference for functional enrichment.   
+
+```{r}
+dim(gvst)
+all_genes<-t(assay(gvst))
+all_genes<-as.data.frame(all_genes)
+dim(all_genes)
+all_genes$sample<-rownames(all_genes)
+all_genes<-all_genes%>%
+  dplyr::select(sample, everything())
+
+write_csv(file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/all_genes.csv", all_genes)
+```
+
+# Functional enrichment with goseq  
+
+## Read in files 
+
+```{r}
+all_genes<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/all_genes.csv")
+```
+
+Read in file of DEG's 
+```{r}
+DEG_list<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_list.csv")
+DEG_counts<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_counts.csv")
+
+DEG_list$contrast<-factor(DEG_list$contrast, levels=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))
+
+levels(DEG_list$contrast)
+```
+
+Get gene length information.  
+```{r}
+#import file
+gff <- rtracklayer::import("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.gff3") #if this doesn't work, restart R and try again 
+
+transcripts <- subset(gff, type == "transcript") #keep only transcripts 
+
+transcripts_gr <- makeGRangesFromDataFrame(transcripts, keep.extra.columns=TRUE) #extract length information
+
+transcript_lengths <- width(transcripts_gr) #isolate length of each gene
+
+seqnames<-transcripts_gr$ID #extract list of gene id 
+
+lengths<-cbind(seqnames, transcript_lengths)
+
+lengths<-as.data.frame(lengths) #convert to data frame
+```
+
+Read in annotation file. 
+
+Downloaded functional annotation (version 3) from: http://cyanophora.rutgers.edu/montipora/Montipora_capitata_HIv3.genes.EggNog_results.txt.gz (EggNog) and http://cyanophora.rutgers.edu/montipora/Montipora_capitata_HIv3.genes.KEGG_results.txt.gz (KEGG). 
+
+Unzipped on desktop. I then removed the # in #query in the first column, otherwise it does not read in column names.  
+
+```{r}
+Mcap.annot <- read.table("Mcap2020/Data/TagSeq/Montipora_capitata_HIv3.genes.EggNog_results.txt",  quote="", sep="\t", header=TRUE)
+dim(Mcap.annot)
+
+# column names
+head(Mcap.annot)
+tail(Mcap.annot)
+
+Mcap.annot<-Mcap.annot%>%
+  rename(gene=query)
+
+names(Mcap.annot)
+```
+
+This functional annotation as 24,072 genes. This is 44% of total protein predicted genes described in the publication associated with this annotation. https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giac098/6815755 
+
+Match up genes in gene list file to annotation file
+```{r}
+names(Mcap.annot)
+
+#remove sample column name 
+probes = names(all_genes)
+#probes <- gsub("sample", "", probes)
+#probes <- probes[probes != ""]
+
+probes2annot = match(probes, Mcap.annot$gene) #match genes in datExpr to genes in annotation file, note I removed the # before query in this file before loading
+
+# The following is the number of probes without annotation 
+sum(is.na(probes2annot))
+
+row_nas<-which(is.na(probes2annot))
+
+#view the genes that do not have a match in the annotation file
+missing<-as.data.frame(probes[row_nas])
+print(missing)
+```
+
+There are 3395 of our genes detected that are not present in the annotation file.  
+
+Reduce annotation file to only contain genes detected in our dataset.  
+
+```{r}
+filtered_Mcap.annot <- Mcap.annot[Mcap.annot$gene %in% probes, ]
+dim(filtered_Mcap.annot)
+```
+
+The annotation file now only contains genes that were detected in our dataset that have annotation information. This is 8081 out of the 11475 genes in our dataset. 
+
+Add in length to the annotation file.    
+
+```{r}
+filtered_Mcap.annot$length<-lengths$transcript_lengths[match(filtered_Mcap.annot$gene, lengths$seqnames)]
+
+which(is.na(filtered_Mcap.annot$length)) #all genes have lengths 
+```
+
+All have length information.  
+
+Format GO terms to remove dashes and quotes.  
+```{r}
+#remove dashes, remove quotes from columns and separate by semicolons (replace , with ;) in KEGG_ko, KEGG_pathway, and Annotation.GO.ID columns
+head(filtered_Mcap.annot$GOs)
+filtered_Mcap.annot$GOs <- gsub(",", ";", filtered_Mcap.annot$GOs)
+filtered_Mcap.annot$GOs <- gsub('"', "", filtered_Mcap.annot$GOs)
+filtered_Mcap.annot$GOs <- gsub("-", NA, filtered_Mcap.annot$GOs)
+head(filtered_Mcap.annot$GOs)
+```
+
+## Enrichment of lifestage DEGs
+
+### Add in annotation information
+
+Merge in relevant annotation information to the DEG list file.  
+
+```{r}
+DEG_list<-left_join(DEG_list, filtered_Mcap.annot, by="gene")
+```
+
+### Plot fold change 
+
+```{r}
+deg_FC <- DEG_list %>% 
+  dplyr::arrange(log2FoldChange) %>%
+  
+  ggplot(aes(x=log2FoldChange, y=reorder(gene, -log2FoldChange), colour=padj)) +
+  facet_grid(~contrast, scales="free_y")+
+  geom_point(size=2)+
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  geom_segment(aes(x=0, xend=log2FoldChange, y=gene, yend=gene),linewidth=1) +
+  geom_vline(xintercept = 0, linetype = "dashed") + # Add vertical line
+  theme_classic() +
+  ylab("Gene")+
+  theme(legend.position = "right",
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(size=14),
+        strip.text=element_text(size=16),
+        axis.title.y = element_text(size=16, face="bold"),
+        axis.title.x = element_text(size = 16, face = "bold"),
+        plot.title = element_text(size = 18, face = "bold"))+
+  ggtitle('Fold Change: lifestage DEGs'); deg_FC
+
+ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_foldchange.png", height=18, width=24)
+```
+
+## Prepare up and down regulated dataframes 
+
+```{r}
+dim(DEG_list)
+length(unique(DEG_list$gene))
+
+up_list<-DEG_list%>%
+  filter(log2FoldChange>0)
+
+dim(up_list)
+length(unique(up_list$gene))
+
+down_list<-DEG_list%>%
+  filter(log2FoldChange<0)
+
+dim(down_list)
+length(unique(down_list$gene))
+```
+8510 total genes with 5924 up regulated and 4124 down regulated. 
+
+## Conduct enrichment for up regulated genes 
+
+Make a list of contrasts to loop through.  
+
+```{r}
+levels(up_list$contrast)
+contrasts<-c(levels(up_list$contrast))
+```
+
+Conduct functional enrichment for each contrast using goseq and rrvgo. Compare against all genes detected in the dataset. 
+
+Conduct at biological process level. Filter for adjusted p-value <0.05.  
+```{r}
+for (lifestage in contrasts) {
+  
+    ### Generate vector with names of all genes detected in our dataset 
+    ALL.vector <- c(filtered_Mcap.annot$gene)
+    
+    ### Generate length vector for all genes 
+    LENGTH.vector <- as.integer(filtered_Mcap.annot$length)
+    
+    ### Generate vector with names in just the contrast we are analyzing
+    ID.vector <- up_list%>%
+      filter(contrast==lifestage)%>%
+      pull(gene)
+    
+    ##Get a list of GO Terms for all genes detected in our dataset 
+    GO.terms <- filtered_Mcap.annot%>%
+      dplyr::select(gene, GOs)
+    
+    ##Format to have one goterm per row with gene ID repeated
+    split <- strsplit(as.character(GO.terms$GOs), ";") 
+    split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+    colnames(split2) <- c("gene", "GOs")
+    GO.terms<-split2
+
+    ##Construct list of genes with 1 for genes in contrast and 0 for genes not in the contrast
+    gene.vector=as.integer(ALL.vector %in% ID.vector) 
+    names(gene.vector)<-ALL.vector#set names
+
+    #weight gene vector by bias for length of gene 
+    pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) 
+    
+    #run goseq using Wallenius method for all categories of GO terms 
+    GO.wall<-goseq(pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:BP"), method="Wallenius", use_genes_without_cat=TRUE)
+
+    GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+    colnames(GO)[1] <- "GOterm"
+    
+    #adjust p-values 
+    GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
+  
+    #Filtering for p < 0.01
+    GO <- GO %>%
+        dplyr::filter(bh_adjust<0.05) %>%
+        dplyr::arrange(., ontology, bh_adjust)
+
+    #Write file of results 
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_up_", lifestage, ".csv"))
+    
+}
+```
+
+Create an empty dataframe to populate (only do this once).  
+
+```{r}
+lifestage_go_results <- data.frame()
+```
+
+Run a loop to filter enrichment for each temperature contrast using rrvgo. There were no enriched terms for Embryos at 5hpf, do not include. 
+```{r}
+levels(up_list$contrast)
+
+contrasts<-c("Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf")
+
+for (lifestage in contrasts) {
+
+    #Read relevant file of results from goseq analysis  
+    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_up_", lifestage, ".csv"))
+    
+    go_results<-go_results%>%
+      filter(ontology=="BP")%>%
+      filter(bh_adjust != "NA") %>%
+      #filter(numInCat>5)%>%
+      arrange(., bh_adjust)
+    
+    print(lifestage)
+    print(length(unique(go_results$GOterm)))
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=c("BP"),
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log10(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+    
+    #add in contrast and regulation
+    go_results$direction<-c("upregulated")
+    go_results$contrast<-lifestage
+    
+    print(length(unique(go_results$GOterm)))
+    
+    #add to data frame 
+    go_df <- go_results
+    lifestage_go_results <- rbind(lifestage_go_results, go_df) 
+
+}
+```
+
+Semantic similarity reduced GO terms for each lifestage.  
+
+```{r}
+length(unique(lifestage_go_results$GOterm))
+```
+124 total enriched GO terms that are upregulated.
+
+## Conduct enrichment for down regulated genes 
+
+Make a list of contrasts to loop through. Embryo 5 hpf had no enriched terms.   
+
+```{r}
+contrasts<-c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf")
+```
+
+Conduct at biological process level. Filter for adjusted p-value <0.05.   
+```{r}
+for (lifestage in contrasts) {
+  
+    ### Generate vector with names of all genes detected in our dataset 
+    ALL.vector <- c(filtered_Mcap.annot$gene)
+    
+    ### Generate length vector for all genes 
+    LENGTH.vector <- as.integer(filtered_Mcap.annot$length)
+    
+    ### Generate vector with names in just the contrast we are analyzing
+    ID.vector <- down_list%>%
+      filter(contrast==lifestage)%>%
+      pull(gene)
+    
+    ##Get a list of GO Terms for all genes expressed
+    GO.terms <- filtered_Mcap.annot%>%
+      dplyr::select(gene, GOs)
+    
+    ##Format to have one goterm per row with gene ID repeated
+    split <- strsplit(as.character(GO.terms$GOs), ";") 
+    split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+    colnames(split2) <- c("gene", "GOs")
+    GO.terms<-split2
+
+    ##Construct list of genes with 1 for genes in contrast and 0 for genes not in the contrast
+    gene.vector=as.integer(ALL.vector %in% ID.vector) 
+    names(gene.vector)<-ALL.vector#set names
+
+    #weight gene vector by bias for length of gene 
+    pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) 
+    
+    #run goseq using Wallenius method for all categories of GO terms 
+    GO.wall<-goseq(pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:BP"), method="Wallenius", use_genes_without_cat=TRUE)
+
+    GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+    colnames(GO)[1] <- "GOterm"
+    
+    #adjust p-values 
+    GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
+  
+    #Filtering for p < 0.01
+    GO <- GO %>%
+        dplyr::filter(bh_adjust<0.05) %>%
+        dplyr::arrange(., ontology, bh_adjust)
+
+    #Write file of results 
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_down_", lifestage, ".csv"))
+    
+}
+```
+
+Run a loop to filter enrichment for each temperature contrast using rrvgo. There are no enriched terms for Embryo 38 hpf downregulated and it is not used in this next section.   
+```{r}
+contrasts<-c("Embryo_5hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf")
+
+for (lifestage in contrasts) {
+
+    #Read relevant file of results from goseq analysis  
+    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_down_", lifestage, ".csv"))
+    
+    go_results<-go_results%>%
+      filter(ontology=="BP")%>%
+      filter(bh_adjust != "NA") %>%
+      #filter(numInCat>5)%>%
+      arrange(., bh_adjust)
+    
+    print(lifestage)
+    print(length(unique(go_results$GOterm)))
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=c("BP"),
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log10(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+    
+    #add in contrast and regulation
+    go_results$direction<-c("downregulated")
+    go_results$contrast<-lifestage
+    
+    print(length(unique(go_results$GOterm)))
+     
+    #add to data frame 
+    go_df <- go_results
+    lifestage_go_results <- rbind(lifestage_go_results, go_df) 
+
+}
+```
+
+```{r}
+length(unique(lifestage_go_results$GOterm))
+```
+There are now 624 enriched GO terms (124 were upregulated, leaving 500 downregulated). 
+
+## Plot enrichment for up and down regulated genes 
+
+Upregulated genes 
+```{r}
+go_plot_up <- lifestage_go_results %>% 
+  filter(direction=="upregulated")%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=contrast, y=term, fill=over_represented_pvalue, size=percHits, colour=over_represented_pvalue)) +
+  facet_grid(ParentTerm ~ ., scales="free_y", labeller = label_wrap_gen(width=2, multi_line = TRUE))+
+  geom_point()+
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Lifestage")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"))+
+  ggtitle('Upregulated DEGs'); go_plot_up
+
+ggsave(plot=go_plot_up, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_upregulated.png", height=50, width=20, limitsize=FALSE)
+```
+
+Downregulated genes 
+```{r}
+go_plot_down <- lifestage_go_results %>% 
+  filter(direction=="downregulated")%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=contrast, y=term, colour=over_represented_pvalue, size=perHits)) +
+  facet_grid(ParentTerm ~ ., scales="free", labeller = label_wrap_gen(width = 2, multi_line = TRUE))+
+  geom_point(aes(size=percHits))+
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  theme_classic() +
+  ylab("GO Term")+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"))+
+  ggtitle('Downregulated Temperature DEGs'); go_plot_down
+
+ggsave(plot=go_plot_down, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_downregulated.png", height=60, width=20, limitsize=FALSE)
+```
+
+Plot with up and down regulated with facet by comparison. 
+
+```{r}
+go_plot_parent_data <- lifestage_go_results %>% 
+  group_by(ParentTerm, contrast, direction)%>%
+  summarise(numberTerms=length(unique(GOterm)))%>%
+  arrange(ParentTerm)
+
+# First, let's find the unique ParentTerm values
+unique_parent_terms <- unique(go_plot_parent_data$ParentTerm)
+
+# Determine the number of unique ParentTerm values
+num_unique <- length(unique_parent_terms)
+
+# Determine the midpoint for splitting into two batches
+midpoint <- ceiling(num_unique / 2)
+
+go_plot_parent_data <- go_plot_parent_data %>%
+  mutate(batch = ifelse(match(ParentTerm, unique_parent_terms) <= midpoint, 1, 2))
+
+go_plot_parent_data$ParentTerm <- factor(go_plot_parent_data$ParentTerm) 
+go_plot_parent_data$ParentTerm <- factor(go_plot_parent_data$ParentTerm, levels = rev(levels(go_plot_parent_data$ParentTerm)))
+
+go_plot_parentA<-go_plot_parent_data%>%
+  filter(batch=="1")%>%
+  
+  ggplot(aes(x=contrast, y=ParentTerm, colour=direction)) +
+  facet_grid(~ direction, scales="free_y", labeller = label_wrap_gen(width = 2, multi_line = TRUE))+
+  geom_point(aes(size=numberTerms))+
+  scale_size(name="Num. GO Terms", breaks=c(2,10,20,50,80), range = c(1, 5))+
+  scale_colour_manual(values=c("blue", "red"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+  xlab("")+
+  ylab("Parent Term")+
+  geom_vline(xintercept=2.5, linetype="dashed")+
+  geom_vline(xintercept=5.5, linetype="dashed")+
+  geom_vline(xintercept=7.5, linetype="dashed")+
+  #geom_vline(xintercept=3.5, linetype="dashed")+
+  ggtitle('Lifestage DEGs')+
+  panel_border(color="black")+
+  theme(legend.position = "none",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"),
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)); go_plot_parentA
+
+go_plot_parentB<-go_plot_parent_data%>%
+  filter(batch=="2")%>%
+  
+  ggplot(aes(x=contrast, y=ParentTerm, colour=direction)) +
+  facet_grid(~ direction, scales="free_y", labeller = label_wrap_gen(width = 2, multi_line = TRUE))+
+  geom_point(aes(size=numberTerms))+
+  scale_size(name="Num. GO Terms", breaks=c(2,10,20,50,80), range = c(1, 5))+
+  scale_colour_manual(values=c("blue", "red"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+    geom_vline(xintercept=2.5, linetype="dashed")+
+  geom_vline(xintercept=5.5, linetype="dashed")+
+  geom_vline(xintercept=7.5, linetype="dashed")+
+    xlab("")+
+  ylab("")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"),
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1))+
+        panel_border(color="black")+
+  ggtitle(''); go_plot_parentB
+
+go_grid<-plot_grid(go_plot_parentA, go_plot_parentB, ncol=2, nrow=1, align="h", rel_widths=c(0.8,1))
+
+ggsave(plot=go_grid, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_parent.png", height=10, width=20, limitsize=FALSE)
+```
+
+## Plot GO terms for parent terms of interest 
+
+```{r}
+interest_list<-c("ATP metabolic process", 
+                 "carbohydrate derivative metabolic process", 
+                 "cation homeostasis", 
+                 "cation transmembrane transport", 
+                 "cation transport", 
+                 "cell population proliferation", 
+                 #"cellular macromolecule metabolic process", 
+                 "cellular response to oxygen-containing compound", 
+                 #"import across plasma membrane", 
+                 "inorganic ion homeostasis", 
+                 "killing of cells of another organism", 
+                 "macromolecule metabolic process", 
+                 #"NADH metabolic process", 
+                 #"organonitrogen compound biosynthetic process", 
+                 #"organonitrogen compound metabolic process", 
+                 "oxidative phosphorylation", 
+                 "oxoacid metabolic process", 
+                 #"positive regulation of macromolecule metabolic process", 
+                 "regulated exocytosis", 
+                 #"regulation of cell communication", 
+                 "regulation of cell population proliferation", 
+                 #"regulation of cellular macromolecule biosynthetic process", 
+                 "regulation of intracellular signal transduction", 
+                 #"regulation of nitrogen compound metabolic process", 
+                 #"regulation of stress-activated MAPK cascade", 
+                 #"regulation of vesicle-mediated transport", 
+                 "ribose phosphate metabolic process", 
+                 #"secondary metabolic process", 
+                 "small molecule metabolic process")
+
+go_plot_parent_data2 <- lifestage_go_results %>% 
+  arrange(ParentTerm)%>%
+  filter(ParentTerm %in% interest_list)%>%
+  mutate(percHits=(numDEInCat/numInCat)*100)
+
+# First, let's find the unique ParentTerm values
+unique_parent_terms2 <- unique(go_plot_parent_data2$ParentTerm)
+
+# Determine the number of unique ParentTerm values
+num_unique2 <- length(unique_parent_terms2)
+
+# Determine the midpoint for splitting into two batches
+midpoint2 <- ceiling(num_unique2 / 2)
+
+go_plot_parent_data2 <- go_plot_parent_data2 %>%
+  mutate(batch = ifelse(match(ParentTerm, unique_parent_terms2) <= midpoint2, 1, 2))
+
+go_plot_parent_data2$ParentTerm <- factor(go_plot_parent_data2$ParentTerm) 
+go_plot_parent_data2$ParentTerm <- factor(go_plot_parent_data2$ParentTerm, levels = rev(levels(go_plot_parent_data2$ParentTerm)))
+
+go_plot_parent2A<-go_plot_parent_data2%>%
+  filter(batch=="1")%>%
+  
+  ggplot(aes(x=contrast, y=term, colour=direction)) +
+  #facet_grid(~ direction * ParentTerm, scales="free_y", labeller = label_wrap_gen(width = 2, multi_line = TRUE))+
+  facet_grid(ParentTerm ~ direction, scales = "free", switch = "y", labeller = label_wrap_gen(width = 2, multi_line = TRUE)) +
+  geom_point(aes(size=percHits))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  scale_colour_manual(values=c("blue", "red"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+  xlab("")+
+  ylab("Parent Term")+
+  geom_vline(xintercept=2.5, linetype="dashed")+
+  geom_vline(xintercept=5.5, linetype="dashed")+
+  geom_vline(xintercept=7.5, linetype="dashed")+
+  #geom_vline(xintercept=3.5, linetype="dashed")+
+  ggtitle('Lifestage DEGs')+
+  panel_border(color="black")+
+  theme(legend.position = "none",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"),
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)); go_plot_parent2A
+
+go_plot_parent2B<-go_plot_parent_data2%>%
+  filter(batch=="2")%>%
+  
+  ggplot(aes(x=contrast, y=term, colour=direction)) +
+  facet_grid(ParentTerm ~ direction, scales = "free", switch = "y", labeller = label_wrap_gen(width = 2, multi_line = TRUE)) +
+  geom_point(aes(size=percHits))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  scale_colour_manual(values=c("blue", "red"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+    geom_vline(xintercept=2.5, linetype="dashed")+
+  geom_vline(xintercept=5.5, linetype="dashed")+
+  geom_vline(xintercept=7.5, linetype="dashed")+
+    xlab("")+
+  ylab("")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"),
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1))+
+        panel_border(color="black")+
+  ggtitle(''); go_plot_parent2B
+
+go_grid2<-plot_grid(go_plot_parent2A, go_plot_parent2B, ncol=2, nrow=1, align="h", rel_widths=c(0.8,1))
+
+ggsave(plot=go_grid2, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_parent_subset.png", height=30, width=20, limitsize=FALSE)
+```
+

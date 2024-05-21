@@ -7,12 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-REDO ANALYSES
-REDO BY TIMEPOINT OF DEVELOPMENT 
-
-THEN GO BACK TO METABOLITES 
-
 This script uses the V3 genome from Cyanophora Rutgers.  
 
 ```{r setup, include=FALSE}
@@ -640,15 +634,6 @@ DEG_PCA <-
 ggsave("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/PCA_DEG.pdf", DEG_PCA, width=11, height=8)
 ```
 
-
-
-# TRY DOING CLUSTERS OF LRT OUTPUT HERE 
-
-https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/08a_DGE_LRT_results.html 
-
-
-
-
 # Save gene lists for functional enrichment 
 
 ## lifestage genes
@@ -1097,7 +1082,7 @@ length(unique(lifestage_go_results$GOterm))
 ```
 There are now 624 enriched GO terms (124 were upregulated, leaving 500 downregulated). 
 
-## Plot enrichment for up and down regulated genes 
+## Plot enrichment for up and down regulated genes  
 
 Upregulated genes 
 ```{r}
@@ -1151,7 +1136,9 @@ go_plot_down <- lifestage_go_results %>%
 ggsave(plot=go_plot_down, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_downregulated.png", height=60, width=20, limitsize=FALSE)
 ```
 
-Plot with up and down regulated with facet by comparison. 
+## Plot enrichment of up and down regulated genes at the Parent Term level  
+
+Plot with up and down regulated with facet by comparison as a dot plot. 
 
 ```{r}
 go_plot_parent_data <- lifestage_go_results %>% 
@@ -1228,111 +1215,425 @@ go_grid<-plot_grid(go_plot_parentA, go_plot_parentB, ncol=2, nrow=1, align="h", 
 ggsave(plot=go_grid, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_parent.png", height=10, width=20, limitsize=FALSE)
 ```
 
-## Plot GO terms for parent terms of interest 
+
+
+
+
+
+
+
+
+
+
+Plot as a heatmap with blue for down regulated and red for up regulated. 
+
+Create a dendrogram for the y axis. 
 
 ```{r}
-interest_list<-c("ATP metabolic process", 
-                 "carbohydrate derivative metabolic process", 
-                 "cation homeostasis", 
-                 "cation transmembrane transport", 
-                 "cation transport", 
-                 "cell population proliferation", 
-                 #"cellular macromolecule metabolic process", 
-                 "cellular response to oxygen-containing compound", 
-                 #"import across plasma membrane", 
-                 "inorganic ion homeostasis", 
-                 "killing of cells of another organism", 
-                 "macromolecule metabolic process", 
-                 #"NADH metabolic process", 
-                 #"organonitrogen compound biosynthetic process", 
-                 #"organonitrogen compound metabolic process", 
-                 "oxidative phosphorylation", 
-                 "oxoacid metabolic process", 
-                 #"positive regulation of macromolecule metabolic process", 
-                 "regulated exocytosis", 
-                 #"regulation of cell communication", 
-                 "regulation of cell population proliferation", 
-                 #"regulation of cellular macromolecule biosynthetic process", 
-                 "regulation of intracellular signal transduction", 
-                 #"regulation of nitrogen compound metabolic process", 
-                 #"regulation of stress-activated MAPK cascade", 
-                 #"regulation of vesicle-mediated transport", 
-                 "ribose phosphate metabolic process", 
-                 #"secondary metabolic process", 
-                 "small molecule metabolic process")
+test<-go_plot_parent_data%>%
+  mutate(up_presence=if_else())
+```
 
-go_plot_parent_data2 <- lifestage_go_results %>% 
-  arrange(ParentTerm)%>%
-  filter(ParentTerm %in% interest_list)%>%
-  mutate(percHits=(numDEInCat/numInCat)*100)
 
-# First, let's find the unique ParentTerm values
-unique_parent_terms2 <- unique(go_plot_parent_data2$ParentTerm)
 
-# Determine the number of unique ParentTerm values
-num_unique2 <- length(unique_parent_terms2)
 
-# Determine the midpoint for splitting into two batches
-midpoint2 <- ceiling(num_unique2 / 2)
 
-go_plot_parent_data2 <- go_plot_parent_data2 %>%
-  mutate(batch = ifelse(match(ParentTerm, unique_parent_terms2) <= midpoint2, 1, 2))
 
-go_plot_parent_data2$ParentTerm <- factor(go_plot_parent_data2$ParentTerm) 
-go_plot_parent_data2$ParentTerm <- factor(go_plot_parent_data2$ParentTerm, levels = rev(levels(go_plot_parent_data2$ParentTerm)))
 
-go_plot_parent2A<-go_plot_parent_data2%>%
+
+```{r}
+go_plot_parent2a<-go_plot_parent_data%>%
   filter(batch=="1")%>%
   
-  ggplot(aes(x=contrast, y=term, colour=direction)) +
-  #facet_grid(~ direction * ParentTerm, scales="free_y", labeller = label_wrap_gen(width = 2, multi_line = TRUE))+
-  facet_grid(ParentTerm ~ direction, scales = "free", switch = "y", labeller = label_wrap_gen(width = 2, multi_line = TRUE)) +
-  geom_point(aes(size=percHits))+
-  scale_size(name="Hits (%)", range = c(1, 5))+
-  scale_colour_manual(values=c("blue", "red"))+
-  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
-  theme_classic() +
+  ggplot(aes(x=contrast, y=ParentTerm, colour=direction, fill=direction)) +
+  geom_tile(aes(colour=direction))+
+  #scale_size(name="Num. GO Terms", breaks=c(2,10,20,50,80), range = c(1, 5))+
+  scale_colour_manual(values=c("blue2", "red2"))+
+  scale_fill_manual(values=c("blue2", "red2"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"), labels=c("Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Polyp (231 hpf)", "Recruit (183 hpf)", "Recruit (231 hpf)"))+
+  theme_classic()+
   xlab("")+
   ylab("Parent Term")+
   geom_vline(xintercept=2.5, linetype="dashed")+
   geom_vline(xintercept=5.5, linetype="dashed")+
   geom_vline(xintercept=7.5, linetype="dashed")+
   #geom_vline(xintercept=3.5, linetype="dashed")+
-  ggtitle('Lifestage DEGs')+
+  #ggtitle('Lifestage DEGs')+
   panel_border(color="black")+
   theme(legend.position = "none",
         axis.text.y = element_text(size=8),
         axis.title.y = element_text(size=12, face="bold"),
         axis.title.x = element_text(size = 12, face = "bold"),
         plot.title = element_text(size = 14, face = "bold"),
-        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)); go_plot_parent2A
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)); go_plot_parent2a
 
-go_plot_parent2B<-go_plot_parent_data2%>%
+go_plot_parent2b<-go_plot_parent_data%>%
   filter(batch=="2")%>%
   
-  ggplot(aes(x=contrast, y=term, colour=direction)) +
-  facet_grid(ParentTerm ~ direction, scales = "free", switch = "y", labeller = label_wrap_gen(width = 2, multi_line = TRUE)) +
-  geom_point(aes(size=percHits))+
-  scale_size(name="Hits (%)", range = c(1, 5))+
-  scale_colour_manual(values=c("blue", "red"))+
-  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
-  theme_classic() +
-    geom_vline(xintercept=2.5, linetype="dashed")+
+  ggplot(aes(x=contrast, y=ParentTerm, colour=direction, fill=direction)) +
+  geom_tile(aes(colour=direction))+
+  #scale_size(name="Num. GO Terms", breaks=c(2,10,20,50,80), range = c(1, 5))+
+  scale_colour_manual(values=c("blue2", "red2"))+
+  scale_fill_manual(values=c("blue2", "red2"))+
+  scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"), labels=c("Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Polyp (231 hpf)", "Recruit (183 hpf)", "Recruit (231 hpf)"))+
+  theme_classic()+
+  xlab("")+
+  ylab("")+
+  geom_vline(xintercept=2.5, linetype="dashed")+
   geom_vline(xintercept=5.5, linetype="dashed")+
   geom_vline(xintercept=7.5, linetype="dashed")+
-    xlab("")+
-  ylab("")+
+  #geom_vline(xintercept=3.5, linetype="dashed")+
+  #ggtitle('Lifestage DEGs')+
+  panel_border(color="black")+
   theme(legend.position = "right",
         axis.text.y = element_text(size=8),
-        axis.title.y = element_blank(),
+        axis.title.y = element_text(size=12, face="bold"),
         axis.title.x = element_text(size = 12, face = "bold"),
         plot.title = element_text(size = 14, face = "bold"),
-        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1))+
-        panel_border(color="black")+
-  ggtitle(''); go_plot_parent2B
+        axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)); go_plot_parent2b
 
-go_grid2<-plot_grid(go_plot_parent2A, go_plot_parent2B, ncol=2, nrow=1, align="h", rel_widths=c(0.8,1))
 
-ggsave(plot=go_grid2, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_parent_subset.png", height=30, width=20, limitsize=FALSE)
+go_plot_parent_heatmap<-plot_grid(go_plot_parent2a, go_plot_parent2b, ncol=2, nrow=1, align="h", rel_widths=c(0.8,1))
+
+ggsave(plot=go_plot_parent_heatmap, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/GO_parent_heatmap.png", height=10, width=16, limitsize=FALSE)
+
 ```
+
+# Try detecting clusters from DEG results  
+
+code from https://hbctraining.github.io/DGE_workshop_salmon_online/lessons/08a_DGE_LRT_results.html 
+```{r}
+# results 
+DEG <- DESeq(gdds, test="LRT", reduced=~1)
+
+# Extract results for LRT
+res_LRT <- results(DEG)
+
+# View results for LRT
+res_LRT  
+```
+
+Filter for genes padj <0.001. For LRT, the p-value is the cut off associated with the test statistic. We have lots of genes, so choosing a more stringent cut off.  
+
+```{r}
+padj.cutoff <- 0.001
+
+# Create a tibble for LRT results
+res_LRT_tb <- res_LRT %>%
+  data.frame() %>%
+  rownames_to_column(var="gene") %>% 
+  as_tibble()
+
+# Subset to return genes with padj < 0.05 and fold change >1 abs
+sigLRT_genes <- res_LRT_tb %>% 
+  dplyr::filter(padj < padj.cutoff)%>%
+  dplyr::filter(abs(log2FoldChange) > 2)
+
+# Get number of significant genes
+nrow(sigLRT_genes)
+```
+There are 4393 genes that change in some way across developmental stages at p<0.001 and at log2 FC > 2 (abs value).    
+
+Perform clustering. 
+
+Try first few genes for testing. 
+```{r}
+library(DEGreport)
+
+# Subset results for faster cluster finding (for classroom demo purposes)
+clustering_sig_genes <- sigLRT_genes %>%
+  arrange(padj) #%>%
+  #head(n=1000)
+
+matrix<-assay(gvst)
+
+meta <- metadata_ordered %>%
+  dplyr::select(sample_id, lifestage)
+
+rownames(meta)<-meta$sample_id
+
+meta<-meta%>%
+  dplyr::select(lifestage)
+
+# Obtain transformed values for those significant genes
+cluster_vst <- matrix[clustering_sig_genes$gene, ]
+```
+
+RUN THIS ON RAVEN WITH HIGH NUMBER OF GENES 
+
+Run with minimum 100 genes per cluster to detect the largest clusters. 
+```{r}
+# Use the `degPatterns` function from the 'DEGreport' package to show gene clusters across sample groups
+clusters <- degPatterns(cluster_vst, metadata = meta, time = "lifestage", col=NULL, plot=FALSE, minc = 100)
+
+```
+
+Plot is showing Z score of VST normalized gene counts  
+```{r}
+dev.off()
+cluster_plot<-ggplot(clusters[["normalized"]],
+        aes(x=lifestage, y=value)) +
+  facet_wrap(~ cluster)+
+  #geom_boxplot() +
+   geom_point(colour="darkgray", size=1) +
+  ylab("Z-score of VST normalized gene counts")+
+   # change the method to make it smoother
+   geom_smooth(aes(group=genes), method = "loess", colour="red", linewidth=0.1, se=FALSE)+
+   geom_smooth(aes(group=1), method = "loess", colour="black")+
+  theme_classic()+
+  theme(
+    axis.text.x = element_text(angle=45, hjust=1, vjust=1)
+  );cluster_plot
+
+ggsave(cluster_plot, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot.pdf", width=13, height=10)
+```
+
+Display number of genes in each cluster. 
+```{r}
+ngenes<-clusters$summarise%>%
+  as.data.frame()
+
+ngenes<-ngenes%>%dplyr::select(cluster, n_genes)%>%unique()
+
+ngenes
+```
+
+```{r}
+# Extract the cluster genes
+group <- clusters$df %>%
+          #dplyr::filter(cluster == 17)%>%
+          rename(gene=genes)
+```
+
+We can perform functional enrichment on these patterns now.  
+
+## Functional enrichment of clusters
+
+Merge in relevant annotation information to the DEG list file.  
+
+```{r}
+group_list<-left_join(group, filtered_Mcap.annot, by="gene")
+```
+
+Conduct functional enrichment using goseq and rrvgo. Compare against all genes detected in the dataset. 
+
+Conduct at biological process level. Filter for adjusted p-value <0.05.  
+```{r}
+cluster_list<-levels(as.factor(group_list$cluster))
+
+for (cluster_id in cluster_list) {
+  
+    ### Generate vector with names of all genes detected in our dataset 
+    ALL.vector <- c(filtered_Mcap.annot$gene)
+    
+    ### Generate length vector for all genes 
+    LENGTH.vector <- as.integer(filtered_Mcap.annot$length)
+    
+    ### Generate vector with names in just the contrast we are analyzing
+    ID.vector <- group_list%>%
+      filter(cluster==cluster_id)%>%
+      pull(gene)
+    
+    ##Get a list of GO Terms for all genes detected in our dataset 
+    GO.terms <- filtered_Mcap.annot%>%
+      dplyr::select(gene, GOs)
+    
+    ##Format to have one goterm per row with gene ID repeated
+    split <- strsplit(as.character(GO.terms$GOs), ";") 
+    split2 <- data.frame(v1 = rep.int(GO.terms$gene, sapply(split, length)), v2 = unlist(split)) 
+    colnames(split2) <- c("gene", "GOs")
+    GO.terms<-split2
+
+    ##Construct list of genes with 1 for genes in contrast and 0 for genes not in the contrast
+    gene.vector=as.integer(ALL.vector %in% ID.vector) 
+    names(gene.vector)<-ALL.vector#set names
+
+    #weight gene vector by bias for length of gene 
+    pwf<-nullp(gene.vector, ID.vector, bias.data=LENGTH.vector) 
+    
+    #run goseq using Wallenius method for all categories of GO terms 
+    GO.wall<-goseq(pwf, ID.vector, gene2cat=GO.terms, test.cats=c("GO:BP"), method="Wallenius", use_genes_without_cat=TRUE)
+
+    GO <- GO.wall[order(GO.wall$over_represented_pvalue),]
+    colnames(GO)[1] <- "GOterm"
+    
+    #adjust p-values 
+    GO$bh_adjust <-  p.adjust(GO$over_represented_pvalue, method="BH") #add adjusted p-values
+  
+    #Filtering for p < 0.05
+    GO <- GO %>%
+        dplyr::filter(bh_adjust<0.05) %>%
+        dplyr::arrange(., ontology, bh_adjust)
+
+    #Write file of results 
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_cluster", cluster_id, ".csv"))
+    
+}
+```
+
+Only clusters 13 (peak in embryo 65 hpf to polyp 231 hpf), 8 (peak in egg to 38 hpf embryos), 2 (peak in larvae 93-231 hpf and polyps 231 hpf) and 1 (peak in polyp and larvae at 231 hpf) have enriched GO terms. The other clusters do not have any significantly enriched GO terms.     
+
+Create an empty dataframe to populate (only do this once).  
+
+```{r}
+cluster_go_results <- data.frame()
+```
+
+Run a loop to filter enrichment for each temperature contrast using rrvgo. There were no enriched terms for Embryos at 5hpf, do not include. 
+```{r}
+
+cluster_list<-c("1", "2", "8", "13")
+
+for (cluster_id in cluster_list) {
+
+    #Read relevant file of results from goseq analysis  
+    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_cluster", cluster_id, ".csv"))
+    
+    go_results<-go_results%>%
+      filter(ontology=="BP")%>%
+      filter(bh_adjust != "NA") %>%
+      #filter(numInCat>5)%>%
+      arrange(., bh_adjust)
+    
+    print(cluster_id)
+    print(length(unique(go_results$GOterm)))
+    
+    #Reduce/collapse GO term set with the rrvgo package 
+      simMatrix <- calculateSimMatrix(go_results$GOterm,
+                                orgdb="org.Ce.eg.db", #c. elegans database
+                                ont=c("BP"),
+                                method="Rel")
+    #claculate similarity 
+    scores <- setNames(-log10(go_results$bh_adjust), go_results$GOterm)
+    reducedTerms <- reduceSimMatrix(simMatrix,
+                                scores,
+                                threshold=0.7,
+                                orgdb="org.Ce.eg.db")
+    
+    #keep only the goterms from the reduced list
+    go_results<-go_results%>%
+      filter(GOterm %in% reducedTerms$go)
+    
+    #add in parent terms to list of go terms 
+    go_results$ParentTerm<-reducedTerms$parentTerm[match(go_results$GOterm, reducedTerms$go)]
+    
+    #add in contrast and regulation
+    go_results$cluster<-cluster_id
+    
+    print(length(unique(go_results$GOterm)))
+    
+    #add to data frame 
+    go_df <- go_results
+    cluster_go_results <- rbind(cluster_go_results, go_df) 
+
+}
+```
+
+Semantic similarity reduced GO terms for each cluster.    
+
+```{r}
+length(unique(cluster_go_results$GOterm))
+```
+
+Plot enrichment faceted by cluster
+
+Cluster 1 (peak in polyp and larvae at 231 hpf)
+```{r}
+go_plot_cluster1 <- cluster_go_results %>% 
+  filter(cluster==1)%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+  geom_point(aes(group=term))+
+  geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  #xlim(0,30)+
+  #scale_x_discrete(limits=c("Embryo_5hpf", "Embryo_38hpf", "Embryo_65hpf", "Larvae_93hpf", "Larvae_163hpf", "Larvae_231hpf", "Polyp_231hpf", "Recruit_183hpf", "Recruit_231hpf"))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Hits (%)")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold")); go_plot_cluster1
+```
+
+Cluster 2 (peak in larvae 93-231 hpf and polyps 231 hpf)
+```{r}
+go_plot_cluster2 <- cluster_go_results %>% 
+  filter(cluster==2)%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+  geom_point(aes(group=term))+
+  geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Hits (%)")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold")); go_plot_cluster2
+```
+
+Cluster 8 (peak in egg to 38 hpf embryos)
+```{r}
+go_plot_cluster8 <- cluster_go_results %>% 
+  filter(cluster==8)%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+  geom_point(aes(group=term))+
+  geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Hits (%)")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold")); go_plot_cluster8
+```
+
+Cluster 13 (peak in embryo 65 hpf to polyp 231 hpf)
+```{r}
+go_plot_cluster13 <- cluster_go_results %>% 
+  filter(cluster==13)%>%
+  dplyr::arrange(over_represented_pvalue) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 6, multi_line = TRUE))+
+  geom_point(aes(group=term))+
+  geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+  scale_colour_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Hits (%)")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold")); go_plot_cluster13
+```
+
+
 

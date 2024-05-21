@@ -14,6 +14,11 @@ editor_options:
   chunk_output_type: console
 ---
 
+FIX 5-methyladensosine (sp?)
+
+
+
+
 # Set up 
 
 Set up workspace, set options, and load required packages.    
@@ -1118,6 +1123,13 @@ Fix 5-methylthioadenosine - duplicate?
 Take VIP list and input for metaboanalyst? See what pathways are enriched for things that change across development? 
 
 Correlation network between DEG genes and VIP metabolites? Then annotate correlated things? 
+
+## Plot VIP concentration across life stages in complex heatmap 
+
+Y = metabolite 
+X = lifestage
+color = concentration 
+dend = distance of compound and conentration for each life stage 
 
 
 

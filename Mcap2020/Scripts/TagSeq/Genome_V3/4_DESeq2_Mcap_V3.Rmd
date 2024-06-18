@@ -780,25 +780,7 @@ Merge to only keep genes that were identified to belong to a cluster.
 group_list<-left_join(group, filtered_Mcap.annot, by="gene")
 ```
 
-Conduct functional enrichment using goseq and rrvgo. Compare against all genes detected in the dataset. 
-
-
-
-
-
-
-
-DOUBLE CHECK ID VECTOR FOR PWF FUNCTION - ALL GENES OR JUST DEGS??????
-
-Should ID vector be ALL.vector instead in nullp and goseq???? 
-
-
-MAYBE DONT EVEN NEED THE ALL VECTOR/ID VECTOR HERE?? 
-https://github.com/fishercera/TreehopperSeq/blob/master/GoSeq_Walkthrough.md
-
-
-
-
+Conduct functional enrichment using goseq and rrvgo. Compare against all genes detected in the dataset.
 
 Conduct at biological process level. Filter for adjusted p-value <0.05.  
 ```{r}

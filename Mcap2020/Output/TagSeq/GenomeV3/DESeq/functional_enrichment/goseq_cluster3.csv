@@ -1,1 +1,3 @@
 GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust
+GO:0031514,4.1593697247363285e-6,0.9999991329792676,16,105,motile cilium,CC,0.04258206400075564
+GO:0097729,4.522549413281891e-6,0.9999992451171248,13,70,9+2 motile cilium,CC,0.04258206400075564

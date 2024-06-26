@@ -7,8 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-This script uses the V3 genome from Cyanophora Rutgers.  
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -19,29 +17,29 @@ options(stringsAsFactors = FALSE) #Set Strings to character
 # Load required libraries    
 
 ```{r}
-if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
-if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
-if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
-if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
-if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
-if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
-if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
-if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
-if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
-if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
-if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
-if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
-if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
-if ("rtracklayer" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rtracklayer")
-if ("GenomicRanges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GenomicRanges")
-if ("plyranges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("plyranges")
-if ("GSEABase" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GSEABase")
-if ("GOSim" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GOSim")
-if ("stats" %in% rownames(installed.packages()) == 'FALSE') install.packages("stats")
-if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("ggdendro")
+#if ("tidyverse" %in% rownames(installed.packages()) == 'FALSE') install.packages('tidyverse') 
+#if ("genefilter" %in% rownames(installed.packages()) == 'FALSE') install.packages('genefilter') 
+#if ("DESeq2" %in% rownames(installed.packages()) == 'FALSE') install.packages('DESeq2') 
+#if ("RColorBrewer" %in% rownames(installed.packages()) == 'FALSE') install.packages('RColorBrewer') 
+#if ("WGCNA" %in% rownames(installed.packages()) == 'FALSE') install.packages('WGCNA') 
+#if ("flashClust" %in% rownames(installed.packages()) == 'FALSE') install.packages('flashClust') 
+#if ("gridExtra" %in% rownames(installed.packages()) == 'FALSE') install.packages('gridExtra') 
+#if ("ComplexHeatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('ComplexHeatmap') 
+#if ("goseq" %in% rownames(installed.packages()) == 'FALSE') install.packages('goseq') 
+#if ("dplyr" %in% rownames(installed.packages()) == 'FALSE') install.packages('dplyr') 
+#if ("clusterProfiler" %in% rownames(installed.packages()) == 'FALSE') install.packages('clusterProfiler') 
+#if ("pheatmap" %in% rownames(installed.packages()) == 'FALSE') install.packages('pheatmap') 
+#if ("magrittr" %in% rownames(installed.packages()) == 'FALSE') install.packages('magrittr') 
+#if ("rtracklayer" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rtracklayer")
+#if ("GenomicRanges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GenomicRanges")
+#if ("plyranges" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("plyranges")
+#if ("GSEABase" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GSEABase")
+#if ("GOSim" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GOSim")
+#if ("stats" %in% rownames(installed.packages()) == 'FALSE') install.packages("stats")
+#if ("ggdendro" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("ggdendro")
 #if ("KEGG.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("KEGG.db")
-if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
-if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
+#if ("GO.db" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("GO.db")
+#if ("rrvgo" %in% rownames(installed.packages()) == 'FALSE') BiocManager::install("rrvgo")
 
 #BiocManager::install("org.Ce.eg.db", force=TRUE) #install if needed 
 
@@ -62,7 +60,7 @@ library("rtracklayer")
 library("GenomicRanges")
 library("plyranges")
 library("GSEABase")
-library("GOSim")
+#library("GOSim")
 library("stats")
 library("ggdendro")
 #library("KEGG.db")
@@ -74,8 +72,11 @@ library("factoextra")
 library("vegan")
 library("EnhancedVolcano")
 library("VennDetail")
-library(viridis) 
-library(cowplot)
+library("viridis") 
+library("cowplot")
+library("DEGreport")
+library("circlize")
+library("tibble")
 ```
 
 # Data input and filtering 
@@ -260,7 +261,7 @@ adonis2(formula = vegan ~ Lifestage, data = test, method = "eu")
           Df SumOfSqs      R2      F Pr(>F)    
 Lifestage  9   318674 0.75057 9.3618  0.001 ***
 Residual  28   105901 0.24943                  
-Total     37   424575 1.00000     
+Total     37   424575 1.00000  
 
 # PCA and sample distances of all genes  
 
@@ -300,26 +301,28 @@ levels(gPCAdata$lifestage)
 
 allgenesfilt_PCA_visual <- 
   ggplot(data=gPCAdata, aes(PC1, PC2, shape=lifestage, colour=lifestage)) + 
-  geom_point(size=5) +
+  geom_point(size=5, stroke=1) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
   
-  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=17, "Embryo (5 hpf)"=16, "Embryo (38 hpf)"=15, "Embryo (65 hpf)"=17, "Larvae (93 hpf)"=15, "Larvae (163 hpf)"=16, "Larvae (231 hpf)"=17, "Metamorphosed Polyp (231 hpf)"=16, "Attached Recruit (183 hpf)"=15, "Attached Recruit (231 hpf)"=16)) +
+  scale_shape_manual(name="Lifestage", values = c("Egg (1 hpf)"=1, "Embryo (5 hpf)"=2, "Embryo (38 hpf)"=3, "Embryo (65 hpf)"=4, "Larvae (93 hpf)"=5, "Larvae (163 hpf)"=6, "Larvae (231 hpf)"=8, "Metamorphosed Polyp (231 hpf)"=11, "Attached Recruit (183 hpf)"=10, "Attached Recruit (231 hpf)"=12)) +
   
   scale_colour_manual(name="Lifestage", values = c("Egg (1 hpf)"="#8C510A", "Embryo (5 hpf)"="#DFC27D", "Embryo (38 hpf)"="#DFC27D", "Embryo (65 hpf)"="#DFC27D", "Larvae (93 hpf)"="#80CDC1", "Larvae (163 hpf)"="#80CDC1", "Larvae (231 hpf)"="#80CDC1", "Metamorphosed Polyp (231 hpf)"="#003C30", "Attached Recruit (183 hpf)"="#BA55D3", "Attached Recruit (231 hpf)"="#BA55D3")) +
   #xlim(-40,40)+ 
   #ylim(-40,40)+
-  coord_fixed()+
+  #coord_fixed()+
   theme_classic() + #Set background color
-  theme(panel.border = element_blank(), # Set border
+  theme(panel.border = element_rect(colour = "black", fill=NA), # Set border
                      #panel.grid.major = element_blank(), #Set major gridlines 
                      #panel.grid.minor = element_blank(), #Set minor gridlines
                      axis.line = element_line(colour = "black"), #Set axes color
-        plot.background=element_blank()) # + #Set the plot background
-  #theme(legend.position = ("none")) #set title attributes
+        plot.background=element_blank(), 
+        axis.title=element_text(size=14), 
+        axis.text=element_text(size=12, color="black"))  + #Set the plot background
+  theme(legend.position = ("right"))
 allgenesfilt_PCA_visual
 
-#ggsave("Mcap2020/Figures/TagSeq/GenomeV3/allgenesfilt-PCA_visual.pdf", allgenesfilt_PCA_visual, width=11, height=8)
+ggsave("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/PCA_all_genes.pdf", allgenesfilt_PCA_visual, width=8, height=5)
 ```
 
 # Run DESeq Results Tests 
@@ -329,7 +332,7 @@ Run test using the LRT to look for effect of lifestage as a whole across our exp
 DEG <- DESeq(gdds, test="LRT", reduced=~1)
 ```
 
-From this, we are going to filter by adjusted p value <0.05, this is generated by the LRT test statistic. We had 9180 DEGs at P<0.05. We are also running at P<0.01 because we need a higher threshold due to the high number of DEGs. This was only reduced to 8686 with P<0.01. It was reduced further to P<0.001 with 8127 genes. We will keep this for now.  
+From this, we are going to filter by adjusted p value <0.05, this is generated by the LRT test statistic. We had 9180 DEGs at P<0.05. We are also running at P<0.01 because we need a higher threshold due to the high number of DEGs. This was only reduced to 8686 with P<0.01. It was reduced further to P<0.001 with 8127 genes. 88.5% of genes were retained in the dataset at a stringent threshold. 
 
 ```{r}
 DEG_results<-results(DEG)
@@ -367,10 +370,11 @@ ann_colors = list(
 )
 ```
 
-Plot heatmap.  
+Plot heatmap of z-scores of expression.  
 ```{r}
-pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=15, height=20)
-pheatmap(assay(DEG_results_vst), cluster_rows=TRUE, show_rownames=FALSE, color=inferno(10), show_colnames=TRUE, fontsize_row=3, scale="row", cluster_cols=TRUE, annotation_col=df, annotation_colors = ann_colors, labels_col=legend_names_col)
+dev.off()
+pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=10, height=10)
+pheatmap(assay(DEG_results_vst), cluster_rows=TRUE, show_rownames=FALSE, color=inferno(10), show_colnames=FALSE, fontsize_row=3, scale="row", cluster_cols=TRUE, annotation_col=df, annotation_colors = ann_colors, labels_col=legend_names_col, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", cutree_rows = 3)
 dev.off()
 ```
 
@@ -528,23 +532,21 @@ There are 8127 genes that change across developmental time at p<0.001.
 Perform clustering. 
 
 ```{r}
-library(DEGreport)
-
 clustering_sig_genes <- sigLRT_genes %>%
-  arrange(padj) 
+  arrange(padj) #genes in rows, stats in columns
 
-matrix<-assay(gvst)
+matrix<-assay(gvst) #genes in rows, sample ID in columns
 
 meta <- metadata_ordered %>%
-  dplyr::select(sample_id, lifestage)
+  dplyr::select(sample_id, lifestage) #sample id and lifestage column
 
 rownames(meta)<-meta$sample_id
 
 meta<-meta%>%
-  dplyr::select(lifestage)
+  dplyr::select(lifestage) #sample ID in rows, one column of lifestage 
 
 # Obtain transformed values for those significant genes
-cluster_vst <- matrix[clustering_sig_genes$gene, ]
+cluster_vst <- matrix[clustering_sig_genes$gene, ] #rows are DEGs and columns are sample ID
 ```
 
 Run with minimum 100 genes per cluster to detect large clusters because we have many DEGs. This will take awhile to run.  
@@ -578,6 +580,59 @@ cluster_plot<-ggplot(clusters[["normalized"]],
 ggsave(cluster_plot, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot.pdf", width=10, height=8)
 ```
 
+Plot these broken down into the main developmental patterns detected in PCA and heatmaps above (early, mid, and late development). Early development included 1-38 hpf; mid development included 65-163 hpf, and late development included 183-231 hpf. 
+
+These are categorized in developmental stages as clusters that show a peak in the respective developmental periods. 
+
+```{r}
+#early development 
+#7, 11, 12, 18, 19, 21, 22, 25
+early<-c("7", "11", "12", "18", "19", "21", "22", "25")
+
+#mid development 
+#3, 14, 15, 16, 20
+mid<-c("3", "14", "15", "16", "20")
+
+#late development
+#1, 2, 5, 6, 17
+late<-c("1", "2", "5", "6", "17")
+
+```
+
+Plot averages of these clusters for each developmental period.  
+
+```{r}
+cluster_data<-clusters[["normalized"]]
+cluster_data<-as.data.frame(cluster_data)
+cluster_data<-cluster_data%>%
+  dplyr::select(genes, merge, value, lifestage, cluster)%>%
+  mutate(pattern=if_else(cluster %in% early, "Early", 
+                          if_else(cluster %in% mid, "Mid", 
+                                  if_else(cluster %in% late, "Late", NA))))
+
+cluster_data$pattern<-factor(cluster_data$pattern, levels=c("Early", "Mid", "Late"))
+
+cluster_plot2<-ggplot(cluster_data,
+        aes(x=lifestage, y=value)) +
+  facet_wrap(~ pattern)+
+   geom_point(colour="darkgray", size=1) +
+  ylab("Z-score of VST normalized gene counts")+
+  xlab("")+
+   # change the method to make it smoother
+   geom_smooth(aes(group=genes), method = "loess", colour="red", linewidth=0.1, se=FALSE)+
+   geom_smooth(aes(group=1), method = "loess", colour="black", linewidth=1, se=TRUE)+
+  geom_hline(yintercept=0.5, linetype="dashed")+
+  geom_vline(xintercept=3.5, linetype="dotted")+
+  geom_vline(xintercept=6.5, linetype="dotted")+
+  theme_classic()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust=1, vjust=1)
+  );cluster_plot2
+
+ggsave(cluster_plot2, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot_patterns.pdf", width=8, height=6)
+```
+
+Extract the list of genes in each cluster. 
 ```{r}
 # Rename and extract information 
 group <- clusters$df %>%
@@ -590,23 +645,9 @@ Assign developmental pattern. DEG PCA and heatmaps showed three main clusters: E
 
 ```{r}
 group <- group%>%
-  mutate(pattern=if_else(cluster=="1", "Late", 
-                         if_else(cluster=="2", "Late", 
-                                 if_else(cluster=="3", "Mid", 
-                                         if_else(cluster=="5", "Late", 
-                                                 if_else(cluster=="6", "Late", 
-                                                         if_else(cluster=="7", "Early", 
-                                                                 if_else(cluster=="11", "Early", 
-                                                                         if_else(cluster=="12", "Early", 
-                                                                                 if_else(cluster=="14", "Mid", 
-                                                                                         if_else(cluster=="15", "Mid", 
-                                                                                                 if_else(cluster=="16", "Mid", 
-                                                                                                         if_else(cluster=="17", "Late", 
-                                                                                                                 if_else(cluster=="18", "Early", 
-                                                                                                                         if_else(cluster=="19", "Early", 
-                                                                                                                                 if_else(cluster=="20", "Mid", 
-                                                                                                                                         if_else(cluster=="21", "Early", 
-                                                                                                                                                 if_else(cluster=="24", "Early", NA))))))))))))))))))
+  mutate(pattern=if_else(cluster %in% early, "Early", 
+                         if_else(cluster %in% mid, "Mid", 
+                                 if_else(cluster %in% late, "Late", NA))))
 ```
 
 Display number of genes in each cluster. 
@@ -614,24 +655,19 @@ Display number of genes in each cluster.
 ngenes<-clusters$summarise%>%
   as.data.frame()
 
-ngenes<-ngenes%>%dplyr::select(cluster, n_genes)%>%unique()
+ngenes<-ngenes%>%dplyr::select(cluster, n_genes)%>%unique()%>%mutate(pattern=if_else(cluster %in% early, "Early", 
+                         if_else(cluster %in% mid, "Mid", 
+                                 if_else(cluster %in% late, "Late", NA))))
 
 ngenes
 
-#early development 
-#7, 11, 12, 18, 19, 21, 24
-211+464+443+269+229+117+154
-#1887 genes in early development clusters 
+ngenes%>%
+  group_by(pattern)%>%
+  summarise(sum=sum(n_genes))
 
-#mid development 
-#3, 14, 15, 16, 20
-504+444+104+404+240
-#1696 genes in mid development 
-
-#late development
-#1, 2, 5, 6, 17
-608+826+390+606+359
+#1845 genes in early development 
 #2789 genes in late development 
+#1696 genes in mid development
 ```
 
 Plot fold change. 
@@ -780,7 +816,7 @@ Merge to only keep genes that were identified to belong to a cluster.
 group_list<-left_join(group, filtered_Mcap.annot, by="gene")
 ```
 
-Conduct functional enrichment using goseq and rrvgo. Compare against all genes detected in the dataset.
+Conduct functional enrichment using goseq and rrvgo. Compare against all genes detected in the dataset that we have annotation information for.
 
 Conduct at biological process level. Filter for adjusted p-value <0.05.  
 ```{r}
@@ -841,12 +877,12 @@ length(ALL.vector)
 length(LENGTH.vector)
 dim(pwf)
 length(unique(GO.terms$gene))
+length(gene.vector)
+length(ID.vector)
 ```
-All the dimensions of the input dataframes count to 8081, the expected number of genes. 
+All the dimensions of the input dataframes count to 8081, the expected number of genes. ID vector is your vector of DEGs, which is used to make the gene.vector. 
 
-Clusters 6 (steady increase), 7 (higest in eggs/embryos), 16 (peak in larvae), 17 (peak in larvae with second peak in recruits), 19 (decrease), 20 (peak in larvae), 21 (decrease), 24 (peak in embryos) do not have any significant GO terms. 
-
-Clusters 1, 2, 3, 5, 11, 12, 14, 15, 18 have significantly enriched GO terms (9 clusters). 
+Clusters 6, 7, 16, 17, 19, 20, 21, and 25 do not have any enriched terms when analyzed alone. 
 
 Create an empty dataframe to populate (only do this once).  
 
@@ -856,10 +892,11 @@ cluster_go_results <- data.frame()
 
 Run a loop to filter enrichment for each temperature contrast using rrvgo. 
 
-clusters 2 and 3 dont have enough enriched go terms to get past the rrvgo step - these are not included. 
+clusters 2 and 3 don't have enough enriched go terms to get past the rrvgo step - these are not included. 
 ```{r}
+cluster_list
 
-cluster_list<-c("1", "5", "11", "12", "14", "15", "18")
+cluster_list<-c("1", "5", "11", "12", "14", "15", "18", "22")
 
 for (cluster_id in cluster_list) {
 
@@ -911,25 +948,25 @@ Semantic similarity reduced GO terms for each cluster.
 ```{r}
 length(unique(cluster_go_results$GOterm))
 ```
-There are 458 total enriched GO terms detected.  
+There are 458 total enriched GO terms detected in all clusters.  
 
 ### Plot enrichment for each cluster
 
-Clusters 1, 5, 11, 12, 14, 15, 18 have significantly enriched GO terms after rrvgo (7 clusters). 
+Clusters 1, 5, 11, 12, 14, 15, 18, and 22 have significantly enriched GO terms after rrvgo (7 clusters). 
 
 Cluster 1 (peaking in larvae through recruits)
 ```{r}
 go_plot_cluster1 <- cluster_go_results %>% 
   filter(cluster=="1")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -949,15 +986,15 @@ Cluster 5 (peaking in larvae through polyp)
 ```{r}
 go_plot_cluster5 <- cluster_go_results %>% 
   filter(cluster=="5")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -977,15 +1014,15 @@ Cluster 11 (peaking in egg through embryo 38 hpf)
 ```{r}
 go_plot_cluster11 <- cluster_go_results %>% 
   filter(cluster=="11")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1005,15 +1042,15 @@ Cluster 12 (peaking in egg through embryo 38 hpf)
 ```{r}
 go_plot_cluster12 <- cluster_go_results %>% 
   filter(cluster=="12")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1033,15 +1070,15 @@ Cluster 14 (peaking in 65 hpf embryo to polyps)
 ```{r}
 go_plot_cluster14 <- cluster_go_results %>% 
   filter(cluster=="14")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1061,15 +1098,15 @@ Cluster 15 (peaking in 38 hpf embryo to 93 hpf larvae)
 ```{r}
 go_plot_cluster15 <- cluster_go_results %>% 
   filter(cluster=="15")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1089,15 +1126,15 @@ Cluster 18 (peaking in egg through 65 hpf embryo)
 ```{r}
 go_plot_cluster18 <- cluster_go_results %>% 
   filter(cluster=="18")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1113,17 +1150,37 @@ go_plot_cluster18 <- cluster_go_results %>%
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster18.png", go_plot_cluster18, width=10, height=10)
 ```
 
+Cluster 22 (peaking in egg through 38 hpf embryo)
+```{r}
+go_plot_cluster22 <- cluster_go_results %>% 
+  filter(cluster=="22")%>%
+  dplyr::arrange(bh_adjust) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)%>%
+  
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
+  facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 25, multi_line = TRUE))+
+  geom_point(aes(group=term))+
+  geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_size(name="Hits (%)", range = c(1, 5))+
+  theme_classic() +
+  ylab("GO Term")+
+  xlab("Hits (%)")+
+  ggtitle("Cluster 18 (egg-embryo)")+
+  theme(legend.position = "right",
+        axis.text.y = element_text(size=8),
+        axis.title.y = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        plot.title = element_text(size = 14, face = "bold"), 
+        strip.text.y.right=element_text(angle=0)); go_plot_cluster22
 
-
-
-
-
-
-
-
-
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster22.png", go_plot_cluster22, width=10, height=10)
+```
 
 ## Conduct enrichment for cluster developmental patterns 
+
+Combine cluster gene lists for early, mid, and late developmental patterns and conduct enrichment on these three categories.  
 
 Conduct at biological process level. Filter for adjusted p-value <0.05.  
 ```{r}
@@ -1188,6 +1245,8 @@ pattern_go_results <- data.frame()
 Run a loop to filter enrichment for each temperature contrast using rrvgo. 
 
 ```{r}
+pattern_list<-c("Early", "Mid", "Late")
+
 for (pattern_id in pattern_list) {
 
     #Read relevant file of results from goseq analysis  
@@ -1196,7 +1255,6 @@ for (pattern_id in pattern_list) {
     go_results<-go_results%>%
       filter(ontology=="BP")%>%
       filter(bh_adjust != "NA") %>%
-      #filter(numInCat>5)%>%
       arrange(., bh_adjust)
     
     print(pattern_id)
@@ -1238,7 +1296,7 @@ Semantic similarity reduced GO terms for each cluster.
 ```{r}
 length(unique(pattern_go_results$GOterm))
 ```
-There are 459 total enriched GO terms detected when analyzed by pattern groups.  
+There are 451 total enriched GO terms detected when analyzed by pattern groups.   
 
 ## Plot enrichment for each developmental pattern
 
@@ -1265,20 +1323,20 @@ early_data$ParentTerm <- factor(early_data$ParentTerm, levels = rev(levels(early
 
 go_plot_earlyA <- early_data %>% 
   filter(batch=="1")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 30, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
   xlab("Hits (%)")+
-  ggtitle("Early Development (1-38 hpf); 1887 genes")+
+  ggtitle("Early Development (1-38 hpf); 1845 genes")+
   theme(legend.position = "none",
         axis.text.y = element_text(size=18),
         axis.title.y = element_text(size=24, face="bold"),
@@ -1290,15 +1348,15 @@ go_plot_earlyA <- early_data %>%
 
 go_plot_earlyB <- early_data %>% 
   filter(batch=="2")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 30, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("")+
@@ -1322,15 +1380,15 @@ Mid development
 ```{r}
 go_plot_mid <- pattern_go_results %>% 
   filter(pattern=="Mid")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 40, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1369,15 +1427,15 @@ late_data$ParentTerm <- factor(late_data$ParentTerm, levels = rev(levels(late_da
 
 go_plot_lateA <- late_data %>% 
   filter(batch=="1")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 20, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("GO Term")+
@@ -1392,15 +1450,15 @@ go_plot_lateA <- late_data %>%
 
 go_plot_lateB <- late_data %>% 
   filter(batch=="2")%>%
-  dplyr::arrange(over_represented_pvalue) %>%
+  dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)%>%
   
-  ggplot(aes(x=percHits, y=term, fill=over_represented_pvalue, colour=over_represented_pvalue, size=percHits)) +
+  ggplot(aes(x=percHits, y=term, fill=bh_adjust, colour=bh_adjust, size=percHits)) +
   facet_grid(ParentTerm ~ ., scales = "free", space='free', labeller = label_wrap_gen(width = 20, multi_line = TRUE))+
   geom_point(aes(group=term))+
   geom_segment(aes(x=0, xend=percHits, y=term, yend=term),linewidth=1) +
-  scale_colour_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
-  scale_fill_gradientn(name = "Over Rep p-value", colours = colorspace::heat_hcl(7))+
+  scale_colour_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
+  scale_fill_gradientn(name = "Adj. p-value", colours = colorspace::heat_hcl(7))+
   scale_size(name="Hits (%)", range = c(1, 5))+
   theme_classic() +
   ylab("")+
@@ -1417,6 +1475,8 @@ go_plot_late<-plot_grid(go_plot_lateA, go_plot_lateB, ncol=2)
 
 ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_late.png", go_plot_late, width=24, height=16)
 ```
+
+
 
 
 

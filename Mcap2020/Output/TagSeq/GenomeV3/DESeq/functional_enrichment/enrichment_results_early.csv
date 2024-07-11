@@ -1,0 +1,333 @@
+GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust,ParentTerm,pattern,percHits
+GO:0051276,2.745906952603097e-32,1,213,619,chromosome organization,BP,1.0341634764893783e-28,chromosome organization,Early,34.41033925686591
+GO:0019219,2.6199947316553063e-28,1,374,1429,regulation of nucleobase-containing compound metabolic process,BP,8.222853465300177e-25,regulation of nucleobase-containing compound metabolic process,Early,26.172148355493352
+GO:0006325,2.5306586580976903e-24,1,140,380,chromatin organization,BP,3.971236099219801e-21,chromatin organization,Early,36.84210526315789
+GO:0090304,3.084329383615564e-24,1,348,1357,nucleic acid metabolic process,BP,4.4677697402203605e-21,nucleic acid metabolic process,Early,25.644804716285925
+GO:0051171,3.783942564196643e-24,1,480,2067,regulation of nitrogen compound metabolic process,BP,5.089673030456214e-21,regulation of nucleobase-containing compound metabolic process,Early,23.222060957910013
+GO:0060255,9.72724460390543e-24,1,509,2237,regulation of macromolecule metabolic process,BP,1.221158287574288e-20,regulation of nucleobase-containing compound metabolic process,Early,22.75368797496647
+GO:0080090,1.842327985434954e-23,1,490,2136,regulation of primary metabolic process,BP,2.168304893357851e-20,regulation of nucleobase-containing compound metabolic process,Early,22.94007490636704
+GO:0051252,5.627740163497091e-23,1,331,1290,regulation of RNA metabolic process,BP,5.887554167711874e-20,regulation of nucleobase-containing compound metabolic process,Early,25.65891472868217
+GO:0050794,5.02166570733216e-22,1,705,3429,regulation of cellular process,BP,4.728149346738595e-19,regulation of cellular process,Early,20.559930008748907
+GO:0031326,2.3857889116528978e-21,1,362,1480,regulation of cellular biosynthetic process,BP,2.0421268634243513e-18,regulation of nucleobase-containing compound metabolic process,Early,24.45945945945946
+GO:0051726,3.0417371203984112e-21,1,211,725,regulation of cell cycle,BP,2.445898340685876e-18,regulation of cell cycle,Early,29.10344827586207
+GO:0010468,3.1172832125994923e-21,1,391,1636,regulation of gene expression,BP,2.445898340685876e-18,regulation of nucleobase-containing compound metabolic process,Early,23.899755501222494
+GO:0031323,4.3889497454465866e-21,1,495,2214,regulation of cellular metabolic process,BP,3.305932506260187e-18,regulation of nucleobase-containing compound metabolic process,Early,22.35772357723577
+GO:0009889,5.54518725614607e-21,1,367,1513,regulation of biosynthetic process,BP,4.016208508480255e-18,regulation of nucleobase-containing compound metabolic process,Early,24.256444150693984
+GO:0019222,8.441986399883655e-21,1,533,2436,regulation of metabolic process,BP,5.887816514674411e-18,regulation of nucleobase-containing compound metabolic process,Early,21.880131362889983
+GO:0010556,1.6934151978790034e-20,1,350,1432,regulation of macromolecule biosynthetic process,BP,1.13888219968784e-17,regulation of nucleobase-containing compound metabolic process,Early,24.441340782122907
+GO:0050789,1.1965277036268065e-19,1,736,3679,regulation of biological process,BP,7.041191620936374e-17,regulation of cellular process,Early,20.00543625985322
+GO:0043170,1.0035227839117451e-18,1,597,2857,macromolecule metabolic process,BP,5.107388525362722e-16,nucleic acid metabolic process,Early,20.896044802240112
+GO:0007049,2.484401453553278e-18,1,212,768,cell cycle,BP,1.1995836864579942e-15,regulation of cell cycle,Early,27.604166666666668
+GO:0048523,7.417463331962518e-18,1,430,1923,negative regulation of cellular process,BP,3.4919563001046538e-15,negative regulation of cellular process,Early,22.360894435777432
+GO:2001141,2.345156600857703e-17,1,289,1169,regulation of RNA biosynthetic process,BP,1.0514677131131286e-14,regulation of nucleobase-containing compound metabolic process,Early,24.721984602224122
+GO:0006355,2.6189777142677118e-17,1,284,1144,regulation of DNA-templated transcription,BP,1.1417582509705236e-14,regulation of nucleobase-containing compound metabolic process,Early,24.825174825174827
+GO:0010564,2.6678011280708953e-17,1,145,468,regulation of cell cycle process,BP,1.1417582509705236e-14,regulation of cell cycle,Early,30.982905982905983
+GO:0033044,4.9896426760415806e-17,1,97,265,regulation of chromosome organization,BP,2.0426078528812832e-14,chromosome organization,Early,36.60377358490566
+GO:0022402,1.0835344009710096e-16,1,195,709,cell cycle process,BP,4.3412843201457614e-14,regulation of cell cycle,Early,27.50352609308886
+GO:0065007,1.5304101767419987e-16,1,766,3952,biological regulation,BP,5.881460007801752e-14,regulation of cellular process,Early,19.38259109311741
+GO:0006259,1.933156903054095e-16,1,140,455,DNA metabolic process,BP,7.000630315656091e-14,DNA metabolic process,Early,30.76923076923077
+GO:0007346,8.228726848964121e-16,1,133,431,regulation of mitotic cell cycle,BP,2.718511496365673e-13,regulation of cell cycle,Early,30.8584686774942
+GO:0006996,8.609181803439258e-16,1,418,1905,organelle organization,BP,2.795163836906288e-13,chromosome organization,Early,21.942257217847768
+GO:0048519,1.0912274367528894e-15,1,459,2138,negative regulation of biological process,BP,3.4828650612701123e-13,negative regulation of cellular process,Early,21.468662301216092
+GO:0071840,1.6100199774976102e-15,1,576,2825,cellular component organization or biogenesis,BP,5.05304769937625e-13,chromosome organization,Early,20.38938053097345
+GO:0006139,1.6460989853911398e-15,1,381,1700,nucleobase-containing compound metabolic process,BP,5.081588523590255e-13,nucleic acid metabolic process,Early,22.411764705882355
+GO:0016043,5.6520066853703764e-15,1,551,2693,cellular component organization,BP,1.6374298137263008e-12,chromosome organization,Early,20.46045302636465
+GO:0045786,9.781889894858258e-15,1,105,319,negative regulation of cell cycle,BP,2.7909510395466037e-12,regulation of cell cycle,Early,32.9153605015674
+GO:0000278,9.992470579808986e-15,1,156,550,mitotic cell cycle,BP,2.808480798334075e-12,regulation of cell cycle,Early,28.363636363636363
+GO:0045934,6.830792073041566e-14,1,172,637,negative regulation of nucleobase-containing compound metabolic process,BP,1.7865367434367464e-11,negative regulation of cellular process,Early,27.001569858712713
+GO:0000280,8.562116327376812e-14,1,89,260,nuclear division,BP,2.2086741446689416e-11,chromosome organization,Early,34.23076923076923
+GO:0051172,1.0948733034714577e-13,1,241,990,negative regulation of nitrogen compound metabolic process,BP,2.786156645631219e-11,negative regulation of cellular process,Early,24.343434343434346
+GO:1903047,2.5199020701203977e-13,1,138,484,mitotic cell cycle process,BP,6.326970117658293e-11,regulation of cell cycle,Early,28.512396694214875
+GO:0006397,2.731999193781752e-13,1,98,302,mRNA processing,BP,6.769246949750548e-11,mRNA processing,Early,32.450331125827816
+GO:0031324,3.4866317088301346e-13,1,255,1073,negative regulation of cellular metabolic process,BP,8.526852169997436e-11,negative regulation of cellular process,Early,23.76514445479963
+GO:0046483,4.236985539590663e-13,1,387,1793,heterocycle metabolic process,BP,1.0229060858465611e-10,nucleic acid metabolic process,Early,21.583937534857782
+GO:0045935,7.17193758590251e-13,1,198,784,positive regulation of nucleobase-containing compound metabolic process,BP,1.6973212503152426e-10,positive regulation of nucleobase-containing compound metabolic process,Early,25.255102040816325
+GO:0033043,7.210753546026204e-13,1,186,726,regulation of organelle organization,BP,1.6973212503152426e-10,chromosome organization,Early,25.6198347107438
+GO:0048285,7.31659403864306e-13,1,90,273,organelle fission,BP,1.7009726215023143e-10,chromosome organization,Early,32.967032967032964
+GO:0051254,9.522469634180697e-13,1,181,700,positive regulation of RNA metabolic process,BP,2.1868003131860574e-10,positive regulation of nucleobase-containing compound metabolic process,Early,25.857142857142858
+GO:0031327,1.1518568117348429e-12,1,171,652,negative regulation of cellular biosynthetic process,BP,2.6133271833468456e-10,negative regulation of cellular process,Early,26.226993865030675
+GO:0006725,1.4513857584523685e-12,1,390,1825,cellular aromatic compound metabolic process,BP,3.1780285136530865e-10,nucleic acid metabolic process,Early,21.36986301369863
+GO:1902275,1.4928212901791365e-12,1,57,141,regulation of chromatin organization,BP,3.2311859442946335e-10,chromatin organization,Early,40.42553191489361
+GO:0048522,2.5518005327054584e-12,1,436,2098,positive regulation of cellular process,BP,5.46056316265642e-10,positive regulation of nucleobase-containing compound metabolic process,Early,20.781696854146805
+GO:0043412,2.799837776387594e-12,1,314,1410,macromolecule modification,BP,5.924016310916267e-10,macromolecule modification,Early,22.26950354609929
+GO:0010558,4.292445601183586e-12,1,163,622,negative regulation of macromolecule biosynthetic process,BP,8.981227012876454e-10,negative regulation of cellular process,Early,26.20578778135048
+GO:0016070,4.355378196925303e-12,1,242,1025,RNA metabolic process,BP,9.012761189703335e-10,nucleic acid metabolic process,Early,23.609756097560975
+GO:0010604,4.447457254122201e-12,1,301,1345,positive regulation of macromolecule metabolic process,BP,9.103268212214691e-10,positive regulation of nucleobase-containing compound metabolic process,Early,22.37918215613383
+GO:0006338,4.648616645215277e-12,1,49,114,chromatin remodeling,BP,9.412698929682672e-10,chromatin organization,Early,42.98245614035088
+GO:0010628,4.785125215378085e-12,1,204,829,positive regulation of gene expression,BP,9.586031162849435e-10,positive regulation of nucleobase-containing compound metabolic process,Early,24.60796139927624
+GO:0006974,6.6324659562286094e-12,1,121,424,DNA damage response,BP,1.3146943833867467e-9,DNA damage response,Early,28.537735849056606
+GO:0009890,6.7486322784724555e-12,1,171,665,negative regulation of biosynthetic process,BP,1.3237864003741124e-9,negative regulation of cellular process,Early,25.71428571428571
+GO:0010605,6.8365375961810635e-12,1,264,1149,negative regulation of macromolecule metabolic process,BP,1.3272045306565523e-9,negative regulation of cellular process,Early,22.97650130548303
+GO:0009987,8.933583485588025e-12,1,915,5060,cellular process,BP,1.7166154144602867e-9,cellular process,Early,18.08300395256917
+GO:0045930,9.53376215602312e-12,1,64,175,negative regulation of mitotic cell cycle,BP,1.8134371228290035e-9,regulation of cell cycle,Early,36.57142857142857
+GO:0006396,1.4186098840311196e-11,1,150,566,RNA processing,BP,2.6382203076493735e-9,RNA processing,Early,26.501766784452297
+GO:0051173,1.4290184874952797e-11,1,285,1270,positive regulation of nitrogen compound metabolic process,BP,2.6382203076493735e-9,positive regulation of nucleobase-containing compound metabolic process,Early,22.440944881889763
+GO:1901990,1.521212219411076e-11,1,77,230,regulation of mitotic cell cycle phase transition,BP,2.7544180099740353e-9,regulation of cell cycle,Early,33.47826086956522
+GO:0009892,1.6913762947682077e-11,1,282,1255,negative regulation of metabolic process,BP,3.00474594403586e-9,negative regulation of cellular process,Early,22.470119521912352
+GO:0006357,1.892453920460196e-11,1,207,856,regulation of transcription by RNA polymerase II,BP,3.2962862501555704e-9,regulation of nucleobase-containing compound metabolic process,Early,24.182242990654206
+GO:1901360,1.9079985198181568e-11,1,399,1908,organic cyclic compound metabolic process,BP,3.2962862501555704e-9,RNA processing,Early,20.91194968553459
+GO:0051128,3.373422179183328e-11,1,292,1321,regulation of cellular component organization,BP,5.722965140198311e-9,chromosome organization,Early,22.10446631339894
+GO:0010948,3.764952360474466e-11,1,68,196,negative regulation of cell cycle process,BP,6.330162312508453e-9,regulation of cell cycle,Early,34.69387755102041
+GO:0000375,3.9587469368568625e-11,1,82,255,"RNA splicing, via transesterification reactions",BP,6.597094121057663e-9,RNA processing,Early,32.15686274509804
+GO:0000377,4.2886850383647975e-11,1,81,251,"RNA splicing, via transesterification reactions with bulged adenosine as nucleophile",BP,7.002176224620327e-9,RNA processing,Early,32.27091633466135
+GO:0000398,4.2886850383647975e-11,1,81,251,"mRNA splicing, via spliceosome",BP,7.002176224620327e-9,RNA processing,Early,32.27091633466135
+GO:0010557,6.142791535545412e-11,1,192,789,positive regulation of macromolecule biosynthetic process,BP,9.886744222722708e-9,positive regulation of nucleobase-containing compound metabolic process,Early,24.334600760456272
+GO:0007059,6.680587422824663e-11,1,67,194,chromosome segregation,BP,1.0661198454170444e-8,regulation of cell cycle,Early,34.5360824742268
+GO:0048518,7.609671470043014e-11,1,467,2324,positive regulation of biological process,BP,1.2041825500200004e-8,positive regulation of nucleobase-containing compound metabolic process,Early,20.094664371772804
+GO:1901987,9.452245070229864e-11,1,80,251,regulation of cell cycle phase transition,BP,1.4832935576458214e-8,regulation of cell cycle,Early,31.872509960159363
+GO:0031325,1.0137616912779162e-10,1,290,1319,positive regulation of cellular metabolic process,BP,1.5776980502854913e-8,positive regulation of nucleobase-containing compound metabolic process,Early,21.986353297952995
+GO:0032502,1.4055923477039778e-10,1,533,2724,developmental process,BP,2.1695663524273458e-8,developmental process,Early,19.566813509544787
+GO:0000070,1.6999351541864915e-10,0.9999999999652052,45,109,mitotic sister chromatid segregation,BP,2.5815708781036958e-8,chromosome organization,Early,41.284403669724774
+GO:0016071,1.733885574500819e-10,1,121,442,mRNA metabolic process,BP,2.6120639402739937e-8,mRNA processing,Early,27.37556561085973
+GO:0008380,2.0500460685033515e-10,1,85,276,RNA splicing,BP,3.0638426599989385e-8,RNA processing,Early,30.79710144927536
+GO:0040029,2.103820831844572e-10,0.9999999999464584,64,185,epigenetic regulation of gene expression,BP,3.1172519777247636e-8,chromatin organization,Early,34.5945945945946
+GO:0031328,2.3080270737265667e-10,1,197,827,positive regulation of cellular biosynthetic process,BP,3.3691827771585264e-8,positive regulation of nucleobase-containing compound metabolic process,Early,23.82103990326481
+GO:0009891,2.4250138184480905e-10,1,200,843,positive regulation of biosynthetic process,BP,3.512725785784307e-8,positive regulation of nucleobase-containing compound metabolic process,Early,23.72479240806643
+GO:0009893,2.830269327287676e-10,1,308,1431,positive regulation of metabolic process,BP,4.0684581452026126e-8,positive regulation of nucleobase-containing compound metabolic process,Early,21.523410202655484
+GO:0051253,3.1388145789658335e-10,1,143,553,negative regulation of RNA metabolic process,BP,4.4778043436746674e-8,negative regulation of cellular process,Early,25.85895117540687
+GO:0006807,4.841588547509451e-10,1,623,3279,nitrogen compound metabolic process,BP,6.855034130688004e-8,nucleic acid metabolic process,Early,18.999695028972248
+GO:0007275,6.638595362589605e-10,1,481,2439,multicellular organism development,BP,9.3292081546958875e-08,developmental process,Early,19.721197211972118
+GO:0098813,7.780641615883474e-10,0.999999999761804,58,165,nuclear chromosome segregation,BP,1.0773328107992773e-7,regulation of cell cycle,Early,35.15151515151515
+GO:1902680,8.073089127468741e-10,1,161,652,positive regulation of RNA biosynthetic process,BP,1.1096667252508309e-7,positive regulation of nucleobase-containing compound metabolic process,Early,24.69325153374233
+GO:0007276,1.2161528228955223e-9,1,186,788,gamete generation,BP,1.635812414853256e-7,gamete generation,Early,23.604060913705585
+GO:0043414,1.3555279086941723e-9,0.999999999610492,51,138,macromolecule methylation,BP,1.810350783590068e-7,macromolecule methylation,Early,36.95652173913043
+GO:0036211,1.4972916090515415e-9,1,280,1295,protein modification process,BP,1.9717131671363346e-7,macromolecule modification,Early,21.62162162162162
+GO:0000819,1.5856653719492176e-9,0.9999999995665498,47,123,sister chromatid segregation,BP,2.073587820776092e-7,regulation of cell cycle,Early,38.21138211382114
+GO:0022414,2.120713747188248e-9,1,254,1160,reproductive process,BP,2.7166775900205376e-7,gamete generation,Early,21.89655172413793
+GO:0045893,2.312468541187452e-9,1,151,610,positive regulation of DNA-templated transcription,BP,2.942303722912224e-7,positive regulation of nucleobase-containing compound metabolic process,Early,24.75409836065574
+GO:0044238,2.786918128534775e-9,1,643,3432,primary metabolic process,BP,3.522178206606601e-7,nucleic acid metabolic process,Early,18.735431235431236
+GO:1901991,2.8473643916474475e-9,0.9999999992382432,42,106,negative regulation of mitotic cell cycle phase transition,BP,3.5745812572742057e-7,regulation of cell cycle,Early,39.62264150943396
+GO:0048856,3.451711754364439e-9,1,506,2614,anatomical structure development,BP,4.3045817249295866e-7,developmental process,Early,19.357306809487376
+GO:0018205,3.6598011239395475e-9,0.9999999988292544,53,149,peptidyl-lysine modification,BP,4.534060195059581e-7,macromolecule modification,Early,35.57046979865772
+GO:0140014,3.901369883905243e-9,0.9999999987632784,52,146,mitotic nuclear division,BP,4.786110750408231e-7,chromosome organization,Early,35.61643835616438
+GO:0000003,3.923506825467921e-9,1,259,1195,reproduction,BP,4.786110750408231e-7,gamete generation,Early,21.673640167364017
+GO:0010629,3.939499582142615e-9,1,186,796,negative regulation of gene expression,BP,4.786110750408231e-7,negative regulation of cellular process,Early,23.366834170854272
+GO:2001251,4.175633240778713e-9,0.9999999989562504,38,92,negative regulation of chromosome organization,BP,5.040471125455381e-7,chromosome organization,Early,41.30434782608695
+GO:0045814,4.539790049386638e-9,0.9999999990686004,31,67,"negative regulation of gene expression, epigenetic",BP,5.44514563184712e-7,chromatin organization,Early,46.26865671641791
+GO:0019953,6.237382233130159e-9,1,197,863,sexual reproduction,BP,7.29541272248907e-7,gamete generation,Early,22.827346465816916
+GO:0071103,7.002644028163902e-9,0.9999999974843288,60,181,DNA conformation change,BP,8.089987097813157e-7,chromosome organization,Early,33.14917127071823
+GO:0030154,7.441078523021875e-9,1,360,1773,cell differentiation,BP,8.522975876855088e-7,developmental process,Early,20.304568527918782
+GO:0018193,7.814717137450359e-9,1,110,416,peptidyl-amino acid modification,BP,8.864996290079982e-7,macromolecule modification,Early,26.442307692307693
+GO:0032501,8.369128380802516e-9,1,553,2911,multicellular organismal process,BP,9.43706925382588e-7,multicellular organismal process,Early,18.996908278941945
+GO:1902679,1.2140424065951895e-8,1,128,507,negative regulation of RNA biosynthetic process,BP,1.3448019152114123e-6,negative regulation of cellular process,Early,25.2465483234714
+GO:0006260,1.383646075012781e-8,0.999999995309756,52,151,DNA replication,BP,1.5148511185212605e-6,DNA metabolic process,Early,34.437086092715234
+GO:0032259,1.5812556988466192e-8,0.9999999944855684,54,159,methylation,BP,1.7015214894274675e-6,macromolecule methylation,Early,33.9622641509434
+GO:0051983,1.7543731381436544e-8,0.9999999952541624,38,96,regulation of chromosome segregation,BP,1.873868421401406e-6,regulation of cell cycle,Early,39.58333333333333
+GO:0048869,1.7801134647408452e-8,1,366,1821,cellular developmental process,BP,1.8832200367716208e-6,developmental process,Early,20.098846787479406
+GO:0045892,1.9961341006762157e-8,1,125,496,negative regulation of DNA-templated transcription,BP,2.088288958324101e-6,negative regulation of cellular process,Early,25.201612903225808
+GO:0022412,2.8880373681172406e-8,1,156,662,cellular process involved in reproduction in multicellular organism,BP,2.988166575770096e-6,gamete generation,Early,23.564954682779458
+GO:0033554,3.0530764450365666e-8,1,212,960,cellular response to stress,BP,3.1245914422001947e-6,DNA damage response,Early,22.083333333333332
+GO:0045787,3.0863994826974806e-8,1,76,262,positive regulation of cell cycle,BP,3.141621008577095e-6,regulation of cell cycle,Early,29.00763358778626
+GO:0044703,3.174636905782023e-8,1,202,908,multi-organism reproductive process,BP,3.214063847998993e-6,gamete generation,Early,22.24669603524229
+GO:0034641,3.211017791517099e-8,1,398,2008,cellular nitrogen compound metabolic process,BP,3.2335120872758553e-6,nucleic acid metabolic process,Early,19.8207171314741
+GO:1901988,4.9957213083064544e-8,0.9999999845740958,42,115,negative regulation of cell cycle phase transition,BP,4.977482960672954e-6,regulation of cell cycle,Early,36.52173913043478
+GO:0006305,5.5673088239933014e-8,0.9999999921920968,20,36,DNA alkylation,BP,5.46031210753218e-6,DNA metabolic process,Early,55.55555555555556
+GO:0006306,5.5673088239933014e-8,0.9999999921920968,20,36,DNA methylation,BP,5.46031210753218e-6,DNA metabolic process,Early,55.55555555555556
+GO:0048609,6.3446242575198e-8,1,201,911,multicellular organismal reproductive process,BP,6.190446600691986e-6,gamete generation,Early,22.063666300768386
+GO:0032504,6.42647009312378e-8,1,203,922,multicellular organism reproduction,BP,6.237982387815149e-6,gamete generation,Early,22.017353579175705
+GO:0140013,7.493933047819139e-8,0.9999999727979596,52,158,meiotic nuclear division,BP,7.199910878749091e-6,gamete generation,Early,32.91139240506329
+GO:0006302,8.285523054677653e-8,0.999999973763868,42,117,double-strand break repair,BP,7.920034753433242e-6,DNA metabolic process,Early,35.8974358974359
+GO:0009790,8.419760564225506e-8,1,193,870,embryo development,BP,8.0077025850975e-6,multicellular organismal process,Early,22.18390804597701
+GO:0071704,9.674226997028543e-8,1,654,3568,organic substance metabolic process,BP,9.154541134725853e-6,nucleic acid metabolic process,Early,18.329596412556054
+GO:0000075,1.201179601520206e-7,0.9999999593943034,45,131,cell cycle checkpoint signaling,BP,1.13097065381135e-5,regulation of cell cycle,Early,34.35114503816794
+GO:0044237,1.209504694586829e-7,1,647,3529,cellular metabolic process,BP,1.1331434280479888e-5,nucleic acid metabolic process,Early,18.333805610654576
+GO:0007292,1.6496650477190816e-7,1,117,476,female gamete generation,BP,1.5378634907721792e-5,gamete generation,Early,24.579831932773107
+GO:0007281,1.7480347652453194e-7,1,133,559,germ cell development,BP,1.6215390475041677e-5,gamete generation,Early,23.792486583184257
+GO:0051052,1.824469727654092e-7,1,68,237,regulation of DNA metabolic process,BP,1.675931192266059e-5,DNA metabolic process,Early,28.691983122362867
+GO:0007010,2.3699630443711067e-7,1,145,627,cytoskeleton organization,BP,2.1664453441044804e-5,chromosome organization,Early,23.125996810207337
+GO:0033046,2.748418264539231e-7,0.999999971866699,15,24,negative regulation of sister chromatid segregation,BP,2.500263977755471e-5,regulation of cell cycle,Early,62.5
+GO:0003006,3.116822238111819e-7,1,175,788,developmental process involved in reproduction,BP,2.821773056052099e-5,gamete generation,Early,22.20812182741117
+GO:1903046,3.7343645311848523e-7,1,60,204,meiotic cell cycle process,BP,3.332787606006728e-5,gamete generation,Early,29.411764705882355
+GO:0048731,4.0918782329067155e-7,1,399,2065,system development,BP,3.577006652436874e-5,multicellular organismal process,Early,19.322033898305087
+GO:0090068,4.13871836412665e-7,0.9999998307021988,57,187,positive regulation of cell cycle process,BP,3.591530208058477e-5,regulation of cell cycle,Early,30.481283422459892
+GO:0051321,5.527581143300433e-7,1,64,225,meiotic cell cycle,BP,4.75296258034203e-5,gamete generation,Early,28.444444444444443
+GO:0030071,5.721110895512133e-7,0.9999999058434492,19,37,regulation of mitotic metaphase/anaphase transition,BP,4.8970108760631354e-5,chromosome organization,Early,51.35135135135135
+GO:0033045,6.32149561516855e-7,0.9999998233525224,31,80,regulation of sister chromatid segregation,BP,5.338120355571254e-5,chromosome organization,Early,38.75
+GO:0000226,7.864391345455302e-7,1,97,389,microtubule cytoskeleton organization,BP,6.611355063672714e-5,microtubule cytoskeleton organization,Early,24.93573264781491
+GO:0033048,8.928604649015691e-7,0.999999919030614,13,20,negative regulation of mitotic sister chromatid segregation,BP,7.472646850916198e-5,regulation of cell cycle,Early,65
+GO:0051246,9.12623861646158e-7,0.9999996305475288,244,1174,regulation of protein metabolic process,BP,7.604256610026019e-5,regulation of nucleobase-containing compound metabolic process,Early,20.783645655877343
+GO:0033047,1.0664791373756994e-6,0.9999997454979674,25,59,regulation of mitotic sister chromatid segregation,BP,8.847078694238677e-5,chromosome organization,Early,42.3728813559322
+GO:1903311,1.1052309537581711e-6,0.99999955648027,51,165,regulation of mRNA metabolic process,BP,9.128335127289528e-5,mRNA processing,Early,30.909090909090907
+GO:0010389,1.1549641476796455e-6,0.9999996177854332,37,106,regulation of G2/M transition of mitotic cell cycle,BP,9.497436622251269e-5,regulation of cell cycle,Early,34.90566037735849
+GO:0007093,1.3207213789682035e-6,0.9999995674738288,36,103,mitotic cell cycle checkpoint signaling,BP,1.081326273363054e-4,regulation of cell cycle,Early,34.95145631067961
+GO:0006403,1.3874010745435996e-6,0.9999994258753152,53,176,RNA localization,BP,1.1261271394280398e-4,RNA localization,Early,30.113636363636363
+GO:0006304,2.011933939272789e-6,0.9999995365030926,23,53,DNA modification,BP,1.6260398287745015e-4,DNA metabolic process,Early,43.39622641509434
+GO:0051985,2.285242608622569e-6,0.9999996568082934,16,30,negative regulation of chromosome segregation,BP,1.8312086622541103e-4,regulation of cell cycle,Early,53.333333333333336
+GO:0030261,2.378005760088392e-6,0.999999397338198,25,61,chromosome condensation,BP,1.897467223229852e-4,chromosome organization,Early,40.98360655737705
+GO:0050684,2.8636714103623887e-6,0.9999990224110048,36,105,regulation of mRNA processing,BP,2.2632321491193456e-4,mRNA processing,Early,34.285714285714285
+GO:2001252,2.872457562739757e-6,0.999998904430169,43,135,positive regulation of chromosome organization,BP,2.2632321491193456e-4,chromosome organization,Early,31.851851851851855
+GO:0044770,2.972208947699078e-6,0.9999987307871312,53,179,cell cycle phase transition,BP,2.3320694455883893e-4,regulation of cell cycle,Early,29.608938547486037
+GO:0006281,2.985009873682797e-6,0.9999987191365722,73,275,DNA repair,BP,2.3323950593909023e-4,DNA damage response,Early,26.545454545454543
+GO:0010639,3.4421483744401064e-6,0.9999985631339056,66,242,negative regulation of organelle organization,BP,2.678475042937258e-4,chromosome organization,Early,27.27272727272727
+GO:1902749,3.833294736449367e-6,0.9999986219249728,38,115,regulation of cell cycle G2/M phase transition,BP,2.9519027618220593e-4,regulation of cell cycle,Early,33.04347826086956
+GO:0051783,3.862034888789403e-6,0.9999984121022616,48,159,regulation of nuclear division,BP,2.9563406093818394e-4,chromosome organization,Early,30.18867924528302
+GO:0045841,4.589560455116227e-6,0.9999996997616184,10,14,negative regulation of mitotic metaphase/anaphase transition,BP,3.470924214068019e-4,regulation of cell cycle,Early,71.42857142857143
+GO:2000816,4.589560455116227e-6,0.9999996997616184,10,14,negative regulation of mitotic sister chromatid separation,BP,3.470924214068019e-4,regulation of cell cycle,Early,71.42857142857143
+GO:0031399,5.537177609297665e-6,0.9999968207022818,170,784,regulation of protein modification process,BP,4.154206835087025e-4,regulation of nucleobase-containing compound metabolic process,Early,21.683673469387756
+GO:0006310,5.650945720666601e-6,0.9999979239389084,38,117,DNA recombination,BP,4.222736462931459e-4,DNA metabolic process,Early,32.47863247863248
+GO:0044772,5.908115656067324e-6,0.9999974740089048,50,169,mitotic cell cycle phase transition,BP,4.382768512525653e-4,regulation of cell cycle,Early,29.585798816568047
+GO:0034502,5.911652074672168e-6,0.9999986328006047,21,49,protein localization to chromosome,BP,4.382768512525653e-4,protein localization to chromosome,Early,42.857142857142854
+GO:0010965,6.4567639034550886e-6,0.999998646724076,19,42,regulation of mitotic sister chromatid separation,BP,4.749504729139171e-4,regulation of cell cycle,Early,45.23809523809524
+GO:0006479,7.933091415197008e-6,0.999997725873622,26,68,protein methylation,BP,5.745694016906725e-4,macromolecule modification,Early,38.23529411764706
+GO:0008213,7.933091415197008e-6,0.999997725873622,26,68,protein alkylation,BP,5.745694016906725e-4,macromolecule modification,Early,38.23529411764706
+GO:0008152,8.227729648934487e-6,0.9999939699421708,663,3692,metabolic process,BP,5.936259655903652e-4,nucleic acid metabolic process,Early,17.95774647887324
+GO:0048468,9.334592697001564e-6,0.9999937410803262,242,1193,cell development,BP,6.709149430428873e-4,developmental process,Early,20.284995808885164
+GO:1905269,9.946266318344437e-6,0.9999968445675038,29,81,positive regulation of chromatin organization,BP,7.12160232094084e-4,chromatin organization,Early,35.80246913580247
+GO:1902099,1.0277734260493952e-5,0.9999977463285576,19,43,regulation of metaphase/anaphase transition of cell cycle,BP,7.303396749409873e-4,chromosome organization,Early,44.18604651162791
+GO:0048583,1.2546697720421178e-5,0.9999912017975756,306,1563,regulation of response to stimulus,BP,8.815927790046687e-4,DNA damage response,Early,19.577735124760075
+GO:0051301,1.2892856280838064e-5,0.9999936021883432,70,269,cell division,BP,9.025478684924224e-4,cell division,Early,26.022304832713754
+GO:0007143,1.3556168223824404e-5,0.9999966260228234,21,51,female meiotic nuclear division,BP,9.454674215660642e-4,gamete generation,Early,41.17647058823529
+GO:0031570,1.59303233625871e-5,0.999994412618451,32,96,DNA integrity checkpoint signaling,BP,0.00110695173151615,regulation of cell cycle,Early,33.33333333333333
+GO:2000045,1.687620114514767e-5,0.9999943177296764,30,87,regulation of G1/S transition of mitotic cell cycle,BP,0.00116836670501571,regulation of cell cycle,Early,34.48275862068966
+GO:1903313,1.6944550955058342e-5,0.9999958884536544,20,48,positive regulation of mRNA metabolic process,BP,0.00116880160818572,mRNA processing,Early,41.66666666666667
+GO:0060996,2.024428355343621e-5,0.9999974012309112,12,21,dendritic spine development,BP,0.00137161297225026,dendritic spine development,Early,57.14285714285714
+GO:0006468,2.0248972772851844e-5,0.999988703582996,93,390,protein phosphorylation,BP,0.00137161297225026,macromolecule modification,Early,23.846153846153847
+GO:0007094,2.079633225991804e-5,0.9999985106598734,9,13,mitotic spindle assembly checkpoint signaling,BP,0.00138380117592408,regulation of cell cycle,Early,69.23076923076923
+GO:0031577,2.079633225991804e-5,0.9999985106598734,9,13,spindle checkpoint signaling,BP,0.00138380117592408,regulation of cell cycle,Early,69.23076923076923
+GO:0071173,2.079633225991804e-5,0.9999985106598734,9,13,spindle assembly checkpoint signaling,BP,0.00138380117592408,regulation of cell cycle,Early,69.23076923076923
+GO:0071174,2.079633225991804e-5,0.9999985106598734,9,13,mitotic spindle checkpoint signaling,BP,0.00138380117592408,regulation of cell cycle,Early,69.23076923076923
+GO:0018022,2.14503708129518e-5,0.9999952222487476,18,41,peptidyl-lysine methylation,BP,0.00142229553795315,macromolecule modification,Early,43.90243902439025
+GO:0007088,2.3507275547438257e-5,0.999990517978349,39,128,regulation of mitotic nuclear division,BP,0.0015477814889294,chromosome organization,Early,30.46875
+GO:0048477,2.394673093992684e-5,0.9999863239308336,100,427,oogenesis,BP,0.00157122261438941,gamete generation,Early,23.4192037470726
+GO:1902806,2.499497847212812e-5,0.9999909915952424,32,97,regulation of cell cycle G1/S phase transition,BP,0.00163430708197446,regulation of cell cycle,Early,32.98969072164948
+GO:0044085,2.9574063935649704e-5,0.9999787380515482,300,1541,cellular component biogenesis,BP,0.00192037654473179,chromosome organization,Early,19.46787800129786
+GO:0051248,3.1931156568317525e-5,0.9999809685297424,110,482,negative regulation of protein metabolic process,BP,0.00205220344483954,regulation of nucleobase-containing compound metabolic process,Early,22.821576763485478
+GO:0010638,3.381592914424383e-5,0.999981254072121,83,343,positive regulation of organelle organization,BP,0.00215860258208561,chromosome organization,Early,24.198250728862973
+GO:0071168,3.643066170694346e-5,0.9999948356586372,12,22,protein localization to chromatin,BP,0.00230407575345678,protein localization to chromosome,Early,54.54545454545454
+GO:0007017,3.781197130665301e-5,0.99997691364124075,116,517,microtubule-based process,BP,0.0023734574389186,microtubule cytoskeleton organization,Early,22.437137330754354
+GO:1902807,3.860599571639203e-5,0.9999894370364296,21,54,negative regulation of cell cycle G1/S phase transition,BP,0.00240725001766681,regulation of cell cycle,Early,38.88888888888889
+GO:2000134,3.860599571639203e-5,0.9999894370364296,21,54,negative regulation of G1/S transition of mitotic cell cycle,BP,0.00240725001766681,regulation of cell cycle,Early,38.88888888888889
+GO:0018393,4.307341170257608e-5,0.999985236042358,28,82,internal peptidyl-lysine acetylation,BP,0.00265939480580724,macromolecule modification,Early,34.146341463414636
+GO:0060997,4.5055313706782686e-5,0.9999972189774732,8,11,dendritic spine morphogenesis,BP,0.00277266866801446,dendritic spine development,Early,72.72727272727273
+GO:0010467,4.526127170051398e-5,0.9999681632861732,237,1183,gene expression,BP,0.00277627038238559,nucleic acid metabolic process,Early,20.03381234150465
+GO:1902850,4.817781618177184e-5,0.9999800422813886,38,127,microtubule cytoskeleton organization involved in mitosis,BP,0.00294557291077579,regulation of cell cycle,Early,29.92125984251969
+GO:0000122,4.897993507066617e-5,0.9999721062784788,86,359,negative regulation of transcription by RNA polymerase II,BP,0.00298492283920943,negative regulation of cellular process,Early,23.955431754874652
+GO:0006473,4.956190626564107e-5,0.999982059538262,30,91,protein acetylation,BP,0.00301064598996221,macromolecule modification,Early,32.967032967032964
+GO:0018394,5.5242773233512765e-5,0.9999807201835296,28,83,peptidyl-lysine acetylation,BP,0.0033449410378144,macromolecule modification,Early,33.734939759036145
+GO:0000086,5.7106997899452895e-5,0.9999814961308504,25,71,G2/M transition of mitotic cell cycle,BP,0.0034467367866814,regulation of cell cycle,Early,35.2112676056338
+GO:1902100,6.084328583852165e-5,0.999993004300092,10,17,negative regulation of metaphase/anaphase transition of cell cycle,BP,0.00364885323447516,chromosome organization,Early,58.82352941176471
+GO:1905819,6.084328583852165e-5,0.999993004300092,10,17,negative regulation of chromosome separation,BP,0.00364885323447516,regulation of cell cycle,Early,58.82352941176471
+GO:0008283,6.118381867695597e-5,0.9999632775139202,102,447,cell population proliferation,BP,0.00365762695081192,cell population proliferation,Early,22.818791946308725
+GO:0071824,6.173357751335695e-5,0.9999727803848352,42,145,protein-DNA complex organization,BP,0.00366997730280036,chromatin organization,Early,28.965517241379313
+GO:0000724,6.434956755764585e-5,0.9999795183205732,24,68,double-strand break repair via homologous recombination,BP,0.00378677095836884,DNA metabolic process,Early,35.294117647058826
+GO:0000725,6.434956755764585e-5,0.9999795183205732,24,68,recombinational repair,BP,0.00378677095836884,DNA metabolic process,Early,35.294117647058826
+GO:0045839,6.587333286393272e-5,0.9999873138232872,14,30,negative regulation of mitotic nuclear division,BP,0.00386357085768694,chromosome organization,Early,46.666666666666664
+GO:1905818,6.606498944162261e-5,0.9999825649285567,19,48,regulation of chromosome separation,BP,0.00386357085768694,regulation of cell cycle,Early,39.58333333333333
+GO:0051647,6.704840950119722e-5,0.9999806825764068,21,56,nucleus localization,BP,0.00390701056146426,nucleus localization,Early,37.5
+GO:0007283,6.722274026416135e-5,0.9999623691625332,78,323,spermatogenesis,BP,0.00390701056146426,gamete generation,Early,24.148606811145513
+GO:0044839,7.31951275201963e-5,0.9999758055609426,25,72,cell cycle G2/M phase transition,BP,0.00422802897648103,regulation of cell cycle,Early,34.72222222222222
+GO:1902531,8.132652303612057e-5,0.9999457793150652,154,731,regulation of intracellular signal transduction,BP,0.0046690846197963,regulation of intracellular signal transduction,Early,21.06703146374829
+GO:0043484,8.185915651103288e-5,0.9999686953493238,31,98,regulation of RNA splicing,BP,0.00468537925914668,RNA processing,Early,31.63265306122449
+GO:0048513,8.563478239645021e-5,0.9999365170223178,307,1603,animal organ development,BP,0.00488663208275016,developmental process,Early,19.15159076731129
+GO:0006475,8.93002706603338e-5,0.999967720721204,28,85,internal protein amino acid acetylation,BP,0.0050804030114947,macromolecule modification,Early,32.94117647058823
+GO:0051129,1.04777133929951e-4,0.9999369500386271,95,416,negative regulation of cellular component organization,BP,0.00594294641275574,chromosome organization,Early,22.83653846153846
+GO:0048232,1.121654947724812e-4,0.9999343033368384,85,364,male gamete generation,BP,0.00630504009570326,gamete generation,Early,23.35164835164835
+GO:0070828,1.230623747742285e-4,0.9999743729798818,14,31,heterochromatin organization,BP,0.00682040075412968,chromatin organization,Early,45.16129032258064
+GO:0007052,1.2314461560215034e-4,0.9999543647390544,28,87,mitotic spindle organization,BP,0.00682040075412968,microtubule cytoskeleton organization,Early,32.18390804597701
+GO:0045944,1.2518097453450457e-4,0.9999222334422836,105,468,positive regulation of transcription by RNA polymerase II,BP,0.00691285317143476,positive regulation of nucleobase-containing compound metabolic process,Early,22.435897435897438
+GO:0045448,1.3046400053758924e-4,0.9999799366687152,11,21,"mitotic cell cycle, embryonic",BP,0.00716258773796893,regulation of cell cycle,Early,52.38095238095239
+GO:0006482,1.3374687222334172e-4,0.9999821533688644,10,18,protein demethylation,BP,0.00727755683611531,macromolecule modification,Early,55.55555555555556
+GO:0008214,1.3374687222334172e-4,0.9999821533688644,10,18,protein dealkylation,BP,0.00727755683611531,macromolecule modification,Early,55.55555555555556
+GO:0022008,1.3410398928001782e-4,0.9999049441314898,204,1019,neurogenesis,BP,0.00727755683611531,multicellular organismal process,Early,20.019627085377824
+GO:0090136,1.3520094685352411e-4,0.999985059481638,9,15,epithelial cell-cell adhesion,BP,0.00729504020114244,epithelial cell-cell adhesion,Early,60
+GO:0006470,1.3621747429978882e-4,0.99994918534943,28,87,protein dephosphorylation,BP,0.00732888931011235,macromolecule modification,Early,32.18390804597701
+GO:0050793,1.4508172697572902e-4,0.9998944972375028,239,1220,regulation of developmental process,BP,0.00773947308974491,regulation of developmental process,Early,19.59016393442623
+GO:0045132,1.503455622172918e-4,0.9999501540822248,23,67,meiotic chromosome segregation,BP,0.00799761944099949,regulation of cell cycle,Early,34.32835820895522
+GO:0051302,1.5443845179914095e-4,0.9999361970255172,33,110,regulation of cell division,BP,0.00819219855163274,cell division,Early,30
+GO:0043543,1.5571287124180831e-4,0.9999367299306164,32,105,protein acylation,BP,0.00823659853470363,macromolecule modification,Early,30.476190476190478
+GO:0051445,1.6553017623982565e-4,0.9999481805851546,21,59,regulation of meiotic cell cycle,BP,0.00870697974517362,gamete generation,Early,35.59322033898305
+GO:0009966,1.8607526532408528e-4,0.9998638489346208,241,1236,regulation of signal transduction,BP,0.00964970738690619,regulation of intracellular signal transduction,Early,19.498381877022652
+GO:0061982,1.8652718861631644e-4,0.9999271607975774,29,94,meiosis I cell cycle process,BP,0.00964970738690619,gamete generation,Early,30.851063829787233
+GO:0009653,2.0804710548323187e-4,0.9998453198864884,267,1389,anatomical structure morphogenesis,BP,0.01061272159141586,developmental process,Early,19.222462203023756
+GO:0070507,2.1191694190083872e-4,0.9999042109752064,38,135,regulation of microtubule cytoskeleton organization,BP,0.01075635561437923,microtubule cytoskeleton organization,Early,28.14814814814815
+GO:0034728,2.1560400536809604e-4,0.9999151457166868,29,93,nucleosome organization,BP,0.01088482312355661,chromatin organization,Early,31.182795698924732
+GO:0032465,2.2369892803684552e-4,0.9999256162388552,22,64,regulation of cytokinesis,BP,0.01120338966452616,cell division,Early,34.375
+GO:0022607,2.2882053115059895e-4,0.9998296341610812,266,1383,cellular component assembly,BP,0.01136918053323727,chromosome organization,Early,19.233550253073027
+GO:0032886,2.3787409787881113e-4,0.9998846165585528,44,164,regulation of microtubule-based process,BP,0.01172619669412537,microtubule cytoskeleton organization,Early,26.82926829268293
+GO:0071108,2.480995584374559e-4,0.9999519498950068,12,26,protein K48-linked deubiquitination,BP,0.0121665697524368,protein K48-linked deubiquitination,Early,46.15384615384615
+GO:0008298,2.504613807726066e-4,0.9999276770415692,18,48,intracellular mRNA localization,BP,0.0122187519723548,RNA localization,Early,37.5
+GO:0080135,2.513357314894405e-4,0.9998487410421816,84,366,regulation of cellular response to stress,BP,0.01222972392681564,DNA damage response,Early,22.950819672131146
+GO:0065009,2.551687988873901e-4,0.9998126656906282,234,1200,regulation of molecular function,BP,0.01238423621610423,regulation of molecular function,Early,19.5
+GO:0048699,2.6364796382586845e-4,0.9998115025814326,193,968,generation of neurons,BP,0.01263296388499981,multicellular organismal process,Early,19.93801652892562
+GO:0007389,2.682396444077609e-4,0.99982831680058315,107,489,pattern specification process,BP,0.01282035721787448,multicellular organismal process,Early,21.881390593047033
+GO:0018105,2.8770725116616187e-4,0.9998819925139238,30,100,peptidyl-serine phosphorylation,BP,0.01361260112238692,macromolecule modification,Early,30
+GO:0051716,2.916231304819e-4,0.9997734766091896,386,2097,cellular response to stimulus,BP,0.01372888792526164,DNA damage response,Early,18.407248450166904
+GO:0051640,3.1575395072173625e-4,0.9998022252832406,95,428,organelle localization,BP,0.01479095185582342,nucleus localization,Early,22.19626168224299
+GO:0000077,3.360952412992579e-4,0.9998682490983624,27,88,DNA damage checkpoint signaling,BP,0.01570473818587177,regulation of cell cycle,Early,30.681818181818183
+GO:0070192,3.5622171355967336e-4,0.9998840902286784,20,58,chromosome organization involved in meiotic cell cycle,BP,0.01656299034084496,gamete generation,Early,34.48275862068966
+GO:0031400,3.638062088470388e-4,0.999785330626024,74,318,negative regulation of protein modification process,BP,0.01683251773660586,regulation of nucleobase-containing compound metabolic process,Early,23.270440251572328
+GO:0006476,3.690177084090688e-4,0.9999175339128312,13,30,protein deacetylation,BP,0.01703179526238033,macromolecule modification,Early,43.333333333333336
+GO:0060964,3.729832587038603e-4,0.9999165463111792,13,30,regulation of miRNA-mediated gene silencing,BP,0.01717273287201074,negative regulation of cellular process,Early,43.333333333333336
+GO:0044774,3.9584258397338e-4,0.9998610868835704,22,67,mitotic DNA integrity checkpoint signaling,BP,0.01813652481460515,regulation of cell cycle,Early,32.83582089552239
+GO:0008608,4.0997439851344296e-4,0.9999319875562254,10,20,attachment of spindle microtubules to kinetochore,BP,0.01869304575885386,nucleus localization,Early,50
+GO:0009798,4.170261296591503e-4,0.999781055554718,50,197,axis specification,BP,0.01895605192587957,multicellular organismal process,Early,25.380710659898476
+GO:0000076,4.3767795546075856e-4,0.9999478622999792,8,14,DNA replication checkpoint signaling,BP,0.01981229225788832,regulation of cell cycle,Early,57.14285714285714
+GO:0007051,4.420084538684329e-4,0.9997864056224144,40,149,spindle organization,BP,0.01996033859663419,microtubule cytoskeleton organization,Early,26.845637583892618
+GO:0006950,4.460070257528675e-4,0.9996606169628528,285,1508,response to stress,BP,0.0200447692170698,DNA damage response,Early,18.899204244031832
+GO:0031145,4.4988388119648486e-4,0.9999244047621512,10,20,anaphase-promoting complex-dependent catabolic process,BP,0.02007526864173224,anaphase-promoting complex-dependent catabolic process,Early,50
+GO:0018209,4.579099582136914e-4,0.9998025010679316,31,107,peptidyl-serine modification,BP,0.02033703401679722,macromolecule modification,Early,28.971962616822427
+GO:0018210,4.628009335487955e-4,0.999851483411634,19,54,peptidyl-threonine modification,BP,0.02050589265801733,macromolecule modification,Early,35.18518518518518
+GO:0000022,4.663425770806634e-4,0.9999574611148064,7,11,mitotic spindle elongation,BP,0.02061431236855862,microtubule cytoskeleton organization,Early,63.63636363636363
+GO:0023051,4.7850167688930783e-4,0.9996383930959608,264,1388,regulation of signaling,BP,0.02100388129953975,regulation of intracellular signal transduction,Early,19.020172910662826
+GO:0031023,4.912569540185227e-4,0.9997941869098518,29,98,microtubule organizing center organization,BP,0.02140213478456796,microtubule cytoskeleton organization,Early,29.591836734693878
+GO:0051225,4.98396238202773e-4,0.9997987943153772,27,89,spindle assembly,BP,0.02154054920952053,microtubule cytoskeleton organization,Early,30.337078651685395
+GO:0032467,5.051569022837064e-4,0.999881616499722,13,31,positive regulation of cytokinesis,BP,0.02171828681941661,cell division,Early,41.935483870967744
+GO:0048024,5.071261161658511e-4,0.999808253803552,24,76,"regulation of mRNA splicing, via spliceosome",BP,0.02175328449548779,mRNA processing,Early,31.57894736842105
+GO:0010324,5.128178811902626e-4,0.9998396771778228,18,51,membrane invagination,BP,0.02194743981975871,membrane invagination,Early,35.294117647058826
+GO:0051304,5.181505825071861e-4,0.9998782160998066,13,31,chromosome separation,BP,0.02210728560691793,regulation of cell cycle,Early,41.935483870967744
+GO:0006405,5.31072791060614e-4,0.9997802174833196,28,94,RNA export from nucleus,BP,0.02250632602513317,protein localization to chromosome,Early,29.78723404255319
+GO:2000026,5.551019123684801e-4,0.9995956683952436,193,981,regulation of multicellular organismal development,BP,0.02338506512709362,regulation of developmental process,Early,19.673802242609582
+GO:0030030,5.590118309819047e-4,0.9996066417856032,154,762,cell projection organization,BP,0.02349721381522377,dendritic spine development,Early,20.209973753280842
+GO:0010646,5.662203000239279e-4,0.999571043762425,261,1374,regulation of cell communication,BP,0.0237472037188209,regulation of cell communication,Early,18.995633187772924
+GO:0120036,5.805579160546129e-4,0.9995916229168508,153,757,plasma membrane bounded cell projection organization,BP,0.02420041931919124,dendritic spine development,Early,20.211360634081903
+GO:0009994,5.808820313458894e-4,0.9997175595813118,39,146,oocyte differentiation,BP,0.02420041931919124,gamete generation,Early,26.71232876712329
+GO:0044773,6.187813906185885e-4,0.9997874728237686,20,60,mitotic DNA damage checkpoint signaling,BP,0.025609389817008,regulation of cell cycle,Early,33.33333333333333
+GO:0010587,6.545037796364999e-4,1,4,4,miRNA catabolic process,BP,0.02701149756599916,anaphase-promoting complex-dependent catabolic process,Early,100
+GO:0019220,6.569627680541456e-4,0.9995414508786212,143,699,regulation of phosphate metabolic process,BP,0.02701149756599916,regulation of nucleobase-containing compound metabolic process,Early,20.457796852646638
+GO:0051174,6.569627680541456e-4,0.9995414508786212,143,699,regulation of phosphorus metabolic process,BP,0.02701149756599916,regulation of nucleobase-containing compound metabolic process,Early,20.457796852646638
+GO:0045995,6.585636948285281e-4,0.9996807204619916,38,142,regulation of embryonic development,BP,0.02701832883946843,multicellular organismal process,Early,26.76056338028169
+GO:0045005,6.636765018035246e-4,0.9998509370076124,12,28,DNA-templated DNA replication maintenance of fidelity,BP,0.0271688960988308,DNA metabolic process,Early,42.857142857142854
+GO:0007097,6.861599087707981e-4,0.9997877610067898,17,48,nuclear migration,BP,0.02778726288615677,nucleus localization,Early,35.41666666666667
+GO:0032872,7.008640490253307e-4,0.9996748641036884,34,123,regulation of stress-activated MAPK cascade,BP,0.02812099522539963,regulation of cell communication,Early,27.64227642276423
+GO:0003002,7.018675458519371e-4,0.9995539663221716,89,404,regionalization,BP,0.02812099522539963,multicellular organismal process,Early,22.02970297029703
+GO:0007399,7.131627278964776e-4,0.9994611560868956,244,1280,nervous system development,BP,0.02848273806572043,multicellular organismal process,Early,19.0625
+GO:0061014,7.229311660933417e-4,0.9998494361075464,11,25,positive regulation of mRNA catabolic process,BP,0.02878121942643492,mRNA processing,Early,44
+GO:0051028,7.545244468425071e-4,0.9997046010950308,24,78,mRNA transport,BP,0.02997563261285074,RNA localization,Early,30.76923076923077
+GO:0051303,7.838740853036908e-4,0.9997543740867127,17,48,establishment of chromosome localization,BP,0.03107606926390274,nucleus localization,Early,35.41666666666667
+GO:1901992,7.925627710450068e-4,0.9997310614093664,19,56,positive regulation of mitotic cell cycle phase transition,BP,0.03135451584358934,regulation of cell cycle,Early,33.92857142857143
+GO:0071897,8.062578367202176e-4,0.9996827059158282,24,78,DNA biosynthetic process,BP,0.03182943673643274,DNA metabolic process,Early,30.76923076923077
+GO:0018107,8.098386557265689e-4,0.9997347008025634,18,52,peptidyl-threonine phosphorylation,BP,0.03190391574474272,macromolecule modification,Early,34.61538461538461
+GO:0070302,8.214715341632704e-4,0.9996147316699582,34,124,regulation of stress-activated protein kinase signaling cascade,BP,0.0322273551246428,regulation of cell communication,Early,27.419354838709676
+GO:0006997,8.265936507578708e-4,0.9996523141329584,27,92,nucleus organization,BP,0.03236088365368288,chromosome organization,Early,29.347826086956523
+GO:0051781,8.656973936309486e-4,0.9996928553397167,20,61,positive regulation of cell division,BP,0.0336434739316965,cell division,Early,32.78688524590164
+GO:0000082,8.728202471748448e-4,0.9996388657932302,26,87,G1/S transition of mitotic cell cycle,BP,0.03376945639436366,regulation of cell cycle,Early,29.88505747126437
+GO:0051493,8.7333255079683e-4,0.9994853971121987,64,276,regulation of cytoskeleton organization,BP,0.03376945639436366,chromosome organization,Early,23.18840579710145
+GO:0030041,8.883955375939037e-4,0.9999304257339928,6,9,actin filament polymerization,BP,0.03414158442536898,chromosome organization,Early,66.66666666666666
+GO:0006913,8.927100725577514e-4,0.9995222415147852,47,188,nucleocytoplasmic transport,BP,0.03423752215139514,protein localization to chromosome,Early,25
+GO:2000036,9.080582519497752e-4,0.9998716983840812,8,15,regulation of stem cell population maintenance,BP,0.03461466587543769,regulation of developmental process,Early,53.333333333333336
+GO:0051168,9.399231591937494e-4,0.999572930219924,31,111,nuclear export,BP,0.03571953985541315,protein localization to chromosome,Early,27.927927927927925
+GO:0010972,9.40836480711854e-4,0.9997117589056456,16,45,negative regulation of G2/M transition of mitotic cell cycle,BP,0.03571953985541315,regulation of cell cycle,Early,35.55555555555556
+GO:0040038,9.57332553432998e-4,0.9998635387969742,8,15,polar body extrusion after meiotic divisions,BP,0.03605505862739357,gamete generation,Early,53.333333333333336
+GO:0051784,9.675485230984924e-4,0.9997027232431656,16,45,negative regulation of nuclear division,BP,0.03629463394117074,chromosome organization,Early,35.55555555555556
+GO:0031440,9.695617828771576e-4,0.9997689695134012,12,29,regulation of mRNA 3'-end processing,BP,0.03629784877407506,mRNA processing,Early,41.37931034482759
+GO:0007098,9.842393161469806e-4,0.9995884233449692,26,88,centrosome cycle,BP,0.03677422730627736,microtubule cytoskeleton organization,Early,29.545454545454547
+GO:0009888,9.950173390667943e-4,0.9992574003459191,207,1071,tissue development,BP,0.03710330992468674,developmental process,Early,19.327731092436977
+GO:0051053,0.00104645641747045,0.999568286465444,25,85,negative regulation of DNA metabolic process,BP,0.03886749664178731,DNA metabolic process,Early,29.411764705882355
+GO:0044843,0.00105377153759667,0.999557071466994,26,88,cell cycle G1/S phase transition,BP,0.0390621492607934,regulation of cell cycle,Early,29.545454545454547
+GO:0007080,0.00113068227417264,0.9996827559767364,14,37,mitotic metaphase chromosome alignment,BP,0.04166708004881626,nucleus localization,Early,37.83783783783784
+GO:0043547,0.0011489043577661,0.999405281235651,41,162,positive regulation of GTPase activity,BP,0.04216209983488219,regulation of molecular function,Early,25.308641975308642
+GO:0035556,0.00115083210212572,0.999207581790664,120,581,intracellular signal transduction,BP,0.04216209983488219,DNA damage response,Early,20.65404475043029
+GO:0046328,0.00120545410652599,0.9994590177476173,29,103,regulation of JNK cascade,BP,0.04407748792231258,regulation of intracellular signal transduction,Early,28.155339805825243
+GO:0099024,0.00121072191554201,0.999617454392934,16,46,plasma membrane invagination,BP,0.04418431083637925,membrane invagination,Early,34.78260869565217
+GO:0006261,0.00124330311601356,0.999431733004148,30,108,DNA-templated DNA replication,BP,0.04527764460615462,DNA metabolic process,Early,27.77777777777778
+GO:0048599,0.00124548987871,0.9993911817809612,35,132,oocyte development,BP,0.04527764460615462,gamete generation,Early,26.515151515151516
+GO:0016358,0.00127859488018777,0.9993666802227198,36,137,dendrite development,BP,0.04612907986372738,dendritic spine development,Early,26.277372262773724
+GO:0051169,0.00128115919328391,0.9993001678935284,47,191,nuclear transport,BP,0.04612907986372738,protein localization to chromosome,Early,24.60732984293194
+GO:0070988,0.00129651234111733,0.9997039395094118,11,26,demethylation,BP,0.04632755957415657,demethylation,Early,42.30769230769231
+GO:0050000,0.00132061152638454,0.9995605021825644,17,50,chromosome localization,BP,0.04692157670442911,nucleus localization,Early,34
+GO:0032200,0.00133166329310042,0.9994907642585128,21,68,telomere organization,BP,0.0472251440157705,chromosome organization,Early,30.88235294117647
+GO:0031175,0.00136188151066495,0.9990857786300782,102,485,neuron projection development,BP,0.04820599760776659,dendritic spine development,Early,21.030927835051546
+GO:0017148,0.00137674286048745,0.9994581310053584,22,72,negative regulation of translation,BP,0.04854952210831336,regulation of nucleobase-containing compound metabolic process,Early,30.555555555555557
+GO:0006513,0.00140175651830719,0.9995502879414544,16,46,protein monoubiquitination,BP,0.04933920933877171,protein K48-linked deubiquitination,Early,34.78260869565217
+GO:0080134,0.00142198909658847,0.9990185245538734,117,567,regulation of response to stress,BP,0.04977494417637357,DNA damage response,Early,20.634920634920633
+GO:0035335,0.00142206574090005,0.9996128656691192,13,34,peptidyl-tyrosine dephosphorylation,BP,0.04977494417637357,macromolecule modification,Early,38.23529411764706

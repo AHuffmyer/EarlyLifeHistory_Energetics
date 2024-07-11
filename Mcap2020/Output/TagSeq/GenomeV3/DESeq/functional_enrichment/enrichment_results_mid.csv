@@ -1,0 +1,10 @@
+GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust,ParentTerm,pattern,percHits
+GO:0035082,2.946811750240928e-7,0.9999999284093536,27,71,axoneme assembly,BP,6.165712452087435e-4,axoneme assembly,Mid,38.028169014084504
+GO:0001539,7.230236820305941e-6,0.999999141876456,12,22,cilium or flagellum-dependent cell motility,BP,0.00860217553625973,cilium-dependent cell motility,Mid,54.54545454545454
+GO:0060285,7.230236820305941e-6,0.999999141876456,12,22,cilium-dependent cell motility,BP,0.00860217553625973,cilium-dependent cell motility,Mid,54.54545454545454
+GO:0003341,7.765757746079097e-6,0.999998011671908,22,60,cilium movement,BP,0.00860217553625973,axoneme assembly,Mid,36.666666666666664
+GO:0001578,1.4225596994120732e-5,0.999995269429275,29,93,microtubule bundle formation,BP,0.01409906405243618,axoneme assembly,Mid,31.182795698924732
+GO:0043687,1.7949954228617828e-5,0.9999922789422644,45,160,post-translational protein modification,BP,0.01678232312922389,post-translational protein modification,Mid,28.125
+GO:0034976,4.3032626494858125e-5,0.999980764056686,44,168,response to endoplasmic reticulum stress,BP,0.03523249519672493,response to endoplasmic reticulum stress,Mid,26.190476190476193
+GO:0030163,4.9181960028361646e-5,0.9999732058121142,74,324,protein catabolic process,BP,0.03858939538725325,post-translational protein modification,Mid,22.839506172839506
+GO:0097722,6.272728346545435e-5,0.9999822890805744,20,58,sperm motility,BP,0.04724869899751884,cilium-dependent cell motility,Mid,34.48275862068966

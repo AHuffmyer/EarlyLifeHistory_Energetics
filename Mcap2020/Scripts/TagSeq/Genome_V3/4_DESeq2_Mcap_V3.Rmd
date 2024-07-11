@@ -373,7 +373,7 @@ ann_colors = list(
 Plot heatmap of z-scores of expression.  
 ```{r}
 dev.off()
-pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=10, height=10)
+pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=12, height=12)
 pheatmap(assay(DEG_results_vst), cluster_rows=TRUE, show_rownames=FALSE, color=inferno(10), show_colnames=FALSE, fontsize_row=3, scale="row", cluster_cols=TRUE, annotation_col=df, annotation_colors = ann_colors, labels_col=legend_names_col, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", cutree_rows = 3)
 dev.off()
 ```
@@ -555,7 +555,7 @@ Run with minimum 100 genes per cluster to detect large clusters because we have 
 clusters <- degPatterns(cluster_vst, metadata = meta, time = "lifestage", col=NULL, plot=FALSE, minc = 100)
 
 ```
-6372 genes were clustered with cluster size >100 
+6330 genes were clustered with cluster size >100 
 
 Plot is showing Z score of VST normalized gene counts  
 ```{r}
@@ -614,22 +614,21 @@ cluster_data$pattern<-factor(cluster_data$pattern, levels=c("Early", "Mid", "Lat
 
 cluster_plot2<-ggplot(cluster_data,
         aes(x=lifestage, y=value)) +
-  facet_wrap(~ pattern)+
-   geom_point(colour="darkgray", size=1) +
-  ylab("Z-score of VST normalized gene counts")+
+  facet_grid(~pattern, scales = "free", space = "free")+
+   geom_point(colour="lightgray", size=1) +
+  ylab("Z-Score (VST normalized gene counts)")+
   xlab("")+
-   # change the method to make it smoother
-   geom_smooth(aes(group=genes), method = "loess", colour="red", linewidth=0.1, se=FALSE)+
-   geom_smooth(aes(group=1), method = "loess", colour="black", linewidth=1, se=TRUE)+
+  geom_smooth(aes(group=genes), method = "loess", colour="darkgray", linewidth=0.1, se=FALSE)+
+  geom_smooth(aes(group=1), method = "loess", colour="black", linewidth=1, se=TRUE)+
   geom_hline(yintercept=0.5, linetype="dashed")+
   geom_vline(xintercept=3.5, linetype="dotted")+
   geom_vline(xintercept=6.5, linetype="dotted")+
   theme_classic()+
   theme(
-    axis.text.x = element_text(angle=90, hjust=1, vjust=1)
+    axis.text.x = element_text(angle=45, hjust=1, vjust=1, color="black")
   );cluster_plot2
 
-ggsave(cluster_plot2, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot_patterns.pdf", width=8, height=6)
+ggsave(cluster_plot2, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot_patterns.pdf", width=6, height=3.5)
 ```
 
 Extract the list of genes in each cluster. 
@@ -686,14 +685,14 @@ deg_FC <- DEG_results %>%
   ylab("Gene")+
   theme(legend.position = "right",
         axis.text.y = element_blank(),
-        axis.text.x = element_text(size=14),
-        strip.text=element_text(size=16),
-        axis.title.y = element_text(size=16, face="bold"),
-        axis.title.x = element_text(size = 16, face = "bold"),
-        plot.title = element_text(size = 18, face = "bold"))+
+        axis.text.x = element_text(size=12),
+        strip.text=element_text(size=14),
+        axis.title.y = element_text(size=14, face="bold"),
+        axis.title.x = element_text(size = 14, face = "bold"),
+        plot.title = element_text(size = 16, face = "bold"))+
   ggtitle(''); deg_FC
 
-ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_foldchange.png", height=6, width=8)
+ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_foldchange.pdf", height=4, width=4)
 ```
 
 # Functional enrichment of genes identified in clusters
@@ -979,7 +978,7 @@ go_plot_cluster1 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster1
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster1.png", go_plot_cluster1, width=10, height=10)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster1.pdf", go_plot_cluster1, width=10, height=10)
 ```
 
 Cluster 5 (peaking in larvae through polyp)
@@ -1007,7 +1006,7 @@ go_plot_cluster5 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster5
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster5.png", go_plot_cluster5, width=10, height=18)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster5.pdf", go_plot_cluster5, width=10, height=18)
 ```
 
 Cluster 11 (peaking in egg through embryo 38 hpf)
@@ -1035,7 +1034,7 @@ go_plot_cluster11 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster11
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster11.png", go_plot_cluster11, width=10, height=26)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster11.pdf", go_plot_cluster11, width=10, height=26)
 ```
 
 Cluster 12 (peaking in egg through embryo 38 hpf)
@@ -1063,7 +1062,7 @@ go_plot_cluster12 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster12
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster12.png", go_plot_cluster12, width=10, height=8)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster12.pdf", go_plot_cluster12, width=10, height=8)
 ```
 
 Cluster 14 (peaking in 65 hpf embryo to polyps)
@@ -1091,7 +1090,7 @@ go_plot_cluster14 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster14
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster14.png", go_plot_cluster14, width=10, height=10)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster14.pdf", go_plot_cluster14, width=10, height=10)
 ```
 
 Cluster 15 (peaking in 38 hpf embryo to 93 hpf larvae)
@@ -1119,7 +1118,7 @@ go_plot_cluster15 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster15
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster15.png", go_plot_cluster15, width=10, height=8)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster15.pdf", go_plot_cluster15, width=10, height=8)
 ```
 
 Cluster 18 (peaking in egg through 65 hpf embryo)
@@ -1147,7 +1146,7 @@ go_plot_cluster18 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster18
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster18.png", go_plot_cluster18, width=10, height=10)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster18.pdf", go_plot_cluster18, width=10, height=10)
 ```
 
 Cluster 22 (peaking in egg through 38 hpf embryo)
@@ -1175,7 +1174,7 @@ go_plot_cluster22 <- cluster_go_results %>%
         plot.title = element_text(size = 14, face = "bold"), 
         strip.text.y.right=element_text(angle=0)); go_plot_cluster22
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster22.png", go_plot_cluster22, width=10, height=10)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_cluster22.pdf", go_plot_cluster22, width=10, height=10)
 ```
 
 ## Conduct enrichment for cluster developmental patterns 
@@ -1313,7 +1312,7 @@ num_unique <- length(unique_early_terms)
 
 # Determine the midpoint for splitting into two batches
 midpoint <- ceiling(num_unique / 2)
-midpoint <- 12
+midpoint <- 9
 
 early_data <- early_data %>%
   mutate(batch = ifelse(match(ParentTerm, unique_early_terms) <= midpoint, 1, 2))
@@ -1339,6 +1338,7 @@ go_plot_earlyA <- early_data %>%
   ggtitle("Early Development (1-38 hpf); 1845 genes")+
   theme(legend.position = "none",
         axis.text.y = element_text(size=18),
+        axis.text.x = element_text(size=18),
         axis.title.y = element_text(size=24, face="bold"),
         axis.title.x = element_text(size = 24, face = "bold"),
         plot.title = element_text(size = 24, face = "bold"), 
@@ -1364,6 +1364,7 @@ go_plot_earlyB <- early_data %>%
   ggtitle("")+
   theme(legend.position = "right",
         axis.text.y = element_text(size=18),
+        axis.text.x = element_text(size=18),
         axis.title.y = element_text(size=24, face="bold"),
         axis.title.x = element_text(size = 24, face = "bold"),
         plot.title = element_text(size = 24, face = "bold"), 
@@ -1371,9 +1372,16 @@ go_plot_earlyB <- early_data %>%
         legend.title=element_text(size=22),
         legend.text=element_text(size=18)); go_plot_earlyB
 
-go_plot_early<-plot_grid(go_plot_earlyA, go_plot_earlyB, ncol=2)
+go_plot_early<-plot_grid(go_plot_earlyA, go_plot_earlyB, ncol=2, rel_widths=c(0.85,1))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_early.png", go_plot_early, width=36, height=36)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_early.pdf", go_plot_early, width=36, height=38)
+
+early_data<-pattern_go_results %>% 
+  filter(pattern=="Early")%>%
+  dplyr::arrange(bh_adjust) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)
+
+write_csv(early_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_early.csv")
 ```
 
 Mid development
@@ -1396,12 +1404,20 @@ go_plot_mid <- pattern_go_results %>%
   ggtitle("Mid-Development (65-163 hpf); 1696 genes")+
   theme(legend.position = "right",
         axis.text.y = element_text(size=14),
+        axis.text.x = element_text(size=14),
         axis.title.y = element_text(size=18, face="bold"),
         axis.title.x = element_text(size = 14, face = "bold"),
         plot.title = element_text(size = 18, face = "bold"), 
         strip.text.y.right=element_text(angle=0, size=14)); go_plot_mid
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_mid.png", go_plot_mid, width=12, height=10)
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_mid.pdf", go_plot_mid, width=12, height=10)
+
+mid_data<-pattern_go_results %>% 
+  filter(pattern=="Mid")%>%
+  dplyr::arrange(bh_adjust) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)
+
+write_csv(mid_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_mid.csv")
 ```
 
 Late development 
@@ -1417,13 +1433,13 @@ num_unique <- length(unique_late_terms)
 
 # Determine the midpoint for splitting into two batches
 midpoint <- ceiling(num_unique / 2)
-midpoint <- 7
+midpoint <- 6
 
 late_data <- late_data %>%
   mutate(batch = ifelse(match(ParentTerm, unique_late_terms) <= midpoint, 1, 2))
 
 late_data$ParentTerm <- factor(late_data$ParentTerm) 
-late_data$ParentTerm <- factor(late_data$ParentTerm, levels = rev(levels(late_data$ParentTerm)))
+#late_data$ParentTerm <- factor(late_data$ParentTerm, levels = rev(levels(late_data$ParentTerm)))
 
 go_plot_lateA <- late_data %>% 
   filter(batch=="1")%>%
@@ -1443,9 +1459,12 @@ go_plot_lateA <- late_data %>%
   ggtitle("Late Development (183-231 hpf); 2789 genes")+
   theme(legend.position = "none",
         axis.text.y = element_text(size=14),
+        axis.text.x = element_text(size=16),
+        legend.text = element_text(size=16),
+        legend.title = element_text(size=18),
         axis.title.y = element_text(size=18, face="bold"),
         axis.title.x = element_text(size = 14, face = "bold"),
-        plot.title = element_text(size = 18, face = "bold"), 
+        plot.title = element_text(size = 16, face = "bold"), 
         strip.text.y.right=element_text(angle=0, size=14)); go_plot_lateA
 
 go_plot_lateB <- late_data %>% 
@@ -1466,17 +1485,25 @@ go_plot_lateB <- late_data %>%
   ggtitle("")+
   theme(legend.position = "right",
         axis.text.y = element_text(size=14),
+        axis.text.x = element_text(size=16),
+        legend.text = element_text(size=16),
+        legend.title = element_text(size=18),
         axis.title.y = element_text(size=18, face="bold"),
         axis.title.x = element_text(size = 14, face = "bold"),
-        plot.title = element_text(size = 18, face = "bold"), 
+        plot.title = element_text(size = 16, face = "bold"), 
         strip.text.y.right=element_text(angle=0, size=14)); go_plot_lateB
 
-go_plot_late<-plot_grid(go_plot_lateA, go_plot_lateB, ncol=2)
+go_plot_late<-plot_grid(go_plot_lateA, go_plot_lateB, ncol=2, rel_widths=c(1,1))
+ 
+ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_late.pdf", go_plot_late, width=24, height=16)
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_late.png", go_plot_late, width=24, height=16)
+late_data<-pattern_go_results %>% 
+  filter(pattern=="Late")%>%
+  dplyr::arrange(bh_adjust) %>%
+  mutate(percHits=(numDEInCat/numInCat)*100)
+
+write_csv(late_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_late.csv")
 ```
-
-
 
 
 

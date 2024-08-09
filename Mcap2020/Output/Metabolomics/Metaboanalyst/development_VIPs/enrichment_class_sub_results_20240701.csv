@@ -1,0 +1,33 @@
+"","total","expected","hits","Raw p","Holm p","FDR"
+"Amino acids, peptides, and analogues",3220,1.19,23,1.89e-23,1.68e-20,1.68e-20
+"Carbohydrates and carbohydrate conjugates",1600,0.587,11,2.03e-11,1.8e-08,9.02e-09
+"Pyrimidine ribonucleotides",26,0.00957,3,1.24e-07,0.00011,3.67e-05
+"Pyrimidine ribonucleosides",5,0.00184,2,1.34e-06,0.00118,0.000297
+"Purine ribonucleotides",82,0.0302,3,4.15e-06,0.00368,0.000739
+"Purine nucleotide sugars",24,0.00883,2,3.67e-05,0.0325,0.00544
+"Pyrimidine nucleotide sugars",30,0.011,2,5.78e-05,0.0511,0.00734
+"Tryptamines and derivatives",51,0.0188,2,0.000168,0.149,0.0187
+"Dicarboxylic acids and derivatives",75,0.0276,2,0.000365,0.322,0.0342
+"Pterins and derivatives",77,0.0283,2,0.000384,0.338,0.0342
+"Nicotinamide dinucleotides",2,0.000736,1,0.000736,0.648,0.0596
+"Aminopiperidines",3,0.0011,1,0.0011,0.97,0.0819
+"Flavin nucleotides",4,0.00147,1,0.00147,1,0.0935
+"Hydroxypyridines",4,0.00147,1,0.00147,1,0.0935
+"Organic phosphoric acids",5,0.00184,1,0.00184,1,0.109
+"Alloxazines and isoalloxazines",8,0.00294,1,0.00294,1,0.164
+"Purine ribonucleosides",10,0.00368,1,0.00367,1,0.182
+"Alpha-keto acids and derivatives",10,0.00368,1,0.00367,1,0.182
+"Cresols",23,0.00847,1,0.00843,1,0.373
+"Phenylpropanoic acids",24,0.00883,1,0.0088,1,0.373
+"Other alkaloids",24,0.00883,1,0.0088,1,0.373
+"Organosulfonic acids and derivatives",48,0.0177,1,0.0175,1,0.709
+"Phosphate esters",84,0.0309,1,0.0305,1,1
+"Gamma butyrolactones",94,0.0346,1,0.034,1,1
+"Phenethylamines",95,0.035,1,0.0344,1,1
+"Benzenediols",105,0.0386,1,0.0379,1,1
+"Indoles",133,0.049,1,0.0478,1,1
+"Pyrimidines and pyrimidine derivatives",210,0.0773,1,0.0744,1,1
+"Alcohols and polyols",309,0.114,1,0.108,1,1
+"Amines",350,0.129,1,0.121,1,1
+"Fatty acid esters",1650,0.607,2,0.124,1,1
+"Fatty acids and conjugates",941,0.346,1,0.293,1,1

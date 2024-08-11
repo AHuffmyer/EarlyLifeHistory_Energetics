@@ -106,8 +106,8 @@ size <- size %>%
 
 Remove 38 hpf group (prawn chip). There is not a reliable volume measurement approximation for this group that we are confident in.  
 ```{r}
-size <- size %>%
-  filter(!lifestage=="Embryo (38 hpf)")
+#size <- size %>%
+  #filter(!lifestage=="Embryo (38 hpf)")
 ```
 
 ## Calculate volume  
@@ -582,6 +582,35 @@ legend_plot<-corr %>%
 
 ```
 
+Generate a plot for use in publication. 
+```{r}
+cells_size_plot2<-corr %>%
+    filter(!group=="Attached Recruit")%>%
+    group_by(lifestage, group)%>%
+    summarise(mean=mean(counts_volume, na.rm=TRUE), se=sd(counts_volume, na.rm=TRUE)/sqrt(length(counts_volume)))%>%
+
+    ggplot(., aes(x = lifestage, y = mean)) +
+    geom_point(aes(fill=group), pch = 21, size=8) + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se, group=group), colour="black", width=0) + 
+    xlab("") + 
+    scale_fill_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"), guide="none")+
+    scale_color_manual(name="Lifestage", values=c("#8C510A", "#DFC27D","#80CDC1", "#003C30", "#BA55D3"))+
+    ylab(expression(bold(paste("Symbiont density (cells mm"^-3," volume)"))))+
+    ylim(0, 250000)+
+    theme_classic() + 
+    theme(
+      legend.position="top",
+      axis.title=element_text(face="bold", size=14),
+      axis.text=element_text(size=12, color="black"), 
+      legend.title=element_text(face="bold", size=14), 
+      axis.text.x = element_text(angle=45, hjust=1, vjust=1)
+      ); cells_size_plot2
+
+ggsave(plot=cells_size_plot2, filename="Mcap2020/Figures/Physiology/cells_volume.png", width=6, height=6)
+
+ggsave(plot=cells_size_plot2, filename="Mcap2020/Figures/Physiology/cells_volume.pdf", width=6, height=6)
+```
+
 Plot as linear relationship.  
 
 ```{r}
@@ -630,6 +659,7 @@ View posthoc differences.
 ```{r}
 emm = emmeans(model, ~ lifestage)
 cld(emm, Letters=c(LETTERS)) #letter display
+pairs(emm) #letter display
 
 ```
 
@@ -701,6 +731,8 @@ recruit_size_plot_mean<-corr %>%
       legend.title=element_text(face="bold", size=14), 
       axis.text.x=element_text(angle=45, hjust=1)
       ); recruit_size_plot_mean
+
+ggsave(filename="Mcap2020/Figures/Physiology/recruit_densities.pdf", plot=recruit_size_plot_mean, width=4, height=6)
 ```
 
 View summary of symbiont densities per unit surface area.  

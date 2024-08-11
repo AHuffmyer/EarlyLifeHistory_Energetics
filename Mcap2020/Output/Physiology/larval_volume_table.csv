@@ -1,6 +1,7 @@
 Lifestage,HPF,n,Mean,SE
 Egg (1 hpf),1,60,0.031,0.001
 Embryo (5 hpf),5,60,0.032,0.001
+Embryo (38 hpf),38,60,0.039,0.002
 Embryo (65 hpf),65,60,0.019,0.001
 Larvae (93 hpf),93,60,0.018,0.001
 Larvae (163 hpf),163,60,0.033,0.001

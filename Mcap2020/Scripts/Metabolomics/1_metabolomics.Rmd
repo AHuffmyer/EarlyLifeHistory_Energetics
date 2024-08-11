@@ -1296,7 +1296,7 @@ atp<-c("ADP", "ATP")
 
 pyrimidine<-c("Carbamoyl phosphate", "Uridine", "UMP", "CMP", "Orotate")
 
-fatty_acids<-c("Adipic acid", "L-Octanoylcarnitine", "O-Decanoyl-L-carnitine")
+fatty_acids<-c("L-Octanoylcarnitine", "O-Decanoyl-L-carnitine", "Acetyl CoA")
 ```
 
 Prepare data frame.  

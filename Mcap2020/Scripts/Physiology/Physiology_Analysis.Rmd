@@ -678,6 +678,19 @@ corr%>%
   write_csv(., "Mcap2020/Output/Physiology/normalized_size_cells_summary.csv")
 ```
 
+Calculate % change between 38 and 65 hpf and 93 and 163 hpf. 
+
+```{r}
+#38 and 65 hpf 
+(142134-35452)/35452
+#300%
+
+#93 and 163 hpf 
+(86779-152846)/152846
+#-43%
+
+```
+
 ### Attached Recruit Plotting  
 
 Plot as box plot for cells per mm^2.    

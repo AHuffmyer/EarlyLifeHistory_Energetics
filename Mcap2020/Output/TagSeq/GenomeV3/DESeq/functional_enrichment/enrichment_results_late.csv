@@ -1,111 +1,53 @@
 GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust,ParentTerm,pattern,percHits
-GO:0002181,3.2975293372877996e-32,1,73,93,cytoplasmic translation,BP,3.1047887475233283e-28,cytoplasmic translation,Late,78.49462365591397
-GO:0006614,5.217184531849123e-24,1,50,61,SRP-dependent cotranslational protein targeting to membrane,BP,1.9648960383850166e-20,SRP-dependent cotranslational protein targeting to membrane,Late,81.9672131147541
-GO:0006613,7.866116674260175e-23,1,51,65,cotranslational protein targeting to membrane,BP,1.645853812144371e-19,SRP-dependent cotranslational protein targeting to membrane,Late,78.46153846153847
-GO:0045047,4.938345280832997e-22,1,55,75,protein targeting to ER,BP,9.299397998336619e-19,SRP-dependent cotranslational protein targeting to membrane,Late,73.33333333333333
-GO:0072599,3.3178492683958518e-21,1,56,79,establishment of protein localization to endoplasmic reticulum,BP,5.679856324832934e-18,SRP-dependent cotranslational protein targeting to membrane,Late,70.88607594936708
-GO:0070972,1.7747177283927498e-19,1,58,88,protein localization to endoplasmic reticulum,BP,2.570746887951067e-16,SRP-dependent cotranslational protein targeting to membrane,Late,65.9090909090909
-GO:0000184,1.2970998688932768e-18,1,52,76,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",BP,1.7446919736520929e-15,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,68.42105263157895
-GO:0006412,5.7336574449693965e-18,1,111,242,translation,BP,7.19803355641458e-15,cytoplasmic translation,Late,45.867768595041326
-GO:0043043,1.1362884357569127e-17,1,114,253,peptide biosynthetic process,BP,1.2586733843375543e-14,cytoplasmic translation,Late,45.059288537549406
-GO:0006612,1.0577660283595848e-16,1,55,89,protein targeting to membrane,BP,1.1065995600021858e-13,SRP-dependent cotranslational protein targeting to membrane,Late,61.79775280898876
-GO:0043604,7.847800151970324e-16,1,125,301,amide biosynthetic process,BP,7.777996034829115e-13,cytoplasmic translation,Late,41.52823920265781
-GO:0006518,1.2197306608117523e-15,1,126,306,peptide metabolic process,BP,1.1484374036873056e-12,cytoplasmic translation,Late,41.17647058823529
-GO:0043603,2.5118323228570696e-14,1,155,417,amide metabolic process,BP,2.1500142941691585e-11,cytoplasmic translation,Late,37.170263788968825
-GO:0006413,2.6725037101584743e-14,1,56,100,translational initiation,BP,2.1880833637388793e-11,cytoplasmic translation,Late,56.00000000000001
-GO:0090150,1.6169102574192223e-11,1,64,136,establishment of protein localization to membrane,BP,1.1710783483638991e-8,SRP-dependent cotranslational protein targeting to membrane,Late,47.05882352941176
-GO:1901566,4.812256174902912e-11,1,218,693,organonitrogen compound biosynthetic process,BP,3.3562813344295094e-8,organonitrogen compound biosynthetic process,Late,31.457431457431458
-GO:0006119,1.9572727987508566e-10,0.99999999996881,37,64,oxidative phosphorylation,BP,1.316335859759907e-7,oxidative phosphorylation,Late,57.8125
-GO:0046034,6.34279479467154e-10,0.9999999998244248,55,117,ATP metabolic process,BP,4.118660992360682e-7,ATP metabolic process,Late,47.008547008547005
-GO:0000956,1.0458171722266054e-9,0.999999999691345,59,130,nuclear-transcribed mRNA catabolic process,BP,6.564594390066404e-7,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,45.38461538461539
-GO:0009205,2.2204223321282475e-9,0.9999999992771822,61,139,purine ribonucleoside triphosphate metabolic process,BP,1.3487991269776462e-6,ATP metabolic process,Late,43.884892086330936
-GO:0009144,2.919299306353436e-9,0.9999999990304292,62,143,purine nucleoside triphosphate metabolic process,BP,1.6415668213855149e-6,ATP metabolic process,Late,43.35664335664335
-GO:0009199,2.963903771818146e-9,0.9999999990151796,62,143,ribonucleoside triphosphate metabolic process,BP,1.6415668213855149e-6,ATP metabolic process,Late,43.35664335664335
-GO:0044281,4.284862269545792e-9,1,258,884,small molecule metabolic process,BP,2.305378325651909e-6,small molecule metabolic process,Late,29.185520361990953
-GO:0009141,1.2513713042266572e-8,0.9999999954385996,64,154,nucleoside triphosphate metabolic process,BP,6.2012034289189945e-6,ATP metabolic process,Late,41.55844155844156
-GO:0006402,1.2851167675748984e-8,0.9999999955146543,60,139,mRNA catabolic process,BP,6.205136884667413e-6,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,43.16546762589928
-GO:0006605,1.3671706545820691e-8,0.9999999944634114,77,196,protein targeting,BP,6.436297649108735e-6,SRP-dependent cotranslational protein targeting to membrane,Late,39.285714285714285
-GO:0019693,2.0103271111233705e-8,1,91,250,ribose phosphate metabolic process,BP,9.233285324283947e-6,ATP metabolic process,Late,36.4
-GO:0006120,2.777751012416317e-8,0.9999999976861936,18,24,"mitochondrial electron transport, NADH to ubiquinone",BP,1.2454245074955157e-5,oxidative phosphorylation,Late,75
-GO:0009150,1.4254382716556118e-7,1,82,227,purine ribonucleotide metabolic process,BP,5.835310455118874e-5,ATP metabolic process,Late,36.12334801762114
-GO:0006163,1.5462933889474857e-7,1,83,231,purine nucleotide metabolic process,BP,5.835573806489756e-5,organonitrogen compound biosynthetic process,Late,35.93073593073593
-GO:0042773,1.549459350669045e-7,0.9999999718002228,25,43,ATP synthesis coupled electron transport,BP,5.835573806489756e-5,oxidative phosphorylation,Late,58.139534883720934
-GO:0042775,1.549459350669045e-7,0.9999999718002228,25,43,mitochondrial ATP synthesis coupled electron transport,BP,5.835573806489756e-5,oxidative phosphorylation,Late,58.139534883720934
-GO:0006753,1.8206260320850245e-7,1,107,320,nucleoside phosphate metabolic process,BP,6.593117078883287e-5,small molecule metabolic process,Late,33.4375
-GO:0009126,2.0208079871686998e-7,0.9999999233452233,57,140,purine nucleoside monophosphate metabolic process,BP,7.047006519698848e-5,ATP metabolic process,Late,40.714285714285715
-GO:0009167,2.0208079871686998e-7,0.9999999233452233,57,140,purine ribonucleoside monophosphate metabolic process,BP,7.047006519698848e-5,ATP metabolic process,Late,40.714285714285715
-GO:0009117,2.3616136037158978e-7,1,105,314,nucleotide metabolic process,BP,7.941347459209656e-5,small molecule metabolic process,Late,33.43949044585987
-GO:0006082,2.6834730822907897e-7,1,145,469,organic acid metabolic process,BP,8.865347651336466e-5,small molecule metabolic process,Late,30.916844349680172
-GO:0072521,4.269406271312148e-7,1,89,257,purine-containing compound metabolic process,BP,1.296728862823856e-4,organonitrogen compound biosynthetic process,Late,34.63035019455253
-GO:0043436,8.378757226031892e-7,1,141,462,oxoacid metabolic process,BP,2.4653183956782274e-4,small molecule metabolic process,Late,30.519480519480517
-GO:0009259,1.262654695020376e-6,0.999999579699334,82,236,ribonucleotide metabolic process,BP,3.2571302139628355e-4,ATP metabolic process,Late,34.74576271186441
-GO:0009161,1.338260923277998e-6,0.999999450098944,57,147,ribonucleoside monophosphate metabolic process,BP,3.3601055261663976e-4,ATP metabolic process,Late,38.775510204081634
-GO:0006401,2.048333800214703e-6,0.99999912224424,60,157,RNA catabolic process,BP,5.009373219719879e-4,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,38.21656050955414
-GO:0019752,2.785409743752695e-6,0.9999986510149173,128,415,carboxylic acid metabolic process,BP,6.63950011197557e-4,small molecule metabolic process,Late,30.843373493975907
-GO:0006091,4.855083846835606e-6,0.9999979345572636,73,211,generation of precursor metabolites and energy,BP,0.00102159876540555,oxidative phosphorylation,Late,34.59715639810427
-GO:0009123,4.857813595946156e-6,0.9999978538672863,59,159,nucleoside monophosphate metabolic process,BP,0.00102159876540555,ATP metabolic process,Late,37.10691823899371
-GO:0022904,7.226033672917566e-6,0.9999981007165356,26,53,respiratory electron transport chain,BP,0.00143235200099695,oxidative phosphorylation,Late,49.056603773584904
-GO:0019362,7.505942145209678e-6,0.9999977077250084,31,68,pyridine nucleotide metabolic process,BP,0.00145715872717982,organonitrogen compound biosynthetic process,Late,45.588235294117645
-GO:0046496,7.505942145209678e-6,0.9999977077250084,31,68,nicotinamide nucleotide metabolic process,BP,0.00145715872717982,organonitrogen compound biosynthetic process,Late,45.588235294117645
-GO:0042593,9.12709900610001e-6,0.999996438824606,44,110,glucose homeostasis,BP,0.00173608486246332,glucose homeostasis,Late,40
-GO:0042255,9.905920161904404e-6,0.9999973642707684,26,52,ribosome assembly,BP,0.00182880767224335,ribosome assembly,Late,50
-GO:0034655,1.1338142812168928e-5,0.9999945077578511,79,234,nucleobase-containing compound catabolic process,BP,0.00207289871161119,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,33.76068376068376
-GO:0022900,1.154498354344781e-5,0.999995810549822,38,92,electron transport chain,BP,0.00209041908756409,oxidative phosphorylation,Late,41.30434782608695
-GO:0000028,1.1995661088063906e-5,0.9999987719753816,13,18,ribosomal small subunit assembly,BP,0.00215133613285077,ribosome assembly,Late,72.22222222222221
-GO:0072524,1.325772549802421e-5,0.999995603706374,33,75,pyridine-containing compound metabolic process,BP,0.0023552474420122,organonitrogen compound biosynthetic process,Late,44
-GO:0033500,1.3967288475442171e-5,0.999994352776694,45,115,carbohydrate homeostasis,BP,0.00245811223627151,glucose homeostasis,Late,39.130434782608695
-GO:0010257,2.0027736340627655e-5,0.9999966069905,16,27,NADH dehydrogenase complex assembly,BP,0.00339767840567891,mitochondrial respiratory chain complex I assembly,Late,59.25925925925925
-GO:0032981,2.0027736340627655e-5,0.9999966069905,16,27,mitochondrial respiratory chain complex I assembly,BP,0.00339767840567891,mitochondrial respiratory chain complex I assembly,Late,59.25925925925925
-GO:0006739,2.037896930657633e-5,0.999996541908921,16,27,NADP metabolic process,BP,0.00342639616975124,organonitrogen compound biosynthetic process,Late,59.25925925925925
-GO:0006811,2.2822635832420263e-5,0.9999862175281222,129,429,monoatomic ion transport,BP,0.00380330137486996,monoatomic ion transport,Late,30.069930069930066
-GO:0019637,2.31532952767274e-5,0.9999856646985426,144,490,organophosphate metabolic process,BP,0.00382455880136889,ATP metabolic process,Late,29.38775510204082
-GO:0045333,2.4866209410728743e-5,0.9999908514912382,36,88,cellular respiration,BP,0.00407178773402985,oxidative phosphorylation,Late,40.909090909090914
-GO:0042776,2.8969921395398726e-5,0.9999979287737194,10,13,proton motive force-driven mitochondrial ATP synthesis,BP,0.00462315754065045,ATP metabolic process,Late,76.92307692307693
-GO:0019439,3.794759859023808e-5,0.999979460613783,84,259,aromatic compound catabolic process,BP,0.00590571263679977,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,32.432432432432435
-GO:0055086,3.970765178705712e-5,0.999976408486744,113,373,nucleobase-containing small molecule metabolic process,BP,0.00612897369509895,small molecule metabolic process,Late,30.29490616621984
-GO:0006887,4.2022353354826544e-5,0.9999756026911012,103,330,exocytosis,BP,0.00638163658084466,exocytosis,Late,31.212121212121215
-GO:0045055,4.420288755055197e-5,0.9999747050211826,97,308,regulated exocytosis,BP,0.00665907660371555,exocytosis,Late,31.493506493506494
-GO:0009206,4.51894272443582e-5,0.9999880131399131,22,45,purine ribonucleoside triphosphate biosynthetic process,BP,0.00675366749554372,ATP metabolic process,Late,48.888888888888886
-GO:0042407,5.137097072910025e-5,0.9999936778211078,12,18,cristae formation,BP,0.00761706102204477,ribosome assembly,Late,66.66666666666666
-GO:0034220,5.2720437278212754e-5,0.9999696557485076,95,303,monoatomic ion transmembrane transport,BP,0.00775608245614081,monoatomic ion transport,Late,31.353135313531354
-GO:0044270,5.731539178199025e-5,0.9999684791149946,82,254,cellular nitrogen compound catabolic process,BP,0.00823897818814243,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,32.28346456692913
-GO:0098869,6.476551548261483e-5,0.9999836868218804,20,40,cellular oxidant detoxification,BP,0.00923938956100848,cellular oxidant detoxification,Late,50
-GO:0046700,6.657679735919742e-5,0.9999631885285974,82,255,heterocycle catabolic process,BP,0.00935602739605258,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,32.15686274509804
-GO:0009145,6.878973419195236e-5,0.9999809821004816,22,46,purine nucleoside triphosphate biosynthetic process,BP,0.00959540358939744,ATP metabolic process,Late,47.82608695652174
-GO:0030834,7.416997900810588e-5,0.9999917098963708,11,16,regulation of actin filament depolymerization,BP,0.01012097735291044,mitochondrial respiratory chain complex I assembly,Late,68.75
-GO:1901701,8.267400279195636e-5,0.9999478998199466,127,432,cellular response to oxygen-containing compound,BP,0.01104137692606617,cellular oxidant detoxification,Late,29.398148148148145
-GO:0072594,8.79956799981662e-5,0.9999509958984945,80,249,establishment of protein localization to organelle,BP,0.01166934260595399,SRP-dependent cotranslational protein targeting to membrane,Late,32.1285140562249
-GO:0009201,1.0515602035931202e-4,0.9999696980810986,22,47,ribonucleoside triphosphate biosynthetic process,BP,0.01356296588620688,ATP metabolic process,Late,46.808510638297875
-GO:1901361,1.14412713928607e-4,0.99993363142461,88,282,organic cyclic compound catabolic process,BP,0.01436337210659732,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,31.20567375886525
-GO:0098660,1.1988415708836776e-4,0.999934642531784,72,221,inorganic ion transmembrane transport,BP,0.01495058650417916,monoatomic ion transport,Late,32.57918552036199
-GO:1901879,1.3956430841264165e-4,0.9999657884631796,18,35,regulation of protein depolymerization,BP,0.01652915403596512,mitochondrial respiratory chain complex I assembly,Late,51.42857142857142
-GO:1990748,1.5296210193826344e-4,0.999957730424178,20,42,cellular detoxification,BP,0.01756359354633804,cellular oxidant detoxification,Late,47.61904761904761
-GO:0005996,1.5506228094683527e-4,0.9999367270716196,35,91,monosaccharide metabolic process,BP,0.01769683522733245,small molecule metabolic process,Late,38.46153846153847
-GO:0006754,1.6037103476306702e-4,0.999955504752261,20,42,ATP biosynthetic process,BP,0.01808351470433122,ATP metabolic process,Late,47.61904761904761
-GO:0098662,1.8167550438371764e-4,0.9999022771136308,65,197,inorganic cation transmembrane transport,BP,0.02036387751815349,monoatomic ion transport,Late,32.99492385786802
-GO:0006810,1.9136666114790565e-4,0.9998504768946056,433,1732,transport,BP,0.02084032416196339,monoatomic ion transport,Late,25
-GO:0009142,2.1067705376274023e-4,0.9999327029013936,23,52,nucleoside triphosphate biosynthetic process,BP,0.02241389604184272,ATP metabolic process,Late,44.230769230769226
-GO:1901700,2.216432245741443e-4,0.9998442205473026,187,686,response to oxygen-containing compound,BP,0.02344810989862758,cellular oxidant detoxification,Late,27.259475218658892
-GO:0055082,2.3373166557479936e-4,0.9998601820042587,89,291,intracellular chemical homeostasis,BP,0.02458883237116786,glucose homeostasis,Late,30.584192439862544
-GO:0015986,2.389298660555134e-4,0.99997093503515,10,15,proton motive force-driven ATP synthesis,BP,0.02485794645133355,ATP metabolic process,Late,66.66666666666666
-GO:1901135,2.442286427091924e-4,0.999835665267859,145,520,carbohydrate derivative metabolic process,BP,0.02526961302668572,carbohydrate derivative metabolic process,Late,27.884615384615387
-GO:0071326,2.480578191968727e-4,0.9999223086866632,22,49,cellular response to monosaccharide stimulus,BP,0.02552555624752081,cellular oxidant detoxification,Late,44.89795918367347
-GO:0019748,2.5339897003961434e-4,0.9999111736524644,26,60,secondary metabolic process,BP,0.02593345654791292,secondary metabolic process,Late,43.333333333333336
-GO:0006027,2.708554619408049e-4,0.9999436375358248,14,26,glycosaminoglycan catabolic process,BP,0.02757015785841782,carbohydrate derivative metabolic process,Late,53.84615384615385
-GO:0032787,2.859889379324568e-4,0.9998406582118108,68,214,monocarboxylic acid metabolic process,BP,0.02895407360325856,small molecule metabolic process,Late,31.775700934579437
-GO:0071322,3.0272078215154777e-4,0.9998969613822204,24,56,cellular response to carbohydrate stimulus,BP,0.03048414464543206,cellular oxidant detoxification,Late,42.857142857142854
-GO:0046364,3.1681366396820316e-4,0.9999222311562294,16,32,monosaccharide biosynthetic process,BP,0.0317336069477938,small molecule metabolic process,Late,50
-GO:0002252,3.486258167469242e-4,0.9997799148623956,104,349,immune effector process,BP,0.03455248818505963,immune effector process,Late,29.799426934097422
-GO:0098655,3.932176635715952e-4,0.999774868685348,71,225,monoatomic cation transmembrane transport,BP,0.03856605115998286,monoatomic ion transport,Late,31.555555555555554
-GO:0048878,4.016899261191213e-4,0.9997313654458004,131,464,chemical homeostasis,BP,0.03919286527849312,glucose homeostasis,Late,28.23275862068966
-GO:0033108,4.2157414311639794e-4,0.9998696027668822,20,45,mitochondrial respiratory chain complex assembly,BP,0.04071675499086381,ribosome assembly,Late,44.44444444444444
-GO:0071417,4.216327982166875e-4,0.9997482231766284,81,265,cellular response to organonitrogen compound,BP,0.04071675499086381,cellular oxidant detoxification,Late,30.566037735849054
-GO:0035864,4.2617650335076353e-4,0.9999395805988452,10,16,response to potassium ion,BP,0.04094555987039912,response to potassium ion,Late,62.5
-GO:0044273,4.706098140416599e-4,0.999885513369152,15,30,sulfur compound catabolic process,BP,0.04369897713767051,"nuclear-transcribed mRNA catabolic process, nonsense-mediated decay",Late,50
-GO:0098754,4.8486301033885194e-4,0.9998270963521269,24,58,detoxification,BP,0.04432259877519864,cellular oxidant detoxification,Late,41.37931034482759
-GO:0051016,5.010862292754066e-4,0.9999670890017012,7,9,barbed-end actin filament capping,BP,0.04558432262553227,mitochondrial respiratory chain complex I assembly,Late,77.77777777777779
-GO:0006164,5.131306189445856e-4,0.9997695672986088,36,99,purine nucleotide biosynthetic process,BP,0.04625459802974797,organonitrogen compound biosynthetic process,Late,36.36363636363637
-GO:1902600,5.208865481599793e-4,0.9998181455834348,23,55,proton transmembrane transport,BP,0.04670864089714558,monoatomic ion transport,Late,41.81818181818181
-GO:0071331,5.278718153060336e-4,0.999827452047642,21,48,cellular response to hexose stimulus,BP,0.04688846299069772,cellular oxidant detoxification,Late,43.75
-GO:0071333,5.278718153060336e-4,0.999827452047642,21,48,cellular response to glucose stimulus,BP,0.04688846299069772,cellular oxidant detoxification,Late,43.75
-GO:0006812,5.36682669832559e-4,0.9996674723791668,90,301,monoatomic cation transport,BP,0.04700591328193916,monoatomic ion transport,Late,29.900332225913623
+GO:0055082,8.235660691878786e-8,1,110,291,intracellular chemical homeostasis,BP,3.189176493245442e-4,intracellular chemical homeostasis,Late,37.80068728522337
+GO:0006082,8.467889366590842e-8,1,160,469,organic acid metabolic process,BP,3.189176493245442e-4,organic acid metabolic process,Late,34.11513859275053
+GO:0043436,2.4279262555959386e-7,1,156,462,oxoacid metabolic process,BP,6.806919049409827e-4,organic acid metabolic process,Late,33.76623376623377
+GO:0019748,2.530318801225043e-7,0.9999999379084142,34,60,secondary metabolic process,BP,6.806919049409827e-4,secondary metabolic process,Late,56.666666666666664
+GO:0048878,3.434305827075811e-7,1,158,464,chemical homeostasis,BP,8.083926628708074e-4,intracellular chemical homeostasis,Late,34.05172413793103
+GO:0019752,6.372784628658827e-7,1,141,415,carboxylic acid metabolic process,BP,0.00125443641486718,organic acid metabolic process,Late,33.97590361445783
+GO:0015718,7.327704616610391e-7,0.9999998336474216,29,50,monocarboxylic acid transport,BP,0.00125443641486718,monocarboxylic acid transport,Late,57.99999999999999
+GO:0042593,8.793088233928937e-7,0.9999996797324192,50,110,glucose homeostasis,BP,0.00137985537110929,intracellular chemical homeostasis,Late,45.45454545454545
+GO:0044281,9.703762158078516e-7,0.9999996049455324,270,884,small molecule metabolic process,BP,0.00140562727075981,organic acid metabolic process,Late,30.542986425339368
+GO:0007517,1.2599225259580765e-6,0.9999994401890948,70,171,muscle organ development,BP,0.00158170673908776,muscle organ development,Late,40.93567251461988
+GO:0060537,1.6651336243956888e-6,0.9999992769687706,65,158,muscle tissue development,BP,0.00184447831064677,muscle tissue development,Late,41.139240506329116
+GO:1901615,2.149773534179516e-6,0.99999928883021,80,205,organic hydroxy compound metabolic process,BP,0.0022490214123408,organic hydroxy compound metabolic process,Late,39.02439024390244
+GO:0060538,3.143405118051864e-6,0.9999988405805732,46,102,skeletal muscle organ development,BP,0.00311544535673866,muscle organ development,Late,45.09803921568628
+GO:0033500,4.160077731818097e-6,0.9999983630731152,50,115,carbohydrate homeostasis,BP,0.00359623313386315,intracellular chemical homeostasis,Late,43.47826086956522
+GO:0071322,7.733461479516313e-6,0.9999978473791844,29,56,cellular response to carbohydrate stimulus,BP,0.0052774000001792,cellular response to glucose stimulus,Late,51.78571428571429
+GO:0071331,8.12726886544512e-6,0.9999979466900712,26,48,cellular response to hexose stimulus,BP,0.0052774000001792,cellular response to glucose stimulus,Late,54.166666666666664
+GO:0071333,8.12726886544512e-6,0.9999979466900712,26,48,cellular response to glucose stimulus,BP,0.0052774000001792,cellular response to glucose stimulus,Late,54.166666666666664
+GO:0071326,1.335069116457247e-5,0.9999964759007502,26,49,cellular response to monosaccharide stimulus,BP,0.007856464541252,cellular response to glucose stimulus,Late,53.06122448979592
+GO:0009749,1.6411124881531066e-5,0.9999939842250994,39,87,response to glucose,BP,0.00908934978365033,cellular response to glucose stimulus,Late,44.827586206896555
+GO:0034284,2.1435508324785504e-5,0.999991761297555,41,94,response to monosaccharide,BP,0.01049619245018414,cellular response to glucose stimulus,Late,43.61702127659575
+GO:0001678,2.2129720939880895e-5,0.9999938955819652,26,50,intracellular glucose homeostasis,BP,0.01049619245018414,intracellular chemical homeostasis,Late,52
+GO:0060485,2.2295560406105133e-5,0.9999913165008554,42,96,mesenchyme development,BP,0.01049619245018414,muscle tissue development,Late,43.75
+GO:0045597,3.253195114972627e-5,0.9999794689283614,151,465,positive regulation of cell differentiation,BP,0.01285439041443653,positive regulation of cell differentiation,Late,32.47311827956989
+GO:0006811,3.3440755195698665e-5,0.9999793603525088,141,429,monoatomic ion transport,BP,0.01285439041443653,monoatomic ion transport,Late,32.86713286713287
+GO:0009746,4.130237921862191e-5,0.9999839543183776,39,90,response to hexose,BP,0.01499688422868226,cellular response to glucose stimulus,Late,43.333333333333336
+GO:0061138,4.169649813620209e-5,0.999983146576952,42,98,morphogenesis of a branching epithelium,BP,0.01499688422868226,morphogenesis of a branching epithelium,Late,42.857142857142854
+GO:0042440,4.220885051883384e-5,0.9999839917825396,38,84,pigment metabolic process,BP,0.01499688422868226,pigment metabolic process,Late,45.23809523809524
+GO:0015849,4.886052276659168e-5,0.9999806230502418,40,92,organic acid transport,BP,0.01643022328960157,monocarboxylic acid transport,Late,43.47826086956522
+GO:0046942,4.886052276659168e-5,0.9999806230502418,40,92,carboxylic acid transport,BP,0.01643022328960157,monocarboxylic acid transport,Late,43.47826086956522
+GO:0019725,5.418920002577233e-5,0.9999665374805908,129,391,cellular homeostasis,BP,0.01729553941839523,intracellular chemical homeostasis,Late,32.992327365728904
+GO:0018958,6.668288339154604e-5,0.9999806557120936,25,48,phenol-containing compound metabolic process,BP,0.02061450439489713,organic hydroxy compound metabolic process,Late,52.083333333333336
+GO:0030003,6.848697473527392e-5,0.9999620732372024,84,236,intracellular monoatomic cation homeostasis,BP,0.02080126163290231,intracellular chemical homeostasis,Late,35.59322033898305
+GO:0006739,7.575128610536499e-5,0.9999854298358448,16,27,NADP metabolic process,BP,0.02129063386044967,organic acid metabolic process,Late,59.25925925925925
+GO:0009743,8.731837032830897e-5,0.9999621069919624,44,108,response to carbohydrate,BP,0.02356506650359141,cellular response to glucose stimulus,Late,40.74074074074074
+GO:0071417,8.884922318278321e-5,0.9999489518194744,92,265,cellular response to organonitrogen compound,BP,0.02356506650359141,cellular response to glucose stimulus,Late,34.71698113207547
+GO:0001763,9.41587635165104e-5,0.9999600033018282,42,101,morphogenesis of a branching structure,BP,0.02415624321791959,morphogenesis of a branching epithelium,Late,41.584158415841586
+GO:0048863,1.073945275853126e-4,0.999953419415184,43,105,stem cell differentiation,BP,0.02660982038103975,positive regulation of cell differentiation,Late,40.95238095238095
+GO:1901701,1.2138351463274706e-4,0.999921362795438,139,432,cellular response to oxygen-containing compound,BP,0.02968536316947091,cellular response to glucose stimulus,Late,32.175925925925924
+GO:0098771,1.2978317079733267e-4,0.9999237261942489,94,275,inorganic ion homeostasis,BP,0.03054933611605714,intracellular chemical homeostasis,Late,34.18181818181818
+GO:0030335,1.3371438558514384e-4,0.9999297587825978,66,177,positive regulation of cell migration,BP,0.03108611845622029,positive regulation of cell migration,Late,37.28813559322034
+GO:0006582,1.363121292477053e-4,0.9999712928201498,17,28,melanin metabolic process,BP,0.03130358177882364,pigment metabolic process,Late,60.71428571428571
+GO:0045595,1.5970092826610735e-4,0.9998841210923244,248,833,regulation of cell differentiation,BP,0.03489603885148193,positive regulation of cell differentiation,Late,29.7719087635054
+GO:0006880,1.627160945349757e-4,1,6,6,intracellular sequestering of iron ion,BP,0.03489603885148193,intracellular chemical homeostasis,Late,100
+GO:0097577,1.627160945349757e-4,1,6,6,sequestering of iron ion,BP,0.03489603885148193,intracellular chemical homeostasis,Late,100
+GO:0006873,1.6307426153313204e-4,0.9999061120974448,85,245,intracellular monoatomic ion homeostasis,BP,0.03489603885148193,intracellular chemical homeostasis,Late,34.69387755102041
+GO:0055080,1.7108703925959492e-4,0.9998996665013614,90,263,monoatomic cation homeostasis,BP,0.03587440162433986,intracellular chemical homeostasis,Late,34.22053231939163
+GO:2000147,1.7575311470506414e-4,0.9999059874987302,67,182,positive regulation of cell motility,BP,0.03636930662649519,positive regulation of cell migration,Late,36.81318681318682
+GO:0061687,2.0705103557453955e-4,1,6,6,detoxification of inorganic compound,BP,0.04019565000932117,cellular response to glucose stimulus,Late,100
+GO:0043648,2.3980109057789825e-4,0.999913366597023,28,63,dicarboxylic acid metabolic process,BP,0.04396613252581782,organic acid metabolic process,Late,44.44444444444444
+GO:0048663,2.621322155105765e-4,0.9999069380438158,27,60,neuron fate commitment,BP,0.04656803537999685,positive regulation of cell differentiation,Late,45
+GO:0010876,2.868936607929665e-4,0.999866948567304,44,110,lipid localization,BP,0.04911358660356683,monoatomic ion transport,Late,40
+GO:1901700,2.908281533878726e-4,0.9997918753372874,206,686,response to oxygen-containing compound,BP,0.04933860321123449,cellular response to glucose stimulus,Late,30.029154518950435

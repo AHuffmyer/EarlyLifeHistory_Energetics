@@ -1,3 +1,1 @@
 GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust
-GO:0140013,2.931706016610395e-6,0.9999996544520834,10,158,meiotic nuclear division,BP,0.04062184265723596
-GO:1903046,4.314358521293182e-6,0.9999993982772263,11,204,meiotic cell cycle process,BP,0.04062184265723596

@@ -51,6 +51,9 @@ library(GGally)
 library(lmerTest)
 library(cowplot)
 library(Hmisc)
+library(multcomp)
+library(FSA)
+library(rcompanion)
 ```
 
 In this project, physiological assays include symbiont cell density and larval volume.  
@@ -252,15 +255,21 @@ kruskal.test(volume~lifestage, data=size)
 
 There is a significant difference in size (larval volume) between lifestages.   
 
-View posthoc comparisons for differences between lifestages.  
+View posthoc comparisons for differences between lifestages using a Dunn test.  
 
 ```{r}
-emm = emmeans(size_model, ~ lifestage)
-cld(emm, Letters=c(LETTERS)) #letter display
-pairs(emm)
-```
+dunn<-dunnTest(volume ~ lifestage, data = size, method = "bonferroni")
 
-Metamorphosed polyps are smaller in volume than larvae within each respective time point. Size is quite variable between life stages.   
+# Access the letters for each group
+dunn_letters <- dunn$res
+
+cld <- cldList(comparison = dunn_letters$Comparison,
+        p.value    = dunn_letters$P.adj,
+        threshold  = 0.05)[1:2]
+
+names(cld)[1]<-"cyl" # change the name of grouping factor according to the dataset (df)
+cld
+```
 
 # **2. Symbiont Density**  
 
@@ -633,8 +642,6 @@ cells_size_plot2<-corr %>%
       ); cells_size_plot2
 ```
 
-There is not a correlation between size and cell density. 
-
 Analyze differences in normalized cell counts by timepoint. 
 
 ```{r}
@@ -773,7 +780,7 @@ corr%>%
   kruskal.test(counts_volume~lifestage, data=.)
 ```
 
-Cell density is not significantly different by life stage in attached recruits, likely due to low sample size.  
+No differences.  
 
 # **3. Generate Figures**  
 

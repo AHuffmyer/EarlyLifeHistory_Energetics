@@ -1,0 +1,4 @@
+GOterm,over_represented_pvalue,under_represented_pvalue,numDEInCat,numInCat,term,ontology,bh_adjust
+GO:0055029,1.171260763803209e-6,0.9999999738039719,5,106,nuclear DNA-directed RNA polymerase complex,CC,0.007905598127715368
+GO:0000428,1.193686005329296e-6,0.9999999731892929,5,107,DNA-directed RNA polymerase complex,CC,0.007905598127715368
+GO:0030880,1.2594548554588765e-6,0.9999999713820181,5,109,RNA polymerase complex,CC,0.007905598127715368

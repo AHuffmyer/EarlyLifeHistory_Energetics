@@ -51,6 +51,9 @@ library("VennDiagram")
 library("broom")
 library("viridis")
 library("ggrepel")
+library("car")
+library("emmeans")
+library("multcomp")
 ```
 
 
@@ -1267,500 +1270,246 @@ kegg_plot1 <- kegg %>%
 ggsave("Mcap2020/Figures/Metabolomics/VIPs/KEGG_enrichment_plot.pdf", kegg_plot1, width=10, height=6)
 ```
 
-# Plot VIPs related to pathways of interest  
 
-Main categories of interest based on metaboanalyst results:  
+# Plot specific metabolite concentrations  
 
-- Carbohydrate metabolism
-- Nitrogen/ammonium metabolism
-- Glyoxlyate metabolism - generating glucose from TAG lipids
-- Amino acid metabolism (phenylalanine, valine/leucine)
-- Riboflavin metabolism - assists in generating glucose from fat/lipid/carb storage
-- Fatty acid metabolism
+- Glucose
+- Glutamine
+- Glutamate
+- ATP/ADP
+- Total montiporic acids 
 
-Make a list of metabolites involved in each pathway.  
-
+Glucose, glutamine, and glutamate 
 ```{r}
-stored_carbs<-c("Sorbitol", "Fructose", "Sucrose", "UDP-D-Glucose", "Cellobiose")
-glycolysis<-c("Glucose", "Glucose-6-phosphate", "Pyruvate")
-
-nitrogen<-c("Glutamate", "Glutamine", "Carbamoyl phosphate")
-
-glyoxylate<-c("Serine", "Pyruvate", "Acetyl CoA")
-
-amino_acids<-c("Threonine", "Isoleucine", "Valine", "Phenylalanine", "Phenylethylamine", "Tyrosine")
-
-riboflavin<-c("Riboflavin", "NAD+")
-
-atp<-c("ADP", "ATP")
-
-pyrimidine<-c("Carbamoyl phosphate", "Uridine", "UMP", "CMP", "Orotate")
-
-fatty_acids<-c("L-Octanoylcarnitine", "O-Decanoyl-L-carnitine", "Acetyl CoA")
-```
-
-Prepare data frame.  
-```{r}
-pathway_data<-metabolites%>%
-  filter(compound %in% vip_list)
-
-pathway_data$HPF<-factor(pathway_data$HPF, levels=c("Egg (1 hpf)", "Embryo (5 hpf)", "Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (183 hpf)",  "Larvae (231 hpf)", "Metamorphosed Polyp (183 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)", "Attached Recruit (255 hpf)"))
-```
-
-Plot stored carbohydrate metabolism metabolites. 
-
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% stored_carbs)%>%
+glucose_plot<-pathway_data%>%
+  filter(compound %in% c("Glucose"))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
+  group_by(HPF, compound, Development)%>%
+  summarise(mean=mean(log_norm_counts), se=sd(log_norm_counts)/sqrt(length(log_norm_counts)))%>%
   group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-stored_plot<-pathway_data%>%
-  filter(compound %in% stored_carbs)%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  ggtitle("Stored carbohydrate metabolism")+
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
   theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
   xlab("")+
-  ylab("")+
-    geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
-  theme(
-    legend.position="none",
-    axis.text.x = element_blank(), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );stored_plot
-```
-
-Plot glycolysis metabolites. 
-
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% glycolysis)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-glycolysis_plot<-pathway_data%>%
-  filter(compound %in% glycolysis)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Glycolysis metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-        geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
-  theme(
-    legend.position="none",
-    axis.text.x = element_blank(), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );glycolysis_plot
-```
-
-Plot nitrogen metabolites. 
-
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% nitrogen)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-nitrogen_plot<-pathway_data%>%
-  filter(compound %in% nitrogen)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Nitrogen metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-  geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
+  ylab("Pool Size")+
+  ggtitle("A. Glucose")+
   theme(
     legend.position="none",
     axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
     legend.title = element_blank(),
     plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );nitrogen_plot
+  );glucose_plot
+
+ggsave(glucose_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/glucose.pdf", width=5, height=4)
 ```
 
-Plot glyoxylate metabolites. 
-
 ```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% glyoxylate)%>%
+glutamine_plot<-pathway_data%>%
+  filter(compound %in% c("Glutamine"))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
+  group_by(HPF, compound, Development)%>%
+  summarise(mean=mean(log_norm_counts), se=sd(log_norm_counts)/sqrt(length(log_norm_counts)))%>%
   group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-glyoxylate_plot<-pathway_data%>%
-  filter(compound %in% glyoxylate)%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Glyoxylate metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
   theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
   xlab("")+
-  ylab("")+
-    geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
-  theme(
-    legend.position="none",
-    axis.text.x = element_blank(), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );glyoxylate_plot
-```
-
-Plot amino acid metabolites. 
-
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% amino_acids)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-amino_plot<-pathway_data%>%
-  filter(compound %in% amino_acids)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Amino acid metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-  geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
+  ylab("Pool Size")+
+  ggtitle("B. Glutamine")+
   theme(
     legend.position="none",
     axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
     legend.title = element_blank(),
     plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );amino_plot
+  );glutamine_plot
+
+ggsave(glutamine_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/glutamine.pdf", width=5, height=4)
 ```
 
-Plot riboflavin metabolites. 
-
 ```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% riboflavin)%>%
+glutamate_plot<-pathway_data%>%
+  filter(compound %in% c("Glutamate"))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
+  group_by(HPF, compound, Development)%>%
+  summarise(mean=mean(log_norm_counts), se=sd(log_norm_counts)/sqrt(length(log_norm_counts)))%>%
   group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-riboflavin_plot<-pathway_data%>%
-  filter(compound %in% riboflavin)%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Riboflavin metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
   theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
   xlab("")+
-  ylab("")+
-   geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
-  theme(
-    legend.position="none",
-    axis.text.x = element_blank(), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );riboflavin_plot
-```
-
-Plot cofactors. 
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% atp)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-cofactor_plot<-pathway_data%>%
-  filter(compound %in% atp)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Cofactor metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-    geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
+  ylab("Pool Size")+
+  ggtitle("C. Glutamate")+
   theme(
     legend.position="none",
     axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
     legend.title = element_blank(),
     plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );cofactor_plot
+  );glutamate_plot
+
+ggsave(glutamate_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/glutamate.pdf", width=5, height=4)
 ```
 
-Plot pyrimidine metabolism. 
 ```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% pyrimidine)%>%
+atp_plot<-pathway_data%>%
+  filter(compound %in% c("ATP"))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
+  group_by(HPF, compound, Development)%>%
+  summarise(mean=mean(log_norm_counts), se=sd(log_norm_counts)/sqrt(length(log_norm_counts)))%>%
   group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-pyrimidine_plot<-pathway_data%>%
-  filter(compound %in% pyrimidine)%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Pyrimidine metabolism")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
   theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
   xlab("")+
-  ylab("")+
-  geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
+  ylab("Pool Size")+
+  ggtitle("ATP")+
   theme(
     legend.position="none",
     axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
     legend.title = element_blank(),
     plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );pyrimidine_plot
+  );atp_plot
+
+ggsave(atp_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/atp.pdf", width=5, height=4)
 ```
 
-Plot fatty acid metabolism metabolites. 
-
+Total Montiporic acids
 ```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% fatty_acids)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-fatty_plot<-pathway_data%>%
-  filter(compound %in% fatty_acids)%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  ggtitle("Fatty acid metabolism")+
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-    geom_text_repel(
-    aes(label = compound), data=data_ends, 
-    color = "black", size = 3
-    )+
-  theme(
-    legend.position="none",
-    axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );fatty_plot
-```
-
-Generate a panel of plots 
-
-```{r}
-grid<-plot_grid(glycolysis_plot, stored_plot, nitrogen_plot, fatty_plot, ncol=2, nrow=2, rel_heights=c(0.7,1))
-
-ggsave(plot=grid, file="Mcap2020/Figures/Metabolomics/VIPs/pathway_plots.pdf", width=9, height=9)
-```
-
-Plot Montiporic acids.  
-```{r}
-data_ends <- pathway_data%>%
+montiporic_plot<-pathway_data%>%
   filter(compound %in% c("Montiporic Acid A", "Montiporic Acid B", "Montiporic Acid C", "Montiporic Acid D"))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-acids_plot<-pathway_data%>%
-  filter(compound %in% c("Montiporic Acid A", "Montiporic Acid B", "Montiporic Acid C", "Montiporic Acid D"))%>%
+  group_by(Lifestage, Rep, HPF)%>%
+  summarise(sum=sum(log_norm_counts))%>%
+  group_by(HPF)%>%
+  summarise(mean=mean(sum), se=sd(sum)/sqrt(length(sum)))%>%
   
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
+  theme_classic()+
+  xlab("")+
   ggtitle("Montiporic Acids")+
-  scale_color_grey(start = 0.7, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
-  #geom_text_repel(
-    #aes(label = compound), data=data_ends, 
-    #color = "black", size = 3
-    #)+
-  theme(
-    legend.position="right",
-    axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
-    legend.title = element_blank(),
-    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );acids_plot
-
-ggsave(plot=acids_plot, file="Mcap2020/Figures/Metabolomics/VIPs/montiporic_acids.pdf", width=7, height=6)
-```
-
-Plot Betaine
-Plot Montiporic acids.  
-```{r}
-data_ends <- pathway_data%>%
-  filter(compound %in% c("Betaine"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  filter(HPF == "Attached Recruit (255 hpf)")
-
-betaine_plot<-pathway_data%>%
-  filter(compound %in% c("Betaine"))%>%
-  
-  group_by(HPF, compound)%>%
-  summarise(mean=mean(log_norm_counts))%>%
-  group_by(compound)%>%
-  mutate(FC=(mean-dplyr::first(mean))/dplyr::first(mean))%>%
-  
-  ggplot(aes(x=HPF, y=FC, colour=compound, group=compound))+
-  geom_smooth(se=FALSE, span = 0.8)+
-  geom_point()+
-  ggtitle("Betaine")+
-  scale_color_grey(start = 0.1, end = 0.1)+ 
-  theme_classic()+
-  geom_hline(yintercept=0, linetype="dashed")+
-  xlab("")+
-  ylab("")+
+  ylab("Pool Size")+
   theme(
     legend.position="none",
     axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
     legend.title = element_blank(),
     plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
-  );betaine_plot
+  );montiporic_plot
 
-ggsave(plot=betaine_plot, file="Mcap2020/Figures/Metabolomics/VIPs/betaine.pdf", width=7, height=6)
+ggsave(montiporic_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/acids.pdf", width=5, height=4)
 ```
+
+```{r}
+dipep_plot<-pathway_data%>%
+  filter(compound %in% c("Arginine-Glutamine"))%>%
+  
+  group_by(HPF, compound, Development)%>%
+  summarise(mean=mean(log_norm_counts), se=sd(log_norm_counts)/sqrt(length(log_norm_counts)))%>%
+  group_by(compound)%>%
+  
+  ggplot(aes(x=HPF, y=mean, fill=HPF))+
+  geom_bar(stat="identity", colour="black")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, colour="black")+
+  scale_fill_manual(values=lifestage_cols)+ 
+  theme_classic()+
+  xlab("")+
+  ylab("Pool Size")+
+  ggtitle("D. Arginine-Glutamine")+
+  theme(
+    legend.position="none",
+    axis.text.x = element_text(angle=45, hjust=1, vjust=1), 
+    legend.title = element_blank(),
+    plot.margin=unit(c(0.1,1,0.1,0.1), 'cm')
+  );dipep_plot
+
+ggsave(dipep_plot, filename="Mcap2020/Figures/Metabolomics/VIPs/arg-gln.pdf", width=5, height=4)
+```
+
+## ANOVA models for metabolites of interest 
+
+Perform ANOVA for each metabolite of interest 
+
+Glucose
+Glutamine
+Glutamate 
+Arg-gln
+
+```{r}
+model_data<-pathway_data%>%
+  filter(compound=="Glucose")
+
+model<-aov(log_norm_counts ~ HPF, data=model_data)
+
+summary(model)
+
+qqPlot(residuals(model))
+leveneTest(residuals(model)~model_data$HPF)
+
+emm<-emmeans(model, ~HPF)
+pairs(emm)
+cld(emm, Letters=LETTERS)
+```
+
+```{r}
+model_data<-pathway_data%>%
+  filter(compound=="Glutamine")
+
+model<-aov(log_norm_counts ~ HPF, data=model_data)
+
+summary(model)
+
+qqPlot(residuals(model))
+leveneTest(residuals(model)~model_data$HPF)
+
+emm<-emmeans(model, ~HPF)
+pairs(emm)
+cld(emm, Letters=LETTERS)
+```
+
+```{r}
+model_data<-pathway_data%>%
+  filter(compound=="Glutamate")
+
+model<-aov(log_norm_counts ~ HPF, data=model_data)
+
+summary(model)
+
+qqPlot(residuals(model))
+leveneTest(residuals(model)~model_data$HPF)
+
+emm<-emmeans(model, ~HPF)
+pairs(emm)
+cld(emm, Letters=LETTERS)
+```
+
+```{r}
+model_data<-pathway_data%>%
+  filter(compound=="Arginine-Glutamine")
+
+model<-aov(log_norm_counts ~ HPF, data=model_data)
+
+summary(model)
+
+qqPlot(residuals(model))
+leveneTest(residuals(model)~model_data$HPF)
+
+emm<-emmeans(model, ~HPF)
+pairs(emm)
+cld(emm, Letters=LETTERS)
+```
+
 
 

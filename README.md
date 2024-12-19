@@ -4,7 +4,7 @@
 
 [![OSF](https://img.shields.io/badge/OSF-10.17605%2FOSF.IO%2FKMU7H-brightgreen)](https://doi.org/10.17605/OSF.IO/KMU7H)  
 
-# Ontogenetic shifts in symbiotic and metabolic state in coral early life history 
+# Metabolic shifts in reef-building corals from fertilization to settlement reveals vulnerable developmental windows
 
 Ariana S. Huffmyer, Kevin H. Wong, Danielle M. Becker-Polinski, Emma Strand, Tali Mass, Hollie M. Putnam  
 
@@ -46,11 +46,9 @@ Respirometry data is analyzed by first extracting metabolic rates using the `LoL
 
 #### Gene Expression
 
-Gene expression was characterized across life stages with TagSeq sequencing at the University of Texas Austin. Sequences were trimmed and underwent QC followed by alignment to the latest (version 3) *Montipora capitata* genome available through [Rutgers University](http://cyanophora.rutgers.edu/montipora/). Sequences were aligned and a gene count matrix was calculated using bioinformatics pipelines detailed in the `TagSeq_BioInf_genomeV3.md` file in the `Scripts/TagSeq/Genome_V3/` folder. 
+Gene expression was characterized across life stages with TagSeq sequencing at the University of Texas Austin. Sequences were trimmed and underwent QC followed by alignment to the latest (version 3) *Montipora capitata* genome available through [Rutgers University](http://cyanophora.rutgers.edu/montipora/). Sequences were aligned and a gene count matrix was calculated using bioinformatics pipelines detailed in the `TagSeq_BioInf_genomeV3.md` file in the `Scripts/TagSeq` folder. 
 
-The gene count matrix was then imported into R with multivariate visualizations and WGCNA analysis in the `1_WGCNA_Mcap_V3.Rmd` script. Results of WGCNA were then functionally annotated using the reference genome with accompanying functional annotation. Functional annotation of genes was conducted using GO-Seq in the `2_WGCNA_GoSeq_V3.Rmd` script. Expression of genes with specific GO terms were examined with the `3_Gene_Expression_Indicators_V3.Rmd`. 
-
-Sequences were also aligned to the symbiont genome (*Cladocopium sp.* and *Durusdinium sp.*) for exploratory purposes. This data is not included in the manuscript due to low symbiont sequences and alignment. Scripts for this exploratory analysis are found in the `Symbiont` folder in the `Scripts/TagSeq` folder. 
+The gene count matrix was then imported into R with multivariate visualizations and differential gene expression analysis in the `DESeq2_Mcap_V3.Rmd` script. Results of DEG analyses were then functionally annotated using the reference genome with accompanying functional annotation. Functional annotation of genes was conducted using GO-Seq in the `DESeq2_Mcap_V3.Rmd` script. 
 
 Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235. 
 
@@ -58,7 +56,7 @@ Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.
 
 #### Metabolomics  
 
-Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `1_metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a WCNA approach in the `2_metabolomics_WGCNA.Rmd` script. Specific metabolites were examined in the `3_metabolite_indicators.Rmd` script. 
+Metabolomics was characterized across development with untargetted metabolomic analysis conducted at Rutgers University Metabolomics Shared Resource. Ion count tables of identified metabolites first underwent QC and filtering with multivariate visualization and analysis in the `metabolomics.Rmd` script. Metabolomic profiles across lifestages were then analyzed using a supervised partial least squares discriminant analysis and VIP score approach in the `metabolomics.Rmd` script.
 
 Raw metabolomics files can be found on the Open Science Framework project.  
 
@@ -66,7 +64,7 @@ Raw metabolomics files can be found on the Open Science Framework project.
 
 #### Symbiont ITS2  
 
-Symbiont ITS2 sequences were analyzed using the [SymPortal pipeline](https://symportal.org/). Symbiont communities at the DIV level were analyzed in the `ITS2_strains.Rmd` file. Filtering and subsampling were conducted in this R script. 
+Symbiont ITS2 sequences were analyzed using the [SymPortal pipeline](https://symportal.org/). Symbiont communities at the DIV level were analyzed in the `ITS2_strains.Rmd` file. Filtering and subsampling were conducted in this R script. We further performed downsampling tests to determine detection limits in the `ITS2_downsampling.Rmd` script.  
 
 Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235. 
 
@@ -80,10 +78,6 @@ Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.
 
 [![SRA](https://img.shields.io/badge/SRA-PRJNA900235-brightgreen)](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA900235)  
 
-#### Integration  
-
-For each data type above, relative change in metrics of interest was calculated across development. These relative change indicators were then plotted together in an integrative plot in the `Integration_Relative_Change.Rmd` script. 
-
 ### Contact 
 
-Any questions about this project and the contents of this repository can be directed to Ariana S. Huffmyer at ashuffmyer (at) uri.edu.
+Any questions about this project and the contents of this repository can be directed to Ariana S. Huffmyer at ashuff (at) uw.edu.

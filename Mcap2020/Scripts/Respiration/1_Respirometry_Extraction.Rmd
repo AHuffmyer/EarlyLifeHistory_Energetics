@@ -10,6 +10,8 @@ output:
     toc_float: yes
   pdf_document:
     keep_tex: yes
+editor_options: 
+  chunk_output_type: console
 ---
 ## Setup  
 
@@ -246,7 +248,7 @@ plot(blank_data$P.umol.min , ylab="umol O2 min-1") #blanks during dark phase
 
 ```
 
-Run 2 on 20210723 had both blanks removed as they were strong outliers. REspiration rates were not significantly greater in this run than on Run 1 on this day. Therefore, we will take the average respiration blank value and use this for corrections for this run.   
+Run 2 on 20210723 had both blanks removed as they were strong outliers. Respiration rates were not significantly greater in this run than on Run 1 on this day. Therefore, we will take the average respiration blank value and use this for corrections for this run.   
 
 ```{r}
 oxygen$code<-paste(oxygen$Date, oxygen$Run)
@@ -261,8 +263,6 @@ colnames(resp.blnk)[colnames(resp.blnk) == 'R.umol.min'] <- 'R.Blank.umol.min' #
 photo.blnk <- aggregate(P.umol.min ~ Date*Run, data=blank_data, mean) #calculate average blank during dark for each run
 colnames(photo.blnk)[colnames(photo.blnk) == 'P.umol.min'] <- 'P.Blank.umol.min' #rename to specify blank for P
 ```
-
-
 
 Merge together.  
 ```{r}

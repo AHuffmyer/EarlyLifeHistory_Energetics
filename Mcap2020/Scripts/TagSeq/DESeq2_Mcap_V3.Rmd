@@ -60,10 +60,8 @@ library("rtracklayer")
 library("GenomicRanges")
 library("plyranges")
 library("GSEABase")
-#library("GOSim")
 library("stats")
 library("ggdendro")
-#library("KEGG.db")
 library("GO.db")
 library("rrvgo")
 library("DESeq2")
@@ -114,7 +112,7 @@ We had 54,384 genes, which was filtered down to 34,223 by removing genes with ro
  
 Conduct data filtering, this includes:  
 
-*pOverA*: Specifying the minimum count for a proportion of samples for each gene. Here, we are using a pOverA of 0.07. This is because we have 38 samples with a minimum of n=3 samples per lifestage. Therefore, we will accept genes that are present in 3/38 = 0.07 of the samples because we expect different expression by life stage. We are further setting the minimum count of genes to 10, such that 7% of the samples must have a gene count of >10 in order for the gene to remain in the data set.  
+*pOverA*: Specifying the minimum count for a proportion of samples for each gene. Here, we are using a pOverA of 0.07. This is because we have 38 samples with a minimum of n=3 samples per lifestage. Therefore, we will accept genes that are present in 3/38 = 0.07 of the samples because we expect different expression by life stage. We are further setting the minimum count of genes to 10, such that 7% of the samples must have a gene count of >10 in order for the gene to remain in the data set.
 
 Filter in the package "genefilter". Pre-filtering our dataset to reduce the memory size dataframe, increase the speed of the transformation and testing functions, and improve quality of statistical analysis by removing low-coverage counts. Removed counts could represent outliers in the data and removing these improves sensitivity of statistical tests.   
 
@@ -287,8 +285,6 @@ pht<-pheatmap(gsampleDistMatrix, #plot matrix
          clustering_distance_rows=gsampleDists, #cluster rows
          clustering_distance_cols=gsampleDists, #cluster columns
          col=colors) #set colors
-
-#save_pheatmap_pdf(pht, "Mcap2020/Figures/TagSeq/GenomeV3/pheatmap.pdf")
 ```
 
 Generate a PCA for visualization/presentations.  
@@ -322,7 +318,7 @@ allgenesfilt_PCA_visual <-
   theme(legend.position = ("right"))
 allgenesfilt_PCA_visual
 
-ggsave("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/PCA_all_genes.pdf", allgenesfilt_PCA_visual, width=8, height=5)
+ggsave("Mcap2020/Figures/TagSeq/DESeq/PCA_all_genes.pdf", allgenesfilt_PCA_visual, width=8, height=5)
 ```
 
 # Run DESeq Results Tests 
@@ -374,7 +370,7 @@ ann_colors = list(
 Plot heatmap of z-scores of expression.  
 ```{r}
 dev.off()
-pdf("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_heatmap_development.pdf", width=12, height=14)
+pdf("Mcap2020/Figures/TagSeq/DESeq/DEG_heatmap_development.pdf", width=12, height=14)
 pheatmap(assay(DEG_results_vst), cluster_rows=TRUE, show_rownames=FALSE, color=inferno(10), show_colnames=FALSE, fontsize_row=3, scale="row", cluster_cols=TRUE, annotation_col=df, annotation_colors = ann_colors, labels_col=legend_names_col, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", cutree_rows = 3)
 dev.off()
 ```
@@ -450,7 +446,7 @@ DEG_PCA <-
         axis.text=element_text(size=12, color="black"))  + #Set the plot background
   theme(legend.position = ("right")); DEG_PCA
 
-ggsave("Mcap2020/Figures/TagSeq/GenomeV3/DESeq/PCA_DEG.pdf", DEG_PCA, width=8, height=5)
+ggsave("Mcap2020/Figures/TagSeq/DESeq/PCA_DEG.pdf", DEG_PCA, width=8, height=5)
 ```
 
 # Save gene lists for functional enrichment 
@@ -466,7 +462,7 @@ head(DEG_results)
 
 deg_results_list<-DEG_results%>%
   dplyr::select(gene, everything())
-write_csv(deg_results_list, "Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_list.csv")
+write_csv(deg_results_list, "Mcap2020/Output/TagSeq/DESeq/deg_list.csv")
 
 dim(DEG_results_vst)
 deg_counts<-t(assay(DEG_results_vst))
@@ -475,7 +471,7 @@ dim(deg_counts)
 deg_counts$sample<-rownames(deg_counts)
 deg_counts<-deg_counts%>%
   dplyr::select(sample, everything())
-write_csv(deg_counts, "Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_counts.csv")
+write_csv(deg_counts, "Mcap2020/Output/TagSeq/DESeq/deg_counts.csv")
 ```
 
 ## All genes detected 
@@ -491,7 +487,7 @@ all_genes$sample<-rownames(all_genes)
 all_genes<-all_genes%>%
   dplyr::select(sample, everything())
 
-write_csv(file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/all_genes.csv", all_genes)
+write_csv(file="Mcap2020/Output/TagSeq/DESeq/all_genes.csv", all_genes)
 ```
 
 # Detect clusters of LRT results   
@@ -557,7 +553,7 @@ clusters <- degPatterns(cluster_vst, metadata = meta, time = "lifestage", col=NU
 6982 genes were clustered with cluster size >100 for all DEGS (9181 total)
 8283 genes clusters with cluster size >50 
 8900 genes clusters with cluster size >25
-9072 genes clusters with cluster size >15 (98.8% of all DEGs were clustered)
+9072 genes clusters with cluster size >15 (98.8% of all DEGs were clustered) - proceeding with cluster minimum size = 15
 
 Plot is showing Z score of VST normalized gene counts  
 ```{r}
@@ -579,7 +575,7 @@ cluster_plot<-ggplot(clusters[["normalized"]],
     axis.text.x = element_text(angle=90, hjust=1, vjust=1)
   );cluster_plot
 
-ggsave(cluster_plot, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot.pdf", width=12, height=10)
+ggsave(cluster_plot, filename="Mcap2020/Figures/TagSeq/DESeq/cluster_plot.pdf", width=12, height=10)
 ```
 
 Plot these broken down into the main developmental patterns detected in PCA and heatmaps above (early, mid, and late development). Early development included 1-38 hpf; mid development included 65-163 hpf, and late development included 183-231 hpf. 
@@ -631,7 +627,7 @@ cluster_plot2<-ggplot(cluster_data,
     axis.text.x = element_text(angle=45, hjust=1, vjust=1, color="black")
   );cluster_plot2
 
-ggsave(cluster_plot2, filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/cluster_plot_patterns.pdf", width=7, height=3.5)
+ggsave(cluster_plot2, filename="Mcap2020/Figures/TagSeq/DESeq/cluster_plot_patterns.pdf", width=7, height=3.5)
 ```
 
 Extract the list of genes in each cluster. 
@@ -696,7 +692,7 @@ deg_FC <- DEG_results %>%
         plot.title = element_text(size = 16, face = "bold"))+
   ggtitle(''); deg_FC
 
-ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_foldchange.pdf", height=4, width=4)
+ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/DESeq/DEG_foldchange.pdf", height=4, width=4)
 ```
 
 # Functional enrichment of genes identified in clusters
@@ -706,13 +702,13 @@ ggsave(plot=deg_FC, "Mcap2020/Figures/TagSeq/GenomeV3/DESeq/DEG_foldchange.pdf",
 Read in files 
 
 ```{r}
-all_genes<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/all_genes.csv")
+all_genes<-read.csv("Mcap2020/Output/TagSeq/DESeq/all_genes.csv")
 ```
 
 Read in file of DEG's 
 ```{r}
-DEG_list<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_list.csv")
-DEG_counts<-read.csv("Mcap2020/Output/TagSeq/GenomeV3/DESeq/deg_counts.csv")
+DEG_list<-read.csv("Mcap2020/Output/TagSeq/DESeq/deg_list.csv")
+DEG_counts<-read.csv("Mcap2020/Output/TagSeq/DESeq/deg_counts.csv")
 ```
 
 Get gene length information.  
@@ -736,7 +732,6 @@ lengths<-as.data.frame(lengths) #convert to data frame
 Read in annotation file. 
 
 Downloaded functional annotation (version 3) from: http://cyanophora.rutgers.edu/montipora/Montipora_capitata_HIv3.genes.EggNog_results.txt.gz (EggNog) and http://cyanophora.rutgers.edu/montipora/Montipora_capitata_HIv3.genes.KEGG_results.txt.gz (KEGG). 
-
 Unzipped on desktop. I then removed the # in #query in the first column, otherwise it does not read in column names.  
 
 ```{r}
@@ -870,7 +865,7 @@ for (cluster_id in cluster_list) {
         dplyr::arrange(., ontology, bh_adjust)
 
     #Write file of results 
-    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_cluster", cluster_id, ".csv"))
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/DESeq/functional_enrichment/goseq_cluster", cluster_id, ".csv"))
     
 }
 ```
@@ -892,7 +887,7 @@ Check the number of genes in each cluster.
 group_list%>%
       group_by(cluster, pattern)%>%
       summarise(n=length(unique(gene)))%>%
-      write_csv(file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/cluster_counts.csv")
+      write_csv(file="Mcap2020/Output/TagSeq/DESeq/cluster_counts.csv")
 
 names(group_list)
 ```
@@ -951,7 +946,7 @@ for (pattern_id in pattern_list) {
         dplyr::arrange(., ontology, bh_adjust)
 
     #Write file of results 
-    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_", pattern_id, ".csv"))
+    write_csv(GO, file = paste0("Mcap2020/Output/TagSeq/DESeq/functional_enrichment/goseq_", pattern_id, ".csv"))
     
 }
 ```
@@ -970,7 +965,7 @@ pattern_list<-c("Early", "Mid", "Late")
 for (pattern_id in pattern_list) {
 
     #Read relevant file of results from goseq analysis  
-    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/goseq_", pattern_id, ".csv"))
+    go_results<-read_csv(file = paste0("Mcap2020/Output/TagSeq/DESeq/functional_enrichment/goseq_", pattern_id, ".csv"))
     
     go_results<-go_results%>%
       filter(ontology=="BP")%>%
@@ -1016,7 +1011,7 @@ Semantic similarity reduced GO terms for each cluster.
 ```{r}
 length(unique(pattern_go_results$GOterm))
 ```
-There are 485 total enriched GO terms detected when analyzed by pattern groups. 
+There are 465 total enriched GO terms detected when analyzed by pattern groups. 
 
 ## Plot enrichment for each developmental pattern
 
@@ -1095,14 +1090,14 @@ go_plot_earlyB <- early_data %>%
 
 go_plot_early<-plot_grid(go_plot_earlyA, go_plot_earlyB, ncol=2, rel_widths=c(0.85,1))
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_early.pdf", go_plot_early, width=35, height=48)
+ggsave(filename="Mcap2020/Figures/TagSeq/DESeq/functional_enrichment/go_early.pdf", go_plot_early, width=35, height=48)
 
 early_data<-pattern_go_results %>% 
   filter(pattern=="Early")%>%
   dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)
 
-write_csv(early_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_early.csv")
+write_csv(early_data, file="Mcap2020/Output/TagSeq/DESeq/functional_enrichment/enrichment_results_early.csv")
 ```
 
 Mid development
@@ -1131,14 +1126,14 @@ go_plot_mid <- pattern_go_results %>%
         plot.title = element_text(size = 18, face = "bold"), 
         strip.text.y.right=element_text(angle=0, size=14)); go_plot_mid
 
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_mid.pdf", go_plot_mid, width=12, height=15)
+ggsave(filename="Mcap2020/Figures/TagSeq/DESeq/functional_enrichment/go_mid.pdf", go_plot_mid, width=12, height=15)
 
 mid_data<-pattern_go_results %>% 
   filter(pattern=="Mid")%>%
   dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)
 
-write_csv(mid_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_mid.csv")
+write_csv(mid_data, file="Mcap2020/Output/TagSeq/DESeq/functional_enrichment/enrichment_results_mid.csv")
 ```
 
 Late development 
@@ -1216,13 +1211,13 @@ go_plot_lateB <- late_data %>%
 
 go_plot_late<-plot_grid(go_plot_lateA, go_plot_lateB, ncol=2, rel_widths=c(0.8,1))
  
-ggsave(filename="Mcap2020/Figures/TagSeq/GenomeV3/DESeq/functional_enrichment/go_late.pdf", go_plot_late, width=22, height=12)
+ggsave(filename="Mcap2020/Figures/TagSeq/DESeq/functional_enrichment/go_late.pdf", go_plot_late, width=22, height=12)
 
 late_data<-pattern_go_results %>% 
   filter(pattern=="Late")%>%
   dplyr::arrange(bh_adjust) %>%
   mutate(percHits=(numDEInCat/numInCat)*100)
 
-write_csv(late_data, file="Mcap2020/Output/TagSeq/GenomeV3/DESeq/functional_enrichment/enrichment_results_late.csv")
+write_csv(late_data, file="Mcap2020/Output/TagSeq/DESeq/functional_enrichment/enrichment_results_late.csv")
 ```
 

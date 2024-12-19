@@ -13,7 +13,7 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-This script analyzes and plots data for M. capitata 2020 life history time series project. Plots are displayed in Plotting section. Results are provided in Analysis section. 
+This script analyzes and plots data for M. capitata 2020 life history time series project. 
 
 # **Setup**  
 
@@ -64,10 +64,6 @@ PRdata<-PRdata[!is.na(PRdata$Type),]
 
 #format columns as factor
 PRdata$dpf<-as.factor(PRdata$dpf)
-
-#subset fused juvenile data frame for a different project and remove 
-fused_oxygen <- PRdata[which(PRdata$Lifestage=='Juvenile'),]
-fused_oxygen <- droplevels(fused_oxygen)
 ```
 
 Examine outliers for respiration data. 
@@ -111,11 +107,6 @@ plot(PRdata$ratio)
 ```{r}
 PRdata<-PRdata%>%filter(ratio > 0)
 plot(PRdata$ratio)
-```
-
-Calculate PR ratio.  
-```{r}
-fused_oxygen$ratio<-fused_oxygen$GP.nmol.org.min/(fused_oxygen$R.nmol.org.min*-1) #calculate P:R ratio 
 ```
 
 # **Analysis and plotting of P and R**  
@@ -743,27 +734,7 @@ ratio_plot_mean<-stats_size %>%
       ); ratio_plot_mean
 
 ggsave("Mcap2020/Figures/Respiration/PR_Ratio_Means_Size.png", ratio_plot_mean, dpi=300, w=4, h=5, units="in")
-
-
 ```
-
-
-## Export relative change of GP, R, and P:R for integrative analyses  
-
-```{r}
-head(PRdf)
-
-pr_change<-PRdf%>%
-  dplyr::select(lifestage_std, Date, Sample.ID, Run, GP.nmol.org.min, R.nmol.org.min, ratio)%>%
-  group_by(lifestage_std)%>%
-  summarise(mean_GP=mean(GP.nmol.org.min), mean_R=mean(R.nmol.org.min), mean_ratio=mean(ratio))%>%
-  mutate(GP_change=((mean_GP-dplyr::first(mean_GP))/abs(dplyr::first(mean_GP))), 
-         R_change=((abs(mean_R)-dplyr::first(abs(mean_R)))/abs(dplyr::first(mean_R))), 
-         ratio_change=((mean_ratio-dplyr::first(mean_ratio))/abs(dplyr::first(mean_ratio))))%>%
-  dplyr::select(lifestage_std, GP_change, R_change, ratio_change)%>%
-  write_csv("Mcap2020/Data/Integration/RelativeChange/PR_relchange.csv")
-```
-
 
 ## Analyze data  
 
@@ -839,7 +810,6 @@ cld <- cldList(comparison = dunn_letters$Comparison,
         p.value    = dunn_letters$P.adj,
         threshold  = 0.05)[1:2]
 
-names(cld)[1]<-"cyl" # change the name of grouping factor according to the dataset (df)
 cld
 ```
 
@@ -940,11 +910,8 @@ cld <- cldList(comparison = dunn_letters$Comparison,
         p.value    = dunn_letters$P.adj,
         threshold  = 0.05)[1:2]
 
-names(cld)[1]<-"cyl" # change the name of grouping factor according to the dataset (df)
 cld
 ```
-
-
 
 ### *P:R*  
 
@@ -1011,7 +978,6 @@ cld <- cldList(comparison = dunn_letters$Comparison,
         p.value    = dunn_letters$P.adj,
         threshold  = 0.05)[1:2]
 
-names(cld)[1]<-"cyl" # change the name of grouping factor according to the dataset (df)
 cld
 ```
 

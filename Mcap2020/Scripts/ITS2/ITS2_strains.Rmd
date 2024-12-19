@@ -511,38 +511,6 @@ summary(aov(Chao1~lifestage, data=alpha_rare))
 
 There are no changes in alpha diversity of ITS2 in development measured by Shannon, Inverse Simpson, or Chao1.  
 
-Export relative change in alpha diversity for integrative analyses. Calculate relative change for all lifestages compared to the first time point in this dataset (eggs). We will use the Shannon Index for this calculation.    
-
-```{r}
-alpha_rel_change<-alpha_rare%>%
-  select(lifestage, sample, Shannon)%>%
-  group_by(lifestage)%>%
-  summarise(mean_alpha=mean(Shannon)) #calculate means
-
-#calculate relative change 
-alpha_rel_change<-alpha_rel_change%>%
-  arrange(lifestage)%>%
-  mutate(symbiont_alpha_diversity=((mean_alpha-dplyr::first(.$mean_alpha))/dplyr::first(.$mean_alpha)))%>%
-  select(lifestage, symbiont_alpha_diversity)%>%
-  write_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_alpha_relchange.csv")
-```
-
-# **Generate VST normalization for DIABLO**  
-
-```{r}
-#gvst <- varianceStabilizingTransformation(diagdds_full, blind=FALSE)
-#head(assay(gvst), 3)
-
-#generate as matrix 
-#matrix<-assay(gvst)
-#dim(matrix)
-
-#matrix<-as.data.frame(matrix)
-
-#save for DIABLO 
-#write.csv(matrix, "Mcap2020/Data/Integration/its2_div.csv")
-```
-
 # **Plot profile level information** 
 
 View the profile level phyloseq object.   
@@ -703,6 +671,8 @@ ggsave("Mcap2020/Figures/ITS2/profile_plot_means.pdf", plot=rel_abund_plot, widt
 
 ## Plot ratio of C:D 
 
+Posthoc results added to plot are analyzed below.  
+
 ```{r}
 ratio_plot<-rel_abund_data%>%
   dplyr::select(its2_type_profile, Abundance, lifestage, Sample)%>%
@@ -771,83 +741,3 @@ cld(emm, Letters=letters)
 ```
 
 Egg (1 hpf) - Larvae (231 hpf)                              -0.3104 0.0834 28  -3.721  0.0254
-
-Output means for integration plot. 
-
-```{r}
-rel_abund_data%>%
-  select(its2_type_profile, Abundance, lifestage, Sample)%>%
-  pivot_wider(values_from = Abundance, names_from = its2_type_profile)%>%
-  mutate(ratio=`C31-C17d-C21-C21ac-C31a`/`D1-D4-D6-D1ab-D17d`)%>%
-  group_by(lifestage)%>%
-  summarise(mean_ratioCD=mean(ratio, na.rm=TRUE))%>%
-  arrange(lifestage)%>%
-  mutate(symbiont_CD_ratio=((mean_ratioCD-dplyr::first(.$mean_ratioCD))/dplyr::first(.$mean_ratioCD)))%>%
-  select(lifestage, symbiont_CD_ratio)%>%
-  write_csv("Mcap2020/Data/Integration/RelativeChange/ITS2_CD_relchange.csv")
-```
-
-# **Run DESeq2**
-
-```{r}
-library("DESeq2")
-diagdds = phyloseq_to_deseq2(GP1_rare_untransformed, ~ lifestage)
-diagdds = DESeq(diagdds, test="Wald", fitType="parametric")
-```
-
-```{r}
-res = results(diagdds, cooksCutoff = FALSE)
-alpha = 0.05
-l2fc = 1
-sigtab = res[which(res$padj < alpha), ]
-sigtab = sigtab[which(sigtab$log2FoldChange > abs(l2fc)), ]
-
-sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(GP1_rare_untransformed)[rownames(sigtab), ], "matrix"))
-head(sigtab)
-```
-
-       baseMean log2FoldChange    lfcSE     stat       pvalue         padj
-C3     36.09249      18.769396 2.953328 6.355339 2.079679e-10 1.601353e-08
-1378_C 22.07770       7.059482 2.035066 3.468919 5.225560e-04 1.341227e-02
-          DIV clade
-C3         C3     C
-1378_C 1378_C     C
-
-Of the samples that are at >1% relative abundance, none are differential.
-
-This isn't very informative, the most dominant taxa are not detected as differential.  
-
-There is some small variation across time, but significant differences are only seen between eggs and some later larval stages. 
-
-Plot the relative abundance of these two taxa.  
-
-```{r}
-df<-as.data.frame(GP1_rare@otu_table)
-
-deg_list <- rownames(sigtab)
-degs<-df[,which(names(df) %in% deg_list)]
-degs$lifestage<-metadata_filt$lifestage[match(rownames(df), rownames(metadata_filt))]
-```
-
-Plot across lifestages.  
-
-```{r}
-plot<-degs%>%
-  mutate(sample=rownames(.))%>%
-  pivot_longer(values_to="value", "names_to"="DIV", cols=c("C3", "1378_C"))
-
-deg_plot <- plot%>%
-  
-  ggplot(aes(x=lifestage, y=value, color=DIV)) + 
-  geom_boxplot(aes(fill=NULL), position=position_dodge(0.9))+
-  geom_point(size=3, position=position_dodge(0.9)) + 
-  scale_color_manual(values=c("black", "darkgray"))+
-  theme_classic() + 
-  theme(axis.text.x=element_text(angle=45, hjust=1, color="black")) + 
-  theme(axis.title.x=element_blank())+
-  theme(legend.position="right");deg_plot
-
-ggsave(plot=deg_plot, file="Mcap2020/Figures/ITS2/deg_taxa.png", width=5, height=4)
-ggsave(plot=deg_plot, file="Mcap2020/Figures/ITS2/deg_taxa.pdf", width=5, height=4)
-```
-

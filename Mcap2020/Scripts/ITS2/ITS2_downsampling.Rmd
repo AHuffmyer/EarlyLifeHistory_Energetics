@@ -45,6 +45,7 @@ library("vegan")
 library("ComplexHeatmap")
 library("tidyverse")
 library("dplyr")
+library("emmeans")
 ```
 
 # Prepare data  
@@ -252,30 +253,6 @@ Residual  28 0.094062 0.51215
 Total     37 0.183662 1.00000 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Subsample at 8000
 
 Subsample to even sampling depth of 8000.  
@@ -331,37 +308,6 @@ Residual  28 0.095362 0.50827
 Total     37 0.187622 1.00000   
 
 Results are the same as 10551 subsampling.  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## Subsample at 6000
@@ -420,23 +366,6 @@ Total     37 0.186736 1.0000
 
 Results are the same as 10551 subsampling.  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Subsample at 4000
 
 Subsample to even sampling depth of 4000.  
@@ -493,18 +422,6 @@ Total     37 0.203679 1.00000
 
 Results are the same as 10551 subsampling. 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## Subsample at 2000
 
 Subsample to even sampling depth of 2000.  
@@ -560,15 +477,6 @@ Residual  28  0.14306 0.56468
 Total     37  0.25336 1.00000  
 
 Results are the same as 10551 subsampling. Note F statistics are decreasing.  
-
-
-
-
-
-
-
-
-
 
 ## Subsample at 1000
 
@@ -744,22 +652,6 @@ We saw that subsampling between 4000-8000 sequences per sample resulted in the s
 
 Based on these results, to be able to confidently detect changes in community across development, we need a minimum sequencing depth of 4000. We will next see if this threshold also applies to analyses at the profile level to accurately detect abundance of specific profiles.  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Profile level analysis: What is the relative abundance of major profiles?  
 
 ## Prepare data 
@@ -880,25 +772,6 @@ pairs(emm)
 
 Egg (1 hpf) - Larvae (231 hpf)                              -0.3104 0.0834 28  -3.721  0.0254
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Subsample to 6000 
 
 Subsample to the minimum sampling depth of 6000.  
@@ -993,27 +866,7 @@ pairs(emm)
 
 Egg (1 hpf) - Larvae (231 hpf)                             -0.31767 0.0893 28  -3.557  0.0374
 
-This comparison is still significant as in original subsampling, but P value has increased slightly.  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+This comparison is still significant as in original subsampling, but P value has increased slightly.
 
 ## Subsample to 4000 
 
@@ -1496,6 +1349,3 @@ Detection of changes in CD ratio across development were lost at <1000 sequencin
 Overall, we found no loss in capacity to detect DIV community composition changes across development at >4000 sequencing depth. We also found no loss in capacity to detect changes in profile level shifts across development at sequencing depth of >4000. 
 
 For this application in this species, the minimum sequencing depth should be 4000. 
-
-
-

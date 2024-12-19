@@ -517,6 +517,15 @@ perm1<-adonis2(phyloseq::distance(physeq1_rare, method="bray") ~ lifestage,
 perm1
 ```
 
+Number of permutations: 999
+
+adonis2(formula = phyloseq::distance(physeq1_rare, method = "bray") ~ lifestage, data = samples)
+          Df SumOfSqs      R2      F Pr(>F)    
+lifestage  7   4.8793 0.64321 4.3781  0.001 ***
+Residual  17   2.7066 0.35679                  
+Total     24   7.5859 1.00000                  
+
+
 ## Plot Heatmap of relative abundance at the family/genus level   
 
 Filter out low frequency taxa <1% relative abundance.  
@@ -645,8 +654,6 @@ ggsave(plot=alpha1_plot, file="Mcap2020/Figures/16S/alpha_rare.png", width=4, he
 ggsave(plot=alpha1_plot, file="Mcap2020/Figures/16S/alpha_rare.pdf", width=4, height=7)
 ```
 
-Similar to the full dataset, we see increases in alpha diversity across development with higher values in attached recruits.  
-
 Test for differences in alpha diversity.  
 ```{r}
 metadata <- as(sample_data(GP2), "data.frame")
@@ -674,26 +681,10 @@ summary(aov(InvSimpson~lifestage, data=alpha_rare))
 lifestage    7  16906  2415.1   17.46 1.3e-06 ***
 Residuals   17   2351   138.3   
 
-
-Export relative change in alpha diversity for integrative analyses. Calculate relative change for all lifestages compared to the first time point in this dataset (embryos at 38 hpf). We will use the Shannon Index for this calculation.    
-
-```{r}
-
-alpha_rel_change<-alpha_rare%>%
-  select(lifestage, sample, Shannon)%>%
-  group_by(lifestage)%>%
-  summarise(mean_alpha=mean(Shannon)) #calculate means
-
-alpha_rel_change$lifestage<-str_trim(alpha_rel_change$lifestage, side = c("right")) #remove whitespace at end of strings
-alpha_rel_change$lifestage<-factor(alpha_rel_change$lifestage, levels=c("Embryo (38 hpf)", "Embryo (65 hpf)", "Larvae (93 hpf)", "Larvae (163 hpf)", "Larvae (231 hpf)", "Metamorphosed Polyp (231 hpf)", "Attached Recruit (183 hpf)", "Attached Recruit (231 hpf)"))
-
-#calculate relative change to the first time point  
-alpha_rel_change<-alpha_rel_change%>%
-  arrange(lifestage)%>%
-  mutate(bacteria_alpha_diversity=((mean_alpha-dplyr::first(.$mean_alpha))/dplyr::first(.$mean_alpha)))%>%
-  select(lifestage, bacteria_alpha_diversity)%>%
-  write_csv("Mcap2020/Data/Integration/RelativeChange/16S_alpha_relchange.csv")
-```
+summary(aov(Chao1~lifestage, data=alpha_rare))
+            Df Sum Sq Mean Sq F value   Pr(>F)    
+lifestage    7 342128   48875   7.706 0.000294 ***
+Residuals   17 107827    6343  
 
 
 # **Plot unknowns** 
@@ -704,80 +695,3 @@ plot_bar(physeq1_rare, fill="Phylum", facet_grid=~Phylum)
 ```
 
 We have some unclassified bacteria, but a higher proportion of proteobacteria and bacteriodes.  
-
-# **Export matrix for multi-omic analyses**  +
-
-Export a matrix of the relative abundance of taxa >0.5% relative abundance for multiomic analysis at the level of sample.    
-
-Filter out low frequency taxa <0.5% relative abundance.  
-```{r}
-physeq1_rare_f
-
-physeq1_rare_prune = filter_taxa(physeq1_rare_f, function(x) mean(x) > 0.5, TRUE)
-
-taxa_names(physeq1_rare_prune) 
-```
-
-There were 1364 taxa before filtering out taxa <0.5% and 36 taxa after filtering.  
-
-Replace OTU number with taxa names.  
-
-View current data frame.  
-```{r}
-table<-as.matrix(otu_table(physeq1_rare_prune))
-table<-as.matrix(as.data.frame(table))
-colnames(table)
-rownames(table)
-```
-
-Extract taxa names at the level of Family.  
-```{r}
-tax_table<-as.matrix(t(tax_table(physeq1_rare_prune)))
-tax_table<-as.matrix(t(as.data.frame(tax_table)))
-colnames(tax_table)
-rownames(tax_table)
-tax_table<-as.data.frame(tax_table)
-```
- 
-```{r}
-#replace OTU with name from taxonomy table  
-table_names<-as.data.frame(table)
-table_names$OTU<-rownames(table)
-
-table_names$Family<-tax_table$Family[match(table_names$OTU, tax_table$OTU)]
-table_names$Genus<-tax_table$Genus[match(table_names$OTU, tax_table$OTU)]
-
-#remove non alphabetic characters from Family and Genus columns 
-table_names$Family <- gsub('[^[:alnum:] ]','',table_names$Family)
-
-table_names$Taxa<-paste(table_names$OTU, "-", table_names$Family, ":", table_names$Genus)
-
-#add to data frame 
-rownames(table_names)<-table_names$Taxa
-
-table_names<-table_names%>%
-  select(!Family)%>%
-  select(!Taxa)%>%
-  select(!Genus)%>%
-  select(!OTU)
-
-table_names<-as.matrix(table_names)
-
-rownames(table_names)
-colnames(table_names)
-
-table_16s<-as.data.frame(table_names)
-table_16s$taxa<-rownames(table_16s)
-```
-
-The dataframe now has OTU with Genus and Family information in rownames and sample name in columns.  
-
-Export for integration analysis.  
-
-```{r}
-write_csv(table_16s, "Mcap2020/Data/Integration/16s_matrix.csv")
-```
-
-
-
-

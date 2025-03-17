@@ -80,4 +80,4 @@ Raw sequence files can be found on NCBI SRA under BioProject PRJNA900235.
 
 ### Contact 
 
-Any questions about this project and the contents of this repository can be directed to Ariana S. Huffmyer at ashuff (at) uw.edu.
+Any questions about this project and the contents of this repository can be directed to Ariana S. Huffmyer at ashuffmyer (at) gmail.com.

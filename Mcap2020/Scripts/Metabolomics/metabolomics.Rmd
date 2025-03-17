@@ -1000,6 +1000,8 @@ Timepoint_VIP_DF
 # Converting row names to column
 Timepoint_VIP_table <- rownames_to_column(Timepoint_VIP_DF, var = "Metabolite")
 
+write_csv(Timepoint_VIP_table, "Mcap2020/Output/Metabolomics/All_Metabolite_VIP_values.csv")
+
 #filter for VIP > 1
 Timepoint_VIP_1 <- Timepoint_VIP_table %>% 
   filter(VIP >= 1)

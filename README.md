@@ -4,7 +4,7 @@
 
 [![OSF](https://img.shields.io/badge/OSF-10.17605%2FOSF.IO%2FKMU7H-brightgreen)](https://doi.org/10.17605/OSF.IO/KMU7H)  
 
-# Metabolic shifts in reef-building corals from fertilization to settlement reveals vulnerable developmental windows
+# Metabolic dynamics of the coral-algal symbiosis from fertilization to settlement identify critical coral energetic vulnerabilities 
 
 Ariana S. Huffmyer, Kevin H. Wong, Danielle M. Becker-Polinski, Emma Strand, Tali Mass, Hollie M. Putnam  
 
